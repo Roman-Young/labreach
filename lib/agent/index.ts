@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { GEMINI_FUNCTION_DECLARATIONS, executeTool, ToolCallCounts } from './tools'
 import { buildSystemPrompt } from './prompts'
 import { writeEmail } from './writer'
-import { evaluateEmail } from './evaluator'
+import { evaluateDraft } from './evaluator'
 import { buildCritique } from './critique'
 import { logEvaluatorVerdict } from './eval-log'
 import { scrapePage } from '@/lib/scraper'
@@ -119,14 +119,26 @@ export async function runAgent(
 
       onProgress('Writing your email...')
       let currentDraft = await writeEmail(ar, request, undefined, onProgress)
-      let verdict = await evaluateEmail(currentDraft, ar.evidence, request.profile, onProgress)
+      let evaluation = await evaluateDraft({
+        draft: currentDraft,
+        evidence: ar.evidence,
+        profile: request.profile,
+        onProgress,
+      })
+      let verdict = evaluation.verdict
       let attempts = 1
 
       while (!verdict.overallPass && attempts < MAX_EVALUATOR_PASSES) {
         const critique = buildCritique(verdict)
         onProgress('Revising based on quality checks...')
         currentDraft = await writeEmail(ar, request, critique, onProgress)
-        verdict = await evaluateEmail(currentDraft, ar.evidence, request.profile, onProgress)
+        evaluation = await evaluateDraft({
+          draft: currentDraft,
+          evidence: ar.evidence,
+          profile: request.profile,
+          onProgress,
+        })
+        verdict = evaluation.verdict
         attempts++
       }
 
@@ -142,6 +154,7 @@ export async function runAgent(
         studentInterests: request.profile.interests,
         experienceLevel: request.profile.experienceLevel,
         studentProfile: request.profile,
+        evaluatorPromptVersion: evaluation.evaluatorPromptVersion,
       }).catch(() => {})
 
       const finalResult: AgentResult = {

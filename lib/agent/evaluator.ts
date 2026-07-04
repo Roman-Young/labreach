@@ -1,8 +1,11 @@
+import { createHash } from 'crypto'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { withRetry } from '@/lib/retry'
 import { checkStructure } from './structure-check'
 import { checkProhibitions } from './prohibitions'
 import type { EvaluatorVerdict, ResearchEvidence, StudentProfile } from '@/types'
+
+const DEFAULT_EVALUATOR_MODEL = 'gemini-2.5-flash'
 
 interface LlmGradedAxes {
   opener: { pass: boolean; quote: string | null }
@@ -58,41 +61,22 @@ function failOpenAxes(reason: string): LlmGradedAxes {
   }
 }
 
-export async function evaluateEmail(
-  draft: { subject: string; body: string; specificHook: string; bridgeSentence: string },
-  evidence: ResearchEvidence,
-  profile: StudentProfile,
-  onProgress?: (msg: string) => void,
-): Promise<EvaluatorVerdict> {
-  onProgress?.('Reviewing draft quality...')
-
-  const structure = checkStructure(draft.body)
-  const prohibitions = checkProhibitions(draft.body)
-
-  const apiKey = process.env.GOOGLE_AI_API_KEY
-  let axes: LlmGradedAxes
-
-  if (!apiKey) {
-    axes = failOpenAxes('evaluator call failed, not verified — GOOGLE_AI_API_KEY not set')
-  } else {
-    const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
-      generationConfig: { temperature: 0.2, responseMimeType: 'application/json' },
-    })
-
-    const prompt = `You are a strict, skeptical evaluator of a cold email a student is about to send to a research lab PI. You are judging the FINISHED EMAIL below against the research evidence that was actually extracted about the lab. Every check is binary — pass or fail — and every check that can point to text must quote the exact phrase, never paraphrase. If you cannot find a phrase that satisfies a check, the check fails and the quote is null.
+// The evaluator prompt as a template. {{SUBJECT}}, {{BODY}}, {{EVIDENCE}} and
+// {{WRITING_SAMPLE}} are filled per call; everything else is the judging
+// instructions. Calibration and GEPA pass modified templates (same
+// placeholders) through evaluateDraft's evaluatorPrompt override.
+export const DEFAULT_EVALUATOR_PROMPT = `You are a strict, skeptical evaluator of a cold email a student is about to send to a research lab PI. You are judging the FINISHED EMAIL below against the research evidence that was actually extracted about the lab. Every check is binary — pass or fail — and every check that can point to text must quote the exact phrase, never paraphrase. If you cannot find a phrase that satisfies a check, the check fails and the quote is null.
 
 EMAIL:
-Subject: ${draft.subject}
+Subject: {{SUBJECT}}
 
-${draft.body}
+{{BODY}}
 
 RESEARCH EVIDENCE (the only source of truth about the lab — anything in the email not grounded here is fabricated):
-${formatEvidenceForEvaluator(evidence)}
+{{EVIDENCE}}
 
 STUDENT'S WRITING SAMPLE (for voice comparison):
-${profile.writingSample?.trim() || '(none provided)'}
+{{WRITING_SAMPLE}}
 
 Evaluate these nine axes:
 
@@ -140,12 +124,85 @@ Return JSON only, matching exactly this shape:
   "wouldSend": { "pass": boolean, "reason": string }
 }`
 
+export function evaluatorPromptVersionOf(template: string): string {
+  return createHash('sha256').update(template).digest('hex').slice(0, 12)
+}
+
+// Replacement via callback so `$` sequences in drafts/evidence are inert.
+function fillTemplate(template: string, values: Record<string, string>): string {
+  let out = template
+  for (const [key, value] of Object.entries(values)) {
+    out = out.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), () => value)
+  }
+  return out
+}
+
+export interface EvaluateDraftInput {
+  draft: { subject: string; body: string }
+  evidence: ResearchEvidence
+  profile: StudentProfile
+  // Full prompt template override (same {{...}} placeholders as
+  // DEFAULT_EVALUATOR_PROMPT). Absent = current default judge.
+  evaluatorPrompt?: string
+  model?: string
+  onProgress?: (msg: string) => void
+}
+
+export interface EvaluateDraftResult {
+  verdict: EvaluatorVerdict
+  // True when the Gemini call failed (missing key, bad JSON, request error)
+  // and the nine LLM axes were marked passing without verification.
+  evaluatorFailedOpen: boolean
+  evaluatorPromptVersion: string
+}
+
+// Pure function of (draft, evidence, profile, evaluator-config): runs the two
+// code checks plus the single Gemini call for the nine LLM-judged axes.
+// Callable on its own for re-eval/calibration/GEPA — no extraction, no
+// composition, no logging.
+export async function evaluateDraft(input: EvaluateDraftInput): Promise<EvaluateDraftResult> {
+  const { draft, evidence, profile, onProgress } = input
+  const template = input.evaluatorPrompt ?? DEFAULT_EVALUATOR_PROMPT
+  const modelName = input.model ?? DEFAULT_EVALUATOR_MODEL
+
+  onProgress?.('Reviewing draft quality...')
+
+  const structure = checkStructure(draft.body)
+  const prohibitions = checkProhibitions(draft.body)
+
+  const apiKey = process.env.GOOGLE_AI_API_KEY
+  let axes: LlmGradedAxes
+  let evaluatorFailedOpen = false
+
+  if (!apiKey) {
+    axes = failOpenAxes('evaluator call failed, not verified — GOOGLE_AI_API_KEY not set')
+    evaluatorFailedOpen = true
+  } else {
+    const genAI = new GoogleGenerativeAI(apiKey)
+    const model = genAI.getGenerativeModel({
+      model: modelName,
+      generationConfig: { temperature: 0.2, responseMimeType: 'application/json' },
+    })
+
+    const prompt = fillTemplate(template, {
+      SUBJECT: draft.subject,
+      BODY: draft.body,
+      EVIDENCE: formatEvidenceForEvaluator(evidence),
+      WRITING_SAMPLE: profile.writingSample?.trim() || '(none provided)',
+    })
+
     try {
       const result = await withRetry(() => model.generateContent(prompt))
       const parsed = safeParseJson<LlmGradedAxes>(result.response.text())
-      axes = parsed ?? failOpenAxes('evaluator call failed, not verified — malformed JSON response')
+      if (parsed) {
+        axes = parsed
+      } else {
+        axes = failOpenAxes('evaluator call failed, not verified — malformed JSON response')
+        evaluatorFailedOpen = true
+      }
     } catch {
       axes = failOpenAxes('evaluator call failed, not verified — request error')
+      evaluatorFailedOpen = true
     }
   }
 
@@ -164,15 +221,29 @@ Return JSON only, matching exactly this shape:
     prohibitions.pass
 
   return {
-    opener: axes.opener,
-    hook: axes.hook,
-    bridge: axes.bridge,
-    noFabrication: axes.noFabrication,
-    naturalness: axes.naturalness,
-    voice: axes.voice,
-    wouldSend: axes.wouldSend,
-    prohibitions,
-    structure: { pass: structure.pass, wordCount: structure.wordCount, paragraphCount: structure.paragraphCount },
-    overallPass,
+    verdict: {
+      opener: axes.opener,
+      hook: axes.hook,
+      bridge: axes.bridge,
+      noFabrication: axes.noFabrication,
+      naturalness: axes.naturalness,
+      voice: axes.voice,
+      wouldSend: axes.wouldSend,
+      prohibitions,
+      structure: { pass: structure.pass, wordCount: structure.wordCount, paragraphCount: structure.paragraphCount },
+      overallPass,
+    },
+    evaluatorFailedOpen,
+    evaluatorPromptVersion: evaluatorPromptVersionOf(template),
   }
+}
+
+export async function evaluateEmail(
+  draft: { subject: string; body: string; specificHook: string; bridgeSentence: string },
+  evidence: ResearchEvidence,
+  profile: StudentProfile,
+  onProgress?: (msg: string) => void,
+): Promise<EvaluatorVerdict> {
+  const { verdict } = await evaluateDraft({ draft, evidence, profile, onProgress })
+  return verdict
 }
