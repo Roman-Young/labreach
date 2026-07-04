@@ -41,6 +41,29 @@ const AXES: { key: AxisKey; label: string; group: 'hook' | 'bridge' | 'other' }[
   { key: 'wouldSend', label: 'Would send', group: 'other' },
 ]
 
+interface Disagreement {
+  timestamp: number
+  labName: string
+  subject: string
+  body: string
+  human: boolean
+  evaluator: boolean
+  detail: string
+}
+
+interface AgreementResult {
+  perAxis: Record<AxisKey, { agree: number; total: number; disagreements: Disagreement[] }>
+  overall: { agree: number; total: number }
+  labeledCount: number
+  scored: number
+  skipped: number
+  anyMissingInputs: boolean
+}
+
+function pctLabel(c: { agree: number; total: number }): string {
+  return c.total ? `${Math.round((c.agree / c.total) * 100)}% (${c.agree}/${c.total})` : '—'
+}
+
 function evaluatorPassFor(verdict: EvaluatorVerdict, key: AxisKey): { pass: boolean; detail: string } {
   switch (key) {
     case 'opener':
@@ -82,6 +105,14 @@ export default function CalibratePage() {
   const [genProgress, setGenProgress] = useState<string[]>([])
   const [genError, setGenError] = useState('')
 
+  // Evaluator agreement report — hold drafts fixed, vary the evaluator prompt
+  const [candidatePrompt, setCandidatePrompt] = useState('')
+  const [defaultVersion, setDefaultVersion] = useState('')
+  const [agreementRunning, setAgreementRunning] = useState(false)
+  const [agreementProgress, setAgreementProgress] = useState({ done: 0, total: 0 })
+  const [agreementError, setAgreementError] = useState('')
+  const [agreement, setAgreement] = useState<AgreementResult | null>(null)
+
   async function fetchEntries() {
     const res = await fetch('/api/admin/calibrate?offset=0&limit=20', {
       headers: { 'x-admin-token': password },
@@ -102,8 +133,129 @@ export default function CalibratePage() {
       setCursor(0)
       setAuthed(true)
       setAuthError('')
+      loadDefaultPrompt()
     } catch {
       setAuthError('Connection error — is the server running?')
+    }
+  }
+
+  async function loadDefaultPrompt() {
+    try {
+      const res = await fetch('/api/re-evaluate', { headers: { 'x-admin-token': password } })
+      if (!res.ok) return
+      const data = await res.json()
+      setCandidatePrompt(data.defaultEvaluatorPrompt ?? '')
+      setDefaultVersion(data.evaluatorPromptVersion ?? '')
+    } catch {
+      // leave the textarea empty; the user can still paste a prompt
+    }
+  }
+
+  // Re-score every human-labeled draft under the candidate evaluator prompt and
+  // compare, per axis, against the human labels. No drafts are regenerated —
+  // each draft costs one Gemini call via /api/re-evaluate. Small concurrency so
+  // a large label set doesn't fire hundreds of requests at once.
+  async function runAgreementReport() {
+    if (agreementRunning || !candidatePrompt.trim()) return
+    setAgreementRunning(true)
+    setAgreementError('')
+    setAgreement(null)
+
+    try {
+      // evaluator:log is capped at 500, so one large page fetches every entry.
+      const res = await fetch('/api/admin/calibrate?offset=0&limit=500', {
+        headers: { 'x-admin-token': password },
+      })
+      if (!res.ok) {
+        setAgreementError('Could not load labeled entries')
+        return
+      }
+      const data = await res.json()
+      const labeled: CalibrationEntry[] = (data.entries ?? []).filter((e: CalibrationEntry) => e.humanLabel)
+      if (labeled.length === 0) {
+        setAgreementError('No labeled drafts yet — grade some above first.')
+        return
+      }
+
+      setAgreementProgress({ done: 0, total: labeled.length })
+
+      const perAxis = {} as AgreementResult['perAxis']
+      for (const a of AXES) perAxis[a.key] = { agree: 0, total: 0, disagreements: [] }
+      let scored = 0
+      let skipped = 0
+      let anyMissingInputs = false
+
+      const queue = [...labeled]
+      async function worker() {
+        while (queue.length > 0) {
+          const entry = queue.shift()
+          if (!entry) break
+          try {
+            const r = await fetch('/api/re-evaluate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'x-admin-token': password },
+              body: JSON.stringify({ logEntryId: entry.timestamp, evaluatorPrompt: candidatePrompt }),
+            })
+            if (!r.ok) {
+              skipped++
+            } else {
+              const rd = await r.json()
+              if (rd.missingInputs?.length) anyMissingInputs = true
+              const verdict: EvaluatorVerdict = rd.verdict
+              const label = entry.humanLabel as HumanLabel
+              scored++
+              for (const a of AXES) {
+                const humanPass = label[a.key]
+                // Legacy labels may lack axes added later; agreement is only
+                // defined where the human actually graded that axis.
+                if (typeof humanPass !== 'boolean') continue
+                const ev = evaluatorPassFor(verdict, a.key)
+                const cell = perAxis[a.key]
+                cell.total++
+                if (ev.pass === humanPass) {
+                  cell.agree++
+                } else {
+                  cell.disagreements.push({
+                    timestamp: entry.timestamp,
+                    labName: entry.labName,
+                    subject: entry.subject,
+                    body: entry.body,
+                    human: humanPass,
+                    evaluator: ev.pass,
+                    detail: ev.detail,
+                  })
+                }
+              }
+            }
+          } catch {
+            skipped++
+          } finally {
+            setAgreementProgress((p) => ({ ...p, done: p.done + 1 }))
+          }
+        }
+      }
+
+      await Promise.all([worker(), worker(), worker()])
+
+      let overallAgree = 0
+      let overallTotal = 0
+      for (const a of AXES) {
+        overallAgree += perAxis[a.key].agree
+        overallTotal += perAxis[a.key].total
+      }
+
+      setAgreement({
+        perAxis,
+        overall: { agree: overallAgree, total: overallTotal },
+        labeledCount: labeled.length,
+        scored,
+        skipped,
+        anyMissingInputs,
+      })
+    } catch (err) {
+      setAgreementError(err instanceof Error ? err.message : 'Report failed')
+    } finally {
+      setAgreementRunning(false)
     }
   }
 
@@ -455,6 +607,99 @@ export default function CalibratePage() {
             )}
           </div>
         )}
+
+        {/* Evaluator agreement report — vary the judge, hold drafts fixed */}
+        <div className="bg-slate-800/40 rounded-xl border border-slate-700 p-4 mt-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Evaluator agreement</p>
+            {defaultVersion && <span className="text-[10px] text-slate-500 font-mono">default judge: {defaultVersion}</span>}
+          </div>
+          <p className="text-xs text-slate-500">
+            Re-score every human-labeled draft under a candidate evaluator prompt and compare, per axis,
+            against the human labels. Drafts are not regenerated — each is one Gemini call. Edit a line,
+            re-run, and watch a weak axis move toward ~90%. Keep the <code className="text-slate-400">{'{{SUBJECT}}'}</code>,{' '}
+            <code className="text-slate-400">{'{{BODY}}'}</code>, <code className="text-slate-400">{'{{EVIDENCE}}'}</code>, and{' '}
+            <code className="text-slate-400">{'{{WRITING_SAMPLE}}'}</code> placeholders intact.
+          </p>
+          <textarea
+            value={candidatePrompt}
+            onChange={(e) => setCandidatePrompt(e.target.value)}
+            rows={8}
+            spellCheck={false}
+            placeholder="Candidate evaluator prompt…"
+            className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-300 text-xs font-mono resize-y focus:outline-none focus:border-teal-500"
+          />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={runAgreementReport}
+              disabled={agreementRunning || !candidatePrompt.trim()}
+              className="px-4 py-2 bg-teal-600 hover:bg-teal-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors"
+            >
+              {agreementRunning ? `Scoring ${agreementProgress.done}/${agreementProgress.total}…` : 'Run agreement report'}
+            </button>
+            <button
+              onClick={loadDefaultPrompt}
+              disabled={agreementRunning}
+              className="px-3 py-2 bg-slate-900 border border-slate-700 hover:text-white text-slate-400 text-xs font-medium rounded-lg transition-colors disabled:opacity-50"
+            >
+              Reset to default
+            </button>
+          </div>
+          {agreementError && <p className="text-xs text-red-400">{agreementError}</p>}
+
+          {agreement && (
+            <div className="space-y-3 pt-1">
+              <p className="text-xs text-slate-400">
+                Overall {pctLabel(agreement.overall)} · {agreement.scored} scored
+                {agreement.skipped ? `, ${agreement.skipped} skipped (rotated out of log)` : ''}
+              </p>
+              {agreement.anyMissingInputs && (
+                <p className="text-[11px] text-amber-400">
+                  Some drafts predate profile storage — voice defaulted to pass for those, which can inflate voice agreement.
+                </p>
+              )}
+              <div className="space-y-1.5">
+                {AXES.map((a) => {
+                  const cell = agreement.perAxis[a.key]
+                  const p = cell.total ? Math.round((cell.agree / cell.total) * 100) : 0
+                  const color = p >= 90 ? 'text-teal-300' : p >= 75 ? 'text-amber-300' : 'text-red-300'
+                  return (
+                    <details key={a.key} className="border border-slate-700 rounded-lg px-3 py-2">
+                      <summary className="cursor-pointer flex items-center justify-between text-xs list-none">
+                        <span className="text-slate-300">{a.label}</span>
+                        <span className={`font-mono ${cell.total ? color : 'text-slate-600'}`}>
+                          {cell.total ? `${p}% (${cell.agree}/${cell.total})` : '—'}
+                        </span>
+                      </summary>
+                      {cell.disagreements.length > 0 ? (
+                        <div className="mt-2 space-y-2">
+                          {cell.disagreements.map((d, i) => (
+                            <div key={i} className="text-[11px] bg-slate-900/50 rounded p-2 space-y-1">
+                              <div className="flex justify-between text-slate-500">
+                                <span>{d.labName}</span>
+                                <span>
+                                  human: <span className={d.human ? 'text-teal-400' : 'text-red-400'}>{d.human ? 'pass' : 'fail'}</span>
+                                  {' · '}evaluator: <span className={d.evaluator ? 'text-teal-400' : 'text-red-400'}>{d.evaluator ? 'pass' : 'fail'}</span>
+                                </span>
+                              </div>
+                              {d.detail && <p className="text-slate-400 italic">{d.detail}</p>}
+                              <details>
+                                <summary className="cursor-pointer text-slate-600">show draft</summary>
+                                <p className="mt-1 text-slate-400 whitespace-pre-wrap leading-relaxed">{d.body}</p>
+                              </details>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="mt-2 text-[11px] text-slate-600">Full agreement on this axis.</p>
+                      )}
+                    </details>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </main>
   )
