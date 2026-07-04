@@ -141,6 +141,7 @@ export async function runAgent(
         attemptsUsed: attempts,
         studentInterests: request.profile.interests,
         experienceLevel: request.profile.experienceLevel,
+        studentProfile: request.profile,
       }).catch(() => {})
 
       const finalResult: AgentResult = {
