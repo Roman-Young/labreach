@@ -97,12 +97,12 @@ Evaluate these nine axes:
    - Explaining the PI's research back to them as if teaching them about their own work, rather than showing what excited the student about it
    - The background paragraph (P3) is longer or goes into more detail than the science paragraph (P2) — self-focus imbalance
    - Every sentence in the science paragraph (P2) is roughly the same length — no variation in rhythm
-   - A single sentence crams multiple facts together with several dependent clauses (overloaded sentence)
+   - A sentence carries more than one main idea, or runs long with several stacked clauses so it has to be re-read to parse (overloaded sentence) — flag any such sentence, especially in the science paragraph
    - The closing paragraph restates a generic interest in the field or "a research opportunity" that could be sent to any lab, instead of a direct, specific ask
    - The student's interest in the lab is stated in both the opening and the closing (redundant)
    - Lab-specific terminology is placed in quotation marks
    - The student-to-lab connection relies only on shared vocabulary (e.g. both mention "computational" or "immunology") without a real mechanistic link
-   - Esoteric jargon a curious sophomore would not actually say out loud, even if technically accurate
+   - Overcomplicated or esoteric technical terms a curious early-undergraduate student would not actually say out loud, even if technically accurate — flag terminology that reads as reached-for or above the student's level when a plainer phrasing was available
 
 8. voice — Compare the email's sentence rhythm, vocabulary level, and phrasing style against the student's writing sample. Pass/fail plus a one-sentence reason. If no writing sample was provided, pass by default with reason "no writing sample provided".
 

@@ -88,7 +88,7 @@ export async function writeEmail(
     profile.experienceLevel === 'none'
       ? `The student has no prior research experience. Their only credential is genuine intellectual curiosity about this lab's specific work. Find what actually connects their stated interests to the lab's specific mechanism or finding — not the broad field.`
       : profile.experienceLevel === 'some'
-      ? `The student has some experience. They are early in their training — write with real curiosity and eagerness to learn, not confidence or expertise. Express what they want to explore, not what they're ready to deliver. Their tone can be slightly more complex and scientific than a complete beginner's — they can use appropriate technical vocabulary from their own coursework or lab work, not just plain-language description.`
+      ? `The student has some experience. They are early in their training — write with real curiosity and eagerness to learn, not confidence or expertise. Express what they want to explore, not what they're ready to deliver. They may use a little technical vocabulary from their own coursework or lab work, but keep the language plain and the sentences short and clear — this student still talks like an early undergrad, not a specialist. When in doubt, choose the simpler word and the shorter sentence.`
       : `The student has significant experience. Find the most precise bridge between their actual work and this lab's specific techniques or open questions. Their tone can be more complex and scientific than a beginner's — they can use appropriate technical vocabulary from their own work, not just plain-language description.`
 
   // Jargon ceiling scales with experience — a beginner's email should stay in plain language,
@@ -146,6 +146,7 @@ Write in this student's voice. Match their patterns without sacrificing any requ
 
 STUDENT:
 Name: ${profile.name} | School: ${profile.school} | Year: ${profile.year.replace('_', ' ')}
+Major: ${profile.major?.trim() || 'not specified'}
 Experience: ${profile.experienceLevel}
 Background: ${profile.relevantExperience || 'None listed'}${profile.relevantCourses ? `\nCourses: ${profile.relevantCourses}` : ''}
 Why research: ${profile.whyResearch}
@@ -169,10 +170,10 @@ It should sound like a specific, curious student actually talking, not an applic
 
 ${voiceSection}${synthesisSection}${calibrationSynthesisSection}${arcsSection}${piFeedbackSection}REQUIRED STRUCTURE — follow exactly, 4 paragraphs:
 
-P1 — Introduction (1 sentence, HARD RULE): Name + year/standing + school + major/general scientific interest area. All four elements are required in this one sentence — this is checked and will fail review if any is missing.
+P1 — Introduction (1 sentence, HARD RULE): Name + year/standing + school + the student's MAJOR if one is given in the STUDENT block above (state it verbatim), otherwise a general scientific interest area. All four elements are required in this one sentence — this is checked and will fail review if any is missing. When a major is provided, it must appear here.
   Example: "My name is Roman Young. I am an incoming second-year UCSD student majoring in Biology specializing in Bioinformatics." — or, if no formal major is given, name the general interest area instead: "My name is Alex Rivera. I am a sophomore at UC San Diego interested in immunology and computational biology."
 
-P2 — The Science (3-5 sentences): Describe the specific finding in the student's own plain words — two or three sentences is good here, enough to show the student actually read and understood the work. Then turn to the student's genuine reaction: what excited or surprised them, what question it raises for them, what potential or next direction they find themselves wondering about. Showing they did their homework is expected — just don't teach the work back to the PI as if explaining their own findings, and don't summarize the methods. The paragraph should still land on the student's curiosity or a question, not read as a book report. Vary sentence length — mix a short observation with a longer curious one.
+P2 — The Science (3-5 sentences): Describe the specific finding in the student's own plain words — two or three sentences is good here, enough to show the student actually read and understood the work. Then turn to the student's genuine reaction: what excited or surprised them, what question it raises for them, what potential or next direction they find themselves wondering about. Showing they did their homework is expected — just don't teach the work back to the PI as if explaining their own findings, and don't summarize the methods. The paragraph should still land on the student's curiosity or a question, not read as a book report. Vary sentence length — mix a short observation with a longer curious one. Vary how the paragraph opens, too: do not default to "I recently read/came across your paper" — you can lead with the finding itself, a specific detail that struck the student, or the question it raised.
 
 P3 — Background + Connection + Humility (3-4 sentences): One sentence naming the type/context of the student's experience — no specific tool names, library names, or benchmark numbers (the resume covers that). One sentence expressing the connection as curiosity: "I'm curious whether...", "I wonder whether similar approaches might apply...", "I am curious how...could be useful." Then the humility line — required for students with limited or no experience: "I am very new but eager to learn" / "As a sophomore new to this area, I am eager to learn" / "I'm new to this but would be grateful for any opportunity to contribute."
 
@@ -190,11 +191,14 @@ ${renderProhibitionsForPrompt()}
 - Spending more of the email describing the lab's research than expressing why the student cares or what they're curious about — the balance must favor the student's genuine interest and questions
 - Quoting lab-specific terminology in quotation marks — reword in plain language instead
 - All sentences the same length in the science paragraph — vary rhythm
+- Long sentences that cram several facts or clauses together — keep to about one idea per sentence and break compound sentences apart; if a sentence has to be re-read to parse, it is too dense
+- Overcomplicated or esoteric technical terms the student wouldn't actually say out loud — when a plain-language phrasing exists, use it
+- Starting the science paragraph with "I recently read/came across your paper" or any close variant — vary how each email enters the finding
 - Stiff, essay-like, or disjointed phrasing — the email must flow naturally, the way a real curious student would actually speak
 - Connection via shared vocabulary only: "we both do computational work" is not a real connection — make it specific or express curiosity about transferability
 - Missing the humility line for students with limited or no experience — it is required
 
-REFERENCE EMAIL — this is the gold standard structure and tone:
+REFERENCE EMAIL — this is the gold standard for structure and tone. Follow its shape and register, but do NOT reuse its opening phrasing ("Recently, I came across your paper...") — vary how your science paragraph begins:
 Dear Professor Peters,
 My name is Roman Young. I am an incoming second-year UCSD student majoring in Biology specializing in Bioinformatics.
 

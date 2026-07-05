@@ -44,6 +44,7 @@ export default function HomePage() {
   const [name, setName] = useState('')
   const [school, setSchool] = useState('')
   const [year, setYear] = useState<StudentYear>('freshman')
+  const [major, setMajor] = useState('')
   const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel>('none')
   const [relevantCourses, setRelevantCourses] = useState('')
   const [relevantExperience, setRelevantExperience] = useState('')
@@ -64,6 +65,7 @@ export default function HomePage() {
       setName(profile.name ?? '')
       setSchool(profile.school ?? '')
       setYear(profile.year ?? 'freshman')
+      setMajor(profile.major ?? '')
       setExperienceLevel(profile.experienceLevel ?? 'none')
       setRelevantCourses(profile.relevantCourses ?? '')
       setRelevantExperience(profile.relevantExperience ?? '')
@@ -94,7 +96,7 @@ export default function HomePage() {
 
   async function handleSubmit() {
     if (!validateUrl(labUrl)) return
-    const profile: StudentProfile = { name, school, year, experienceLevel, relevantCourses, relevantExperience, whyResearch, interests, otherInterest, writingSample }
+    const profile: StudentProfile = { name, school, year, major: major.trim(), experienceLevel, relevantCourses, relevantExperience, whyResearch, interests, otherInterest, writingSample }
     saveProfile(profile)
     const request = { profile, labUrl }
     sessionStorage.setItem('labreach_request', JSON.stringify(request))
@@ -216,6 +218,9 @@ export default function HomePage() {
                 <option value="senior">Senior</option>
                 <option value="graduate">Graduate Student</option>
               </select>
+            </Field>
+            <Field label="Major / Field of Study" hint="Optional. If given, it's used in the email's opening line; otherwise your interests are used instead.">
+              <input type="text" value={major} onChange={(e) => setMajor(e.target.value)} placeholder="e.g. Biology (specializing in Bioinformatics), undeclared" className={inputClass} />
             </Field>
             <Field label="Experience Level">
               <select value={experienceLevel} onChange={(e) => setExperienceLevel(e.target.value as ExperienceLevel)} className={inputClass}>

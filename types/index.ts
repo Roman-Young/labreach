@@ -12,6 +12,7 @@ export interface StudentProfile {
   name: string
   school: string
   year: StudentYear
+  major?: string
   experienceLevel: ExperienceLevel
   relevantCourses: string
   relevantExperience: string

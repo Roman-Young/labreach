@@ -8,6 +8,7 @@ const DEFAULT_PROFILE: StudentProfile = {
   name: 'Alex Rivera',
   school: 'UC San Diego',
   year: 'sophomore',
+  major: 'Biology (specializing in Bioinformatics)',
   experienceLevel: 'some',
   relevantCourses: 'Introductory Immunology, Biochemistry, Statistics for Biology',
   relevantExperience: 'One quarter as a volunteer research assistant in a campus microbiology lab, mostly running PCR and prepping samples',
@@ -521,6 +522,12 @@ export default function CalibratePage() {
                   <option key={y} value={y}>{y.replace('_', ' ')}</option>
                 ))}
               </select>
+              <input
+                value={profile.major ?? ''}
+                onChange={(e) => setProfile((p) => ({ ...p, major: e.target.value }))}
+                placeholder="Major / field (optional)"
+                className="col-span-2 px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-white text-xs"
+              />
               <div className="col-span-2 flex gap-2">
                 {(['none', 'some'] as ExperienceLevel[]).map((lvl) => (
                   <button
