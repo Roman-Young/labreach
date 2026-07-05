@@ -54,7 +54,7 @@ export async function updateCalibrationSynthesis(): Promise<void> {
     return lines.join('\n')
   })
 
-  const prompt = `You are analyzing ${labeledEntries.length} cold email draft${labeledEntries.length > 1 ? 's' : ''} that a human reviewer has personally graded pass/fail on seven specific axes. These are ground-truth human judgments of quality, not an automated score.
+  const prompt = `You are analyzing ${labeledEntries.length} cold email draft${labeledEntries.length > 1 ? 's' : ''} that a human reviewer has personally graded pass/fail on nine specific axes. These are ground-truth human judgments of quality, not an automated score.
 
 ${docs.join('\n\n' + '─'.repeat(70) + '\n\n')}
 

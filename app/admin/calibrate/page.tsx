@@ -320,9 +320,9 @@ export default function CalibratePage() {
   const unlabeled = entries.filter((e) => !e.humanLabel)
   const current = unlabeled[cursor]
 
-  // The human answers all 7 axes blind — no evaluator verdict or agreement coloring is
+  // The human answers all 9 axes blind — no evaluator verdict or agreement coloring is
   // shown until every axis has an answer, so seeing the AI's opinion on axis 1 can't bias
-  // how you judge axes 2-7. Once complete, we reveal + tally + submit in one step, and the
+  // how you judge axes 2-9. Once complete, we reveal + tally + submit in one step, and the
   // reviewer explicitly clicks "Next" rather than auto-advancing, so they actually see the
   // comparison instead of it flashing by.
   function toggleAxis(key: AxisKey, value: boolean) {
@@ -545,7 +545,7 @@ export default function CalibratePage() {
 
             {!revealed && (
               <p className="text-xs text-slate-500 italic">
-                Grade blind first — the evaluator&apos;s verdict stays hidden until you&apos;ve answered all seven, so it can&apos;t bias your calls.
+                Grade blind first — the evaluator&apos;s verdict stays hidden until you&apos;ve answered all nine, so it can&apos;t bias your calls.
               </p>
             )}
 

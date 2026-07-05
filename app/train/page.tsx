@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { AgentEvent, AgentResult, ResearchRequest, ExperienceLevel, StudentYear } from '@/types'
+import type { AgentEvent, AgentResult, ResearchRequest, ExperienceLevel, StudentYear, StudentProfile } from '@/types'
 
 const STORAGE_KEY = 'labreach_train_password'
 
@@ -42,6 +42,8 @@ export default function TrainPage() {
   const [sessionHistory, setSessionHistory] = useState<SessionEntry[]>([])
   const [currentDraft, setCurrentDraft] = useState<{ subject: string; body: string } | null>(null)
   const [researchContext, setResearchContext] = useState<ResearchContext | null>(null)
+  // The profile used for this session, kept so /api/refine (which requires it) can reuse it.
+  const [sessionProfile, setSessionProfile] = useState<StudentProfile | null>(null)
   const [feedback, setFeedback] = useState('')
   const [isRefining, setIsRefining] = useState(false)
 
@@ -74,20 +76,19 @@ export default function TrainPage() {
     setResearchContext(null)
     setError('')
 
-    const request: ResearchRequest = {
-      profile: {
-        name: 'Test Student',
-        school: 'Sample University',
-        year: 'sophomore' as StudentYear,
-        experienceLevel,
-        relevantCourses: '',
-        relevantExperience,
-        whyResearch,
-        interests: interests.split(',').map(s => s.trim()).filter(Boolean),
-        writingSample: '',
-      },
-      labUrl,
+    const profile: StudentProfile = {
+      name: 'Test Student',
+      school: 'Sample University',
+      year: 'sophomore' as StudentYear,
+      experienceLevel,
+      relevantCourses: '',
+      relevantExperience,
+      whyResearch,
+      interests: interests.split(',').map(s => s.trim()).filter(Boolean),
+      writingSample: '',
     }
+    setSessionProfile(profile)
+    const request: ResearchRequest = { profile, labUrl }
 
     try {
       const res = await fetch('/api/research', {
@@ -166,6 +167,7 @@ export default function TrainPage() {
           currentSubject: currentDraft.subject,
           currentBody: currentDraft.body,
           feedback: feedback.trim(),
+          profile: sessionProfile,
           researchContext,
         }),
       })
