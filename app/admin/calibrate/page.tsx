@@ -101,13 +101,21 @@ export default function CalibratePage() {
   // Draft generation
   const [labUrl, setLabUrl] = useState('')
   const [profile, setProfile] = useState<StudentProfile>(DEFAULT_PROFILE)
+  // Kept as raw text so commas and spaces type naturally; parsed to an array
+  // only at generation. Binding the input to interests.join() and splitting on
+  // every keystroke collapses trailing commas/spaces as you type.
+  const [interestsText, setInterestsText] = useState(DEFAULT_PROFILE.interests.join(', '))
   const [isGenerating, setIsGenerating] = useState(false)
   const [genProgress, setGenProgress] = useState<string[]>([])
   const [genError, setGenError] = useState('')
 
   // Evaluator agreement report — hold drafts fixed, vary the evaluator prompt
   const [candidatePrompt, setCandidatePrompt] = useState('')
-  const [defaultVersion, setDefaultVersion] = useState('')
+  const [activeVersion, setActiveVersion] = useState('')
+  const [isCustomActive, setIsCustomActive] = useState(false)
+  const [savingPrompt, setSavingPrompt] = useState(false)
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle')
+  const [saveError, setSaveError] = useState('')
   const [agreementRunning, setAgreementRunning] = useState(false)
   const [agreementProgress, setAgreementProgress] = useState({ done: 0, total: 0 })
   const [agreementError, setAgreementError] = useState('')
@@ -133,21 +141,76 @@ export default function CalibratePage() {
       setCursor(0)
       setAuthed(true)
       setAuthError('')
-      loadDefaultPrompt()
+      loadActivePrompt()
     } catch {
       setAuthError('Connection error — is the server running?')
     }
   }
 
-  async function loadDefaultPrompt() {
+  // Load the evaluator prompt currently gating real emails: the saved override
+  // if one exists, else the code default. Pre-fills the textarea with it.
+  async function loadActivePrompt() {
     try {
-      const res = await fetch('/api/re-evaluate', { headers: { 'x-admin-token': password } })
+      const res = await fetch('/api/admin/evaluator-prompt', { headers: { 'x-admin-token': password } })
       if (!res.ok) return
       const data = await res.json()
-      setCandidatePrompt(data.defaultEvaluatorPrompt ?? '')
-      setDefaultVersion(data.evaluatorPromptVersion ?? '')
+      setCandidatePrompt(data.activePrompt ?? '')
+      setActiveVersion(data.activeVersion ?? '')
+      setIsCustomActive(!!data.isCustom)
+      setSaveStatus('idle')
     } catch {
       // leave the textarea empty; the user can still paste a prompt
+    }
+  }
+
+  // Persist the textarea as the live evaluator prompt — it will gate every new
+  // email generated after this. Validated server-side to keep placeholders.
+  async function savePrompt() {
+    if (savingPrompt || !candidatePrompt.trim()) return
+    setSavingPrompt(true)
+    setSaveStatus('idle')
+    setSaveError('')
+    try {
+      const res = await fetch('/api/admin/evaluator-prompt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': password },
+        body: JSON.stringify({ evaluatorPrompt: candidatePrompt }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setSaveStatus('error')
+        setSaveError(data.error ?? 'Save failed')
+        return
+      }
+      setActiveVersion(data.version ?? '')
+      setIsCustomActive(true)
+      setSaveStatus('saved')
+    } catch (err) {
+      setSaveStatus('error')
+      setSaveError(err instanceof Error ? err.message : 'Save failed')
+    } finally {
+      setSavingPrompt(false)
+    }
+  }
+
+  // Remove the saved override so the live evaluator reverts to the code default,
+  // and reload the textarea to show it.
+  async function resetPrompt() {
+    if (savingPrompt) return
+    setSavingPrompt(true)
+    setSaveStatus('idle')
+    setSaveError('')
+    try {
+      await fetch('/api/admin/evaluator-prompt', {
+        method: 'DELETE',
+        headers: { 'x-admin-token': password },
+      })
+      await loadActivePrompt()
+    } catch {
+      setSaveStatus('error')
+      setSaveError('Reset failed')
+    } finally {
+      setSavingPrompt(false)
     }
   }
 
@@ -265,11 +328,13 @@ export default function CalibratePage() {
     setGenError('')
     setGenProgress([])
 
+    const interests = interestsText.split(',').map((s) => s.trim()).filter(Boolean)
+
     try {
       const res = await fetch('/api/research', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-token': password },
-        body: JSON.stringify({ profile, labUrl: labUrl.trim() }),
+        body: JSON.stringify({ profile: { ...profile, interests }, labUrl: labUrl.trim() }),
       })
 
       if (!res.ok) {
@@ -473,8 +538,8 @@ export default function CalibratePage() {
                 ))}
               </div>
               <input
-                value={profile.interests.join(', ')}
-                onChange={(e) => setProfile((p) => ({ ...p, interests: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) }))}
+                value={interestsText}
+                onChange={(e) => setInterestsText(e.target.value)}
                 placeholder="Interests (comma-separated)"
                 className="col-span-2 px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-white text-xs"
               />
@@ -611,39 +676,51 @@ export default function CalibratePage() {
         {/* Evaluator agreement report — vary the judge, hold drafts fixed */}
         <div className="bg-slate-800/40 rounded-xl border border-slate-700 p-4 mt-6 space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Evaluator agreement</p>
-            {defaultVersion && <span className="text-[10px] text-slate-500 font-mono">default judge: {defaultVersion}</span>}
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Evaluator prompt &amp; agreement</p>
+            <span className="text-[10px] text-slate-500 font-mono">
+              live judge: {activeVersion || '—'}{isCustomActive ? ' (custom)' : ' (default)'}
+            </span>
           </div>
           <p className="text-xs text-slate-500">
-            Re-score every human-labeled draft under a candidate evaluator prompt and compare, per axis,
-            against the human labels. Drafts are not regenerated — each is one Gemini call. Edit a line,
-            re-run, and watch a weak axis move toward ~90%. Keep the <code className="text-slate-400">{'{{SUBJECT}}'}</code>,{' '}
+            This textarea is the evaluator prompt. <span className="text-slate-400">Run agreement report</span> tests it
+            against your human labels without regenerating drafts (one Gemini call each) — edit a line, re-run, and watch a
+            weak axis move toward ~90%. <span className="text-slate-400">Save as live judge</span> makes it the prompt that
+            grades every new email. Keep the <code className="text-slate-400">{'{{SUBJECT}}'}</code>,{' '}
             <code className="text-slate-400">{'{{BODY}}'}</code>, <code className="text-slate-400">{'{{EVIDENCE}}'}</code>, and{' '}
             <code className="text-slate-400">{'{{WRITING_SAMPLE}}'}</code> placeholders intact.
           </p>
           <textarea
             value={candidatePrompt}
-            onChange={(e) => setCandidatePrompt(e.target.value)}
+            onChange={(e) => { setCandidatePrompt(e.target.value); if (saveStatus !== 'idle') setSaveStatus('idle') }}
             rows={8}
             spellCheck={false}
-            placeholder="Candidate evaluator prompt…"
+            placeholder="Evaluator prompt…"
             className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-300 text-xs font-mono resize-y focus:outline-none focus:border-teal-500"
           />
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={runAgreementReport}
-              disabled={agreementRunning || !candidatePrompt.trim()}
+              disabled={agreementRunning || savingPrompt || !candidatePrompt.trim()}
               className="px-4 py-2 bg-teal-600 hover:bg-teal-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors"
             >
               {agreementRunning ? `Scoring ${agreementProgress.done}/${agreementProgress.total}…` : 'Run agreement report'}
             </button>
             <button
-              onClick={loadDefaultPrompt}
-              disabled={agreementRunning}
+              onClick={savePrompt}
+              disabled={agreementRunning || savingPrompt || !candidatePrompt.trim()}
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors"
+            >
+              {savingPrompt ? 'Saving…' : 'Save as live judge'}
+            </button>
+            <button
+              onClick={resetPrompt}
+              disabled={agreementRunning || savingPrompt}
               className="px-3 py-2 bg-slate-900 border border-slate-700 hover:text-white text-slate-400 text-xs font-medium rounded-lg transition-colors disabled:opacity-50"
             >
               Reset to default
             </button>
+            {saveStatus === 'saved' && <span className="text-xs text-teal-400">✓ Saved — now gating new emails</span>}
+            {saveStatus === 'error' && <span className="text-xs text-red-400">{saveError || 'Save failed'}</span>}
           </div>
           {agreementError && <p className="text-xs text-red-400">{agreementError}</p>}
 

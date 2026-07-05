@@ -61,6 +61,17 @@ export async function kvSet(key: string, value: string, ttlSeconds?: number): Pr
   }
 }
 
+export async function kvDelete(key: string): Promise<void> {
+  if (!isKvConfigured()) {
+    const store = localRead()
+    delete store[key]
+    delete store[`__ttl__${key}`]
+    localWrite(store)
+    return
+  }
+  await kv.del(key)
+}
+
 export const KV_KEYS = {
   trainingLog: 'training:log',
   userRefinements: 'user:refinements',
@@ -68,4 +79,8 @@ export const KV_KEYS = {
   evaluatorLog: 'evaluator:log',
   calibrationLabels: 'calibration:labels',
   calibrationSynthesis: 'calibration:synthesis',
+  // The active evaluator prompt saved from /admin/calibrate. Absent = use
+  // DEFAULT_EVALUATOR_PROMPT (the code constant). Lets calibration changes gate
+  // real emails without a redeploy; "Reset to default" deletes this key.
+  evaluatorPrompt: 'evaluator:prompt',
 } as const

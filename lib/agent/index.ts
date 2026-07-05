@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { GEMINI_FUNCTION_DECLARATIONS, executeTool, ToolCallCounts } from './tools'
 import { buildSystemPrompt } from './prompts'
 import { writeEmail } from './writer'
-import { evaluateDraft } from './evaluator'
+import { evaluateDraft, getActiveEvaluatorPrompt } from './evaluator'
 import { buildCritique } from './critique'
 import { logEvaluatorVerdict } from './eval-log'
 import { scrapePage } from '@/lib/scraper'
@@ -118,11 +118,15 @@ export async function runAgent(
       }
 
       onProgress('Writing your email...')
+      // Use the evaluator prompt saved from /admin/calibrate if one exists,
+      // else the code default — so a calibrated judge gates real emails.
+      const evaluatorPrompt = await getActiveEvaluatorPrompt()
       let currentDraft = await writeEmail(ar, request, undefined, onProgress)
       let evaluation = await evaluateDraft({
         draft: currentDraft,
         evidence: ar.evidence,
         profile: request.profile,
+        evaluatorPrompt,
         onProgress,
       })
       let verdict = evaluation.verdict
@@ -136,6 +140,7 @@ export async function runAgent(
           draft: currentDraft,
           evidence: ar.evidence,
           profile: request.profile,
+          evaluatorPrompt,
           onProgress,
         })
         verdict = evaluation.verdict

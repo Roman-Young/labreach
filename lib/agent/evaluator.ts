@@ -1,6 +1,7 @@
 import { createHash } from 'crypto'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { withRetry } from '@/lib/retry'
+import { kvGet, KV_KEYS } from '@/lib/kv'
 import { checkStructure } from './structure-check'
 import { checkProhibitions } from './prohibitions'
 import type { EvaluatorVerdict, ResearchEvidence, StudentProfile } from '@/types'
@@ -126,6 +127,30 @@ Return JSON only, matching exactly this shape:
 
 export function evaluatorPromptVersionOf(template: string): string {
   return createHash('sha256').update(template).digest('hex').slice(0, 12)
+}
+
+// A custom evaluator prompt must keep these placeholders, or the evaluator
+// won't see the email/evidence and every verdict becomes meaningless.
+export const REQUIRED_EVALUATOR_PLACEHOLDERS = ['{{SUBJECT}}', '{{BODY}}', '{{EVIDENCE}}', '{{WRITING_SAMPLE}}'] as const
+
+export function missingEvaluatorPlaceholders(template: string): string[] {
+  return REQUIRED_EVALUATOR_PLACEHOLDERS.filter((p) => !template.includes(p))
+}
+
+// The evaluator prompt the live pipeline should use: the one saved from
+// /admin/calibrate if present and non-empty, else the code default. Kept out of
+// evaluateDraft (which stays a pure function) — runAgent calls this and passes
+// the result in explicitly.
+export async function getActiveEvaluatorPrompt(): Promise<string> {
+  try {
+    const saved = await kvGet(KV_KEYS.evaluatorPrompt)
+    if (saved && saved.trim() && missingEvaluatorPlaceholders(saved).length === 0) {
+      return saved
+    }
+  } catch {
+    // fall through to default
+  }
+  return DEFAULT_EVALUATOR_PROMPT
 }
 
 // Replacement via callback so `$` sequences in drafts/evidence are inert.
