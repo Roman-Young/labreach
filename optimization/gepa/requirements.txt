@@ -1,0 +1,7 @@
+# GEPA optimization harness (offline, not part of the Next.js app).
+# Verified against dspy 3.2.1: GEPA(metric, auto, reflection_lm, track_stats)
+# and compile(student, trainset=, valset=) match this scaffold, and the metric
+# protocol is (gold, pred, trace, pred_name, pred_trace) -> float | ScoreWithFeedback.
+# Re-verify the GEPA API if you move to a different major version.
+dspy>=3.0,<4
+requests>=2.31.0

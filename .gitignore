@@ -43,3 +43,11 @@ next-env.d.ts
 
 # claude code local settings
 .claude/settings.local.json
+
+# GEPA optimization subproject — secrets, venv, generated seeds/runs
+optimization/**/.env
+optimization/**/venv/
+optimization/**/.venv/
+optimization/**/__pycache__/
+optimization/gepa/seed_labs.json
+optimization/gepa/gepa_runs/
