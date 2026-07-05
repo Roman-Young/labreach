@@ -10,7 +10,7 @@ just a number. This file produces that feedback.
 
 The single most important rule below: when an axis FAILS, the feedback must say
 why AND quote the offending phrase from the email. Generic feedback ("score was
-low") throws away GEPA's entire advantage. Your evaluator already produces
+low") throws away GEPA's entire advantage. LabReach's evaluator already produces
 per-axis verdicts with quoted phrases — this metric's job is to translate them
 into instruction-shaped feedback the reflection LM can act on.
 
@@ -24,24 +24,18 @@ LabReach's evaluator has 11 checks total:
 Score = weighted fraction of checks passed. Weights let you tell GEPA that, e.g.,
 a generic non-transferable bridge matters more than a slightly-off word count.
 
-SIGNATURE (confirmed against dspy.GEPA)
----------------------------------------
-    metric(gold, pred, trace=None, pred_name=None, pred_trace=None)
-        -> dspy.Prediction(score: float, feedback: str | None)
-The tail args (trace/pred_name/pred_trace) are filled by GEPA for per-predictor
-scoring; single-prompt optimization can ignore them. Confirm the exact return
-type against the dspy version you install — older/newer builds expose it as
-`dspy.Prediction(score=, feedback=)` or a `ScoreWithFeedback` dataclass from
-`dspy.teleprompt.gepa.gepa_utils`. They are interchangeable in practice.
+INTEGRATION (already wired)
+---------------------------
+`score_draft_via_app_evaluator()` POSTs to the app's admin-gated
+POST /api/evaluate-adhoc, which runs the SAME evaluateDraft() the production
+pipeline uses. The optimization target is therefore identical to the scorer that
+gates real emails. Do NOT reimplement the checks in Python.
 
-INTEGRATION NOTE
-----------------
-`score_draft_via_app_evaluator()` is a stub. Wire it to the SAME evaluator the
-LabReach app uses — ideally by calling an admin-gated endpoint that runs
-`evaluateDraft(draft, evidence, profile)` and returns the per-axis verdict — so
-the optimization target is identical to the scorer that gates real emails. Do
-NOT reimplement the checks in Python; you'd be optimizing toward a different
-judge than production uses.
+The normalization below matches LabReach's REAL evaluator output shape (verified
+against lib/agent/evaluator.ts and types/index.ts): a nested EvaluatorVerdict
+where each axis uses `pass` (not `passed`), hook/bridge are nested objects, and
+noFabrication/naturalness carry `hits` arrays rather than a single quote/reason.
+The top-level response also carries `evaluatorFailedOpen`.
 """
 
 from __future__ import annotations
@@ -56,7 +50,7 @@ import dspy
 # ---------------------------------------------------------------------------
 # 1. Axis weights. Higher weight = GEPA treats failures on this axis as more
 #    costly, so it prioritizes fixing them. These reflect the qualities the
-#    student flagged as weak (cliché, weak human connection, odd flow), so
+#    student flagged as weak (cliche, weak human connection, odd flow), so
 #    bridge/naturalness/voice are weighted above the mechanical checks.
 #    Tune these; they are the main knob on what GEPA optimizes toward.
 # ---------------------------------------------------------------------------
@@ -69,7 +63,7 @@ AXIS_WEIGHTS: dict[str, float] = {
     "bridge_isBidirectional":  1.5,   # weak human connection = the stated problem
     "bridge_isNonTransferable":1.5,   # generic/swappable bridge = the stated problem
     "noFabrication":           2.0,   # a fabricated specific is disqualifying; weight high
-    "naturalness":             1.5,   # cliché / odd flow = the stated problem
+    "naturalness":             1.5,   # cliche / odd flow = the stated problem
     "voice":                   1.25,
     "wouldSend":               1.0,   # holistic check-on-the-checks
 }
@@ -117,7 +111,7 @@ AXIS_FIX_HINTS: dict[str, str] = {
 
 @dataclass
 class AxisVerdict:
-    """One axis result as returned by the LabReach evaluator."""
+    """One axis result, normalized from the LabReach evaluator."""
     passed: bool
     quote: Optional[str]   # the offending/supporting phrase, or None
     reason: Optional[str]  # the evaluator's own short reason
@@ -131,63 +125,117 @@ class EvalResult:
 
 
 # ---------------------------------------------------------------------------
-# 2. The bridge to LabReach's real evaluator. REPLACE THE BODY with a call to
-#    the same evaluator the app uses. The recommended path is an admin-gated
-#    endpoint that runs evaluateDraft() and returns the per-axis verdict.
+# 2. Normalization. LabReach's EvaluatorVerdict is nested; flatten it into the
+#    flat AXIS_WEIGHTS keys, pulling a representative quote + reason per axis.
 # ---------------------------------------------------------------------------
+def _first_hit_quote(hits: list[dict], quote_key: str) -> Optional[str]:
+    for h in hits or []:
+        q = h.get(quote_key)
+        if q:
+            return q
+    return None
+
+
+def _join_hit_reasons(hits: list[dict], reason_key: str) -> Optional[str]:
+    reasons = [h.get(reason_key) for h in (hits or []) if h.get(reason_key)]
+    return "; ".join(reasons) if reasons else None
+
+
+def normalize_verdict(verdict: dict, evaluator_failed_open: bool) -> EvalResult:
+    """Map LabReach's nested EvaluatorVerdict JSON into a flat EvalResult."""
+    axes: dict[str, AxisVerdict] = {}
+
+    def leaf(node: dict) -> AxisVerdict:
+        return AxisVerdict(
+            passed=bool(node.get("pass", False)),
+            quote=node.get("quote"),
+            reason=node.get("reason"),
+        )
+
+    # Code checks
+    structure = verdict.get("structure", {})
+    axes["structure"] = AxisVerdict(
+        passed=bool(structure.get("pass", False)),
+        quote=None,
+        reason=f"wordCount={structure.get('wordCount')}, paragraphCount={structure.get('paragraphCount')}",
+    )
+    prohibitions = verdict.get("prohibitions", {})
+    axes["prohibitions"] = AxisVerdict(
+        passed=bool(prohibitions.get("pass", False)),
+        quote=_first_hit_quote(prohibitions.get("hits", []), "phrase"),
+        reason=_join_hit_reasons(prohibitions.get("hits", []), "context"),
+    )
+
+    # Simple leaf axes
+    axes["opener"] = leaf(verdict.get("opener", {}))
+    axes["voice"] = leaf(verdict.get("voice", {}))
+    axes["wouldSend"] = leaf(verdict.get("wouldSend", {}))
+
+    # Nested hook / bridge
+    hook = verdict.get("hook", {})
+    axes["hook_isFinding"] = leaf(hook.get("isFinding", {}))
+    axes["hook_isRecent"] = leaf(hook.get("isRecent", {}))
+    bridge = verdict.get("bridge", {})
+    axes["bridge_isBidirectional"] = leaf(bridge.get("isBidirectional", {}))
+    axes["bridge_isNonTransferable"] = leaf(bridge.get("isNonTransferable", {}))
+
+    # Hit-array axes
+    nofab = verdict.get("noFabrication", {})
+    axes["noFabrication"] = AxisVerdict(
+        passed=bool(nofab.get("pass", False)),
+        quote=_first_hit_quote(nofab.get("hits", []), "claim"),
+        reason=_join_hit_reasons(nofab.get("hits", []), "reason"),
+    )
+    nat = verdict.get("naturalness", {})
+    axes["naturalness"] = AxisVerdict(
+        passed=bool(nat.get("pass", False)),
+        quote=_first_hit_quote(nat.get("hits", []), "quote"),
+        reason=_join_hit_reasons(nat.get("hits", []), "issue"),
+    )
+
+    # Any axis the weights expect but the verdict omitted: mark failed + visible.
+    for key in AXIS_WEIGHTS:
+        if key not in axes:
+            axes[key] = AxisVerdict(passed=False, quote=None,
+                                    reason="axis missing from evaluator output")
+
+    return EvalResult(axes=axes, evaluator_failed_open=evaluator_failed_open)
+
+
 def score_draft_via_app_evaluator(
-    draft: str,
+    subject: str,
+    body: str,
     evidence: Any,
     student_profile: Any,
     evaluator_prompt: Optional[str] = None,
 ) -> EvalResult:
     """
-    Call LabReach's real evaluator over HTTP and normalize the response.
+    Call LabReach's real evaluator over HTTP (POST /api/evaluate-adhoc) and
+    normalize the response. This runs the exact evaluateDraft() the app uses.
 
-    Expects an admin-gated endpoint (e.g. POST /api/evaluate-adhoc) that accepts
-    {draft, evidence, studentProfile, evaluatorPrompt?} and returns the same
-    per-axis verdict structure the app logs to evaluator:log.
-
-    Reconcile the JSON field names below with the ACTUAL evaluator output shape
-    (see the reconciliation note produced in Phase 1). Do not assume these names.
+    Env:
+      LABREACH_BASE_URL    e.g. http://localhost:3000
+      LABREACH_ADMIN_TOKEN matches ADMIN_PASSWORD
     """
-    base_url = os.environ["LABREACH_BASE_URL"]           # e.g. http://localhost:3000
-    admin_token = os.environ["LABREACH_ADMIN_TOKEN"]     # matches ADMIN_PASSWORD
+    base_url = os.environ["LABREACH_BASE_URL"].rstrip("/")
+    admin_token = os.environ["LABREACH_ADMIN_TOKEN"]
 
     resp = requests.post(
         f"{base_url}/api/evaluate-adhoc",
         headers={"x-admin-token": admin_token},
         json={
-            "draft": draft,
+            "draft": {"subject": subject, "body": body},
             "evidence": evidence,
             "studentProfile": student_profile,
-            "evaluatorPrompt": evaluator_prompt,
+            "evaluatorPrompt": evaluator_prompt,  # None = default (calibrated) judge
         },
-        timeout=60,
+        timeout=90,
     )
     resp.raise_for_status()
     data = resp.json()
 
-    # --- Normalize. Map the app's verdict JSON into EvalResult. ADAPT NAMES. ---
-    # The design doc groups checks as: structure + prohibitions (code) and the
-    # nine LLM axes with nested keys like hook.isFinding. Flatten nested keys to
-    # underscore form (hook.isFinding -> hook_isFinding) to match AXIS_WEIGHTS.
-    axes: dict[str, AxisVerdict] = {}
-    for key in AXIS_WEIGHTS:
-        raw = data.get("axes", {}).get(key) or data.get(key)  # tolerate either shape
-        if raw is None:
-            # Missing axis: treat as failed but flag clearly so it's visible.
-            axes[key] = AxisVerdict(passed=False, quote=None,
-                                    reason="axis missing from evaluator output")
-            continue
-        axes[key] = AxisVerdict(
-            passed=bool(raw.get("passed", raw.get("pass", False))),
-            quote=raw.get("quote"),
-            reason=raw.get("reason"),
-        )
-
-    return EvalResult(
-        axes=axes,
+    return normalize_verdict(
+        verdict=data.get("verdict", {}),
         evaluator_failed_open=bool(data.get("evaluatorFailedOpen", False)),
     )
 
@@ -247,6 +295,13 @@ def build_score_and_feedback(result: EvalResult) -> tuple[float, str]:
 # ---------------------------------------------------------------------------
 # 4. The GEPA metric entrypoint. This is what you pass to dspy.GEPA(metric=...).
 # ---------------------------------------------------------------------------
+def _draft_from_pred(pred: Any) -> tuple[str, str]:
+    """Pull (subject, body) out of the program's prediction, tolerantly."""
+    subject = getattr(pred, "subject", "") or ""
+    body = getattr(pred, "body", None) or getattr(pred, "email", None) or getattr(pred, "draft", None) or ""
+    return subject, body
+
+
 def labreach_metric(
     gold: dspy.Example,
     pred: dspy.Prediction,
@@ -256,23 +311,24 @@ def labreach_metric(
 ) -> dspy.Prediction:
     """
     gold:  a dspy.Example carrying the seed inputs — expected fields:
-           gold.lab_url, gold.evidence, gold.student_profile
+           gold.evidence (raw bundle), gold.student_profile (raw profile)
            (evidence is pre-extracted/cached so rollouts skip Stage 1; see plan §5.6)
-    pred:  the program's output — expected field: pred.email (the composed draft)
+    pred:  the program's output — expected fields: pred.subject, pred.body
 
     Returns dspy.Prediction(score, feedback). GEPA averages score across the
     batch and feeds feedback to the reflection LM to rewrite the writer prompt.
     """
-    draft = getattr(pred, "email", None) or getattr(pred, "draft", None)
-    if not draft:
+    subject, body = _draft_from_pred(pred)
+    if not body:
         return dspy.Prediction(
             score=0.0,
-            feedback="The program produced no email text. The writer prompt must "
+            feedback="The program produced no email body. The writer prompt must "
                      "output a complete four-paragraph draft.",
         )
 
     result = score_draft_via_app_evaluator(
-        draft=draft,
+        subject=subject,
+        body=body,
         evidence=gold.evidence,
         student_profile=gold.student_profile,
         # No evaluator_prompt override here: when optimizing the WRITER we hold
@@ -289,9 +345,9 @@ def labreach_metric(
 #    a quick before/after benchmark of a candidate prompt outside GEPA.
 # ---------------------------------------------------------------------------
 def labreach_score_only(gold: dspy.Example, pred: dspy.Prediction, trace=None) -> float:
-    draft = getattr(pred, "email", None) or getattr(pred, "draft", None)
-    if not draft:
+    subject, body = _draft_from_pred(pred)
+    if not body:
         return 0.0
-    result = score_draft_via_app_evaluator(draft, gold.evidence, gold.student_profile)
+    result = score_draft_via_app_evaluator(subject, body, gold.evidence, gold.student_profile)
     score, _ = build_score_and_feedback(result)
     return score
