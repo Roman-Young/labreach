@@ -162,14 +162,17 @@ ${formatEvidence(research.evidence)}
 ${experienceInstruction}
 
 COMPOSING THE HOOK AND BRIDGE — this is your job, not the research agent's:
-From the evidence above, select the single strongest candidate finding and phrase it as the hook for paragraph 2 — in your own words, plain language, not a direct quote. Then compose a bridge sentence connecting that finding (or another piece of evidence) to something specific in this student's background or interests — the bridge must be specific enough that it could not apply to any other student+lab pair (ask yourself: could this exact sentence be sent by a different student to a different lab? If yes, it's too generic).
+From the evidence above, select the single strongest candidate finding and phrase it as the hook for paragraph 2 — in your own words, plain language, not a direct quote. Then compose a bridge that does two things at once: it names something specific in this student's background or interests, AND it voices a specific curiosity, question, or excitement the finding sparks in them — what they wonder about it, what potential they see in it, what they'd want to explore. A bridge that only restates the finding, or only names a shared topic, is not enough; the point is the student's genuine reaction to this specific work, not a description of it. The bridge must be specific enough that it could not apply to any other student+lab pair (ask yourself: could this exact sentence be sent by a different student to a different lab? If yes, it's too generic).
+
+FLOW AND NATURALNESS — read the finished email aloud in your head before you settle on it:
+It should sound like a specific, curious student actually talking, not an application essay. Sentences should connect and build on one another, not sit as separate declarations. Cut anything stiff, formulaic, or over-formal, and prefer the phrasing a real sophomore would use over the most impressive-sounding version. The whole email should move as one continuous thought — curiosity about the work, to a genuine connection, to the ask — with no abrupt jumps and no filler transitions.
 
 ${voiceSection}${synthesisSection}${calibrationSynthesisSection}${arcsSection}${piFeedbackSection}REQUIRED STRUCTURE — follow exactly, 4 paragraphs:
 
 P1 — Introduction (1 sentence, HARD RULE): Name + year/standing + school + major/general scientific interest area. All four elements are required in this one sentence — this is checked and will fail review if any is missing.
   Example: "My name is Roman Young. I am an incoming second-year UCSD student majoring in Biology specializing in Bioinformatics." — or, if no formal major is given, name the general interest area instead: "My name is Alex Rivera. I am a sophomore at UC San Diego interested in immunology and computational biology."
 
-P2 — The Science (3-5 sentences): Specific paper or finding + what specifically excited the student about it in plain language + why it matters or where it could lead. This paragraph is about the RESEARCH, not the student. Vary sentence length — mix a short observation sentence with a longer curious one. Do not summarize the paper's methodology. Do not explain the research to the PI as if teaching them about their own work.
+P2 — The Science (3-5 sentences): Anchor on ONE specific finding, named briefly in the student's own plain words — one sentence, maybe two, no more. Spend the rest of the paragraph on the student's genuine reaction to it: what excited or surprised them, what question it raises for them, what potential or next direction they find themselves wondering about. The PI completed this work and knows it better than anyone — do not describe it back to them, do not summarize the methods, and do not spend more of the paragraph explaining what the lab did than expressing why the student is drawn to it. If more than about one sentence is describing the research rather than the student's curiosity about it, you are over-explaining — cut it. Vary sentence length — mix a short observation with a longer curious one.
 
 P3 — Background + Connection + Humility (3-4 sentences): One sentence naming the type/context of the student's experience — no specific tool names, library names, or benchmark numbers (the resume covers that). One sentence expressing the connection as curiosity: "I'm curious whether...", "I wonder whether similar approaches might apply...", "I am curious how...could be useful." Then the humility line — required for students with limited or no experience: "I am very new but eager to learn" / "As a sophomore new to this area, I am eager to learn" / "I'm new to this but would be grateful for any opportunity to contribute."
 
@@ -183,9 +186,11 @@ NEVER DO THESE:
 ${renderProhibitionsForPrompt()}
 - Resume dumping: specific tool names, library names, performance metrics, benchmark numbers
 - ${jargonInstruction}
-- Explaining the PI's research back to them — show what excited the student, not a paper summary
+- Explaining or summarizing the PI's own research back to them — they performed and completed this work and know it better than anyone; it reads poorly to have a student teach it back. Show the student's curiosity about it, never a paper summary
+- Spending more of the email describing the lab's research than expressing why the student cares or what they're curious about — the balance must favor the student's genuine interest and questions
 - Quoting lab-specific terminology in quotation marks — reword in plain language instead
 - All sentences the same length in the science paragraph — vary rhythm
+- Stiff, essay-like, or disjointed phrasing — the email must flow naturally, the way a real curious student would actually speak
 - Connection via shared vocabulary only: "we both do computational work" is not a real connection — make it specific or express curiosity about transferability
 - Missing the humility line for students with limited or no experience — it is required
 
