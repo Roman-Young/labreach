@@ -61,3 +61,8 @@ optimization/gepa/gepa_runs/
 evals/corpus/raw/
 evals/corpus/emails.json
 evals/corpus/judge-results.json
+
+# Internal planning docs — kept locally, not shipped. LabReach_Conversation_Summary
+# names real PIs and their reply outcomes; both are superseded by README + the code.
+/ARCHITECTURE_DECISION.md
+/LabReach_Conversation_Summary.md

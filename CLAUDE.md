@@ -1,73 +1,55 @@
 # Agent Instructions
 
-You're working inside the **WAT framework** (Workflows, Agents, Tools). This architecture separates concerns so that probabilistic AI handles reasoning while deterministic code handles execution. That separation is what makes this system reliable.
+LabReach is a **Next.js (App Router) + TypeScript** web app that helps undergraduates
+cold-email research labs. It began as a Python "WAT framework" scaffold; that has been
+replaced by the app described here, but the **core WAT principle still governs the
+design**: probabilistic AI handles reasoning, deterministic code handles execution and
+gating. That separation is what makes the output trustworthy.
 
-## The WAT Architecture
+## The architecture (probabilistic vs. deterministic)
 
-**Layer 1: Workflows (The Instructions)**
-- Markdown SOPs stored in `workflows/`
-- Each workflow defines the objective, required inputs, which tools to use, expected outputs, and how to handle edge cases
-- Written in plain language, the same way you'd brief someone on your team
+**AI does the reasoning:**
+- `lib/agent/digest.ts` — reads a lab page and extracts what they work on + join logistics (one Gemini call).
+- `lib/agent/index.ts` — the research→write→evaluate→revise orchestrator (`runAgent`).
+- `lib/agent/writer.ts` — composes the email (Claude).
+- `lib/agent/evaluator.ts` — the LLM-judged quality axes (Gemini).
 
-**Layer 2: Agents (The Decision-Maker)**
-- This is your role. You're responsible for intelligent coordination.
-- Read the relevant workflow, run tools in the correct sequence, handle failures gracefully, and ask clarifying questions when needed
-- You connect intent to execution without trying to do everything yourself
-- Example: If you need to pull data from a website, don't attempt it directly. Read `workflows/scrape_website.md`, figure out the required inputs, then execute `tools/scrape_single_site.py`
+**Deterministic code does the gating — this is where reliability comes from:**
+- `lib/agent/grounding.ts` — drops any evidence quote not found verbatim in a fetched page. Grounding is a string match, not a prompt instruction.
+- `lib/agent/prohibitions.ts` / `structure-check.ts` — regex + structural checks, no model call.
+- `lib/kv.ts`, `lib/scraper.ts` (cached), `lib/pubmed.ts`, `lib/rate-limit.ts`, `middleware.ts` — plumbing.
 
-**Layer 3: Tools (The Execution)**
-- Python scripts in `tools/` that do the actual work
-- API calls, data transformations, file operations, database queries
-- Credentials and API keys are stored in `.env`
-- These scripts are consistent, testable, and fast
+**Why it matters:** when AI handles every step directly, accuracy compounds downward. Offloading verification and gating to deterministic code is what keeps a fabricated quote or an out-of-level claim from reaching a real professor.
 
-**Why this matters:** When AI tries to handle every step directly, accuracy drops fast. If each step is 90% accurate, you're down to 59% success after just five steps. By offloading execution to deterministic scripts, you stay focused on orchestration and decision-making where you excel.
+## The two user-facing flows
 
-## How to Operate
+1. **Lab Digest** (`/digest` → `/api/digest` → `digestLab`) — paste lab URLs, get grounded facts + join logistics, sorted by interest overlap. Surfaces facts, never a reply prediction.
+2. **The Writer** (`/` → `/draft` → `/api/research` → `runAgent`) — a personalized first draft the student edits and sends themselves. Never sends, never bulk-exports.
 
-**1. Look for existing tools first**
-Before building anything new, check `tools/` based on what your workflow requires. Only create new scripts when nothing exists for that task.
+Admin/eval surfaces: `/admin`, `/admin/calibrate` (blind grading + evaluator-prompt tuning), and the `evals/` corpus harness.
 
-**2. Learn and adapt when things fail**
-When you hit an error:
-- Read the full error message and trace
-- Fix the script and retest (if it uses paid API calls or credits, check with me before running again)
-- Document what you learned in the workflow (rate limits, timing quirks, unexpected behavior)
-- Example: You get rate-limited on an API, so you dig into the docs, discover a batch endpoint, refactor the tool to use it, verify it works, then update the workflow so this never happens again
+## How to operate
 
-**3. Keep workflows current**
-Workflows should evolve as you learn. When you find better methods, discover constraints, or encounter recurring issues, update the workflow. That said, don't create or overwrite workflows without asking unless I explicitly tell you to. These are your instructions and need to be preserved and refined, not tossed after one use.
+1. **Reuse before building.** Check `lib/agent/` and `lib/` for an existing function before writing a new one. The pipeline is deliberately small and composable.
+2. **Deterministic where it counts.** New correctness guarantees belong in code (a check, a gate), not in a prompt. Prompts steer; code enforces.
+3. **Learn from failures.** Read the full error, fix, and **verify by running it** — a build, a typecheck, or an end-to-end call. If a fix uses **paid API calls or credits (Anthropic, Firecrawl), check before running again.** Gemini and PubMed have free tiers; Firecrawl bills per scrape (the `.tmp/` cache exists to avoid re-paying).
+4. **Respect the evidence non-negotiables.** Never write finished/bulk emails; never let a quote through that isn't grounded; never claim above the student's stated experience level; never fabricate why a student personally cares; the digest/filter runs upstream of writing.
+5. **Don't overwrite instruction docs without asking** — this file and anything under `workflows/`. Correct facts freely; don't discard intent.
 
-## The Self-Improvement Loop
+## The self-improvement loop
 
-Every failure is a chance to make the system stronger:
-1. Identify what broke
-2. Fix the tool
-3. Verify the fix works
-4. Update the workflow with the new approach
-5. Move on with a more robust system
+Identify what broke → fix it in the right layer (code for guarantees, prompt for steering) → verify it runs → note any durable constraint (rate limits, caching, API quirks) → move on more robust.
 
-This loop is how the framework improves over time.
+## Layout
 
-## File Structure
-
-**What goes where:**
-- **Deliverables**: Final outputs go to cloud services (Google Sheets, Slides, etc.) where I can access them directly
-- **Intermediates**: Temporary processing files that can be regenerated
-
-**Directory layout:**
 ```
-.tmp/           # Temporary files (scraped data, intermediate exports). Regenerated as needed.
-tools/          # Python scripts for deterministic execution
-workflows/      # Markdown SOPs defining what to do and how
-.env            # API keys and environment variables (NEVER store secrets anywhere else)
-credentials.json, token.json  # Google OAuth (gitignored)
+app/            # Next.js routes (pages + API)
+lib/agent/      # the pipeline: reasoning (digest/writer/evaluator) + deterministic gates
+lib/            # kv, scraper (cached), pubmed, rate-limit, admin-auth
+evals/          # corpus harness (anonymized labels committed; raw bodies gitignored)
+middleware.ts   # whole-app password gate (SITE_PASSWORD), no-op when unset
+.tmp/           # disposable: local KV store + scrape cache. Regenerated as needed.
+.env            # API keys (NEVER store secrets elsewhere)
 ```
 
-**Core principle:** Local files are just for processing. Anything I need to see or use lives in cloud services. Everything in `.tmp/` is disposable.
-
-## Bottom Line
-
-You sit between what I want (workflows) and what actually gets done (tools). Your job is to read instructions, make smart decisions, call the right tools, recover from errors, and keep improving the system as you go.
-
-Stay pragmatic. Stay reliable. Keep learning.
+Stay pragmatic. Gate with code, steer with prompts, verify before you claim it works.
