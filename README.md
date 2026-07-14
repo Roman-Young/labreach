@@ -34,9 +34,16 @@ findings from that corpus shaped the whole design:
   mosquitoes too; dung beetles replied). So the Digest sorts by interest overlap but
   labels it honestly as *closeness to your interests* — never "most likely to reply."
 
-The `evals/` directory turns the corpus into a runnable check of the first finding: score
-all 53 emails with the live evaluator and see whether any quality axis separates the ones
-that got replies. See [evals/README.md](evals/README.md).
+The `evals/` directory turns the corpus into a runnable check of the first finding — and it
+holds up. Scored with LabReach's own evaluator, **no quality axis separates the emails that
+got replies from the ones that didn't** (smallest p = 0.24, n = 17 vs 36), and the judge's
+holistic *"would a PI respond to this?"* verdict is **0 for 17** on emails that PIs actually
+did respond to — including the one that became a real job.
+
+That's the project's premise falsified by its own data, using its own judge as the
+instrument. It is exactly why the leverage moved upstream into the Digest and why the writer's
+output is presented as a draft to edit rather than a graded artifact. Full numbers and caveats:
+**[evals/RESULTS.md](evals/RESULTS.md)**.
 
 ## Setup
 
