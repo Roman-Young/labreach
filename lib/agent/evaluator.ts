@@ -5,7 +5,7 @@ import { kvGet, KV_KEYS } from '@/lib/kv'
 import { checkStructure } from './structure-check'
 import { checkProhibitions } from './prohibitions'
 import { evalModel } from './models'
-import type { EvaluatorVerdict, ResearchEvidence, StudentProfile } from '@/types'
+import type { EvaluatorVerdict, ResearchEvidence } from '@/types'
 
 interface LlmGradedAxes {
   opener: { pass: boolean; quote: string | null }
@@ -19,7 +19,6 @@ interface LlmGradedAxes {
   }
   noFabrication: { pass: boolean; hits: Array<{ claim: string; reason: string }> }
   naturalness: { pass: boolean; hits: Array<{ quote: string; issue: string }> }
-  voice: { pass: boolean; reason: string }
   wouldSend: { pass: boolean; reason: string }
 }
 
@@ -56,15 +55,14 @@ function failOpenAxes(reason: string): LlmGradedAxes {
     },
     noFabrication: { pass: true, hits: [] },
     naturalness: { pass: true, hits: [] },
-    voice: { pass: true, reason },
     wouldSend: { pass: true, reason },
   }
 }
 
-// The evaluator prompt as a template. {{SUBJECT}}, {{BODY}}, {{EVIDENCE}} and
-// {{WRITING_SAMPLE}} are filled per call; everything else is the judging
-// instructions. Calibration and GEPA pass modified templates (same
-// placeholders) through evaluateDraft's evaluatorPrompt override.
+// The evaluator prompt as a template. {{SUBJECT}}, {{BODY}} and {{EVIDENCE}} are
+// filled per call; everything else is the judging instructions. Calibration and
+// GEPA pass modified templates (same placeholders) through evaluateDraft's
+// evaluatorPrompt override.
 export const DEFAULT_EVALUATOR_PROMPT = `You are a strict, skeptical evaluator of a cold email a student is about to send to a research lab PI. You are judging the FINISHED EMAIL below against the research evidence that was actually extracted about the lab. Every check is binary — pass or fail — and every check that can point to text must quote the exact phrase, never paraphrase. If you cannot find a phrase that satisfies a check, the check fails and the quote is null.
 
 EMAIL:
@@ -75,10 +73,7 @@ Subject: {{SUBJECT}}
 RESEARCH EVIDENCE (the only source of truth about the lab — anything in the email not grounded here is fabricated):
 {{EVIDENCE}}
 
-STUDENT'S WRITING SAMPLE (for voice comparison):
-{{WRITING_SAMPLE}}
-
-Evaluate these nine axes:
+Evaluate these eight axes:
 
 1. opener — Quote the first sentence of the email. It must state the student's name, school, year/standing, AND a general scientific interest area (e.g. "immunology", "computational biology") — either as a stated major or as their stated interest. Fail (quote: null) if any of these elements is missing from that first sentence.
 
@@ -103,9 +98,7 @@ Evaluate these nine axes:
    - The student-to-lab connection relies only on shared vocabulary (e.g. both mention "computational" or "immunology") without a real mechanistic link
    - Overcomplicated or esoteric technical terms a curious early-undergraduate student would not actually say out loud, even if technically accurate — flag terminology that reads as reached-for or above the student's level when a plainer phrasing was available
 
-8. voice — Compare the email's sentence rhythm, vocabulary level, and phrasing style against the student's writing sample. Pass/fail plus a one-sentence reason. If no writing sample was provided, pass by default with reason "no writing sample provided".
-
-9. wouldSend — Holistic verdict: if you were the PI, would you actually respond to this email? This is deliberately still a direct yes/no judgment call, not a 1-10 score — a draft can pass every check above and still fail this if something about the whole doesn't land. Pass/fail plus a one-sentence reason.
+8. wouldSend — Holistic verdict: if you were the PI, would you actually respond to this email? This is deliberately still a direct yes/no judgment call, not a 1-10 score — a draft can pass every check above and still fail this if something about the whole doesn't land. Pass/fail plus a one-sentence reason.
 
 Return JSON only, matching exactly this shape:
 {
@@ -120,7 +113,6 @@ Return JSON only, matching exactly this shape:
   },
   "noFabrication": { "pass": boolean, "hits": [{ "claim": string, "reason": string }] },
   "naturalness": { "pass": boolean, "hits": [{ "quote": string, "issue": string }] },
-  "voice": { "pass": boolean, "reason": string },
   "wouldSend": { "pass": boolean, "reason": string }
 }`
 
@@ -130,7 +122,7 @@ export function evaluatorPromptVersionOf(template: string): string {
 
 // A custom evaluator prompt must keep these placeholders, or the evaluator
 // won't see the email/evidence and every verdict becomes meaningless.
-export const REQUIRED_EVALUATOR_PLACEHOLDERS = ['{{SUBJECT}}', '{{BODY}}', '{{EVIDENCE}}', '{{WRITING_SAMPLE}}'] as const
+export const REQUIRED_EVALUATOR_PLACEHOLDERS = ['{{SUBJECT}}', '{{BODY}}', '{{EVIDENCE}}'] as const
 
 export function missingEvaluatorPlaceholders(template: string): string[] {
   return REQUIRED_EVALUATOR_PLACEHOLDERS.filter((p) => !template.includes(p))
@@ -164,7 +156,6 @@ function fillTemplate(template: string, values: Record<string, string>): string 
 export interface EvaluateDraftInput {
   draft: { subject: string; body: string }
   evidence: ResearchEvidence
-  profile: StudentProfile
   // Full prompt template override (same {{...}} placeholders as
   // DEFAULT_EVALUATOR_PROMPT). Absent = current default judge.
   evaluatorPrompt?: string
@@ -180,12 +171,14 @@ export interface EvaluateDraftResult {
   evaluatorPromptVersion: string
 }
 
-// Pure function of (draft, evidence, profile, evaluator-config): runs the two
-// code checks plus the single Gemini call for the nine LLM-judged axes.
-// Callable on its own for re-eval/calibration/GEPA — no extraction, no
-// composition, no logging.
+// Pure function of (draft, evidence, evaluator-config): runs the two code checks
+// plus the single Gemini call for the eight LLM-judged axes. Callable on its own
+// for re-eval/calibration/GEPA — no extraction, no composition, no logging.
+// Deliberately does NOT take the student profile: the only axis that read it was
+// `voice`, which passed 100% of both repliers and non-repliers (evals/RESULTS.md)
+// and has been deleted.
 export async function evaluateDraft(input: EvaluateDraftInput): Promise<EvaluateDraftResult> {
-  const { draft, evidence, profile, onProgress } = input
+  const { draft, evidence, onProgress } = input
   const template = input.evaluatorPrompt ?? DEFAULT_EVALUATOR_PROMPT
   const modelName = input.model ?? evalModel()
 
@@ -212,7 +205,6 @@ export async function evaluateDraft(input: EvaluateDraftInput): Promise<Evaluate
       SUBJECT: draft.subject,
       BODY: draft.body,
       EVIDENCE: formatEvidenceForEvaluator(evidence),
-      WRITING_SAMPLE: profile.writingSample?.trim() || '(none provided)',
     })
 
     try {
@@ -240,7 +232,6 @@ export async function evaluateDraft(input: EvaluateDraftInput): Promise<Evaluate
     axes.bridge.isNonTransferable.pass &&
     axes.noFabrication.pass &&
     axes.naturalness.pass &&
-    axes.voice.pass &&
     axes.wouldSend.pass &&
     prohibitions.pass
 
@@ -251,7 +242,6 @@ export async function evaluateDraft(input: EvaluateDraftInput): Promise<Evaluate
       bridge: axes.bridge,
       noFabrication: axes.noFabrication,
       naturalness: axes.naturalness,
-      voice: axes.voice,
       wouldSend: axes.wouldSend,
       prohibitions,
       structure: { pass: structure.pass, wordCount: structure.wordCount, paragraphCount: structure.paragraphCount },
@@ -265,9 +255,8 @@ export async function evaluateDraft(input: EvaluateDraftInput): Promise<Evaluate
 export async function evaluateEmail(
   draft: { subject: string; body: string; specificHook: string; bridgeSentence: string },
   evidence: ResearchEvidence,
-  profile: StudentProfile,
   onProgress?: (msg: string) => void,
 ): Promise<EvaluatorVerdict> {
-  const { verdict } = await evaluateDraft({ draft, evidence, profile, onProgress })
+  const { verdict } = await evaluateDraft({ draft, evidence, onProgress })
   return verdict
 }

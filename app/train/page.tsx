@@ -32,7 +32,7 @@ export default function TrainPage() {
   // Training form state
   const [labUrl, setLabUrl] = useState('')
   const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel>('none')
-  const [relevantExperience, setRelevantExperience] = useState('')
+  const [experience, setExperience] = useState('')
   const [whyResearch, setWhyResearch] = useState('I want to understand disease at a mechanistic level.')
   const [interests, setInterests] = useState('Neuroscience, Molecular & Cell Biology')
 
@@ -81,11 +81,11 @@ export default function TrainPage() {
       school: 'Sample University',
       year: 'sophomore' as StudentYear,
       experienceLevel,
-      relevantCourses: '',
-      relevantExperience,
+      courses: '',
+      experience,
+      projects: '',
       whyResearch,
       interests: interests.split(',').map(s => s.trim()).filter(Boolean),
-      writingSample: '',
     }
     setSessionProfile(profile)
     const request: ResearchRequest = { profile, labUrl }
@@ -310,12 +310,12 @@ export default function TrainPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-slate-500 mb-1">Relevant experience</label>
+                <label className="block text-xs text-slate-500 mb-1">Hands-on lab experience</label>
                 <textarea
-                  value={relevantExperience}
-                  onChange={(e) => setRelevantExperience(e.target.value)}
+                  value={experience}
+                  onChange={(e) => setExperience(e.target.value)}
                   rows={2}
-                  placeholder="e.g. AP Biology, hospital volunteer, Python..."
+                  placeholder="e.g. PCR and cell culture, one quarter in a microbiology lab..."
                   className={inputClass}
                 />
               </div>

@@ -25,6 +25,41 @@ function saveProfile(profile: StudentProfile) {
 const inputClass =
   'w-full px-3 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500'
 
+// Every student fills the same three buckets — courses, hands-on experience, projects.
+// Only the framing shifts with experience level. A student with no lab time is not
+// missing a field; they have coursework and projects, and the email will connect from
+// those and claim nothing more.
+const EXPERIENCE_COPY: Record<ExperienceLevel, {
+  coursesHint: string; coursesPlaceholder: string
+  experienceHint: string; experiencePlaceholder: string
+  projectsHint: string; projectsPlaceholder: string
+}> = {
+  none: {
+    coursesHint: "Science and math classes you've taken. These are real, earned material the email can connect from.",
+    coursesPlaceholder: 'e.g. AP Biology, General Chemistry, Calculus, Intro to Neuroscience...',
+    experienceHint: "Any hands-on lab work, even from a class lab section. Leave it blank if you haven't worked in a lab — that's expected, and the email will never pretend otherwise.",
+    experiencePlaceholder: 'e.g. microscopy and gel electrophoresis in my BILD 3 lab section — or leave blank',
+    projectsHint: "Anything you've built or run on your own — code, a science fair project, a club initiative.",
+    projectsPlaceholder: 'e.g. wrote a Python script to scrape and plot local air-quality data',
+  },
+  some: {
+    coursesHint: 'Science and math classes you\'ve taken, especially ones relevant to the labs you\'re targeting.',
+    coursesPlaceholder: 'e.g. Intro Immunology, Biochemistry, Statistics for Biology, Organic Chemistry...',
+    experienceHint: 'Techniques you have actually run, and time you have spent in a lab. Name the type of work — your resume carries the details.',
+    experiencePlaceholder: "e.g. one semester in a microbiology lab running PCR and prepping samples",
+    projectsHint: "Personal or side projects — anything you built or investigated outside of class.",
+    projectsPlaceholder: 'e.g. built a small variant-calling script in Python; ran a data analysis for my club',
+  },
+  significant: {
+    coursesHint: 'Upper-division or graduate coursework relevant to the labs you\'re targeting.',
+    coursesPlaceholder: 'e.g. Advanced Immunology, Genomics, Molecular Biology of the Cell...',
+    experienceHint: 'Labs you have worked in and techniques you have actually run. Name the type of work — your resume carries the details.',
+    experiencePlaceholder: 'e.g. 2 years in an immunology lab; flow cytometry, mouse dissections, cell culture',
+    projectsHint: 'Independent projects, pipelines, or work you drove yourself.',
+    projectsPlaceholder: 'e.g. built a variant-calling pipeline; presented an abstract at a 2025 conference',
+  },
+}
+
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div>
@@ -46,12 +81,12 @@ export default function HomePage() {
   const [year, setYear] = useState<StudentYear>('freshman')
   const [major, setMajor] = useState('')
   const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel>('none')
-  const [relevantCourses, setRelevantCourses] = useState('')
-  const [relevantExperience, setRelevantExperience] = useState('')
+  const [courses, setCourses] = useState('')
+  const [experience, setExperience] = useState('')
+  const [projects, setProjects] = useState('')
   const [whyResearch, setWhyResearch] = useState('')
   const [interests, setInterests] = useState<string[]>([])
   const [otherInterest, setOtherInterest] = useState('')
-  const [writingSample, setWritingSample] = useState('')
   const [hoursPerWeek, setHoursPerWeek] = useState('')
   const [startDate, setStartDate] = useState('')
   const [duration, setDuration] = useState('')
@@ -70,12 +105,12 @@ export default function HomePage() {
       setYear(profile.year ?? 'freshman')
       setMajor(profile.major ?? '')
       setExperienceLevel(profile.experienceLevel ?? 'none')
-      setRelevantCourses(profile.relevantCourses ?? '')
-      setRelevantExperience(profile.relevantExperience ?? '')
+      setCourses(profile.courses ?? '')
+      setExperience(profile.experience ?? '')
+      setProjects(profile.projects ?? '')
       setWhyResearch(profile.whyResearch ?? '')
       setInterests(profile.interests ?? [])
       setOtherInterest(profile.otherInterest ?? '')
-      setWritingSample(profile.writingSample ?? '')
       setHoursPerWeek(profile.hoursPerWeek ?? '')
       setStartDate(profile.startDate ?? '')
       setDuration(profile.duration ?? '')
@@ -102,7 +137,7 @@ export default function HomePage() {
 
   async function handleSubmit() {
     if (!validateUrl(labUrl)) return
-    const profile: StudentProfile = { name, school, year, major: major.trim(), experienceLevel, relevantCourses, relevantExperience, whyResearch, interests, otherInterest, writingSample, hoursPerWeek: hoursPerWeek.trim(), startDate: startDate.trim(), duration: duration.trim() }
+    const profile: StudentProfile = { name, school, year, major: major.trim(), experienceLevel, courses, experience, projects, whyResearch, interests, otherInterest, hoursPerWeek: hoursPerWeek.trim(), startDate: startDate.trim(), duration: duration.trim() }
     saveProfile(profile)
     const request = { profile, labUrl }
     sessionStorage.setItem('labreach_request', JSON.stringify(request))
@@ -110,9 +145,14 @@ export default function HomePage() {
     router.push('/draft')
   }
 
-  const writingSampleWordCount = writingSample.trim().split(/\s+/).filter(Boolean).length
-  const writingSampleValid = writingSampleWordCount >= 20
-  const step1Valid = name.trim() && school.trim() && writingSampleValid && whyResearch.trim() && interests.length > 0
+  // The writing sample and its 20-word gate are gone: the `voice` axis it fed passed
+  // 100% of both repliers and non-repliers (evals/RESULTS.md), so it measured nothing.
+  // The three experience buckets are what the writer mines for an earned connection.
+  const step1Valid = name.trim() && school.trim() && whyResearch.trim() && interests.length > 0
+
+  // Same three buckets at every level — only the framing changes. A student with no lab
+  // experience has coursework and projects, and that is a complete profile, not a gap.
+  const copy = EXPERIENCE_COPY[experienceLevel]
 
   // Returning user shortcut screen
   if (isReturning && savedProfile?.name && step === 2) {
@@ -146,18 +186,8 @@ export default function HomePage() {
                   <span className="text-slate-300">{savedProfile.interests.slice(0, 3).join(', ')}{savedProfile.interests.length > 3 ? '...' : ''}</span>
                 </div>
               )}
-              {savedProfile.writingSample && (
-                <div><span className="text-slate-500">Writing sample: </span><span className="text-slate-300">Saved</span></div>
-              )}
             </div>
           </div>
-
-          {!savedProfile.writingSample && (
-            <div className="bg-amber-900/20 border border-amber-700/40 rounded-xl p-4 mb-4">
-              <p className="text-sm text-amber-300 font-medium mb-1">Writing sample missing</p>
-              <p className="text-xs text-amber-400/80">Edit your profile to add one — it&apos;s how the agent writes in your voice.</p>
-            </div>
-          )}
 
           <button
             onClick={() => setIsReturning(false)}
@@ -235,35 +265,24 @@ export default function HomePage() {
                 <option value="significant">Significant experience (multiple semesters, projects)</option>
               </select>
             </Field>
-            {(experienceLevel === 'none' || experienceLevel === 'some') && (
-              <Field
-                label="Relevant Courses"
-                hint="List science or math classes you've taken. These go in your transcript attachment and help the agent make connections."
-              >
-                <textarea
-                  value={relevantCourses}
-                  onChange={(e) => setRelevantCourses(e.target.value)}
-                  placeholder="e.g. AP Biology, AP Chemistry, Calculus, Intro to Neuroscience, Organic Chemistry..."
-                  rows={3}
-                  className={inputClass}
-                />
-              </Field>
-            )}
-            {experienceLevel === 'none' && (
-              <Field label="Other Skills" hint="Programming, lab techniques from class, volunteering, clubs — anything science-adjacent.">
-                <textarea value={relevantExperience} onChange={(e) => setRelevantExperience(e.target.value)} placeholder="e.g. Python basics, hospital volunteer, science olympiad, microscopy in class..." rows={3} className={inputClass} />
-              </Field>
-            )}
-            {experienceLevel === 'some' && (
-              <Field label="Research & Work Experience" hint="Describe your lab experience, internships, or relevant jobs. This goes in your resume attachment.">
-                <textarea value={relevantExperience} onChange={(e) => setRelevantExperience(e.target.value)} placeholder="e.g. One semester in Dr. Smith's lab doing PCR and cell culture, hospital volunteer for 6 months..." rows={4} className={inputClass} />
-              </Field>
-            )}
-            {experienceLevel === 'significant' && (
-              <Field label="Research Experience & Skills" hint="Your most relevant projects, techniques, and accomplishments. This goes in your resume.">
-                <textarea value={relevantExperience} onChange={(e) => setRelevantExperience(e.target.value)} placeholder="e.g. 2 years in immunology lab, proficient in flow cytometry, CRISPR, published abstract in 2024..." rows={4} className={inputClass} />
-              </Field>
-            )}
+            <div className="border-t border-slate-700 pt-5">
+              <p className="text-sm font-semibold text-slate-300 mb-1">Your background</p>
+              <p className="text-xs text-slate-500 mb-3">
+                The email builds its connection to a lab out of something you have actually done. Be concrete and be honest —
+                anything you leave blank simply won&apos;t be claimed.
+              </p>
+              <div className="space-y-5">
+                <Field label="Coursework" hint={copy.coursesHint}>
+                  <textarea value={courses} onChange={(e) => setCourses(e.target.value)} placeholder={copy.coursesPlaceholder} rows={3} className={inputClass} />
+                </Field>
+                <Field label="Hands-on lab experience" hint={copy.experienceHint}>
+                  <textarea value={experience} onChange={(e) => setExperience(e.target.value)} placeholder={copy.experiencePlaceholder} rows={experienceLevel === 'none' ? 2 : 4} className={inputClass} />
+                </Field>
+                <Field label="Projects" hint={copy.projectsHint}>
+                  <textarea value={projects} onChange={(e) => setProjects(e.target.value)} placeholder={copy.projectsPlaceholder} rows={3} className={inputClass} />
+                </Field>
+              </div>
+            </div>
             <Field label="Why do you want to do research?" hint="In 1-2 sentences. Be honest — the agent uses this to make the email feel genuine.">
               <textarea value={whyResearch} onChange={(e) => setWhyResearch(e.target.value)} placeholder="e.g. I want to understand disease at a mechanistic level, not just learn about it from textbooks." rows={3} className={inputClass} />
               {!whyResearch.trim() && (
@@ -291,27 +310,6 @@ export default function HomePage() {
                   <input type="text" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="e.g. 2+ semesters" className={inputClass} />
                 </Field>
               </div>
-            </div>
-
-            <div className="border-t border-slate-700 pt-5">
-              <Field
-                label="Your Writing Sample"
-                hint="Paste a few sentences or a short paragraph written by you — an email, a text message, anything that sounds like you. The agent uses this to write in your voice, not in AI voice."
-              >
-                <textarea
-                  value={writingSample}
-                  onChange={(e) => setWritingSample(e.target.value)}
-                  placeholder="e.g. Hey Dr. Smith, I saw your talk last week and the part about X really stuck with me. I've been thinking about it ever since..."
-                  rows={5}
-                  className={inputClass}
-                />
-                {!writingSample.trim() && (
-                  <p className="text-xs text-amber-400 mt-1.5">Required — this is how the agent learns your voice.</p>
-                )}
-                {writingSample.trim() && !writingSampleValid && (
-                  <p className="text-xs text-amber-400 mt-1.5">{writingSampleWordCount} words — needs at least 20 so the agent has enough to match your voice.</p>
-                )}
-              </Field>
             </div>
 
             <button

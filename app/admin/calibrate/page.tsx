@@ -10,11 +10,11 @@ const DEFAULT_PROFILE: StudentProfile = {
   year: 'sophomore',
   major: 'Biology (specializing in Bioinformatics)',
   experienceLevel: 'some',
-  relevantCourses: 'Introductory Immunology, Biochemistry, Statistics for Biology',
-  relevantExperience: 'One quarter as a volunteer research assistant in a campus microbiology lab, mostly running PCR and prepping samples',
+  courses: 'Introductory Immunology, Biochemistry, Statistics for Biology',
+  experience: 'One quarter as a volunteer research assistant in a campus microbiology lab, mostly running PCR and prepping samples',
+  projects: 'Built a small Python script to plot growth curves from our plate-reader exports',
   whyResearch: 'I want to understand how the immune system distinguishes self from non-self at a mechanistic level, not just from a textbook description',
   interests: ['immunology', 'computational biology'],
-  writingSample: "I've always liked the moments in a lab where the data doesn't match what everyone expected. Last quarter I spent a week debugging a PCR protocol that kept giving weird bands, and it turned out to be a primer design issue nobody had caught. Figuring that out taught me more than the actual result did.",
 }
 
 interface CalibrationEntry {
@@ -28,7 +28,7 @@ interface CalibrationEntry {
   humanLabel: HumanLabel | null
 }
 
-type AxisKey = 'opener' | 'hookIsFinding' | 'hookIsRecent' | 'bridgeIsBidirectional' | 'bridgeIsNonTransferable' | 'noFabrication' | 'naturalness' | 'voice' | 'wouldSend'
+type AxisKey = 'opener' | 'hookIsFinding' | 'hookIsRecent' | 'bridgeIsBidirectional' | 'bridgeIsNonTransferable' | 'noFabrication' | 'naturalness' | 'wouldSend'
 
 const AXES: { key: AxisKey; label: string; group: 'hook' | 'bridge' | 'other' }[] = [
   { key: 'opener', label: 'Opener: name/school/year/interest', group: 'other' },
@@ -38,7 +38,6 @@ const AXES: { key: AxisKey; label: string; group: 'hook' | 'bridge' | 'other' }[
   { key: 'bridgeIsNonTransferable', label: 'Bridge: non-transferable', group: 'bridge' },
   { key: 'noFabrication', label: 'No fabrication', group: 'other' },
   { key: 'naturalness', label: 'Sounds natural, not AI', group: 'other' },
-  { key: 'voice', label: 'Voice match', group: 'other' },
   { key: 'wouldSend', label: 'Would send', group: 'other' },
 ]
 
@@ -81,8 +80,6 @@ function evaluatorPassFor(verdict: EvaluatorVerdict, key: AxisKey): { pass: bool
       return { pass: verdict.noFabrication.pass, detail: verdict.noFabrication.hits.map((h) => h.claim).join('; ') || '(none found)' }
     case 'naturalness':
       return { pass: verdict.naturalness.pass, detail: verdict.naturalness.hits.map((h) => `${h.issue}: "${h.quote}"`).join('; ') || '(none found)' }
-    case 'voice':
-      return { pass: verdict.voice.pass, detail: verdict.voice.reason }
     case 'wouldSend':
       return { pass: verdict.wouldSend.pass, detail: verdict.wouldSend.reason }
   }
@@ -551,16 +548,23 @@ export default function CalibratePage() {
                 className="col-span-2 px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-white text-xs"
               />
               <textarea
-                value={profile.relevantExperience}
-                onChange={(e) => setProfile((p) => ({ ...p, relevantExperience: e.target.value }))}
-                placeholder="Relevant experience"
+                value={profile.courses}
+                onChange={(e) => setProfile((p) => ({ ...p, courses: e.target.value }))}
+                placeholder="Coursework"
                 rows={2}
                 className="col-span-2 px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-white text-xs resize-none"
               />
               <textarea
-                value={profile.writingSample}
-                onChange={(e) => setProfile((p) => ({ ...p, writingSample: e.target.value }))}
-                placeholder="Writing sample"
+                value={profile.experience}
+                onChange={(e) => setProfile((p) => ({ ...p, experience: e.target.value }))}
+                placeholder="Hands-on lab experience"
+                rows={2}
+                className="col-span-2 px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-white text-xs resize-none"
+              />
+              <textarea
+                value={profile.projects}
+                onChange={(e) => setProfile((p) => ({ ...p, projects: e.target.value }))}
+                placeholder="Projects"
                 rows={2}
                 className="col-span-2 px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-white text-xs resize-none"
               />
@@ -693,8 +697,8 @@ export default function CalibratePage() {
             against your human labels without regenerating drafts (one Gemini call each) — edit a line, re-run, and watch a
             weak axis move toward ~90%. <span className="text-slate-400">Save as live judge</span> makes it the prompt that
             grades every new email. Keep the <code className="text-slate-400">{'{{SUBJECT}}'}</code>,{' '}
-            <code className="text-slate-400">{'{{BODY}}'}</code>, <code className="text-slate-400">{'{{EVIDENCE}}'}</code>, and{' '}
-            <code className="text-slate-400">{'{{WRITING_SAMPLE}}'}</code> placeholders intact.
+            <code className="text-slate-400">{'{{BODY}}'}</code>, and <code className="text-slate-400">{'{{EVIDENCE}}'}</code>{' '}
+            placeholders intact.
           </p>
           <textarea
             value={candidatePrompt}
@@ -737,11 +741,6 @@ export default function CalibratePage() {
                 Overall {pctLabel(agreement.overall)} · {agreement.scored} scored
                 {agreement.skipped ? `, ${agreement.skipped} skipped (rotated out of log)` : ''}
               </p>
-              {agreement.anyMissingInputs && (
-                <p className="text-[11px] text-amber-400">
-                  Some drafts predate profile storage — voice defaulted to pass for those, which can inflate voice agreement.
-                </p>
-              )}
               <div className="space-y-1.5">
                 {AXES.map((a) => {
                   const cell = agreement.perAxis[a.key]

@@ -1,19 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkAdminAuth } from '@/lib/admin-auth'
 import { evaluateDraft } from '@/lib/agent/evaluator'
-import type { ResearchEvidence, StudentProfile } from '@/types'
+import type { ResearchEvidence } from '@/types'
 
 export const maxDuration = 30
 
-// Internal tooling twin of /api/re-evaluate that takes the draft + evidence +
-// profile directly instead of a log entry id. This is the scoring endpoint the
-// offline GEPA harness calls, so the optimization target is the exact same
-// evaluator that gates real emails. Never writes to evaluator:log.
+// Internal tooling twin of /api/re-evaluate that takes the draft + evidence
+// directly instead of a log entry id. This is the scoring endpoint the offline
+// GEPA harness and the corpus eval call, so the optimization target is the exact
+// same evaluator that gates real emails. Never writes to evaluator:log.
 
 interface AdhocRequest {
   draft?: { subject?: string; body?: string }
   evidence?: Partial<ResearchEvidence>
-  studentProfile?: StudentProfile
   evaluatorPrompt?: string
   model?: string
 }
@@ -41,29 +40,11 @@ export async function POST(req: NextRequest) {
     otherQuotableSpecifics: body.evidence.otherQuotableSpecifics ?? [],
   }
 
-  const missingInputs: string[] = []
-  let profile: StudentProfile
-  if (body.studentProfile) {
-    profile = body.studentProfile
-  } else {
-    missingInputs.push('studentProfile (voice axis will default-pass: no writing sample provided)')
-    profile = {
-      name: '',
-      school: '',
-      year: 'sophomore',
-      experienceLevel: 'none',
-      relevantCourses: '',
-      relevantExperience: '',
-      whyResearch: '',
-      interests: [],
-      writingSample: '',
-    }
-  }
-
+  // The evaluator is a pure function of (draft, evidence) — it no longer reads a
+  // student profile, so there is nothing left to stub or warn about here.
   const result = await evaluateDraft({
     draft: { subject: body.draft.subject ?? '', body: body.draft.body },
     evidence,
-    profile,
     evaluatorPrompt: body.evaluatorPrompt,
     model: body.model,
   })
@@ -72,6 +53,6 @@ export async function POST(req: NextRequest) {
     verdict: result.verdict,
     evaluatorFailedOpen: result.evaluatorFailedOpen,
     evaluatorPromptVersion: result.evaluatorPromptVersion,
-    missingInputs,
+    missingInputs: [],
   })
 }

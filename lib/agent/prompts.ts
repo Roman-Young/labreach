@@ -17,9 +17,10 @@ Name: ${profile.name}
 School: ${profile.school}
 Year: ${profile.year.replace('_', ' ')}
 Experience level: ${profile.experienceLevel}
-${profile.relevantCourses ? `\nRelevant courses (on transcript):\n${profile.relevantCourses}` : ''}
-Relevant experience and skills:
-${profile.relevantExperience || 'None listed.'}
+${profile.courses?.trim() ? `\nCoursework (on transcript):\n${profile.courses}` : ''}
+Hands-on lab experience:
+${profile.experience?.trim() || 'None yet — this student has not worked in a lab.'}
+${profile.projects?.trim() ? `\nProjects they have built:\n${profile.projects}` : ''}
 
 Why they want to do research:
 ${profile.whyResearch}

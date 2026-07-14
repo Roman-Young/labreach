@@ -151,15 +151,6 @@ Revise to address this while keeping all specific research details intact.
 `
     : ''
 
-  const voiceSection = profile.writingSample?.trim()
-    ? `STUDENT'S WRITING SAMPLE — study their rhythm, sentence length, vocabulary level, how they open and close thoughts:
-${profile.writingSample}
-
-Write in this student's voice. Match their patterns without sacrificing any required content or structure. The rules below take priority over voice match — never drop the humility line, science paragraph, or ask to sound more like them.
-
-`
-    : ''
-
   // Availability — PIs ask for this explicitly; none of the 53 corpus emails stated it.
   // Assembled from whichever fields the student filled in; empty if they filled none.
   const availabilityParts = [
@@ -179,7 +170,9 @@ STUDENT:
 Name: ${profile.name} | School: ${profile.school} | Year: ${profile.year.replace('_', ' ')}
 Major: ${profile.major?.trim() || 'not specified'}
 Experience: ${profile.experienceLevel}
-Background: ${profile.relevantExperience || 'None listed'}${profile.relevantCourses ? `\nCourses: ${profile.relevantCourses}` : ''}
+Coursework: ${profile.courses?.trim() || 'None listed'}
+Hands-on lab experience: ${profile.experience?.trim() || 'None yet — this student has not worked in a lab'}
+Projects: ${profile.projects?.trim() || 'None listed'}
 Why research: ${profile.whyResearch}
 Interests: ${profile.interests.join(', ')}${profile.otherInterest ? `, ${profile.otherInterest}` : ''}
 ${availabilityLine ? `Availability: ${availabilityLine}` : ''}
@@ -197,10 +190,12 @@ ${experienceInstruction}
 COMPOSING THE HOOK AND BRIDGE — this is your job, not the research agent's:
 From the evidence above, select the single strongest candidate finding and phrase it as the hook for paragraph 2 — in your own words, plain language, not a direct quote. Then compose a bridge that does two things at once: it names something specific in this student's background or interests, AND it voices a specific curiosity, question, or excitement the finding sparks in them — what they wonder about it, what potential they see in it, what they'd want to explore. A bridge that only restates the finding, or only names a shared topic, is not enough; the point is the student's genuine reaction to this specific work, not a description of it. The bridge must be specific enough that it could not apply to any other student+lab pair (ask yourself: could this exact sentence be sent by a different student to a different lab? If yes, it's too generic).
 
+Draw the student's half of the bridge from a REAL item in their Coursework, Hands-on lab experience, or Projects above — a specific class they took, a technique they actually ran, or something they actually built. That earned, concrete connection is the point. If a student has no lab experience, use a course or a project; do not apologize for the gap and do not invent experience they don't have. Never invent a personal reason they care (no "ever since my grandmother…") — the curiosity must be scientific and must follow from the finding.
+
 FLOW AND NATURALNESS — read the finished email aloud in your head before you settle on it:
 It should sound like a specific, curious student actually talking, not an application essay. Sentences should connect and build on one another, not sit as separate declarations. Cut anything stiff, formulaic, or over-formal, and prefer the phrasing a real sophomore would use over the most impressive-sounding version. The whole email should move as one continuous thought — curiosity about the work, to a genuine connection, to the ask — with no abrupt jumps and no filler transitions.
 
-${voiceSection}${synthesisSection}${calibrationSynthesisSection}${arcsSection}${piFeedbackSection}REQUIRED STRUCTURE — follow exactly, 4 paragraphs:
+${synthesisSection}${calibrationSynthesisSection}${arcsSection}${piFeedbackSection}REQUIRED STRUCTURE — follow exactly, 4 paragraphs:
 
 P1 — Introduction (HARD RULE): State the student's name, year/standing, school, AND a general scientific interest area — these four are always required and are checked; the opener fails review if any is missing. If a major is given in the STUDENT block above, include it too (verbatim), alongside the interest area — never drop the interest area just because a major is present.
   Example with a major: "My name is Roman Young. I am a second-year student at UC San Diego majoring in Biology, interested in bioinformatics and immunology."
@@ -261,6 +256,15 @@ Return the body as "bodyParagraphs": an ordered list where each item is one para
 
   // Join in code so paragraph breaks are guaranteed regardless of the model's
   // inline-newline behavior (see WRITER_SCHEMA note).
-  const body = paragraphs.join('\n\n')
+  let body = paragraphs.join('\n\n')
+
+  // Flash sometimes glues the sign-off name onto the closing sentence
+  // ("...for your consideration.Alex Rivera"). We know the student's name, so split
+  // it back off deterministically rather than asking the prompt to be careful.
+  const escapedName = profile.name.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  if (escapedName) {
+    body = body.replace(new RegExp(`([.!?])[ \\t]*(${escapedName})\\s*$`), '$1\n\n$2')
+  }
+
   return { subject: parsed.subject, body, specificHook: parsed.specificHook, bridgeSentence: parsed.bridgeSentence }
 }

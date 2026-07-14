@@ -50,32 +50,14 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // Entries logged before the schema enrichment lack the full profile. The
-  // evaluator only reads profile.writingSample (voice axis), so re-eval is
-  // still meaningful — but voice will default-pass, and we flag that.
+  // The evaluator is a pure function of (draft, evidence): it no longer reads the
+  // student profile (the `voice` axis was deleted), so an entry logged before the
+  // profile was stored re-scores exactly as faithfully as a new one.
   const missingInputs: string[] = []
-  let profile: StudentProfile
-  if (entry.studentProfile) {
-    profile = entry.studentProfile
-  } else {
-    missingInputs.push('studentProfile (voice axis will default-pass: no writing sample stored)')
-    profile = {
-      name: '',
-      school: '',
-      year: 'sophomore',
-      experienceLevel: (entry.experienceLevel as StudentProfile['experienceLevel']) || 'none',
-      relevantCourses: '',
-      relevantExperience: '',
-      whyResearch: '',
-      interests: entry.studentInterests ?? [],
-      writingSample: '',
-    }
-  }
 
   const result = await evaluateDraft({
     draft: { subject: entry.subject, body: entry.body },
     evidence: entry.evidence,
-    profile,
     evaluatorPrompt,
     model,
   })

@@ -4,6 +4,13 @@ Ran the live LabReach evaluator over all **53 real cold emails** with known repl
 outcomes (17 replied, 36 did not). Reproduce with `npm run eval:ingest && npm run eval:judge`.
 All 53 scored; 0 evaluator failures.
 
+> **Addendum (WS2).** The run below was scored by the then-current **nine**-axis judge.
+> Acting on the `voice` result in this very table (100% pass in *both* groups — it
+> separated nothing), the `voice` axis has since been **deleted**, along with the writing
+> sample it read. The judge is now **eight** axes and `evals/eval-judge.mjs` no longer
+> reports `voice`. Nothing else in this document changes: no other axis was touched, and
+> the headline finding stands. A re-run will simply omit the `voice` row.
+
 ## The headline
 
 > **The evaluator would not have sent a single one of the 17 emails that actually got replies.**

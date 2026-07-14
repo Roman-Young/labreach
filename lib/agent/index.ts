@@ -144,7 +144,6 @@ export async function runAgent(
       let evaluation = await evaluateDraft({
         draft: currentDraft,
         evidence: ar.evidence,
-        profile: request.profile,
         evaluatorPrompt,
         onProgress,
       })
@@ -158,7 +157,6 @@ export async function runAgent(
         evaluation = await evaluateDraft({
           draft: currentDraft,
           evidence: ar.evidence,
-          profile: request.profile,
           evaluatorPrompt,
           onProgress,
         })

@@ -28,9 +28,6 @@ export function buildCritique(verdict: EvaluatorVerdict): string {
       lines.push(`- Sounds AI-generated (${hit.issue}): "${hit.quote}" — rewrite this specific sentence to fix it, don't just reword nearby text.`)
     }
   }
-  if (!verdict.voice.pass) {
-    lines.push(`- Voice: ${verdict.voice.reason}`)
-  }
   if (!verdict.wouldSend.pass) {
     lines.push(`- Overall: ${verdict.wouldSend.reason}`)
   }

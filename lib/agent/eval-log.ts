@@ -14,9 +14,9 @@ export interface EvaluatorLogEntry {
   studentInterests: string[]
   experienceLevel: string
   // Optional because entries logged before the re-eval schema change lack them.
-  // studentProfile makes an entry self-contained for faithful re-scoring (the
-  // voice axis reads profile.writingSample); evaluatorPromptVersion tells
-  // "same draft, different judge" runs apart.
+  // studentProfile keeps an entry self-contained (who the draft was written for);
+  // evaluatorPromptVersion tells "same draft, different judge" runs apart. The
+  // evaluator itself no longer reads the profile — `voice` was deleted in WS2.
   studentProfile?: StudentProfile
   evaluatorPromptVersion?: string
 }

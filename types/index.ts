@@ -14,12 +14,18 @@ export interface StudentProfile {
   year: StudentYear
   major?: string
   experienceLevel: ExperienceLevel
-  relevantCourses: string
-  relevantExperience: string
+  // Structured experience, in three buckets. These are what the writer mines for a
+  // real, earned connection — the one thing in the 53-email corpus that beat baseline.
+  // They replace the old free-text blob and the writing sample (whose `voice` axis
+  // passed 100% of both repliers and non-repliers, i.e. measured nothing).
+  // A student with no research experience fills courses + projects and leaves
+  // `experience` empty. That is expected, not a deficit.
+  courses: string      // coursework: "BILD 1, BICD 100, Organic Chemistry"
+  experience: string   // hands-on technique / lab work: "PCR, cell culture, one semester in X lab"
+  projects: string     // personal or side projects: "built a variant-calling script in Python"
   whyResearch: string
   interests: string[]
   otherInterest?: string
-  writingSample: string
   // Availability — PIs ask for this explicitly (it signals training ROI) and none of the
   // 53 corpus emails stated it. Optional; fed into the email's ask when present.
   hoursPerWeek?: string
@@ -81,7 +87,6 @@ export interface EvaluatorVerdict {
   }
   noFabrication: { pass: boolean; hits: FabricationHit[] }
   naturalness: { pass: boolean; hits: NaturalnessHit[] }
-  voice: { pass: boolean; reason: string }
   wouldSend: { pass: boolean; reason: string }
   prohibitions: { pass: boolean; hits: ProhibitionHit[] }
   structure: { pass: boolean; wordCount: number; paragraphCount: number }
@@ -96,7 +101,6 @@ export interface HumanLabel {
   bridgeIsNonTransferable: boolean
   noFabrication: boolean
   naturalness: boolean
-  voice: boolean
   wouldSend: boolean
   labeledAt: number
 }

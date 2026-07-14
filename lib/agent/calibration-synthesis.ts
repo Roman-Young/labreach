@@ -50,12 +50,11 @@ export async function updateCalibrationSynthesis(): Promise<void> {
     lines.push(`  Bridge is non-transferable to another student+lab pair: ${label.bridgeIsNonTransferable ? 'pass' : 'FAIL'}`)
     lines.push(`  No fabricated specifics: ${label.noFabrication ? 'pass' : 'FAIL'}`)
     lines.push(`  Sounds natural, not AI-generated: ${label.naturalness ? 'pass' : 'FAIL'}`)
-    lines.push(`  Voice match: ${label.voice ? 'pass' : 'FAIL'}`)
     lines.push(`  Would send: ${label.wouldSend ? 'pass' : 'FAIL'}`)
     return lines.join('\n')
   })
 
-  const prompt = `You are analyzing ${labeledEntries.length} cold email draft${labeledEntries.length > 1 ? 's' : ''} that a human reviewer has personally graded pass/fail on nine specific axes. These are ground-truth human judgments of quality, not an automated score.
+  const prompt = `You are analyzing ${labeledEntries.length} cold email draft${labeledEntries.length > 1 ? 's' : ''} that a human reviewer has personally graded pass/fail on eight specific axes. These are ground-truth human judgments of quality, not an automated score.
 
 ${docs.join('\n\n' + '─'.repeat(70) + '\n\n')}
 

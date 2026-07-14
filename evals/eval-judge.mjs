@@ -7,8 +7,11 @@
 // Scores via POST /api/evaluate-adhoc so the judge is the exact evaluator that
 // gates real emails. The corpus has no stored evidence bundle (the 2023-24 lab
 // pages have changed), so it scores with EMPTY evidence: axes that read the
-// evidence (noFabrication) or a writing sample (voice) are not interpretable here
-// and are reported separately from the evidence-independent axes.
+// evidence (noFabrication) are not interpretable here and are reported separately
+// from the evidence-independent axes.
+//
+// The `voice` axis is gone (WS2): it read a writing sample, passed 100% of both
+// repliers and non-repliers, and measured nothing. The judge is now eight axes.
 //
 // Prereqs: dev server running WITHOUT SITE_PASSWORD, ADMIN_PASSWORD set, and
 // evals/corpus/emails.json produced by `node evals/ingest.mjs`.
@@ -32,8 +35,8 @@ const emails = JSON.parse(readFileSync(EMAILS, 'utf8'))
 
 // Evidence-independent axes — the honest ones for this run.
 const INTERPRETABLE = ['opener', 'hookIsFinding', 'bridgeIsBidirectional', 'bridgeIsNonTransferable', 'naturalness', 'wouldSend', 'prohibitions', 'structure']
-// Reported but NOT interpretable here (need evidence / a writing sample).
-const CAVEATED = ['noFabrication', 'voice', 'hookIsRecent']
+// Reported but NOT interpretable here (need a real evidence bundle).
+const CAVEATED = ['noFabrication', 'hookIsRecent']
 
 function flattenAxes(v) {
   return {
@@ -44,7 +47,6 @@ function flattenAxes(v) {
     bridgeIsNonTransferable: v.bridge.isNonTransferable.pass,
     noFabrication: v.noFabrication.pass,
     naturalness: v.naturalness.pass,
-    voice: v.voice.pass,
     wouldSend: v.wouldSend.pass,
     prohibitions: v.prohibitions.pass,
     structure: v.structure.pass,
@@ -106,7 +108,7 @@ function reportBlock(title, axesList) {
 
 console.log(`Scored ${scored.length}/${emails.length}  (replied ${replied.length}, no-reply ${notReplied.length}; ${failedOpen} fail-open, ${errored} errored — excluded)`)
 reportBlock('EVIDENCE-INDEPENDENT AXES (interpretable) — thesis predicts ~0 gap everywhere:', INTERPRETABLE)
-reportBlock('CAVEATED AXES (need evidence/writing sample — NOT interpretable on this corpus):', CAVEATED)
+reportBlock('CAVEATED AXES (need a real evidence bundle — NOT interpretable on this corpus):', CAVEATED)
 
 // The named negative control: B02 should pass the interpretable axes despite silence.
 const b02 = scored.find((r) => r.id === 'B02')
