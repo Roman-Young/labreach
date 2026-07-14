@@ -142,6 +142,19 @@ Write in this student's voice. Match their patterns without sacrificing any requ
 `
     : ''
 
+  // Availability — PIs ask for this explicitly; none of the 53 corpus emails stated it.
+  // Assembled from whichever fields the student filled in; empty if they filled none.
+  const availabilityParts = [
+    profile.hoursPerWeek?.trim() ? `${profile.hoursPerWeek.trim()} hours per week` : '',
+    profile.startDate?.trim() ? `can start ${profile.startDate.trim()}` : '',
+    profile.duration?.trim() ? `for ${profile.duration.trim()}` : '',
+  ].filter(Boolean)
+  const availabilityLine = availabilityParts.join(', ')
+
+  const askInstruction = availabilityLine
+    ? `P4 — The Ask (2-3 sentences): State the student's availability naturally, in their own words — they are available ${availabilityLine}. Then one clean ask for a 15-20 minute call. Nothing else — no closing enthusiasm statement.`
+    : `P4 — The Ask (1-2 sentences): One clean ask for a 15-20 minute call. Optional timeline. Nothing else — no closing enthusiasm statement.`
+
   const prompt = `You are writing a personalized cold email from a student to a research lab PI. All research has been done — your job is the writing only.
 
 STUDENT:
@@ -151,6 +164,7 @@ Experience: ${profile.experienceLevel}
 Background: ${profile.relevantExperience || 'None listed'}${profile.relevantCourses ? `\nCourses: ${profile.relevantCourses}` : ''}
 Why research: ${profile.whyResearch}
 Interests: ${profile.interests.join(', ')}${profile.otherInterest ? `, ${profile.otherInterest}` : ''}
+${availabilityLine ? `Availability: ${availabilityLine}` : ''}
 ${attachmentLine ? `Will attach: ${attachmentLine}` : ''}
 
 RESEARCH FINDINGS:
@@ -178,7 +192,7 @@ P2 — The Science (3-5 sentences): Describe the specific finding in the student
 
 P3 — Background + Connection + Humility (3-4 sentences): One sentence naming the type/context of the student's experience — no specific tool names, library names, or benchmark numbers (the resume covers that). One sentence expressing the connection as curiosity: "I'm curious whether...", "I wonder whether similar approaches might apply...", "I am curious how...could be useful." Then the humility line — required for students with limited or no experience: "I am very new but eager to learn" / "As a sophomore new to this area, I am eager to learn" / "I'm new to this but would be grateful for any opportunity to contribute."
 
-P4 — The Ask (1-2 sentences): One clean ask for a 15-20 minute call. Optional timeline. Nothing else — no closing enthusiasm statement.
+${askInstruction}
 
 Sign-off: "Thank you for your time" or "Thank you for your consideration." Name only.
 Subject line: Research Interest in [SPECIFIC TOPIC] – [Name], [School]

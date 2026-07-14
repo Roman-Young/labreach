@@ -52,6 +52,9 @@ export default function HomePage() {
   const [interests, setInterests] = useState<string[]>([])
   const [otherInterest, setOtherInterest] = useState('')
   const [writingSample, setWritingSample] = useState('')
+  const [hoursPerWeek, setHoursPerWeek] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [duration, setDuration] = useState('')
 
   const [labUrl, setLabUrl] = useState('')
   const [urlError, setUrlError] = useState('')
@@ -73,6 +76,9 @@ export default function HomePage() {
       setInterests(profile.interests ?? [])
       setOtherInterest(profile.otherInterest ?? '')
       setWritingSample(profile.writingSample ?? '')
+      setHoursPerWeek(profile.hoursPerWeek ?? '')
+      setStartDate(profile.startDate ?? '')
+      setDuration(profile.duration ?? '')
       setStep(2)
     } else {
       setStep(1)
@@ -96,7 +102,7 @@ export default function HomePage() {
 
   async function handleSubmit() {
     if (!validateUrl(labUrl)) return
-    const profile: StudentProfile = { name, school, year, major: major.trim(), experienceLevel, relevantCourses, relevantExperience, whyResearch, interests, otherInterest, writingSample }
+    const profile: StudentProfile = { name, school, year, major: major.trim(), experienceLevel, relevantCourses, relevantExperience, whyResearch, interests, otherInterest, writingSample, hoursPerWeek: hoursPerWeek.trim(), startDate: startDate.trim(), duration: duration.trim() }
     saveProfile(profile)
     const request = { profile, labUrl }
     sessionStorage.setItem('labreach_request', JSON.stringify(request))
@@ -270,6 +276,22 @@ export default function HomePage() {
                 <p className="text-xs text-amber-400 mt-1.5">Required — select at least one.</p>
               )}
             </Field>
+
+            <div className="border-t border-slate-700 pt-5">
+              <p className="text-sm font-semibold text-slate-300 mb-1">Availability</p>
+              <p className="text-xs text-slate-500 mb-3">Optional, but PIs ask for this directly — stating it signals the training they invest will pay off. If you fill these in, the email says so in the ask.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <Field label="Hours / week">
+                  <input type="text" value={hoursPerWeek} onChange={(e) => setHoursPerWeek(e.target.value)} placeholder="e.g. 10–12" className={inputClass} />
+                </Field>
+                <Field label="Can start">
+                  <input type="text" value={startDate} onChange={(e) => setStartDate(e.target.value)} placeholder="e.g. this fall" className={inputClass} />
+                </Field>
+                <Field label="For how long">
+                  <input type="text" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="e.g. 2+ semesters" className={inputClass} />
+                </Field>
+              </div>
+            </div>
 
             <div className="border-t border-slate-700 pt-5">
               <Field

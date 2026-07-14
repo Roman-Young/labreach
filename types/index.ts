@@ -20,6 +20,11 @@ export interface StudentProfile {
   interests: string[]
   otherInterest?: string
   writingSample: string
+  // Availability — PIs ask for this explicitly (it signals training ROI) and none of the
+  // 53 corpus emails stated it. Optional; fed into the email's ask when present.
+  hoursPerWeek?: string
+  startDate?: string
+  duration?: string
 }
 
 export interface PublicationRef {
