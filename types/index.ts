@@ -141,3 +141,60 @@ export interface ResearchRequest {
   profile: StudentProfile
   labUrl: string
 }
+
+// --- Lab Digest ---------------------------------------------------------------
+// The digest reads a lab's homepage and reports facts, never a reply prediction.
+// Every quoted field is verbatim from the page (grounded) or null — never guessed.
+
+export interface JoinLogistics {
+  hoursExpected: string | null       // e.g. "12-20 hours", verbatim from the page
+  mechanism: string | null           // e.g. "BILD99 / BISP199 / BISP196", verbatim
+  prerequisites: string | null       // verbatim
+  contactInstructions: string | null // e.g. "apply via the form", verbatim
+  recruitingNote: string | null      // only if the page explicitly states accept/full status
+}
+
+export interface LabDigestEntry {
+  labUrl: string
+  labName: string
+  piName: string
+  piEmail: string | null
+  whatTheyWorkOn: string             // 1-2 grounded sentences
+  mostRecentPaperYear: number | null
+  publicationVolume: number | null   // recent-window paper count from PubMed → flood proxy
+  logistics: JoinLogistics
+  interestOverlap: number            // 0-1, for the honest interest sort only (NOT a prediction)
+  evidence: EvidenceItem[]           // grounded quotes backing whatTheyWorkOn
+}
+
+export interface DigestRequest {
+  profile: StudentProfile
+  labUrls: string[]
+}
+
+// SSE events streamed by /api/digest as labs finish (concurrency-limited).
+export type DigestEventType = 'progress' | 'lab' | 'error' | 'done'
+
+export interface DigestProgressEvent {
+  type: 'progress'
+  message: string
+  completed: number
+  total: number
+}
+
+export interface DigestLabEvent {
+  type: 'lab'
+  entry: LabDigestEntry
+}
+
+export interface DigestErrorEvent {
+  type: 'error'
+  labUrl: string
+  message: string
+}
+
+export interface DigestDoneEvent {
+  type: 'done'
+}
+
+export type DigestEvent = DigestProgressEvent | DigestLabEvent | DigestErrorEvent | DigestDoneEvent

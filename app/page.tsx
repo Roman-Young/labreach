@@ -336,6 +336,9 @@ export default function HomePage() {
                 className={`${inputClass} ${urlError ? 'border-red-500' : ''}`}
               />
               {urlError && <p className="text-sm text-red-400 mt-1">{urlError}</p>}
+              <p className="text-xs text-slate-500 mt-2">
+                Not sure which labs? <button type="button" onClick={() => router.push('/digest')} className="text-teal-400 hover:text-teal-300">Screen several at once →</button>
+              </p>
             </Field>
             <div className="flex gap-3">
               <button onClick={() => setStep(1)} className="flex-1 py-3 border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white font-semibold rounded-xl transition-colors">← Back</button>

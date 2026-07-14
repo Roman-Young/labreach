@@ -1,12 +1,12 @@
 import type { AgentEvent } from '@/types'
 
-export function encodeEvent(event: AgentEvent): string {
+export function encodeEvent<T>(event: T): string {
   return `data: ${JSON.stringify(event)}\n\n`
 }
 
-export function createSSEStream(): {
+export function createSSEStream<T = AgentEvent>(): {
   readable: ReadableStream<Uint8Array>
-  emit: (event: AgentEvent) => void
+  emit: (event: T) => void
   close: () => void
 } {
   const encoder = new TextEncoder()
@@ -20,7 +20,7 @@ export function createSSEStream(): {
 
   return {
     readable,
-    emit(event: AgentEvent) {
+    emit(event: T) {
       controller.enqueue(encoder.encode(encodeEvent(event)))
     },
     close() {

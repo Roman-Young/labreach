@@ -38,6 +38,14 @@ function isGrounded(quote: string, haystacks: string[]): boolean {
   return haystacks.some((h) => h.includes(q))
 }
 
+// Reusable single-quote check (the digest verifies each extracted logistics field
+// this way, dropping any the page doesn't actually contain). Returns the quote if
+// grounded, else null.
+export function groundedValueOrNull(quote: string | null | undefined, corpus: SourceCorpus): string | null {
+  if (!quote || !quote.trim()) return null
+  return isGrounded(quote, corpus.map(normalize)) ? quote : null
+}
+
 export function verifyGrounding(evidence: ResearchEvidence, corpus: SourceCorpus): GroundingResult {
   const haystacks = corpus.map(normalize)
   const dropped: DroppedQuote[] = []
