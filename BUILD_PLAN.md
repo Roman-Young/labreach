@@ -79,18 +79,54 @@ evals/               Corpus harness: anonymize -> ingest -> judge. RESULTS.md ho
 
 ---
 
-## 3. THE CRITICAL CONSTRAINT: Gemini free-tier rate limits
+## 3. Models, latency, and cost — get this right
 
-Measured, not guessed. Running the 53-email eval at concurrency 3, **each evaluator call took ~80 seconds** because the free tier was returning 429s and `retry.ts` was backing off.
+### The latency problem is the FREE TIER, not the model
 
-A batch of 20 drafts is roughly **160+ Gemini calls** (research loop ~6/lab, writer 1–3, evaluator 1–3). On the free tier this is a **long queue, not a fast batch.**
+Measured, not guessed. Running the 53-email eval at concurrency 3, **each evaluator call took ~80 seconds** — but that was almost entirely **429 rate-limit backoff** in `retry.ts`, not inference. The free tier caps around **15 RPM regardless of which Gemini model you pick.**
 
-**Design implications — do not skip these:**
+**Therefore: paying is what fixes latency. Changing models does not.** These are two separate decisions:
+- **Latency** → move to a paid Gemini tier. The 429 storms vanish; a Flash draft returns in seconds.
+- **Model** → a quality/cost dial, chosen independently.
+
+### Model split (the recommended config)
+
+Use the good model **only where prose quality matters.** Research is structured extraction and evaluation is classification — 2.5 Flash is fine at both and 5× cheaper.
+
+```
+GEMINI_WRITER_MODEL=gemini-3.5-flash     # prose — worth the spend
+GEMINI_RESEARCH_MODEL=gemini-2.5-flash   # extraction — cheap
+GEMINI_EVAL_MODEL=gemini-2.5-flash       # classification — cheap
+```
+
+Make all three **env-configurable with free-tier-friendly defaults** (2.5 Flash everywhere), so a friend who clones the repo runs free, while the owner's deploy sets the writer to 3.5 Flash.
+
+**Side benefit:** with the writer on 3.5 and the judge on 2.5, the evaluator is no longer grading its own model family's output — which removes the self-leniency risk noted in WS1.
+
+### Verified pricing (July 2026)
+
+| Model | input /M | output /M | Notes |
+|---|---|---|---|
+| Gemini 2.5 Flash | $0.30 | $2.50 | cheapest; fine for extraction + judging |
+| **Gemini 3.5 Flash** | **$1.50** | **$9.00** | GA; beats last-gen Pro; ~20% faster output; **has a free tier** |
+| Claude Sonnet 4.6 | $3.00 | $15.00 | standard — **being removed** |
+| Claude Sonnet 4.6 | $2.00 | $10.00 | *introductory, through Aug 31 2026* |
+
+Against Sonnet's standard price, 3.5 Flash is ~2× cheaper; during Sonnet's intro pricing it's only ~10–30% cheaper. **Price is not the reason to port — one provider and one key is.**
+
+**Cost per fully-researched email on the split config: ~$0.05.**
+→ a 20-lab batch is **under $1**. 5 friends × 40 emails ≈ **~$10/month.**
+
+### What 3.5 Flash actually buys you (be honest about this)
+
+The eval says prose quality is worth **~1 percentage point** on replies. So **3.5 Flash will not get you more replies.** What it buys is a **better starting draft → less editing per email in the review queue.** Since human review (~2–5 min × 20 drafts) is now the *only* remaining bottleneck, that is a real and sufficient reason to spend on it. It buys back the student's time, not the reply rate. Do not claim otherwise in the README.
+
+### Batch design implications (these still hold, paid or not)
+
 - The batch step **must be a durable, resumable queue**, not a fire-and-forget `Promise.all`. Progress must survive a page refresh.
-- Show honest ETA and per-lab status. "Drafting 7 of 20…" not a spinner.
-- Cap concurrency low (2–3) and let `retry.ts` absorb 429s.
-- **Reduce calls per email.** The biggest win: the digest already scraped and extracted the lab. **The writer should reuse the digest's evidence instead of re-running the whole `runAgent` research loop.** This is the single most important efficiency change in this plan.
-- Offer a paid-Gemini escape hatch: a few dollars removes the limit entirely. Document it; don't require it.
+- Show honest per-lab status ("Drafting 7 of 20…"), not a spinner.
+- Cap concurrency low (2–3); Firecrawl's free tier only allows 2 concurrent browsers anyway, and `retry.ts` absorbs 429s.
+- **Reduce calls per email.** The biggest win: the digest already scraped and extracted the lab. **The writer should reuse the digest's grounded evidence instead of re-running the whole `runAgent` research loop.** This is the single most important efficiency change in this plan — it roughly halves both cost and latency.
 
 ---
 
@@ -100,12 +136,11 @@ A batch of 20 drafts is roughly **160+ Gemini calls** (research loop ~6/lab, wri
 
 **Goal:** delete `@anthropic-ai/sdk` and `ANTHROPIC_API_KEY` from the project.
 
-- `lib/agent/writer.ts`: replace the Anthropic streaming block (~lines 218–237) with Gemini. Use `gemini-2.5-flash` (free tier, cheap, sufficient). Keep the JSON-out contract (`{subject, body, specificHook, bridgeSentence}`) — use `responseMimeType: 'application/json'` + a `responseSchema`, exactly like `digest.ts` and `evaluator.ts` already do. Temperature ~0.7 (the writer wants some variety; the digest/evaluator use 0.2).
+- `lib/agent/writer.ts`: replace the Anthropic streaming block (~lines 218–237) with Gemini. Keep the JSON-out contract (`{subject, body, specificHook, bridgeSentence}`) — use `responseMimeType: 'application/json'` + a `responseSchema`, exactly like `digest.ts` and `evaluator.ts` already do. Temperature ~0.7 (the writer wants variety; digest/evaluator use 0.2).
+- **Read the model from env**, per §3: `GEMINI_WRITER_MODEL` (default `gemini-2.5-flash` so a clone runs free; the owner's deploy sets `gemini-3.5-flash`). Do the same for `GEMINI_RESEARCH_MODEL` and `GEMINI_EVAL_MODEL`.
 - Remove `@anthropic-ai/sdk` from `package.json`; remove `ANTHROPIC_API_KEY` from `.env.example` and the README setup table.
-- **Re-derive `prohibitions.ts` against Flash.** The current 26 regexes catch *Claude's* tics. Generate ~10 real drafts with Flash, read them, and replace the list with Flash's actual tells. Gemini's common ones: "delve", "underscore", "pivotal", "testament to", "moreover", "furthermore", "it's worth noting", "landscape", "realm", "crucial". Keep the corpus-derived ones that are genre-specific (assertion phrases, "strong interest", etc.).
-- **Model dial (document, don't default):** `gemini-3-flash` ($0.50/$3.00 per M) or `gemini-3.5-flash` ($1.50/$9.00, GA, beats last-gen Pro) if draft quality feels short. Not needed for v1.
-
-**Watch for:** the evaluator is *also* Flash. A model judging its own family's output is somewhat lenient. This matters less now that the evaluator is demoted to a floor check (WS4), but note it in the README.
+- **Re-derive `prohibitions.ts` against Flash.** The current 26 regexes catch *Claude's* tics. Generate ~10 real drafts with the chosen Flash model, read them, and replace the list with Flash's actual tells. Gemini's common ones: "delve", "underscore", "pivotal", "testament to", "moreover", "furthermore", "it's worth noting", "landscape", "realm", "crucial". Keep the corpus-derived, genre-specific ones (assertion phrases, "strong interest", etc.).
+- **Remove the hard-coded gold-standard reference email** currently embedded in the writer prompt (`writer.ts` ~lines 202–211). One fixed exemplar is the real cross-student fingerprint risk (WS6) and it anchors every draft to one voice.
 
 ### WS2 — Profile: drop the writing sample, add structured experience
 
@@ -207,12 +242,12 @@ Most of these already exist in `writer.ts`'s "NEVER DO THESE" and in `prohibitio
 
 | Service | Role | Cost |
 |---|---|---|
-| **Google AI (Gemini Flash)** | research, digest, writer, evaluator | **Free tier** (rate-limited — see §3). A few $ removes the limit. |
+| **Google AI (Gemini Flash)** | research, digest, writer, evaluator | Free tier works (rate-limited, ~15 RPM). **Paid tier is what fixes latency** — ~$0.05/email on the split config in §3, so a 20-lab batch is under $1. |
 | **Firecrawl** | scraping | Free: 1,000 credits/mo. Digest 1/lab, draft ~4/lab. Hobby = 3,000/mo for ~$16 if 5 friends × 40 emails. |
 | **PubMed (NCBI)** | papers, recency | **Free, no key.** |
 | ~~Anthropic~~ | ~~writer~~ | **Deleted by WS1.** |
 
-**One API key to run the whole app.** That is the point of this plan.
+**One API key to run the whole app.** That is the point of this plan. A friend cloning the repo runs entirely free on the defaults; the owner's deploy sets `GEMINI_WRITER_MODEL=gemini-3.5-flash` and a paid tier for speed.
 
 ---
 
