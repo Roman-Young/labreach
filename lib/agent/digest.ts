@@ -25,7 +25,7 @@ const EXTRACTION_SCHEMA = {
   type: SchemaType.OBJECT,
   properties: {
     labName: { type: SchemaType.STRING, description: 'Lab or research group name' },
-    piName: { type: SchemaType.STRING, description: "The PI's full name" },
+    piName: { type: SchemaType.STRING, description: "The principal investigator's full name (first and last). Look in the page title, headers, 'about'/'PI'/'contact' text, and any email address. If only a surname is available (e.g. from the lab name 'Jin Lab'), return just the surname. Empty string only if no name is present at all." },
     piEmail: { type: SchemaType.STRING, description: "The PI's email if shown, else empty string" },
     whatTheyWorkOn: {
       type: SchemaType.STRING,
@@ -65,16 +65,42 @@ PAGE CONTENT:
 ${pageText}`
 }
 
-function computeInterestOverlap(text: string, interests: string[]): number {
-  if (!interests.length) return 0
-  const hay = text.toLowerCase()
-  const matched = interests.filter((interest) => {
-    const terms = interest
+// Match substrings per canonical interest. Exact-word matching is too brittle — a
+// "Neuroscience" student should match a lab that says "nervous system / neuronal",
+// never the literal word "neuroscience". The interest list is a fixed 14, so a
+// curated map is bounded and far more robust than lexical overlap. This drives the
+// honest interest sort only; it is never presented as a reply prediction.
+const INTEREST_KEYWORDS: Record<string, string[]> = {
+  Biochemistry: ['biochem', 'enzyme', 'metaboli', 'protein structure'],
+  'Bioengineering / Synthetic Biology': ['bioengineer', 'synthetic biol', 'biomaterial', 'tissue engineer', 'biosensor'],
+  'Bioinformatics / Computational Biology': ['bioinformatic', 'computational', 'sequencing', 'machine learning', 'algorithm', 'genomic data'],
+  Biophysics: ['biophysic', 'single-molecule', 'single molecule', 'cryo-em', 'cryo em', 'structural biol', 'molecular dynamics'],
+  'Drug Development / Pharmacology': ['drug', 'pharmacolog', 'therapeutic', 'small molecule', 'inhibitor'],
+  'Genetics & Genomics': ['genetic', 'genomic', 'genome', 'gene expression', 'variant', 'mutation', 'crispr', 'transcript'],
+  'Gut Microbiome': ['microbiome', 'microbiota', 'commensal', 'gastrointestinal', 'gut '],
+  Immunology: ['immun', 't cell', 't-cell', 'b cell', 'b-cell', 'antibod', 'cytokine', 'inflammat', 'antigen'],
+  'Microbiology / Virology': ['microbio', 'bacteri', 'virus', 'viral', 'virolog', 'pathogen', 'phage', 'infect'],
+  'Molecular & Cell Biology': ['molecular', 'cell biol', 'cellular', 'signaling', 'signalling', 'organelle', 'membrane'],
+  Neuroscience: ['neuro', 'nervous', 'brain', 'synap', 'cognit', 'behavior', 'behaviour'],
+  'Oncology / Cancer Biology': ['cancer', 'oncolog', 'tumor', 'tumour', 'metasta', 'carcino', 'malignan'],
+  'Public Health / Epidemiology': ['epidemiolog', 'public health', 'population health', 'surveillance', 'outbreak'],
+  'Translational Medicine': ['translational', 'clinical', 'patient'],
+}
+
+function keywordsFor(interest: string): string[] {
+  return (
+    INTEREST_KEYWORDS[interest] ??
+    interest
       .toLowerCase()
       .split(/[/,&\s]+/)
       .filter((t) => t.length > 3)
-    return terms.some((t) => hay.includes(t))
-  }).length
+  )
+}
+
+function computeInterestOverlap(text: string, interests: string[]): number {
+  if (!interests.length) return 0
+  const hay = text.toLowerCase()
+  const matched = interests.filter((interest) => keywordsFor(interest).some((k) => hay.includes(k))).length
   return matched / interests.length
 }
 
@@ -124,21 +150,25 @@ export async function digestLab(labUrl: string, profile: StudentProfile): Promis
     recruitingNote: groundedValueOrNull(raw.recruitingNote, corpus),
   }
 
+  const piName = (raw.piName || '').trim()
+
   // PubMed (free): most recent paper year + a recent-window volume as a flood proxy.
-  // Best-effort — name collisions make this approximate, and a failure must not sink
-  // the whole digest entry.
+  // Only search when we have a real full name (2+ tokens) — a bare surname like "Jin"
+  // returns thousands of unrelated authors, so an honest null beats a noisy number.
   let mostRecentPaperYear: number | null = null
   let publicationVolume: number | null = null
-  try {
-    const pubs = await searchPubMed(raw.piName, 20)
-    const years = pubs.map((p) => parseInt(p.year, 10)).filter((y) => !Number.isNaN(y))
-    if (years.length) {
-      mostRecentPaperYear = Math.max(...years)
-      const cutoff = new Date().getFullYear() - RECENT_WINDOW_YEARS
-      publicationVolume = years.filter((y) => y >= cutoff).length
+  if (piName.split(/\s+/).length >= 2 && !/unknown/i.test(piName)) {
+    try {
+      const pubs = await searchPubMed(piName, 20)
+      const years = pubs.map((p) => parseInt(p.year, 10)).filter((y) => !Number.isNaN(y))
+      if (years.length) {
+        mostRecentPaperYear = Math.max(...years)
+        const cutoff = new Date().getFullYear() - RECENT_WINDOW_YEARS
+        publicationVolume = years.filter((y) => y >= cutoff).length
+      }
+    } catch {
+      // leave both null
     }
-  } catch {
-    // leave both null
   }
 
   const overlapText = [raw.whatTheyWorkOn, ...evidence.map((e) => e.quote)].join(' ')
@@ -146,7 +176,7 @@ export async function digestLab(labUrl: string, profile: StudentProfile): Promis
   return {
     labUrl,
     labName: raw.labName || 'Unknown lab',
-    piName: raw.piName || 'Unknown PI',
+    piName: piName || 'Unknown PI',
     piEmail: nullIfEmpty(raw.piEmail),
     whatTheyWorkOn: raw.whatTheyWorkOn || '',
     mostRecentPaperYear,
