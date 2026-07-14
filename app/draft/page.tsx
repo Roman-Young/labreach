@@ -39,7 +39,7 @@ function DraftPageInner() {
   const [refineFeedback, setRefineFeedback] = useState('')
   const [isRefining, setIsRefining] = useState(false)
   const [restoredFromCache, setRestoredFromCache] = useState(false)
-  const [bodyViewMode, setBodyViewMode] = useState<'annotated' | 'edit'>('annotated')
+  const [bodyViewMode, setBodyViewMode] = useState<'annotated' | 'edit'>('edit')
 
   const hasStarted = useRef(false)
   const shouldSkipAgent = useRef(false)
@@ -270,19 +270,12 @@ function DraftPageInner() {
             {/* Left: editable email */}
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-slate-800/40 rounded-2xl border border-slate-700 p-6">
-                <div className="flex items-center justify-between mb-5">
-                  <h2 className="text-lg font-semibold text-white">Your Draft</h2>
-                  <div className="flex items-center gap-1 bg-slate-900 rounded-lg p-0.5">
-                    <button
-                      onClick={() => setBodyViewMode('annotated')}
-                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
-                        bodyViewMode === 'annotated'
-                          ? 'bg-slate-700 text-white'
-                          : 'text-slate-500 hover:text-slate-300'
-                      }`}
-                    >
-                      View
-                    </button>
+                <div className="flex items-start justify-between mb-4 gap-4">
+                  <div>
+                    <h2 className="text-lg font-semibold text-white">Your starting draft</h2>
+                    <p className="text-sm text-slate-400 mt-0.5">A first draft, not a finished email. Edit it until it sounds like you — then send it yourself.</p>
+                  </div>
+                  <div className="flex items-center gap-1 bg-slate-900 rounded-lg p-0.5 shrink-0">
                     <button
                       onClick={() => setBodyViewMode('edit')}
                       className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
@@ -292,6 +285,16 @@ function DraftPageInner() {
                       }`}
                     >
                       Edit
+                    </button>
+                    <button
+                      onClick={() => setBodyViewMode('annotated')}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                        bodyViewMode === 'annotated'
+                          ? 'bg-slate-700 text-white'
+                          : 'text-slate-500 hover:text-slate-300'
+                      }`}
+                    >
+                      Preview + terms
                     </button>
                   </div>
                 </div>
@@ -388,10 +391,10 @@ function DraftPageInner() {
                   </div>
                 )}
                 {result.evaluatorFlag && (
-                  <div className="flex items-start gap-3 px-4 py-3 bg-orange-900/20 border border-orange-700/40 rounded-xl">
-                    <span className="text-orange-400 text-sm mt-0.5">⚠</span>
-                    <p className="text-sm text-orange-200/80">
-                      This draft did not pass all automated quality checks. Review it carefully before sending.
+                  <div className="flex items-start gap-3 px-4 py-3 bg-slate-700/30 border border-slate-600/50 rounded-xl">
+                    <span className="text-slate-400 text-sm mt-0.5">✎</span>
+                    <p className="text-sm text-slate-300">
+                      A couple of spots are worth a second look — read it over and reword anything that doesn&apos;t sound like you before sending. That&apos;s expected; this is a starting point.
                     </p>
                   </div>
                 )}
