@@ -1,0 +1,54 @@
+id,corpus,pi,replied,tag,notes
+A01,A,A01,0,,PHLPP1 / cell division. Co-addressed to two PIs.
+A02,A,A02,0,,CD8 T cell differentiation.
+A03,A,A03,1,gold_warm,"REPLIED. Not cold: student had visited the lab in person. Gold for the warm-contact dimension only, not for prose."
+A04,A,A04,0,,Transportome.
+A05,A,A05,0,,ER inheritance.
+A06,A,A06,0,,CRISPRa in mosquitoes. Used the 'outdoorsy student' personal hook.
+A07,A,A07,0,,Dfm1 / ERAD.
+A08,A,A08,1,,REPLIED. Immune cell differentiation.
+A09,A,A09,0,,Mosquitoes. 'Outdoorsy' hook.
+A10,A,A10,1,,REPLIED. Mosquitoes / dengue. 'Outdoorsy' hook.
+A11,A,A11,0,,Glycans.
+A12,A,A12,0,,Abiotic lipids. Near-duplicate of A13.
+A13,A,A13,0,,Abiotic lipids. NEAR-DUPLICATE of A12. Form-email risk.
+A14,A,A14,1,,REPLIED. OGT fuel-sensing in neurons.
+A15,A,A15,0,,LRRK2 inhibitors.
+A16,A,A16,1,,REPLIED. L22 ribosome / magnesium tradeoff.
+A17,A,A17,1,,REPLIED. Dynein / Ppk channels.
+A18,A,A18,1,,REPLIED. pPDH reverse marker. Named a specific publication by title.
+A19,A,A19,0,,Basal ganglia / GABA.
+A20,A,A20,0,,CD28 / immune checkpoints.
+A21,A,A21,0,,mRNA localization.
+A22,A,A22,0,,Opioid peptide sensors.
+A23,A,A23,0,,hAPP / CA3 memory.
+A24,A,A24,0,,EPI vesicle / Chimalliviridae.
+A25,A,A25,1,,REPLIED. Liver cancer immunotherapy.
+A26,A,A26,0,,Dengue NS1.
+A27,A,A27,1,,REPLIED. Dung beetles / developmental plasticity. 'Outdoorsy' hook.
+A28,A,A28,1,,REPLIED. Phage therapy / gene drives.
+A29,A,A29,0,,T-cell exhaustion.
+A30,A,A30,0,,iPSC / Down syndrome.
+A31,A,A31,0,,C. elegans immunity.
+A32,A,A32,0,,Cellular senescence.
+A33,A,A33,0,,Gene drives / malaria.
+A34,A,A34,0,,Second email to A07. TA referral ([a TA]). Referral did NOT convert here.
+A35,A,A35,1,gold_warm,REPLIED. TA referral: [a TA] recommended the lab BY NAME. Warm contact.
+A36,A,A36,0,,Plant DNA methylation / ecDNA.
+A37,A,A37,1,gold,"REPLIED. BECAME AN ACTUAL JOB. Tier 0, zero experience, strongest domain fit (gut immunology + microbiome). The single most important email in the corpus: proves domain fit beats credentials."
+A38,A,A38,1,,REPLIED. Stomatal regulation.
+A39,A,A39,0,,GPCRs / glioblastoma.
+A40,A,A40,0,,Dynein / cryo-EM.
+A41,A,A41,0,,Autophagy in cancer.
+B01,B,B01,0,negative,0-FOR-8. SigProfilerAssignment. Method-admiration. Wet student -> dry lab. Modality mismatch.
+B02,B,B02,0,negative_key,0-FOR-8. THE CANONICAL NEGATIVE. Best-written email in the corpus. Germline-vs-somatic polygenic-risk-score analogy is genuinely sharp. Got silence. This is exactly what an LLM produces by default.
+B03,B,B03,0,negative,0-FOR-8. LongTR + missing heritability. Best multi-paper synthesis in the corpus. Still failed. Modality mismatch.
+B04,B,B04,0,negative,0-FOR-8. B. fragilis pangenome. Implication-chasing: 'could guide IBD treatment.' Fails the lab-swap test.
+B05,B,B05,0,negative,0-FOR-8. eQTL + chromatin QTL. Textbook coursework-to-paper bridge. Modality mismatch.
+B06,B,B06,1,gold,REPLIED. MICAL2 + cancer informatics commentary. Multi-paper synthesis. Cancer informatics partially overlapped his domain.
+B07,B,B07,1,ab_test_a,REPLIED (PI replied; two drafts exist for this PI). v1 leads with 'I was fascinated by your paper.' Compare to B08.
+B08,B,B08,1,gold,REPLIED. THE COMPLEMENTARITY GOLD. Leads with the A37 experience and frames computation as COMPLEMENTING immunology rather than something to be taught. The only email in 53 with a value-to-lab framing. This is the shape the tool should hunt for.
+B09,B,B09,0,negative,0-FOR-8. eCLIP / SARS-CoV-2 RNA-protein. Large famous flooded lab. Low accessibility + modality mismatch.
+B10,B,B10,1,gold,REPLIED. PTPN2 haploinsufficiency x microbiome x Treg destabilization. Domain fit (microbiome/immune) + coursework anchor + specific recent paper. Strongest overall gold.
+B11,B,B11,0,negative,0-FOR-8. Designed protein assemblies / oligomorphism. Zero overlap with anything he had done.
+B12,B,B12,0,negative,0-FOR-8. RUNX1 variant phenotyping. Most scientifically mature forward question in the corpus (VUS classification). Still failed. Modality mismatch.

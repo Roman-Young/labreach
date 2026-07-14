@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "corpus:anonymize": "node evals/anonymize.mjs",
+    "eval:ingest": "node evals/ingest.mjs",
+    "eval:judge": "node evals/eval-judge.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.106.0",
