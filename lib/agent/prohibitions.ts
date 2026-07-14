@@ -10,8 +10,16 @@ export interface ProhibitedPattern {
 // workflows/skills/the-humanizer.md. Style judgments (resume dumping, jargon level, sentence-length
 // variance, shared-vocabulary-only connections, self-focus imbalance) can't be regexed honestly —
 // those live in the evaluator's `naturalness` axis instead (lib/agent/evaluator.ts).
+//
+// The AI-vocabulary block below is model-agnostic AI slop that Gemini Flash also produces, so it
+// carries over from the Claude era unchanged. The two "Flash tell" entries were added after reading
+// real Gemini-3.x-Flash drafts (WS1): "caught my eye" recurred as a science-paragraph opener, and
+// the "recently read/came across your paper" opener leaked past the prompt-only ban. This is a
+// preliminary derivation on a small sample — widen it once real end-to-end runs produce more drafts.
 export const PROHIBITED_PATTERNS: ProhibitedPattern[] = [
   { label: 'em dash', regex: /—/g },
+  { label: 'Flash tell: "caught my eye"', regex: /\bcaught my eye\b/gi },
+  { label: 'Flash tell: formulaic "recently read/came across ... paper" opener', regex: /\b(?:recently (?:read|came across)|came across your (?:paper|work|research))\b/gi },
   { label: 'assertion phrase: "directly connects to"', regex: /\bdirectly connects to\b/gi },
   { label: 'assertion phrase: "directly transfers to"', regex: /\bdirectly transfers to\b/gi },
   { label: 'assertion phrase: "directly supports"', regex: /\bdirectly supports\b/gi },

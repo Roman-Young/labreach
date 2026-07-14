@@ -1,12 +1,32 @@
-import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai'
 import { withRetry } from '@/lib/retry'
 import { kvGet, KV_KEYS } from '@/lib/kv'
 import { findBestArcs } from './examples'
 import type { TrainingArc } from './examples'
 import { renderProhibitionsForPrompt } from './prohibitions'
+import { writerModel } from './models'
 import type { AgentResult, ResearchRequest, ResearchEvidence } from '@/types'
 
-const MODEL = 'claude-sonnet-4-6'
+// The writer's JSON-out contract. responseMimeType + responseSchema make Gemini
+// return exactly these fields, matching digest.ts / evaluator.ts. The body comes
+// back as an ordered array of paragraphs, not one string: Flash emits inter-paragraph
+// newlines unreliably (Claude did not), which produced wall-of-text drafts. Joining
+// the array in code guarantees the paragraph breaks deterministically.
+const WRITER_SCHEMA = {
+  type: SchemaType.OBJECT,
+  properties: {
+    subject: { type: SchemaType.STRING, description: 'The email subject line' },
+    bodyParagraphs: {
+      type: SchemaType.ARRAY,
+      description:
+        'The email body as an ordered list of paragraphs: the greeting, then each paragraph P1–P4, then the attachment line if one is required, then the sign-off. One paragraph per list item, with no blank lines inside an item.',
+      items: { type: SchemaType.STRING },
+    },
+    specificHook: { type: SchemaType.STRING, description: 'The hook you used, restated as a standalone sentence' },
+    bridgeSentence: { type: SchemaType.STRING, description: 'The bridge you used, restated as a standalone sentence' },
+  },
+  required: ['subject', 'bodyParagraphs', 'specificHook', 'bridgeSentence'],
+}
 
 function safeParseJson<T>(text: string): T | null {
   try {
@@ -65,10 +85,8 @@ export async function writeEmail(
   piFeedback?: string,
   onProgress?: (message: string) => void,
 ): Promise<{ subject: string; body: string; specificHook: string; bridgeSentence: string }> {
-  const apiKey = process.env.ANTHROPIC_API_KEY
-  if (!apiKey) {
-    return { subject: research.subject, body: research.body, specificHook: '', bridgeSentence: '' }
-  }
+  const apiKey = process.env.GOOGLE_AI_API_KEY
+  if (!apiKey) throw new Error('GOOGLE_AI_API_KEY is not set')
 
   const profile = request.profile
   const [learningSynthesis, calibrationSynthesis, trainingArcs] = await Promise.all([
@@ -213,47 +231,36 @@ ${renderProhibitionsForPrompt()}
 - Connection via shared vocabulary only: "we both do computational work" is not a real connection — make it specific or express curiosity about transferability
 - Missing the humility line for students with limited or no experience — it is required
 
-REFERENCE EMAIL — this is the gold standard for structure and tone. Follow its shape and register, but do NOT reuse its opening phrasing ("Recently, I came across your paper...") — vary how your science paragraph begins:
-Dear Professor Peters,
-My name is Roman Young. I am an incoming second-year UCSD student majoring in Biology specializing in Bioinformatics.
-
-Recently, I came across your paper on cow milk epitopes in allergic children and was fascinated by how you combined proteomics, bioinformatics, and single-cell sequencing to identify T-cell responses. I found it especially exciting how this approach could lead to more precise diagnostics and potentially new treatments for food allergies and other immune-related diseases. Reading about this made me realize how powerful computational tools can be in uncovering mechanisms of immune tolerance and disease.
-
-This past year, I gained wet-lab experience with the Ramanan Lab at the Salk studying gut immunology and breast cancer. But as a beginning Bioinformatics student, I'd love to learn more about computational immunology in a hands-on research setting. I am very new but eager to learn, and I would be grateful for any opportunities to get involved with your team and learn more this upcoming school year. I've attached my resume and transcript for reference.
-
-Thank you for your time,
-Roman Young
-
 Length: 200-280 words total.
 
-Return JSON only: { "subject": "...", "body": "...", "specificHook": "...", "bridgeSentence": "..." }
+Return the body as "bodyParagraphs": an ordered list where each item is one paragraph — the greeting, then P1, P2, P3, P4, then the attachment line if one is required, then the sign-off. Do not put blank lines inside an item.
 "specificHook" and "bridgeSentence" should restate, as standalone sentences, the hook and bridge you composed and used in the email — not new content, just the same choices stated plainly outside the email body.`
 
-  const anthropic = new Anthropic({ apiKey })
-  const text = await withRetry(async () => {
-    let accumulated = ''
-    let stage = 0
-    const stream = anthropic.messages.stream({
-      model: MODEL,
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }],
-    })
-    stream.on('text', (chunk) => {
-      accumulated += chunk
-      if (onProgress) {
-        if (stage === 0 && accumulated.length >= 400) { onProgress('Drafting the science paragraph...'); stage = 1 }
-        else if (stage === 1 && accumulated.length >= 800) { onProgress('Matching your voice...'); stage = 2 }
-        else if (stage === 2 && accumulated.length >= 1200) { onProgress('Finishing up...'); stage = 3 }
-      }
-    })
-    await stream.finalMessage()
-    return accumulated
+  onProgress?.('Drafting your email...')
+  const genAI = new GoogleGenerativeAI(apiKey)
+  const model = genAI.getGenerativeModel({
+    model: writerModel(),
+    generationConfig: {
+      temperature: 0.7,
+      responseMimeType: 'application/json',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      responseSchema: WRITER_SCHEMA as any,
+    },
   })
-  const parsed = safeParseJson<{ subject: string; body: string; specificHook: string; bridgeSentence: string }>(text)
 
-  if (!parsed?.subject || !parsed?.body || !parsed?.specificHook || !parsed?.bridgeSentence) {
+  const text = await withRetry(async () => {
+    const res = await model.generateContent(prompt)
+    return res.response.text()
+  })
+  const parsed = safeParseJson<{ subject: string; bodyParagraphs: string[]; specificHook: string; bridgeSentence: string }>(text)
+
+  const paragraphs = parsed?.bodyParagraphs?.map((p) => p.trim()).filter(Boolean) ?? []
+  if (!parsed?.subject || paragraphs.length === 0 || !parsed?.specificHook || !parsed?.bridgeSentence) {
     throw new Error('Writer returned malformed output — please try again')
   }
 
-  return parsed
+  // Join in code so paragraph breaks are guaranteed regardless of the model's
+  // inline-newline behavior (see WRITER_SCHEMA note).
+  const body = paragraphs.join('\n\n')
+  return { subject: parsed.subject, body, specificHook: parsed.specificHook, bridgeSentence: parsed.bridgeSentence }
 }

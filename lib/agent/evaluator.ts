@@ -4,9 +4,8 @@ import { withRetry } from '@/lib/retry'
 import { kvGet, KV_KEYS } from '@/lib/kv'
 import { checkStructure } from './structure-check'
 import { checkProhibitions } from './prohibitions'
+import { evalModel } from './models'
 import type { EvaluatorVerdict, ResearchEvidence, StudentProfile } from '@/types'
-
-const DEFAULT_EVALUATOR_MODEL = 'gemini-2.5-flash'
 
 interface LlmGradedAxes {
   opener: { pass: boolean; quote: string | null }
@@ -188,7 +187,7 @@ export interface EvaluateDraftResult {
 export async function evaluateDraft(input: EvaluateDraftInput): Promise<EvaluateDraftResult> {
   const { draft, evidence, profile, onProgress } = input
   const template = input.evaluatorPrompt ?? DEFAULT_EVALUATOR_PROMPT
-  const modelName = input.model ?? DEFAULT_EVALUATOR_MODEL
+  const modelName = input.model ?? evalModel()
 
   onProgress?.('Reviewing draft quality...')
 

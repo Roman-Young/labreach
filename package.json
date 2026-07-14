@@ -12,7 +12,6 @@
     "eval:judge": "node evals/eval-judge.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.106.0",
     "@google/generative-ai": "^0.24.1",
     "@mendable/firecrawl-js": "^4.28.3",
     "@vercel/kv": "^3.0.0",
@@ -28,6 +27,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
+    "tsx": "^4.23.1",
     "typescript": "^5"
   }
 }

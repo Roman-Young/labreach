@@ -55,11 +55,14 @@ npm run dev               # http://localhost:3000
 
 Required keys (`.env`):
 
-- `GOOGLE_AI_API_KEY` — Gemini (research, evaluator, digest). Free tier works.
+- `GOOGLE_AI_API_KEY` — Gemini. The only model key the app needs: research, digest,
+  writer, and evaluator all run on it. Free tier works.
 - `FIRECRAWL_API_KEY` — scraping lab pages. Free tier: 1,000 credits/mo; the digest costs
   1 credit per lab and caches scrapes to `.tmp/` so re-runs are free.
-- `ANTHROPIC_API_KEY` — Claude (the writer). Paid.
 - `ADMIN_PASSWORD` — gates `/admin` and the eval endpoints.
+
+Optional: `GEMINI_WRITER_MODEL` / `GEMINI_RESEARCH_MODEL` / `GEMINI_EVAL_MODEL` (all default
+to `gemini-2.5-flash`). Point the writer at a stronger model on a paid deploy; leave the rest.
 
 Storage and the whole-app gate are optional locally; see `.env.example`.
 

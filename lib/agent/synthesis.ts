@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { kvGet, kvSet, KV_KEYS } from '@/lib/kv'
 import { withRetry } from '@/lib/retry'
+import { evalModel } from './models'
 import type { TrainingSession } from '@/app/api/admin/sessions/route'
 
 export async function updateLearningSynthesis(): Promise<void> {
@@ -70,7 +71,7 @@ Be concrete. Reference what actually happened in these sessions. If a mistake ap
 
   const genAI = new GoogleGenerativeAI(apiKey)
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.5-flash',
+    model: evalModel(),
     generationConfig: { temperature: 0.4 },
   })
 

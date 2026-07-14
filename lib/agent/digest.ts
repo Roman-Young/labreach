@@ -3,9 +3,9 @@ import { scrapePage } from '@/lib/scraper'
 import { searchPubMed } from '@/lib/pubmed'
 import { withRetry } from '@/lib/retry'
 import { groundedValueOrNull } from './grounding'
+import { researchModel } from './models'
 import type { LabDigestEntry, JoinLogistics, StudentProfile, EvidenceItem } from '@/types'
 
-const MODEL = 'gemini-2.5-flash'
 const RECENT_WINDOW_YEARS = 3
 
 interface RawExtraction {
@@ -118,7 +118,7 @@ export async function digestLab(labUrl: string, profile: StudentProfile): Promis
 
   const genAI = new GoogleGenerativeAI(apiKey)
   const model = genAI.getGenerativeModel({
-    model: MODEL,
+    model: researchModel(),
     generationConfig: {
       temperature: 0.2,
       responseMimeType: 'application/json',

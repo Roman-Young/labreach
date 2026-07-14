@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { kvGet, kvSet, KV_KEYS } from '@/lib/kv'
 import { withRetry } from '@/lib/retry'
+import { evalModel } from './models'
 import type { EvaluatorLogEntry } from './eval-log'
 import type { HumanLabel } from '@/types'
 
@@ -72,7 +73,7 @@ Be concrete and reference what actually happened in these drafts.`
 
   const genAI = new GoogleGenerativeAI(apiKey)
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.5-flash',
+    model: evalModel(),
     generationConfig: { temperature: 0.4 },
   })
 

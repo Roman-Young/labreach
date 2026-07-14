@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { GEMINI_FUNCTION_DECLARATIONS, executeTool, ToolCallCounts } from './tools'
 import { buildSystemPrompt } from './prompts'
+import { researchModel } from './models'
 import { writeEmail } from './writer'
 import { evaluateDraft, getActiveEvaluatorPrompt } from './evaluator'
 import { buildCritique } from './critique'
@@ -50,7 +51,7 @@ export async function runAgent(
 
   const genAI = new GoogleGenerativeAI(apiKey)
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.5-flash',
+    model: researchModel(),
     systemInstruction: systemPrompt,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tools: [{ functionDeclarations: GEMINI_FUNCTION_DECLARATIONS }] as any,
