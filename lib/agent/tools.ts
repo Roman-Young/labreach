@@ -190,6 +190,7 @@ export async function executeTool(
   name: string,
   input: Record<string, unknown>,
   counts: ToolCallCounts,
+  sources: string[],
   onProgress: (message: string) => void,
 ): Promise<{ result: string; finished: boolean; agentResult?: AgentResult }> {
   if (name === 'fetch_webpage') {
@@ -202,7 +203,9 @@ export async function executeTool(
     onProgress(`Fetching: ${reason}...`)
     try {
       const markdown = await scrapePage(url)
-      return { result: markdown.slice(0, 12000), finished: false }
+      const seen = markdown.slice(0, 12000)
+      sources.push(seen) // retain for grounding — only text we actually fetched can be quoted
+      return { result: seen, finished: false }
     } catch (e) {
       return { result: `Error fetching ${url}: ${(e as Error).message}`, finished: false }
     }
@@ -213,7 +216,9 @@ export async function executeTool(
     onProgress('Searching PubMed for recent publications...')
     try {
       const results = await searchPubMed(query, 5)
-      return { result: JSON.stringify(results, null, 2), finished: false }
+      const rendered = JSON.stringify(results, null, 2)
+      sources.push(results.map((r) => r.title).join('\n'))
+      return { result: rendered, finished: false }
     } catch (e) {
       return { result: `PubMed search error: ${(e as Error).message}`, finished: false }
     }
@@ -229,6 +234,8 @@ export async function executeTool(
     try {
       const abstract = await fetchAbstract(pmid)
       if (!abstract) return { result: 'Abstract not found', finished: false }
+      // Push the raw title + abstract text (not the JSON) so grounding matches clean prose.
+      sources.push(`${abstract.title}\n${abstract.abstract}`)
       return { result: JSON.stringify(abstract, null, 2), finished: false }
     } catch (e) {
       return { result: `Abstract fetch error: ${(e as Error).message}`, finished: false }
@@ -251,6 +258,7 @@ export async function executeTool(
       const pmcUrl = `https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${pmcid}/`
       const markdown = await scrapePage(pmcUrl)
       const keyContent = extractKeySection(markdown)
+      sources.push(keyContent)
       return { result: `Full paper content (PMC${pmcid}) — Discussion/Future Directions:\n\n${keyContent}`, finished: false }
     } catch (e) {
       return { result: `Full paper fetch failed: ${(e as Error).message}`, finished: false }

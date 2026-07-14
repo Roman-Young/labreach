@@ -5,6 +5,7 @@ import { writeEmail } from './writer'
 import { evaluateDraft, getActiveEvaluatorPrompt } from './evaluator'
 import { buildCritique } from './critique'
 import { logEvaluatorVerdict } from './eval-log'
+import { verifyGrounding } from './grounding'
 import { scrapePage } from '@/lib/scraper'
 import { withRetry } from '@/lib/retry'
 import type { AgentResult, ResearchRequest, ResearchEvidence } from '@/types'
@@ -58,12 +59,16 @@ export async function runAgent(
 
   const chat = model.startChat()
   const counts: ToolCallCounts = { fetch_webpage: 0, fetch_pubmed_abstract: 0, fetch_full_paper: 0 }
+  // Every page/abstract/paper text actually fetched this run — the ground truth that
+  // extracted quotes must appear in. Seeded with the pre-fetched homepage below.
+  const sources: string[] = []
 
   // Pre-fetch the homepage — Gemini always starts here, so we skip an entire round-trip
   onProgress('Fetching lab page...')
   let homepageMarkdown = ''
   try {
     homepageMarkdown = (await scrapePage(request.labUrl)).slice(0, 12000)
+    sources.push(homepageMarkdown)
     counts.fetch_webpage++
     onProgress('Analyzing lab research...')
   } catch {
@@ -88,7 +93,7 @@ export async function runAgent(
     // so counter check-and-increment in executeTool runs synchronously before any await yields
     const results = await Promise.all(
       functionCalls.map((fc) =>
-        executeTool(fc.name, fc.args as Record<string, unknown>, counts, onProgress)
+        executeTool(fc.name, fc.args as Record<string, unknown>, counts, sources, onProgress)
       )
     )
 
@@ -102,15 +107,28 @@ export async function runAgent(
     if (agentResult) {
       const ar = agentResult
 
+      // Grounding gate: discard any quote that does not appear verbatim in a page we
+      // actually fetched. Downstream (writer, noFabrication axis) then only ever sees
+      // verified evidence. This is the code-level enforcement the design requires.
+      const grounded = verifyGrounding(ar.evidence, sources)
+      if (grounded.dropped.length > 0) {
+        onProgress(`Verifying sources (discarded ${grounded.dropped.length} unverifiable quote${grounded.dropped.length === 1 ? '' : 's'})...`)
+      }
+      ar.evidence = grounded.evidence
+
       // One-shot evidence quality gate — only reject once so we never loop indefinitely
       if (!evidenceRejected) {
         const evidenceIssue = checkEvidenceQuality(ar.evidence)
         if (evidenceIssue) {
           evidenceRejected = true
           onProgress('Digging deeper into the research...')
+          const groundingNote =
+            grounded.dropped.length > 0
+              ? `${grounded.dropped.length} quote${grounded.dropped.length === 1 ? '' : 's'} you submitted could not be found verbatim in any page you fetched and ${grounded.dropped.length === 1 ? 'was' : 'were'} discarded. You must quote exact text, character-for-character, from a page you actually read. `
+              : ''
           response = await withRetry(() =>
             chat.sendMessage(
-              `Your extracted evidence is too generic: ${evidenceIssue}\n\nFetch the abstract or full text of one specific paper and pull exact quotes of findings or claims. Then call finish() again.`
+              `${groundingNote}Your extracted evidence is too generic: ${evidenceIssue}\n\nFetch the abstract or full text of one specific paper and pull exact quotes of findings or claims. Then call finish() again.`
             )
           )
           continue
