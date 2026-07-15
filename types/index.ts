@@ -190,6 +190,8 @@ export interface LabResearchBundle {
   findings: LabFinding[]             // grounded + recency-filtered; findings[0] is the flagged standout
   methods: string[]                  // notable/unusual methods in plain language (from grounded text)
   extrapolations: LabExtrapolation[] // "could do next", as curiosity prompts
+  glossary: GlossaryEntry[]          // plain explanations of the technical terms used above, for
+                                     // non-experts screening labs across sectors (click-to-explain)
   mostRecentPaperYear: number | null
   publicationVolume: number | null   // recent-window paper count from PubMed → flood proxy
   hasRecentWork: boolean             // false => surface "no recent work to hook onto"

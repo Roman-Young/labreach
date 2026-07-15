@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import type { StudentProfile, LabDigestEntry, LabFinding, DigestEvent } from '@/types'
+import GlossaryText from '@/components/GlossaryText'
+import type { StudentProfile, LabDigestEntry, LabFinding, GlossaryEntry, DigestEvent } from '@/types'
 
 const PROFILE_KEY = 'labreach_profile'
 
@@ -46,14 +47,14 @@ function LogisticsRow({ label, value }: { label: string; value: string | null })
   )
 }
 
-function FindingRow({ finding, standout }: { finding: LabFinding; standout?: boolean }) {
+function FindingRow({ finding, standout, glossary }: { finding: LabFinding; standout?: boolean; glossary: GlossaryEntry[] }) {
   const [showQuote, setShowQuote] = useState(false)
   return (
     <div className={`rounded-lg p-3 ${standout ? 'bg-teal-900/20 border border-teal-800/50' : 'bg-slate-900/40 border border-slate-700/50'}`}>
       {standout && <p className="text-[10px] font-semibold uppercase tracking-wider text-teal-400 mb-1">Strongest hook</p>}
-      <p className="text-sm text-slate-200 leading-snug">{finding.plainSummary}</p>
+      <p className="text-sm text-slate-200 leading-snug"><GlossaryText text={finding.plainSummary} glossary={glossary} /></p>
       <p className="text-xs text-slate-400 mt-1 leading-snug">
-        <span className="text-slate-500">Why it matters: </span>{finding.significance}
+        <span className="text-slate-500">Why it matters: </span><GlossaryText text={finding.significance} glossary={glossary} />
       </p>
       <div className="flex items-center gap-2 mt-1.5 text-[11px] text-slate-600">
         {finding.year && <span>{finding.year}</span>}
@@ -111,7 +112,7 @@ function LabCard({ entry, onWrite }: { entry: LabDigestEntry; onWrite: (e: LabDi
           <p className="text-xs font-semibold text-slate-400 mb-1.5">Recent findings</p>
           <div className="space-y-2">
             {b.findings.map((f, i) => (
-              <FindingRow key={i} finding={f} standout={i === 0 && b.findings.length > 1} />
+              <FindingRow key={i} finding={f} standout={i === 0 && b.findings.length > 1} glossary={b.glossary} />
             ))}
           </div>
         </div>
@@ -135,7 +136,7 @@ function LabCard({ entry, onWrite }: { entry: LabDigestEntry; onWrite: (e: LabDi
             {b.extrapolations.map((e, i) => (
               <li key={i} className="text-sm text-slate-300 leading-snug flex gap-2">
                 <span className="text-teal-500 shrink-0">→</span>
-                <span>{e.direction}</span>
+                <GlossaryText text={e.direction} glossary={b.glossary} />
               </li>
             ))}
           </ul>

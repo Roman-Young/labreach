@@ -2,7 +2,6 @@ import { createHash } from 'crypto'
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai'
 import { scrapePage } from '@/lib/scraper'
 import { searchPubMed, fetchAbstract } from '@/lib/pubmed'
-import { withRetry } from '@/lib/retry'
 import { kvGet, kvSet } from '@/lib/kv'
 import { groundedValueOrNull } from './grounding'
 import { researchModel } from './models'
@@ -11,6 +10,7 @@ import type {
   LabResearchBundle,
   LabFinding,
   LabExtrapolation,
+  GlossaryEntry,
   JoinLogistics,
   PublicationRef,
   StudentProfile,
@@ -22,7 +22,7 @@ const RECENT_WINDOW_YEARS = 3
 const RECENCY_MAX_AGE_YEARS = 4
 const MAX_ABSTRACTS = 4 // recent abstracts to read per lab (fetched in parallel; PubMed is free)
 const BUNDLE_TTL_SECONDS = 60 * 24 * 60 * 60 // 60 days — labs change; a stale bundle undercuts recency
-const BUNDLE_KEY_PREFIX = 'bundle:v2:' // bump to invalidate cached bundles when the pipeline changes
+const BUNDLE_KEY_PREFIX = 'bundle:v3:' // bump to invalidate cached bundles when the pipeline changes
 
 // ---------------------------------------------------------------------------
 // Call 1 — grounded extraction from the lab homepage.
@@ -64,8 +64,8 @@ const HOMEPAGE_SCHEMA = {
         type: SchemaType.OBJECT,
         properties: {
           quote: { type: SchemaType.STRING, description: 'EXACT verbatim quote from the page, character-for-character, naming the finding/claim.' },
-          plainSummary: { type: SchemaType.STRING, description: 'The finding in one plain sentence a curious sophomore would understand.' },
-          significance: { type: SchemaType.STRING, description: 'One sentence on why this is scientifically interesting or what it could matter for. Your interpretation, grounded in the quote — not hype.' },
+          plainSummary: { type: SchemaType.STRING, description: 'The finding in one plain sentence a curious sophomore with no background in this field would understand. No jargon.' },
+          significance: { type: SchemaType.STRING, description: '2-3 plain sentences on what this finding means and why it matters — the broader scientific implications and where it could lead — written so a non-expert undergrad screening labs across many fields could follow it. Your interpretation, grounded in the quote, not hype.' },
         },
         required: ['quote', 'plainSummary', 'significance'],
       },
@@ -106,6 +106,7 @@ ${pageText}`
 interface ReasoningExtraction {
   abstractFindings: Array<{ quote: string; sourceIndex: number; plainSummary: string; significance: string }>
   extrapolations: Array<{ direction: string; basedOn: string }>
+  glossary: Array<{ term: string; explanation: string }>
   standoutQuote: string
 }
 
@@ -121,8 +122,8 @@ const REASONING_SCHEMA = {
         properties: {
           quote: { type: SchemaType.STRING, description: 'A full sentence copied CHARACTER-FOR-CHARACTER from the abstract text — a real result sentence, NOT the paper title, and NOT paraphrased. If you cannot copy an exact sentence, do not include this finding. This is verified against the abstract and dropped if it does not match.' },
           sourceIndex: { type: SchemaType.NUMBER, description: 'The index (0-based) of the abstract this quote came from.' },
-          plainSummary: { type: SchemaType.STRING, description: 'The finding in one plain sentence a curious sophomore would understand (your own words).' },
-          significance: { type: SchemaType.STRING, description: 'One sentence on why it is scientifically interesting (your own words, grounded in the quote).' },
+          plainSummary: { type: SchemaType.STRING, description: 'The finding in one plain sentence a curious sophomore with no background in this field would understand. No jargon (your own words).' },
+          significance: { type: SchemaType.STRING, description: '2-3 plain sentences on what this finding means and why it matters — the broader implications and where it could lead — for a non-expert undergrad screening labs across many fields (your own words, grounded in the quote).' },
         },
         required: ['quote', 'sourceIndex', 'plainSummary', 'significance'],
       },
@@ -140,12 +141,25 @@ const REASONING_SCHEMA = {
         required: ['direction', 'basedOn'],
       },
     },
+    glossary: {
+      type: SchemaType.ARRAY,
+      description:
+        'Plain-language explanations of the technical terms and jargon that appear in the findings, significance, and extrapolations above — so a curious undergrad new to this field can follow them. Include any term a non-expert screening labs across many sectors would likely not know (e.g. "mTOR signaling", "integrated stress response", "tRNA isoacceptor", "angiogenesis"). 4-10 terms; each explanation is 1-2 plain sentences with no further jargon. The term must appear verbatim in the text above so it can be highlighted.',
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          term: { type: SchemaType.STRING, description: 'The technical term exactly as it appears in the text above.' },
+          explanation: { type: SchemaType.STRING, description: 'A plain 1-2 sentence explanation a non-expert undergrad would understand.' },
+        },
+        required: ['term', 'explanation'],
+      },
+    },
     standoutQuote: {
       type: SchemaType.STRING,
       description: 'The exact quote (from either the homepage findings or the abstracts) of the single most unique/interesting finding — the one a student should hook onto. Must match one of the quotes verbatim.',
     },
   },
-  required: ['abstractFindings', 'extrapolations', 'standoutQuote'],
+  required: ['abstractFindings', 'extrapolations', 'glossary', 'standoutQuote'],
 }
 
 function reasoningPrompt(
@@ -167,10 +181,11 @@ ${websiteBlock}
 Recent paper abstracts (read these for specific, recent findings):
 ${abstractsBlock}
 
-Do three things:
-1. abstractFindings: pull the most specific RESULTS from the abstracts. For each, copy one full result sentence CHARACTER-FOR-CHARACTER from the abstract as the quote (never the paper title, never a paraphrase — the quote is verified against the abstract and silently dropped if it is not an exact match). Give the abstract's index, plus your own plain summary and significance. Prefer 1-2 findings per abstract, spread across the abstracts rather than many from one. Empty array only if the abstracts truly contain no quotable result.
+Do four things:
+1. abstractFindings: pull the most specific RESULTS from the abstracts. For each, copy one full result sentence CHARACTER-FOR-CHARACTER from the abstract as the quote (never the paper title, never a paraphrase — the quote is verified against the abstract and silently dropped if it is not an exact match). Give the abstract's index, plus your own plain summary and a 2-3 sentence plain-language significance. Prefer 1-2 findings per abstract, spread across the abstracts rather than many from one. Empty array only if the abstracts truly contain no quotable result.
 2. extrapolations: 2-4 open directions this work could lead to next — the kind of thing a curious student might wonder about. Frame every one as a possibility or open question, never as advice to the lab and never as established fact.
-3. standoutQuote: copy the exact quote (from the website findings or the abstracts) of the single most unique/interesting finding — the one worth hooking an email onto.`
+3. glossary: explain, in plain language, the technical terms that appear in your findings/significance/extrapolations — for a student new to this field who is screening labs across many sectors. Include any term a non-expert wouldn't know; the term must appear verbatim in your text so it can be highlighted.
+4. standoutQuote: copy the exact quote (from the website findings or the abstracts) of the single most unique/interesting finding — the one worth hooking an email onto.`
 }
 
 // ---------------------------------------------------------------------------
@@ -226,6 +241,37 @@ function bundleKeyFor(labUrl: string): string {
   return `${BUNDLE_KEY_PREFIX}${createHash('sha1').update(normalizeUrl(labUrl)).digest('hex')}`
 }
 
+function safeParseJson<T>(text: string): T | null {
+  try {
+    return JSON.parse(text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim()) as T
+  } catch {
+    return null
+  }
+}
+
+// Generate + parse JSON with retries. Even with a responseSchema, Gemini occasionally
+// returns malformed or empty JSON; a single such failure previously zeroed the whole
+// reasoning step (losing glossary + extrapolations + abstract findings) because
+// withRetry only retries transient HTTP errors, not parse failures. Retrying here makes
+// a silent total loss rare — which matters because the result is cached for 60 days.
+async function generateJson<T>(
+  model: { generateContent: (p: string) => Promise<{ response: { text: () => string } }> },
+  prompt: string,
+  attempts = 3,
+): Promise<T | null> {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await model.generateContent(prompt)
+      const parsed = safeParseJson<T>(res.response.text())
+      if (parsed) return parsed
+    } catch {
+      // transient request error — fall through to retry
+    }
+    if (i < attempts - 1) await new Promise((r) => setTimeout(r, 1500 * (i + 1)))
+  }
+  return null
+}
+
 // ---------------------------------------------------------------------------
 // getLabResearchBundle — the single research pass. Public, cacheable, no student
 // data. Checks KV first; on a miss it scrapes + reads abstracts + extracts +
@@ -261,10 +307,8 @@ export async function getLabResearchBundle(labUrl: string): Promise<LabResearchB
     },
   })
 
-  const home = await withRetry(async () => {
-    const res = await model.generateContent(homepagePrompt(pageText))
-    return JSON.parse(res.response.text()) as HomepageExtraction
-  })
+  const home = await generateJson<HomepageExtraction>(model, homepagePrompt(pageText))
+  if (!home) throw new Error('Could not extract this lab from its page — please try again')
 
   const piName = (home.piName || '').trim()
 
@@ -287,14 +331,25 @@ export async function getLabResearchBundle(labUrl: string): Promise<LabResearchB
       }
       // Read the most recent abstracts (already sorted by date) for real paper content.
       // Fetched in parallel so breadth doesn't cost linear latency; order is preserved.
+      // NCBI rate-limits ~3 req/s without a key, so a burst of parallel efetch calls can
+      // drop some — one retry after a short pause recovers most transient failures, which
+      // is what keeps the finding count stable (abstract findings anchor the digest).
+      const fetchAbstractResilient = async (pmid: string) => {
+        for (let attempt = 0; attempt < 2; attempt++) {
+          try {
+            const a = await fetchAbstract(pmid)
+            if (a && a.abstract.trim()) return a
+          } catch {
+            // fall through to retry
+          }
+          if (attempt === 0) await new Promise((r) => setTimeout(r, 500))
+        }
+        return null
+      }
       const fetched = await Promise.all(
         pubs.slice(0, MAX_ABSTRACTS).map(async (p) => {
-          try {
-            const a = await fetchAbstract(p.pmid)
-            return a && a.abstract.trim() ? { p, a } : null
-          } catch {
-            return null
-          }
+          const a = await fetchAbstractResilient(p.pmid)
+          return a ? { p, a } : null
         }),
       )
       for (const item of fetched) {
@@ -320,15 +375,15 @@ export async function getLabResearchBundle(labUrl: string): Promise<LabResearchB
       responseSchema: REASONING_SCHEMA as any,
     },
   })
-  let reasoning: ReasoningExtraction = { abstractFindings: [], extrapolations: [], standoutQuote: '' }
-  try {
-    reasoning = await withRetry(async () => {
-      const res = await reasoningModel.generateContent(reasoningPrompt(home.findings ?? [], abstracts))
-      return JSON.parse(res.response.text()) as ReasoningExtraction
-    })
-  } catch {
-    // extrapolation is best-effort; a lab with only grounded findings is still useful
-  }
+  // Best-effort: a lab with only grounded homepage findings is still useful if this fails
+  // entirely, but generateJson retries so that outcome is now rare.
+  const reasoning: ReasoningExtraction =
+    (await generateJson<ReasoningExtraction>(reasoningModel, reasoningPrompt(home.findings ?? [], abstracts))) ?? {
+      abstractFindings: [],
+      extrapolations: [],
+      glossary: [],
+      standoutQuote: '',
+    }
 
   // Ground every quote against what we actually fetched. Anything not verbatim is dropped.
   const corpus = [pageText, ...abstracts.map((a) => `${a.title}\n${a.abstract}`)]
@@ -399,6 +454,9 @@ export async function getLabResearchBundle(labUrl: string): Promise<LabResearchB
     methods: (home.methods ?? []).filter((m) => m && m.trim()),
     extrapolations: (reasoning.extrapolations ?? []).filter(
       (e): e is LabExtrapolation => !!e.direction && !!e.direction.trim(),
+    ),
+    glossary: (reasoning.glossary ?? []).filter(
+      (g): g is GlossaryEntry => !!g.term && !!g.term.trim() && !!g.explanation && !!g.explanation.trim(),
     ),
     mostRecentPaperYear,
     publicationVolume,
