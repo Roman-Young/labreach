@@ -20,9 +20,9 @@ const RECENT_WINDOW_YEARS = 3
 // Findings whose source paper is older than this many years are dropped from the bundle.
 // Enforceable on papers (we know their year); best-effort on website prose (year unknown).
 const RECENCY_MAX_AGE_YEARS = 4
-const MAX_ABSTRACTS = 2 // recent abstracts to actually read per lab (PubMed is free but rate-limited)
+const MAX_ABSTRACTS = 4 // recent abstracts to read per lab (fetched in parallel; PubMed is free)
 const BUNDLE_TTL_SECONDS = 60 * 24 * 60 * 60 // 60 days — labs change; a stale bundle undercuts recency
-const BUNDLE_KEY_PREFIX = 'bundle:v1:'
+const BUNDLE_KEY_PREFIX = 'bundle:v2:' // bump to invalidate cached bundles when the pipeline changes
 
 // ---------------------------------------------------------------------------
 // Call 1 — grounded extraction from the lab homepage.
@@ -119,10 +119,10 @@ const REASONING_SCHEMA = {
       items: {
         type: SchemaType.OBJECT,
         properties: {
-          quote: { type: SchemaType.STRING, description: 'EXACT verbatim quote from the abstract, character-for-character.' },
+          quote: { type: SchemaType.STRING, description: 'A full sentence copied CHARACTER-FOR-CHARACTER from the abstract text — a real result sentence, NOT the paper title, and NOT paraphrased. If you cannot copy an exact sentence, do not include this finding. This is verified against the abstract and dropped if it does not match.' },
           sourceIndex: { type: SchemaType.NUMBER, description: 'The index (0-based) of the abstract this quote came from.' },
-          plainSummary: { type: SchemaType.STRING, description: 'The finding in one plain sentence.' },
-          significance: { type: SchemaType.STRING, description: 'One grounded sentence on why it is scientifically interesting.' },
+          plainSummary: { type: SchemaType.STRING, description: 'The finding in one plain sentence a curious sophomore would understand (your own words).' },
+          significance: { type: SchemaType.STRING, description: 'One sentence on why it is scientifically interesting (your own words, grounded in the quote).' },
         },
         required: ['quote', 'sourceIndex', 'plainSummary', 'significance'],
       },
@@ -168,9 +168,9 @@ Recent paper abstracts (read these for specific, recent findings):
 ${abstractsBlock}
 
 Do three things:
-1. abstractFindings: pull the most specific findings from the abstracts, each with an EXACT verbatim quote and the abstract's index. Empty array if no abstracts.
+1. abstractFindings: pull the most specific RESULTS from the abstracts. For each, copy one full result sentence CHARACTER-FOR-CHARACTER from the abstract as the quote (never the paper title, never a paraphrase — the quote is verified against the abstract and silently dropped if it is not an exact match). Give the abstract's index, plus your own plain summary and significance. Prefer 1-2 findings per abstract, spread across the abstracts rather than many from one. Empty array only if the abstracts truly contain no quotable result.
 2. extrapolations: 2-4 open directions this work could lead to next — the kind of thing a curious student might wonder about. Frame every one as a possibility or open question, never as advice to the lab and never as established fact.
-3. standoutQuote: the single most unique/interesting finding's exact quote (from the website findings or the abstracts) — the one worth hooking an email onto.`
+3. standoutQuote: copy the exact quote (from the website findings or the abstracts) of the single most unique/interesting finding — the one worth hooking an email onto.`
 }
 
 // ---------------------------------------------------------------------------
@@ -285,17 +285,23 @@ export async function getLabResearchBundle(labUrl: string): Promise<LabResearchB
         mostRecentPaperYear = Math.max(...years)
         publicationVolume = years.filter((y) => y >= currentYear - RECENT_WINDOW_YEARS).length
       }
-      // Read the most recent few abstracts (already sorted by date) for real paper content.
-      for (const p of pubs.slice(0, MAX_ABSTRACTS)) {
-        try {
-          const a = await fetchAbstract(p.pmid)
-          if (a && a.abstract.trim()) {
-            abstracts.push({ title: a.title || p.title, abstract: a.abstract, year: a.year || p.year })
-            publications.push({ title: a.title || p.title, source: 'pubmed', year: a.year || p.year, pmid: p.pmid })
+      // Read the most recent abstracts (already sorted by date) for real paper content.
+      // Fetched in parallel so breadth doesn't cost linear latency; order is preserved.
+      const fetched = await Promise.all(
+        pubs.slice(0, MAX_ABSTRACTS).map(async (p) => {
+          try {
+            const a = await fetchAbstract(p.pmid)
+            return a && a.abstract.trim() ? { p, a } : null
+          } catch {
+            return null
           }
-        } catch {
-          // skip an unreadable abstract
-        }
+        }),
+      )
+      for (const item of fetched) {
+        if (!item) continue
+        const { p, a } = item
+        abstracts.push({ title: a.title || p.title, abstract: a.abstract, year: a.year || p.year })
+        publications.push({ title: a.title || p.title, source: 'pubmed', year: a.year || p.year, pmid: p.pmid })
       }
     } catch {
       // leave pubmed-derived fields empty
@@ -305,8 +311,10 @@ export async function getLabResearchBundle(labUrl: string): Promise<LabResearchB
   // Call 2 — abstract findings + extrapolation + standout flag.
   const reasoningModel = genAI.getGenerativeModel({
     model: researchModel(),
+    // Low temperature: the finding quotes must be copied verbatim or grounding drops them.
+    // The extrapolations are still specific and useful at this temperature.
     generationConfig: {
-      temperature: 0.4,
+      temperature: 0.2,
       responseMimeType: 'application/json',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       responseSchema: REASONING_SCHEMA as any,
