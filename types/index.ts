@@ -158,17 +158,51 @@ export interface JoinLogistics {
   recruitingNote: string | null      // only if the page explicitly states accept/full status
 }
 
-export interface LabDigestEntry {
+// A single grounded finding, with generated (but grounded) interpretation layered on.
+// `quote` is verbatim from a fetched page/abstract; `plainSummary` and `significance`
+// are the tool's read of it — allowed generation, but each is tied to the quote.
+export interface LabFinding {
+  quote: string                      // verbatim from a fetched page/abstract (grounded)
+  source: string                     // e.g. "Smith et al. 2024, abstract" or "Lab homepage"
+  sourceType: EvidenceItem['sourceType']
+  year: number | null                // publication year when knowable, for the recency gate
+  plainSummary: string               // the finding in plain language (generated)
+  significance: string               // why it is scientifically interesting (generated, grounded in quote)
+}
+
+// "What they could do next" — an open direction the work suggests, framed as possibility
+// to prompt the student's own thinking. Never presented as fact or as advice to the PI.
+export interface LabExtrapolation {
+  direction: string
+  basedOn: string                    // short reference to the finding it extends (traceability)
+}
+
+// The public, cacheable research bundle for a lab. Contains NO student-specific data —
+// it is shared across users and keyed by lab URL. Per-user pieces (interest overlap, the
+// bridge) are computed on top at request time and never written here.
+export interface LabResearchBundle {
   labUrl: string
+  fetchedAt: number                  // epoch ms — freshness + TTL display
   labName: string
   piName: string
   piEmail: string | null
   whatTheyWorkOn: string             // 1-2 grounded sentences
+  findings: LabFinding[]             // grounded + recency-filtered; findings[0] is the flagged standout
+  methods: string[]                  // notable/unusual methods in plain language (from grounded text)
+  extrapolations: LabExtrapolation[] // "could do next", as curiosity prompts
   mostRecentPaperYear: number | null
   publicationVolume: number | null   // recent-window paper count from PubMed → flood proxy
+  hasRecentWork: boolean             // false => surface "no recent work to hook onto"
   logistics: JoinLogistics
+  publications: PublicationRef[]
+}
+
+// The per-user digest view: the shared public bundle plus the fields that depend on
+// *this* student. The UI reads bundle.* for lab facts and these for personalization.
+export interface LabDigestEntry {
+  bundle: LabResearchBundle
   interestOverlap: number            // 0-1, for the honest interest sort only (NOT a prediction)
-  evidence: EvidenceItem[]           // grounded quotes backing whatTheyWorkOn
+  matchedInterests: string[]         // which of the student's interests matched (per-user)
 }
 
 export interface DigestRequest {

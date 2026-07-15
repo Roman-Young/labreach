@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import type { StudentProfile, LabDigestEntry, DigestEvent } from '@/types'
+import type { StudentProfile, LabDigestEntry, LabFinding, DigestEvent } from '@/types'
 
 const PROFILE_KEY = 'labreach_profile'
 
@@ -46,53 +46,118 @@ function LogisticsRow({ label, value }: { label: string; value: string | null })
   )
 }
 
+function FindingRow({ finding, standout }: { finding: LabFinding; standout?: boolean }) {
+  const [showQuote, setShowQuote] = useState(false)
+  return (
+    <div className={`rounded-lg p-3 ${standout ? 'bg-teal-900/20 border border-teal-800/50' : 'bg-slate-900/40 border border-slate-700/50'}`}>
+      {standout && <p className="text-[10px] font-semibold uppercase tracking-wider text-teal-400 mb-1">Strongest hook</p>}
+      <p className="text-sm text-slate-200 leading-snug">{finding.plainSummary}</p>
+      <p className="text-xs text-slate-400 mt-1 leading-snug">
+        <span className="text-slate-500">Why it matters: </span>{finding.significance}
+      </p>
+      <div className="flex items-center gap-2 mt-1.5 text-[11px] text-slate-600">
+        {finding.year && <span>{finding.year}</span>}
+        <button onClick={() => setShowQuote((s) => !s)} className="hover:text-slate-400">
+          {showQuote ? 'hide quote' : 'show quote'}
+        </button>
+      </div>
+      {showQuote && (
+        <p className="mt-1.5 text-xs text-slate-400 italic border-l-2 border-slate-700 pl-2">
+          &ldquo;{finding.quote}&rdquo; <span className="text-slate-600 not-italic">— {finding.source}</span>
+        </p>
+      )}
+    </div>
+  )
+}
+
 function LabCard({ entry, onWrite }: { entry: LabDigestEntry; onWrite: (e: LabDigestEntry) => void }) {
-  const [showSources, setShowSources] = useState(false)
+  const b = entry.bundle
   const hasLogistics =
-    entry.logistics.hoursExpected ||
-    entry.logistics.mechanism ||
-    entry.logistics.prerequisites ||
-    entry.logistics.contactInstructions ||
-    entry.logistics.recruitingNote
+    b.logistics.hoursExpected ||
+    b.logistics.mechanism ||
+    b.logistics.prerequisites ||
+    b.logistics.contactInstructions ||
+    b.logistics.recruitingNote
 
   return (
     <div className="bg-slate-800/50 rounded-2xl border border-slate-700 p-5">
       <div className="flex items-start justify-between gap-3 mb-2">
         <div>
-          <h3 className="text-lg font-semibold text-white">{entry.labName}</h3>
-          <p className="text-sm text-slate-400">{entry.piName}{entry.piEmail ? ` · ${entry.piEmail}` : ''}</p>
+          <h3 className="text-lg font-semibold text-white">{b.labName}</h3>
+          <p className="text-sm text-slate-400">{b.piName}{b.piEmail ? ` · ${b.piEmail}` : ''}</p>
         </div>
-        <a href={entry.labUrl} target="_blank" rel="noreferrer" className="text-xs text-teal-400 hover:text-teal-300 shrink-0 mt-1">page ↗</a>
+        <a href={b.labUrl} target="_blank" rel="noreferrer" className="text-xs text-teal-400 hover:text-teal-300 shrink-0 mt-1">page ↗</a>
       </div>
 
-      <p className="text-sm text-slate-300 mb-3">{entry.whatTheyWorkOn}</p>
+      <p className="text-sm text-slate-300 mb-3">{b.whatTheyWorkOn}</p>
+
+      {entry.matchedInterests.length > 0 && (
+        <p className="text-xs text-teal-300/90 mb-3">
+          Matches your interest in {entry.matchedInterests.join(', ')}.
+        </p>
+      )}
 
       <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 mb-3">
-        {entry.mostRecentPaperYear && <span>Most recent paper: <span className="text-slate-300">{entry.mostRecentPaperYear}</span></span>}
-        {floodNote(entry.publicationVolume) && <span className="text-slate-400">{floodNote(entry.publicationVolume)}</span>}
+        {b.mostRecentPaperYear && <span>Most recent paper: <span className="text-slate-300">{b.mostRecentPaperYear}</span></span>}
+        {floodNote(b.publicationVolume) && <span className="text-slate-400">{floodNote(b.publicationVolume)}</span>}
       </div>
+
+      {!b.hasRecentWork && (
+        <p className="text-xs text-amber-400/80 mb-3">No recent work to hook onto — this lab has no findings from the last few years to reference.</p>
+      )}
+
+      {b.findings.length > 0 && (
+        <div className="mb-3">
+          <p className="text-xs font-semibold text-slate-400 mb-1.5">Recent findings</p>
+          <div className="space-y-2">
+            {b.findings.map((f, i) => (
+              <FindingRow key={i} finding={f} standout={i === 0 && b.findings.length > 1} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {b.methods.length > 0 && (
+        <div className="mb-3">
+          <p className="text-xs font-semibold text-slate-400 mb-1.5">Notable methods</p>
+          <div className="flex flex-wrap gap-1.5">
+            {b.methods.map((m, i) => (
+              <span key={i} className="text-xs bg-slate-900/60 border border-slate-700 rounded px-2 py-0.5 text-slate-300">{m}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {b.extrapolations.length > 0 && (
+        <div className="mb-3">
+          <p className="text-xs font-semibold text-slate-400 mb-1.5">Questions to explore <span className="font-normal text-slate-600">— where this work could go, to spark your own angle</span></p>
+          <ul className="space-y-1">
+            {b.extrapolations.map((e, i) => (
+              <li key={i} className="text-sm text-slate-300 leading-snug flex gap-2">
+                <span className="text-teal-500 shrink-0">→</span>
+                <span>{e.direction}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="border-t border-slate-700/60 pt-3 mb-3">
         <p className="text-xs font-semibold text-slate-400 mb-1.5">How to join (from their page)</p>
         {hasLogistics ? (
           <div className="space-y-1">
-            <LogisticsRow label="Hours" value={entry.logistics.hoursExpected} />
-            <LogisticsRow label="How to join" value={entry.logistics.mechanism} />
-            <LogisticsRow label="Prerequisites" value={entry.logistics.prerequisites} />
-            <LogisticsRow label="Contact" value={entry.logistics.contactInstructions} />
-            <LogisticsRow label="Recruiting" value={entry.logistics.recruitingNote} />
+            <LogisticsRow label="Hours" value={b.logistics.hoursExpected} />
+            <LogisticsRow label="How to join" value={b.logistics.mechanism} />
+            <LogisticsRow label="Prerequisites" value={b.logistics.prerequisites} />
+            <LogisticsRow label="Contact" value={b.logistics.contactInstructions} />
+            <LogisticsRow label="Recruiting" value={b.logistics.recruitingNote} />
           </div>
         ) : (
           <p className="text-sm text-slate-500 italic">No join details posted on this page — you&apos;ll have to ask.</p>
         )}
       </div>
 
-      <div className="flex items-center justify-between">
-        {entry.evidence.length > 0 ? (
-          <button onClick={() => setShowSources((s) => !s)} className="text-xs text-slate-500 hover:text-slate-300">
-            {showSources ? 'Hide' : 'Show'} sources ({entry.evidence.length})
-          </button>
-        ) : <span />}
+      <div className="flex items-center justify-end">
         <button
           onClick={() => onWrite(entry)}
           className="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white text-sm font-semibold rounded-lg transition-colors"
@@ -100,17 +165,6 @@ function LabCard({ entry, onWrite }: { entry: LabDigestEntry; onWrite: (e: LabDi
           Write this one →
         </button>
       </div>
-
-      {showSources && entry.evidence.length > 0 && (
-        <div className="mt-3 space-y-2 border-t border-slate-700/60 pt-3">
-          {entry.evidence.map((ev, i) => (
-            <div key={i} className="text-xs">
-              <span className="text-slate-300 italic">&ldquo;{ev.quote}&rdquo;</span>
-              <span className="text-slate-600"> — {ev.source}</span>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   )
 }
@@ -185,7 +239,9 @@ export default function DigestPage() {
 
   function handleWrite(entry: LabDigestEntry) {
     if (!profile) return
-    sessionStorage.setItem('labreach_request', JSON.stringify({ profile, labUrl: entry.labUrl }))
+    // Pass the already-researched bundle so the writer can reuse it (Phase B); the current
+    // draft flow reads only { profile, labUrl } and ignores the extra field harmlessly.
+    sessionStorage.setItem('labreach_request', JSON.stringify({ profile, labUrl: entry.bundle.labUrl, bundle: entry.bundle }))
     router.push('/draft')
   }
 
@@ -253,7 +309,7 @@ export default function DigestPage() {
 
         <div className="space-y-4">
           {entries.map((entry) => (
-            <LabCard key={entry.labUrl} entry={entry} onWrite={handleWrite} />
+            <LabCard key={entry.bundle.labUrl} entry={entry} onWrite={handleWrite} />
           ))}
         </div>
 
@@ -276,5 +332,5 @@ export default function DigestPage() {
 
 function sortEntries(a: LabDigestEntry, b: LabDigestEntry): number {
   if (b.interestOverlap !== a.interestOverlap) return b.interestOverlap - a.interestOverlap
-  return (b.mostRecentPaperYear ?? 0) - (a.mostRecentPaperYear ?? 0)
+  return (b.bundle.mostRecentPaperYear ?? 0) - (a.bundle.mostRecentPaperYear ?? 0)
 }

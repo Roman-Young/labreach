@@ -25,8 +25,15 @@ export interface PubMedAbstract extends PubMedResult {
   journal: string
 }
 
-export async function searchPubMed(query: string, maxResults = 5): Promise<PubMedResult[]> {
-  const url = `${BASE}/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=${maxResults}&sort=date&retmode=json`
+export async function searchPubMed(query: string, maxResults = 5, minYear?: number): Promise<PubMedResult[]> {
+  // minYear applies a publication-date floor server-side (datetype=pdat), so recency is
+  // enforced at the source rather than by trimming results afterward. maxdate is open-ended
+  // (next year, to avoid dropping in-press articles dated ahead).
+  const dateFilter =
+    minYear !== undefined
+      ? `&datetype=pdat&mindate=${minYear}&maxdate=${new Date().getFullYear() + 1}`
+      : ''
+  const url = `${BASE}/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=${maxResults}&sort=date&retmode=json${dateFilter}`
   const res = await fetch(url, { next: { revalidate: 0 } })
   if (!res.ok) throw new Error(`PubMed search failed: ${res.status}`)
   const data = await res.json()
