@@ -12,8 +12,8 @@ import type { AgentEvent, AgentResult, ResearchRequest, ExperienceLevel } from '
 export default function DraftPage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-slate-500">Loading...</div>
+      <main className="flex-1 flex items-center justify-center">
+        <div className="text-ink-faint">Loading...</div>
       </main>
     }>
       <DraftPageInner />
@@ -201,31 +201,23 @@ function DraftPageInner() {
 
   if (!request) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-slate-500">Loading...</div>
+      <main className="flex-1 flex items-center justify-center">
+        <div className="text-ink-faint">Loading...</div>
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen px-4 py-10">
+    <main className="flex-1 px-4 sm:px-6 py-12">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <button
-              onClick={() => router.push('/')}
-              className="text-teal-400 font-mono text-sm tracking-widest hover:text-teal-300 transition-colors"
-            >
-              LABREACH
-            </button>
-            <h1 className="text-2xl font-bold text-white mt-1">Your Email Draft</h1>
-          </div>
+        <div className="flex items-end justify-between mb-8 hero-glow">
+          <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] leading-[1.05] text-ink">Your draft<span className="text-grad">.</span></h1>
           <button
             onClick={() => router.push('/')}
-            className="text-sm text-slate-400 hover:text-white transition-colors"
+            className="text-sm text-ink-soft hover:text-ink transition-colors"
           >
-            ← Start Over
+            Start over
           </button>
         </div>
 
@@ -238,28 +230,28 @@ function DraftPageInner() {
 
         {/* Error state */}
         {error && (
-          <div className="mb-8 p-4 bg-red-900/30 border border-red-700 rounded-xl">
-            <p className="text-red-300 font-medium mb-1">Something went wrong</p>
-            <p className="text-red-400 text-sm">{error}</p>
+          <div className="mb-8 p-4 bg-alert-wash border border-alert/20 rounded-lg">
+            <p className="text-alert font-semibold mb-1">Something went wrong</p>
+            <p className="text-ink-soft text-sm">{error}</p>
             <button
               onClick={() => { setError(null); runAgent(request) }}
-              className="mt-3 text-sm text-teal-400 hover:text-teal-300 transition-colors"
+              className="mt-3 text-sm text-pine hover:text-pine-deep font-medium transition-colors"
             >
-              Try again →
+              Try again
             </button>
           </div>
         )}
 
         {/* Restored from cache banner */}
         {restoredFromCache && result && !isRunning && !isRegenerating && (
-          <div className="mb-4 flex items-center justify-between px-4 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl">
-            <span className="text-sm text-slate-400">Showing your previous draft for this lab.</span>
+          <div className="mb-4 flex items-center justify-between px-4 py-2.5 bg-surface border border-line rounded-lg">
+            <span className="text-sm text-ink-soft">Showing your previous draft for this lab.</span>
             <button
               onClick={handleRegenerate}
               disabled={regenerateCount === 0}
-              className="text-sm text-teal-400 hover:text-teal-300 disabled:text-slate-500 disabled:cursor-not-allowed transition-colors"
+              className="text-sm text-pine hover:text-pine-deep font-medium disabled:text-ink-faint disabled:cursor-not-allowed transition-colors"
             >
-              Regenerate for a fresh draft →
+              Regenerate for a fresh draft
             </button>
           </div>
         )}
@@ -269,29 +261,29 @@ function DraftPageInner() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left: editable email */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="bg-slate-800/40 rounded-2xl border border-slate-700 p-6">
-                <div className="flex items-start justify-between mb-4 gap-4">
+              <div className="bg-surface rounded-xl border border-line elev p-6">
+                <div className="flex items-start justify-between mb-5 gap-4">
                   <div>
-                    <h2 className="text-lg font-semibold text-white">Your starting draft</h2>
-                    <p className="text-sm text-slate-400 mt-0.5">A first draft, not a finished email. Edit it until it sounds like you — then send it yourself.</p>
+                    <h2 className="text-lg font-bold tracking-tight text-ink">Your starting draft</h2>
+                    <p className="text-sm text-ink-soft mt-0.5">A first draft, not a finished email. Edit it until it sounds like you — then send it yourself.</p>
                   </div>
-                  <div className="flex items-center gap-1 bg-slate-900 rounded-lg p-0.5 shrink-0">
+                  <div className="flex items-center gap-0.5 bg-paper border border-line rounded-md p-0.5 shrink-0">
                     <button
                       onClick={() => setBodyViewMode('edit')}
-                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                      className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
                         bodyViewMode === 'edit'
-                          ? 'bg-slate-700 text-white'
-                          : 'text-slate-500 hover:text-slate-300'
+                          ? 'bg-surface text-ink shadow-sm'
+                          : 'text-ink-faint hover:text-ink'
                       }`}
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => setBodyViewMode('annotated')}
-                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                      className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
                         bodyViewMode === 'annotated'
-                          ? 'bg-slate-700 text-white'
-                          : 'text-slate-500 hover:text-slate-300'
+                          ? 'bg-surface text-ink shadow-sm'
+                          : 'text-ink-faint hover:text-ink'
                       }`}
                     >
                       Preview + terms
@@ -301,20 +293,20 @@ function DraftPageInner() {
 
                 {/* Subject — always editable */}
                 <div className="mb-4">
-                  <label className="block text-xs text-slate-500 mb-1">Subject</label>
+                  <label className="block font-mono text-[11px] uppercase tracking-wider text-ink-faint mb-1.5">Subject</label>
                   <input
                     type="text"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-teal-500"
+                    className="w-full px-3 py-2 bg-paper border border-line rounded-md text-sm text-ink focus:outline-none focus:border-pine"
                   />
                 </div>
 
                 {/* Body — annotated or editable */}
                 <div>
-                  <label className="block text-xs text-slate-500 mb-2">Body</label>
+                  <label className="block font-mono text-[11px] uppercase tracking-wider text-ink-faint mb-1.5">Body</label>
                   {bodyViewMode === 'annotated' ? (
-                    <div className="px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg min-h-[200px]">
+                    <div className="px-3 py-2 bg-paper border border-line rounded-md min-h-[200px]">
                       <AnnotatedEmailBody
                         body={body}
                         glossary={result.termGlossary ?? []}
@@ -325,7 +317,7 @@ function DraftPageInner() {
                       value={body}
                       onChange={(e) => setBody(e.target.value)}
                       rows={12}
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-slate-200 leading-relaxed focus:outline-none focus:border-teal-500 resize-none"
+                      className="w-full px-3 py-2 bg-paper border border-line rounded-md text-sm text-ink leading-relaxed focus:outline-none focus:border-pine resize-none"
                     />
                   )}
                 </div>
@@ -334,7 +326,7 @@ function DraftPageInner() {
                   <button
                     onClick={handleRegenerate}
                     disabled={isRegenerating || regenerateCount === 0}
-                    className="text-xs text-slate-500 hover:text-slate-300 disabled:text-slate-700 disabled:cursor-not-allowed transition-colors"
+                    className="text-xs text-ink-faint hover:text-ink-soft disabled:text-line disabled:cursor-not-allowed transition-colors"
                   >
                     Regenerate ({regenerateCount} left)
                   </button>
@@ -342,8 +334,8 @@ function DraftPageInner() {
               </div>
 
               {/* Refine with feedback */}
-              <div className="bg-slate-800/40 rounded-2xl border border-slate-700 p-5">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Want to change something?</p>
+              <div className="bg-surface rounded-lg border border-line p-5">
+                <p className="font-mono text-[11px] font-medium uppercase tracking-wider text-ink-faint mb-3">Want to change something?</p>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -352,23 +344,22 @@ function DraftPageInner() {
                     onKeyDown={(e) => e.key === 'Enter' && !isRefining && handleRefine()}
                     placeholder='e.g. "Make the opening reference the 2020 KRAS paper specifically"'
                     disabled={isRefining}
-                    className="flex-1 px-3 py-2.5 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 disabled:opacity-50"
+                    className="flex-1 px-3 py-2.5 bg-paper border border-line rounded-md text-ink placeholder:text-ink-faint text-sm focus:outline-none focus:border-pine disabled:opacity-50"
                   />
                   <button
                     onClick={handleRefine}
                     disabled={isRefining || !refineFeedback.trim()}
-                    className="px-4 py-2.5 bg-teal-600 hover:bg-teal-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors whitespace-nowrap"
+                    className="px-4 py-2.5 bg-pine hover:bg-pine-deep disabled:bg-line disabled:text-ink-faint disabled:cursor-not-allowed text-on-accent text-sm font-semibold rounded-md transition-colors whitespace-nowrap"
                   >
-                    {isRefining ? 'Refining...' : 'Refine →'}
+                    {isRefining ? 'Refining...' : 'Refine'}
                   </button>
                 </div>
               </div>
 
               {/* Attachment reminder */}
               {(request.profile.experienceLevel as ExperienceLevel) !== 'significant' && (
-                <div className="flex items-start gap-3 px-4 py-3 bg-amber-900/20 border border-amber-800/40 rounded-xl">
-                  <span className="text-amber-400 text-sm mt-0.5">📎</span>
-                  <p className="text-sm text-amber-200/80">
+                <div className="px-4 py-3 bg-warn-wash border border-warn/20 rounded-lg">
+                  <p className="text-sm text-warn">
                     {(request.profile.experienceLevel as ExperienceLevel) === 'none'
                       ? 'Remember to attach your transcript when you send this email.'
                       : 'Remember to attach your transcript and resume when you send this email.'}
@@ -383,17 +374,15 @@ function DraftPageInner() {
             <div className="lg:col-span-1">
               <div className="sticky top-6 space-y-4">
                 {result.researchQuality === 'limited' && (
-                  <div className="flex items-start gap-3 px-4 py-3 bg-yellow-900/20 border border-yellow-700/40 rounded-xl">
-                    <span className="text-yellow-400 text-sm mt-0.5">⚠</span>
-                    <p className="text-sm text-yellow-200/80">
+                  <div className="px-4 py-3 bg-warn-wash border border-warn/20 rounded-lg">
+                    <p className="text-sm text-warn">
                       Limited info found on this lab&apos;s website. For a more specific email, paste a Google Scholar link or specific paper titles into the refinement box.
                     </p>
                   </div>
                 )}
                 {result.evaluatorFlag && (
-                  <div className="flex items-start gap-3 px-4 py-3 bg-slate-700/30 border border-slate-600/50 rounded-xl">
-                    <span className="text-slate-400 text-sm mt-0.5">✎</span>
-                    <p className="text-sm text-slate-300">
+                  <div className="px-4 py-3 bg-surface border border-line rounded-lg">
+                    <p className="text-sm text-ink-soft">
                       A couple of spots are worth a second look — read it over and reword anything that doesn&apos;t sound like you before sending. That&apos;s expected; this is a starting point.
                     </p>
                   </div>

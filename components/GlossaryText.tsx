@@ -40,7 +40,7 @@ export default function GlossaryText({ text, glossary, className }: Props) {
             key={i}
             onClick={() => setActive(isActive ? null : entry)}
             className={`underline decoration-dotted underline-offset-2 cursor-help transition-colors ${
-              isActive ? 'text-teal-200 decoration-teal-200' : 'text-teal-400/90 decoration-teal-700 hover:text-teal-300'
+              isActive ? 'text-pine-deep decoration-pine' : 'text-pine decoration-pine/50 hover:text-pine-deep'
             }`}
           >
             {part}
@@ -48,8 +48,8 @@ export default function GlossaryText({ text, glossary, className }: Props) {
         )
       })}
       {active && (
-        <span className="block mt-1.5 px-2.5 py-1.5 bg-slate-900/70 border border-teal-900/50 rounded text-xs text-slate-300 leading-snug">
-          <span className="font-semibold text-teal-300">{active.term}:</span> {active.explanation}
+        <span className="block mt-1.5 px-2.5 py-1.5 bg-pine-wash border border-pine/25 rounded text-xs text-ink-soft leading-snug">
+          <span className="font-semibold text-pine-deep">{active.term}:</span> {active.explanation}
         </span>
       )}
     </span>

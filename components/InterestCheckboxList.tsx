@@ -38,24 +38,35 @@ export default function InterestCheckboxList({ value, otherValue, onChange, onOt
   return (
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {INTERESTS.map((interest) => (
-          <label
-            key={interest}
-            className="flex items-center gap-2 cursor-pointer group"
-          >
-            <input
-              type="checkbox"
-              checked={value.includes(interest)}
-              onChange={() => toggle(interest)}
-              className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-teal-500 focus:ring-teal-500 focus:ring-offset-slate-900"
-            />
-            <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
-              {interest}
-            </span>
-          </label>
-        ))}
+        {INTERESTS.map((interest) => {
+          const checked = value.includes(interest)
+          return (
+            <label
+              key={interest}
+              className={`flex items-center gap-2.5 cursor-pointer rounded-md border px-3 py-2 text-sm transition-colors ${
+                checked
+                  ? 'border-pine bg-pine-wash text-ink'
+                  : 'border-line bg-surface text-ink-soft hover:border-ink-faint hover:text-ink'
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={() => toggle(interest)}
+                className="w-4 h-4 rounded border-line accent-pine"
+              />
+              <span>{interest}</span>
+            </label>
+          )
+        })}
 
-        <label className="flex items-center gap-2 cursor-pointer group">
+        <label
+          className={`flex items-center gap-2.5 cursor-pointer rounded-md border px-3 py-2 text-sm transition-colors ${
+            showOther
+              ? 'border-pine bg-pine-wash text-ink'
+              : 'border-line bg-surface text-ink-soft hover:border-ink-faint hover:text-ink'
+          }`}
+        >
           <input
             type="checkbox"
             checked={showOther}
@@ -63,11 +74,9 @@ export default function InterestCheckboxList({ value, otherValue, onChange, onOt
               setShowOther(e.target.checked)
               if (!e.target.checked) onOtherChange('')
             }}
-            className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-teal-500 focus:ring-teal-500 focus:ring-offset-slate-900"
+            className="w-4 h-4 rounded border-line accent-pine"
           />
-          <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
-            Other
-          </span>
+          <span>Other</span>
         </label>
       </div>
 
@@ -77,7 +86,7 @@ export default function InterestCheckboxList({ value, otherValue, onChange, onOt
           value={otherValue}
           onChange={(e) => onOtherChange(e.target.value)}
           placeholder="Describe your interest..."
-          className="mt-3 w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500"
+          className="mt-3 w-full px-3 py-2 bg-surface border border-line rounded-md text-ink placeholder:text-ink-faint text-sm focus:outline-none focus:border-pine focus:ring-1 focus:ring-pine"
         />
       )}
     </div>

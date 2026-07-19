@@ -6,7 +6,7 @@ import InterestCheckboxList from '@/components/InterestCheckboxList'
 import type { StudentProfile, ExperienceLevel, StudentYear } from '@/types'
 
 const STORAGE_KEY = 'labreach_profile'
-const STEP_LABELS = ['About You', 'Target Lab']
+const STEP_LABELS = ['About you', 'Target lab']
 
 function loadProfile(): Partial<StudentProfile> | null {
   if (typeof window === 'undefined') return null
@@ -23,7 +23,7 @@ function saveProfile(profile: StudentProfile) {
 }
 
 const inputClass =
-  'w-full px-3 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500'
+  'w-full px-3 py-2.5 bg-surface border border-line rounded-md text-ink placeholder:text-ink-faint text-sm focus:outline-none focus:border-pine focus:ring-1 focus:ring-pine'
 
 // Every student fills the same three buckets — courses, hands-on experience, projects.
 // Only the framing shifts with experience level. A student with no lab time is not
@@ -63,8 +63,8 @@ const EXPERIENCE_COPY: Record<ExperienceLevel, {
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-slate-300 mb-1">{label}</label>
-      {hint && <p className="text-xs text-slate-500 mb-2">{hint}</p>}
+      <label className="block text-sm font-semibold text-ink mb-1">{label}</label>
+      {hint && <p className="text-[13px] text-ink-soft mb-2 leading-snug">{hint}</p>}
       {children}
     </div>
   )
@@ -157,33 +157,32 @@ export default function HomePage() {
   // Returning user shortcut screen
   if (isReturning && savedProfile?.name && step === 2) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
-        <div className="w-full max-w-lg">
-          <div className="mb-10 text-center">
-            <div className="text-teal-400 font-mono text-sm tracking-widest mb-4">LABREACH</div>
-            <h1 className="text-3xl font-bold text-white mb-2">
-              Welcome back, {savedProfile.name?.split(' ')[0]}.
+      <main className="flex-1 px-4 sm:px-6 py-16">
+        <div className="w-full max-w-xl mx-auto hero-glow">
+          <div className="mb-8">
+            <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] leading-[1.05] text-ink mb-2">
+              Welcome back, {savedProfile.name?.split(' ')[0]}<span className="text-grad">.</span>
             </h1>
-            <p className="text-slate-400">Ready to draft another email?</p>
+            <p className="text-ink-soft text-lg">Ready to draft another email?</p>
           </div>
 
-          <div className="bg-slate-800/50 rounded-2xl border border-slate-700 p-6 mb-6">
+          <div className="bg-surface rounded-xl border border-line elev p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-slate-300">Your saved profile</h2>
+              <h2 className="text-sm font-semibold text-ink">Your saved profile</h2>
               <button
                 onClick={() => { setIsReturning(false); setStep(1) }}
-                className="text-xs text-teal-400 hover:text-teal-300 transition-colors"
+                className="text-sm text-pine hover:text-pine-deep font-medium transition-colors"
               >
                 Edit
               </button>
             </div>
-            <div className="space-y-2 text-sm text-slate-400">
-              <div><span className="text-slate-500">School: </span><span className="text-slate-300">{savedProfile.school}</span></div>
-              <div><span className="text-slate-500">Experience: </span><span className="text-slate-300 capitalize">{savedProfile.experienceLevel}</span></div>
+            <div className="space-y-2 text-sm">
+              <div><span className="text-ink-faint">School </span><span className="text-ink">{savedProfile.school}</span></div>
+              <div><span className="text-ink-faint">Experience </span><span className="text-ink capitalize">{savedProfile.experienceLevel}</span></div>
               {savedProfile.interests && savedProfile.interests.length > 0 && (
                 <div>
-                  <span className="text-slate-500">Interests: </span>
-                  <span className="text-slate-300">{savedProfile.interests.slice(0, 3).join(', ')}{savedProfile.interests.length > 3 ? '...' : ''}</span>
+                  <span className="text-ink-faint">Interests </span>
+                  <span className="text-ink">{savedProfile.interests.slice(0, 3).join(', ')}{savedProfile.interests.length > 3 ? '...' : ''}</span>
                 </div>
               )}
             </div>
@@ -191,9 +190,9 @@ export default function HomePage() {
 
           <button
             onClick={() => setIsReturning(false)}
-            className="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-xl transition-colors"
+            className="w-full py-3 bg-pine hover:bg-pine-deep text-on-accent font-semibold rounded-md transition-colors"
           >
-            Draft Another Email →
+            Draft another email
           </button>
         </div>
       </main>
@@ -204,45 +203,30 @@ export default function HomePage() {
   if (step === 0) return null
 
   return (
-    <main className="min-h-screen flex flex-col items-center px-4 py-12">
-      <div className="w-full max-w-xl">
+    <main className="flex-1 px-4 sm:px-6 py-14">
+      <div className="w-full max-w-xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="text-teal-400 font-mono text-sm tracking-widest mb-4">LABREACH</div>
-
-          {/* Step indicator */}
-          <div className="flex items-center justify-center gap-2 mb-5">
-            {STEP_LABELS.map((label, i) => {
-              const n = (i + 1) as 1 | 2
-              return (
-                <div key={n} className="flex items-center gap-2">
-                  <div
-                    className={`flex items-center gap-1.5 ${n < step ? 'cursor-pointer' : ''}`}
-                    onClick={() => { if (n < step) setStep(n) }}
-                  >
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${n === step ? 'bg-teal-500 text-white' : n < step ? 'bg-teal-800 text-teal-300' : 'bg-slate-800 text-slate-600'}`}>
-                      {n < step ? '✓' : n}
-                    </div>
-                    <span className={`text-xs hidden sm:block ${n === step ? 'text-white' : 'text-slate-600'}`}>{label}</span>
-                  </div>
-                  {i < STEP_LABELS.length - 1 && (
-                    <div className={`w-8 h-px ${n < step ? 'bg-teal-800' : 'bg-slate-700'}`} />
-                  )}
-                </div>
-              )
-            })}
-          </div>
-
-          <h2 className="text-2xl font-bold text-white">{STEP_LABELS[step - 1]}</h2>
+        <div className="mb-10 hero-glow">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-ink-faint mb-3">
+            Step {step} of {STEP_LABELS.length}
+          </p>
+          <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] leading-[1.05] text-ink">
+            {STEP_LABELS[step - 1]}<span className="text-grad">.</span>
+          </h1>
+          {step === 1 && (
+            <p className="text-ink-soft mt-4 text-lg leading-relaxed">
+              One profile, saved in your browser. Every draft is built from what you write here — nothing more.
+            </p>
+          )}
         </div>
 
         {/* Step 1 — About You */}
         {step === 1 && (
-          <div className="space-y-5">
-            <Field label="Full Name">
+          <div className="space-y-6">
+            <Field label="Full name">
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your full name" className={inputClass} />
             </Field>
-            <Field label="School / University">
+            <Field label="School / university">
               <input type="text" value={school} onChange={(e) => setSchool(e.target.value)} placeholder="e.g. UC San Diego, MIT, Jefferson High School" className={inputClass} />
             </Field>
             <Field label="Year">
@@ -255,23 +239,23 @@ export default function HomePage() {
                 <option value="graduate">Graduate Student</option>
               </select>
             </Field>
-            <Field label="Major / Field of Study" hint="Optional. If given, it's used in the email's opening line; otherwise your interests are used instead.">
+            <Field label="Major / field of study" hint="Optional. If given, it's used in the email's opening line; otherwise your interests are used instead.">
               <input type="text" value={major} onChange={(e) => setMajor(e.target.value)} placeholder="e.g. Biology (specializing in Bioinformatics), undeclared" className={inputClass} />
             </Field>
-            <Field label="Experience Level">
+            <Field label="Experience level">
               <select value={experienceLevel} onChange={(e) => setExperienceLevel(e.target.value as ExperienceLevel)} className={inputClass}>
                 <option value="none">No research experience yet</option>
                 <option value="some">Some experience (courses, a semester in a lab, etc.)</option>
                 <option value="significant">Significant experience (multiple semesters, projects)</option>
               </select>
             </Field>
-            <div className="border-t border-slate-700 pt-5">
-              <p className="text-sm font-semibold text-slate-300 mb-1">Your background</p>
-              <p className="text-xs text-slate-500 mb-3">
+            <div className="border-t border-line pt-6">
+              <h2 className="text-lg font-bold tracking-tight text-ink mb-1">Your background</h2>
+              <p className="text-[13px] text-ink-soft mb-5 leading-snug">
                 The email builds its connection to a lab out of something you have actually done. Be concrete and be honest —
                 anything you leave blank simply won&apos;t be claimed.
               </p>
-              <div className="space-y-5">
+              <div className="space-y-6">
                 <Field label="Coursework" hint={copy.coursesHint}>
                   <textarea value={courses} onChange={(e) => setCourses(e.target.value)} placeholder={copy.coursesPlaceholder} rows={3} className={inputClass} />
                 </Field>
@@ -286,19 +270,19 @@ export default function HomePage() {
             <Field label="Why do you want to do research?" hint="In 1-2 sentences. Be honest — the agent uses this to make the email feel genuine.">
               <textarea value={whyResearch} onChange={(e) => setWhyResearch(e.target.value)} placeholder="e.g. I want to understand disease at a mechanistic level, not just learn about it from textbooks." rows={3} className={inputClass} />
               {!whyResearch.trim() && (
-                <p className="text-xs text-amber-400 mt-1.5">Required — the agent uses this to write a genuine motivation.</p>
+                <p className="text-[13px] text-warn mt-1.5">Required — the agent uses this to write a genuine motivation.</p>
               )}
             </Field>
-            <Field label="Science Interests" hint="Select all that apply.">
+            <Field label="Science interests" hint="Select all that apply.">
               <InterestCheckboxList value={interests} otherValue={otherInterest} onChange={setInterests} onOtherChange={setOtherInterest} />
               {interests.length === 0 && (
-                <p className="text-xs text-amber-400 mt-1.5">Required — select at least one.</p>
+                <p className="text-[13px] text-warn mt-1.5">Required — select at least one.</p>
               )}
             </Field>
 
-            <div className="border-t border-slate-700 pt-5">
-              <p className="text-sm font-semibold text-slate-300 mb-1">Availability</p>
-              <p className="text-xs text-slate-500 mb-3">Optional, but PIs ask for this directly — stating it signals the training they invest will pay off. If you fill these in, the email says so in the ask.</p>
+            <div className="border-t border-line pt-6">
+              <h2 className="text-lg font-bold tracking-tight text-ink mb-1">Availability</h2>
+              <p className="text-[13px] text-ink-soft mb-4 leading-snug">Optional, but PIs ask for this directly — stating it signals the training they invest will pay off. If you fill these in, the email says so in the ask.</p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Field label="Hours / week">
                   <input type="text" value={hoursPerWeek} onChange={(e) => setHoursPerWeek(e.target.value)} placeholder="e.g. 10–12" className={inputClass} />
@@ -315,37 +299,37 @@ export default function HomePage() {
             <button
               onClick={() => setStep(2)}
               disabled={!step1Valid}
-              className="w-full py-3 bg-teal-600 hover:bg-teal-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors mt-2"
+              className="w-full py-3 bg-pine hover:bg-pine-deep disabled:bg-line disabled:text-ink-faint disabled:cursor-not-allowed text-on-accent font-semibold rounded-md transition-colors mt-2"
             >
-              Continue →
+              Continue
             </button>
           </div>
         )}
 
         {/* Step 2 — Target Lab */}
         {step === 2 && (
-          <div className="space-y-5">
-            <Field label="Lab Website URL" hint="Paste the URL of the lab you want to contact. This can be their homepage, a faculty profile, or a research group page.">
+          <div className="space-y-6">
+            <Field label="Lab website URL" hint="Paste the URL of the lab you want to contact. This can be their homepage, a faculty profile, or a research group page.">
               <input
                 type="url"
                 value={labUrl}
                 onChange={(e) => { setLabUrl(e.target.value); setUrlError('') }}
                 placeholder="https://smithlab.ucsf.edu"
-                className={`${inputClass} ${urlError ? 'border-red-500' : ''}`}
+                className={`${inputClass} ${urlError ? 'border-alert' : ''}`}
               />
-              {urlError && <p className="text-sm text-red-400 mt-1">{urlError}</p>}
-              <p className="text-xs text-slate-500 mt-2">
-                Not sure which labs? <button type="button" onClick={() => router.push('/digest')} className="text-teal-400 hover:text-teal-300">Screen several at once →</button>
+              {urlError && <p className="text-sm text-alert mt-1">{urlError}</p>}
+              <p className="text-[13px] text-ink-soft mt-2">
+                Not sure which labs? <button type="button" onClick={() => router.push('/digest')} className="text-pine hover:text-pine-deep font-medium">Screen several at once</button>
               </p>
             </Field>
             <div className="flex gap-3">
-              <button onClick={() => setStep(1)} className="flex-1 py-3 border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white font-semibold rounded-xl transition-colors">← Back</button>
+              <button onClick={() => setStep(1)} className="flex-1 py-3 border border-line bg-surface text-ink-soft hover:border-ink-faint hover:text-ink font-semibold rounded-md transition-colors">Back</button>
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !labUrl.trim()}
-                className="flex-[2] py-3 bg-teal-600 hover:bg-teal-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors"
+                className="flex-[2] py-3 bg-pine hover:bg-pine-deep disabled:bg-line disabled:text-ink-faint disabled:cursor-not-allowed text-on-accent font-semibold rounded-md transition-colors"
               >
-                {isSubmitting ? 'Starting...' : 'Draft My Email →'}
+                {isSubmitting ? 'Starting...' : 'Draft my email'}
               </button>
             </div>
           </div>
