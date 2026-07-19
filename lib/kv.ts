@@ -1,6 +1,24 @@
-import { kv } from '@vercel/kv'
+import { createClient } from '@vercel/kv'
 import fs from 'fs'
 import path from 'path'
+
+// Explicit client instead of the default `kv` singleton so we can turn OFF
+// automaticDeserialization. Every value we store is already a JSON string, and every
+// caller does its own JSON.parse. With deserialization ON (the default), get() returns a
+// parsed object, JSON.parse(object) throws, the error is swallowed, and every cache read
+// silently misses — verified against the live store 2026-07-17. Off = get() returns the
+// raw string, which is the contract kvGet has always promised.
+let _kv: ReturnType<typeof createClient> | null = null
+function kvClient() {
+  if (!_kv) {
+    _kv = createClient({
+      url: process.env.KV_REST_API_URL!,
+      token: process.env.KV_REST_API_TOKEN!,
+      automaticDeserialization: false,
+    })
+  }
+  return _kv
+}
 
 const LOCAL_STORE_PATH = path.join(process.cwd(), '.tmp', 'kv-store.json')
 
@@ -41,7 +59,7 @@ export async function kvGet(key: string): Promise<string | null> {
     }
     return store[key] ?? null
   }
-  return (await kv.get<string>(key)) ?? null
+  return (await kvClient().get<string>(key)) ?? null
 }
 
 export async function kvSet(key: string, value: string, ttlSeconds?: number): Promise<void> {
@@ -55,9 +73,9 @@ export async function kvSet(key: string, value: string, ttlSeconds?: number): Pr
     return
   }
   if (ttlSeconds) {
-    await kv.set(key, value, { ex: ttlSeconds })
+    await kvClient().set(key, value, { ex: ttlSeconds })
   } else {
-    await kv.set(key, value)
+    await kvClient().set(key, value)
   }
 }
 
@@ -69,7 +87,7 @@ export async function kvDelete(key: string): Promise<void> {
     localWrite(store)
     return
   }
-  await kv.del(key)
+  await kvClient().del(key)
 }
 
 export const KV_KEYS = {
