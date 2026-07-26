@@ -1,134 +1,228 @@
-# LabReach — Phase C: UCSD Warm Corpus + Fit-Ranking Screen
+# LabReach — Phase C Spec: UCSD Research Accelerator
 
-**Status:** design, approved 2026-07-25.
-**End goal:** Option C (DB-backed screen + subordinated writer).
-**Next 2 weeks:** build **Option B well** — the DB + the SEND/MAYBE/SKIP screen, standalone, *no writer wiring yet*.
+**Status:** design, approved 2026-07-25. **Supersedes** the earlier SEND/MAYBE/SKIP framing
+of this file (that framing is retired — see §1).
 **Audience:** Claude Code / any agent working in this repo.
-**Author's note:** Written *against the actual code on `main` as of 2026-07-25*, not the aspirational orientation doc. "Existing" = in the repo today. "New" = not yet. Read the named files before building, and if reality has moved, follow the code and say so in the commit message.
+**Companion:** `BUILD_STEPS.md` (the ordered implementation checklist). This file is the
+*what & why*; that file is the *do-this-then-this*.
+**Author's note:** Written against the actual code on `main` as of 2026-07-25. "Existing" =
+in the repo today; "new" = not yet. Read the named files before building, and if reality has
+moved, follow the code and say so in the commit message.
 
 ---
 
-## 0. Why this exists — the reconciliation
+## 1. What this is — the product thesis
 
-The orientation doc (`../my-context/reference/labreach.md`) describes a product that **never writes the email**, whose spine is a **fit ranker** emitting SEND / MAYBE / SKIP. The code on `main` is the opposite: a per-lab pipeline that **researches → writes a finished draft → evaluates and rewrites it** (`lib/agent/index.ts`, `runAgent()`), plus a GEPA harness that optimizes the *writing* prompt. There is no fit ranker, no SEND/MAYBE/SKIP, and no credibility-tier gate in the code today.
+**LabReach is a research accelerator, not a target selector.** The bottleneck in cold-emailing
+labs is the 30–60 minutes of research *per lab* (read the faculty page, research page,
+publications, team page, recent papers, then figure out what actually connects). LabReach
+removes that tax at scale: it pre-researches UCSD labs once, caches everything, and on request
+hands the student a **substantiated, quote-backed, relevance-ranked research digest per lab** —
+readable in ~30 seconds — so they can email **as many labs as they want**, each with something
+real to say.
 
-**The plan reconciles these in two moves:**
-
-- **End goal — Option C:** a **DB-backed fit-ranking screen** decides SEND / MAYBE / SKIP per lab; only for **SEND** labs does the **existing writer** run, producing a **draft the student must be able to defend**, gated by the credibility tier and surfaced with the predicted PI follow-up question.
-- **Next 2 weeks — Option B, done well:** build only the **screen** — DB + fit ranker + the critical test. The existing writer is left **untouched and unwired** during this sprint. This gives a standalone, honest product (a SEND/MAYBE/SKIP recommender over real UCSD labs) and, crucially, forces the 0-for-8 critical test to pass *before* any writing logic is layered back on.
-
-**Why this order.** The screen is the part the design says actually determines outcomes, and it's the part that can be *proven wrong cheaply* (the 0-for-8 test). Building it standalone means we find out if the core thesis holds before spending effort re-integrating the writer. The DB is the priority within the sprint, and it is fork-independent — it's the least wasted effort no matter how the downstream evolves.
+Concretely:
+- **The core product is the per-lab research digest.** For every lab a student is considering:
+  the lab's actual findings/discoveries (verbatim quotes + sources), filtered and ordered by
+  relevance to *this* student's interests/experience, presented in a clean UX.
+- **Volume is a feature, not a risk to suppress.** The tool helps a student send *many*
+  emails cheaply, because the DB drives per-email research cost toward zero.
+- **The only hard bar is an explicit "no undergrads."** A lab that says it doesn't take
+  undergraduates is excluded even if it's a great fit. Nothing else is hidden.
+- **The ranker is an optional prioritization layer,** not a gate. For a student with limited
+  time who only wants to send a few, it orders labs "start here first." It never removes a lab
+  from view (except the explicit-no bar above).
+- **The writer is a later, optional, downstream add-on.** The existing `writer.ts` becomes
+  exactly this — it is **not touched** in this phase.
 
 ---
 
-## 1. Target architecture (Option C) — with the 2-week cut marked
+## 2. Why this framing (the reasoning, so it isn't relitigated)
+
+This repositioning updates — not ignores — the corpus evidence (the 53-email dataset, the
+0-for-8 modality finding). Two arguments carry it:
+
+1. **The DB deletes the cost the anti-volume argument was built on.** "Send 20 well-targeted,
+   get 8 beats send 100 scattershot, get 10" assumed each email costs ~45 min of research.
+   That's *why* per-send conversion beat raw volume. Once research cost is ~0, the calculus
+   shifts: a lower reply *rate* over far more sends can win on absolute replies, and one yes
+   changes a trajectory. We're changing the variable the evidence was conditioned on, not
+   denying it.
+2. **A research-only tool dodges the real volume risk.** The dangerous failure mode — PIs
+   blacklisting mass-emailers, "cold email is dead in sales" — attaches to tools that
+   *generate and blast finished emails* (Apollo/Instantly/Lavender). LabReach does mass
+   *research*; the **student still writes and sends each email themselves.** That is the
+   design line that separates "a great research assistant" from "a spam cannon." Keeping the
+   writer optional and downstream is what protects it.
+
+**The one thing that does NOT change:** modality mismatch still gets zero replies (the
+0-for-8 were the best-written, most-connected emails in the corpus, to dry labs from a wet
+student — all failed). So modality and connection *type* stay inside the **ranker's math**
+(§5). The ranker's whole job is "if you're short on time, start here," and if it ordered by
+raw similarity it would send time-constrained students to the 0-for-8 *first*. The ranker is
+optional; its correctness is not.
+
+**Systemic guardrail to remember:** if adoption gets large, hundreds of students mass-emailing
+the same ~2,000 labs could flood PIs and degrade the channel. The mitigation is baked into the
+design — real per-lab research + student-authored emails, never generated blasts.
+
+---
+
+## 3. Architecture
 
 ```
-[0] STUDENT PROFILE                  existing StudentProfile (types/index.ts)
-      -> NEW: compute CREDIBILITY TIER (0-3) in code            [2-WK]
-      |
-[1] CANDIDATE LABS
-      UCSD path:  pull from the warm DB                          [2-WK]  <-- the evolution
-      general path: pasted lab URL (EXISTING cold path)
-      |
-[2] HARVEST + EXTRACT -> LabProfile (quote-backed)
-      UCSD path:  pre-computed, read from DB (NEW ingestion job) [2-WK]
-      general path: live, existing loop (tools.ts/scraper.ts/pubmed.ts)
-      |
-[3] FIT RANKING  <<< THE SPINE >>>                               [2-WK]
-      domain overlap, MODALITY FIT, complementarity, level, recruiting
-      -> SEND / MAYBE / SKIP + one-line reason
-      |
-      ===== 2-WEEK SPRINT ENDS HERE (Option B). Product = the screen. =====
-      |
-[4] FOR SEND LABS ONLY  (Option C, AFTER the sprint)
-      EXISTING writer (writer.ts) fires -> NEW tier gate (code)
-      -> NEW predicted PI follow-up question -> EXISTING evaluator loop
-      |
-[5] OUTCOME LOGGING   extend eval-log with the verdict + reply outcome
+INGESTION (offline, once per lab, refreshed monthly)
+  enumerate UCSD labs (directory expansion)
+    -> harvest: lab pages (home/research/TEAM/join-us) + papers (PubMed/efetch)
+    -> store RAW TEXT (the cache)                                  [kills re-scraping]
+    -> LLM extract -> structured LabProfile (quote-backed)         [what the ranker needs]
+    -> (optional) embed papers/chunks                              [what RAG retrieves over]
+  ================= everything above is stored in Postgres =================
+
+ON REQUEST (fast, no scraping)
+  student profile (private, per-user, NOT in shared DB)
+    -> RAG: retrieve the lab's findings most RELEVANT to this student   (similarity OK here)
+    -> compose the RESEARCH DIGEST per lab  <<< THE PRODUCT >>>
+    -> bar labs that explicitly say "no undergrads"
+    -> (optional) RANKER sorts the digests by reply-likelihood         (structured fields)
+    -> (later, optional) WRITER drafts from the digest                 (existing writer.ts)
 ```
 
-The fit ranker consumes a `LabProfile` and does not care whether it came from the DB or a live scrape — which is what makes stages [1]–[3] independent of the later writer decision.
+RAG feeds **relevance and content**; the structured fields feed the **ranker**. They are two
+inputs, because the signals that predict replies (modality, complementarity-from-absence,
+recruiting) are exactly the ones similarity search cannot see.
 
 ---
 
-## 2. Scope discipline (read before enumerating anything)
+## 4. What lives in the database (concrete, per lab)
 
-- **Pilot ONE division: biology / biomedical.** First users are UCSD Bio Cloud students; this bounds the one-time ingestion cost so we measure it before spending credits on physics/chem/med. Scale only after the bio pilot proves out.
-- **Verify on ~20 labs before the batch.** Extraction-quality tuning is always the slow part. Get 20 labs producing clean, quote-backed `LabProfile`s you'd trust, then run the division.
-- **Do not touch `writer.ts` this sprint.** It stays exactly as is. Re-integrating it is Option C, post-sprint.
+Stored once, refreshed monthly:
 
----
+1. **Identity:** PI name, title, email; department/division; lab URL.
+2. **Raw cache (the expensive stuff):** scraped markdown of the lab's pages (home, research,
+   **team**, **join-us/positions**) + fetched paper abstracts / full text. This is what makes
+   per-request serving free — we never re-scrape per student.
+3. **Structured `LabProfile` (extracted from the cache, quote-backed or `null`):**
+   - `findings[]` — verbatim quotes of actual discoveries/claims, each with source.
+   - `dataModality` — wet / dry / mixed (the top predictive signal after domain; invisible to
+     similarity).
+   - `teamComposition` — roles seen on the team page (basis for complementarity inference).
+   - `recruitingSignal` — quoted; includes the **explicit "no undergrads"** flag (the one hard
+     bar).
+   - `lastRefreshed`.
+4. **(Optional, deferred) embeddings** of papers/chunks for RAG relevance retrieval.
 
-## 3. The 2-week sprint (Option B + DB)
-
-Four phases. The DB lands first (the priority); the critical test runs as early as possible because it can invalidate the model.
-
-### C.0 — Reconcile & lock the schema  (~1-2 evenings)
-- Re-verify §0 against the code at build time.
-- Define the `LabProfile` schema — extend `types/index.ts`. Every field carries a verbatim quote + source URL, or is `null` (design principle #2). Minimum fields: PI name/title/email; department/division; research summary (quoted); **data modalities generated** (the wet/dry signal); recent findings (quoted, from papers); team-page composition (for complementarity inference); **recruiting signal** (quoted); lab URL; `last_refreshed`.
-- DB tech: **Postgres + pgvector** (one store for structured now, embeddings later — no separate vector DB). Neon or Vercel Postgres.
-
-### C.1 — DB + ingestion pipeline  ← PRIORITY  (~4-6 evenings + one batch run)
-- **[Owner infra]** Provision Postgres (+pgvector), connect it to the Vercel project — same class of step as the open **T65** KV gate (env vars must reach production, not just local `.env`).
-- Enumerate biology/biomedical labs from UCSD faculty directories (directory expansion — the design's blessed alternative to citation-ranked discovery).
-- Reuse the **existing** extraction stack (`lib/agent/tools.ts`, `lib/scraper.ts`, `lib/pubmed.ts`) to harvest each lab into a stored `LabProfile`, as an **offline batch job** (never on the request path).
-- Verify on ~20 labs, then batch the division.
-- **[Owner]** Approve the one-time Firecrawl budget first — agent gives an estimate (labs × pages × cost) before the batch runs.
-- Keep **Upstash KV** as a hot cache in front of the DB.
-
-### C.2 — Fit ranker (the standalone screen = Option B)  (~3-5 evenings)
-- Compute **credibility tier (0-3)** from `StudentProfile` in code.
-- Structured filter + ranker over `LabProfile`s → **SEND / MAYBE / SKIP + one-line reason**.
-- **Modality fit** is first-class: wet-student → dry-lab forces SKIP absent a complementarity claim (the lever that would have killed the 0-for-8).
-- Surface this as a simple screen UI/endpoint. No writing. The SKIP list is the point.
-
-### C.3 — The critical test (build alongside C.2; it gates C.4)  (~2-3 evenings + a prerequisite)
-- **PREREQUISITE — the corpus does not exist as data yet.** As of 2026-07-25 the 53-email
-  corpus lives only as prose in Roman's context files; there is **no `evals/corpus/`
-  directory in this repo**, and the orientation doc's reference to that path is aspirational.
-  Before this test can run, the **12 Year-2 labs** must be assembled as machine-readable
-  data — each lab's identity/URL, the Year-2 student profile, and the known reply outcome
-  (replied / no-reply, and the 8-vs-2 split). This is **human work only Roman can do**
-  (from his sent mail) and it **gates C.3** entirely.
-- With that data: feed the ranker the 12 labs + the Year-2 profile, **blind** to outcomes.
-- It must mark the **eight** method-admiration labs SKIP/MAYBE and the **two** that replied SEND. If it can't reproduce the 0-for-8 split from profiles alone, the model of "good target" is wrong. **This is the sprint's success bar.**
-
-**Definition of done for the 2 weeks:** UCSD bio labs ingested into the DB; a fit ranker that returns SEND/MAYBE/SKIP + reason over them; the Year-2 corpus assembled as data and the 0-for-8 critical test passing over it. No writer changes.
+The **student profile is never in this shared DB** — it's PII, held per-user, private.
 
 ---
 
-## 4. After the sprint — Option C (not this sprint)
+## 5. The ranker (optional prioritization layer)
 
-- **C.4 — Subordinate the writer:** `writeEmail()` fires only for SEND labs; add the **tier gate (code filter)** capping claimable connection types; attach the **predicted PI follow-up question**; the existing evaluator loop still gates draft quality.
-- **C.5 — Serving / refresh / scale:** wire the request path to the DB; monthly **refresh cron**; scale ingestion to the other divisions.
-- **Vectors, deferred:** add pgvector chunked retrieval only if briefs prove thin, scoped to **within-lab passage selection**, never to lab-level recall. At ~2,000 labs structured retrieval handles recall.
+**Role:** a time-allocation advisor. It never hides a lab (only the explicit-no bar does). It
+orders the digests so "start at the top" means "highest reply-likelihood," not "most similar."
+
+**Scoring shape (structured fields + code — no LLM in the verdict):**
+```
+score(student, lab) = Σ_connections ( type_weight × strength ) × modality_multiplier
+hard rule: recruiting == "explicit no undergrads"  -> barred (excluded, not scored)
+```
+- **Connection types, in descending weight:** complementarity > method/data/tool > system >
+  problem > trajectory. This ordering — not raw connection *count* — is what separated the
+  corpus replies from the non-replies. (The 0-for-8 had the *most* connections; they were the
+  wrong type.)
+- **`modality_multiplier`** heavily discounts a wet-student→dry-lab mismatch with no
+  complementarity claim. It sinks such labs in the ranking; it does **not** remove them.
+
+**How the weights are set — honestly, given n=53:**
+1. **Hand-set priors from the findings** (modality dominant, complementarity highest, raw
+   similarity weak). Read off two years of outcomes, not guessed.
+2. **Calibrate against the corpus with the 0-for-8 as the objective:** tune weights until the
+   12 held-out Year-2 labs order correctly (the 8 admiration labs sink, the 2 repliers rise).
+3. **Logistic regression on the 53 as a cross-check only** — heavy regularization, ≤3–4
+   features. At n=53 you *calibrate* weights, you don't freely *learn* them (unconstrained
+   fitting to 53 correlated points produces confident garbage — the same small-sample trap
+   that makes citation-ranked discovery fail). If it independently up-weights modality, that's
+   confirmation; if it disagrees wildly, the sample is too thin to trust.
+
+**The 0-for-8 test is demoted:** it is no longer the product's success bar (the product
+succeeds by delivering fast, trustworthy research). It is the **sanity check on the ranker's
+ordering** — does the optional "start here" list put repliers above admiration-traps?
 
 ---
 
-## 5. Realistic timeline & risk
+## 6. Structured fields + code ranker vs an LLM judge — decided
 
-The sprint (C.0–C.3) is roughly **10-14 protected deep-work evenings** — i.e. it *fills* the two weeks with nothing to spare. Honest risks: (1) extraction-quality tuning always overruns; (2) it competes with PEPMatch, the Salk/Seurat work, and PHIL 27; (3) the **Claude Max renewal is mid-August** and must not get crowded out. If the two weeks slip, the DB (C.1) is the part to protect — it's the priority and the fork-independent asset.
+**Decision: structured fields + code ranker.** Rationale, across the axes we weighed:
+- **Cost:** structured extraction is paid *once per lab*, then serving is ~free. An
+  LLM-judge-per-query would re-introduce a recurring per-lab-per-user bill — the exact
+  per-call cost the DB exists to kill.
+- **Testability:** a code ranker reproduces the 0-for-8 ordering deterministically and is
+  unit-testable; a stochastic LLM judge is hard to calibrate and drifts.
+- **Failure mode:** an LLM judging off RAG-retrieved (similarity-selected) text is prone to
+  being seduced by topically-similar papers — the 0-for-8 risk.
 
----
-
-## 6. Tools / infrastructure
-
-| Need | Choice | Notes |
-|---|---|---|
-| Database | Postgres + **pgvector** (Neon / Vercel Postgres) | One store for structured + (later) vectors |
-| Scraping | Firecrawl (existing `lib/scraper.ts`) | Offline ingestion only now, not per request |
-| Publications | PubMed / OpenAlex / NCBI efetch (existing `lib/pubmed.ts`) | Free; the extra data depth |
-| Hot cache | Upstash KV (existing `lib/kv.ts`) | Keep in front of the DB; resolves the T65 prod-wiring gate |
-| Embeddings (post-sprint) | Voyage or OpenAI `text-embedding-3` | Deferred until earned |
-| Extraction / rank | Existing Gemini stack | — |
-| Batch + refresh | Script + Vercel Cron | One-time run + monthly refresh |
+**But don't over-structure.** Schematize only the few signals that are (a) decision-critical
+and (b) invisible to similarity — **modality, recruiting, team composition.** Everything soft
+(domain relevance, the digest content, later the writing) stays with LLM + RAG, where
+flexibility helps and rigidity would hurt.
 
 ---
 
-## 7. Ground truth & non-negotiables — unchanged
+## 7. Code changes this phase
 
-- The 53-email corpus stays the only real scoreboard — **once assembled as data** (see C.3; today it's prose only, not in `evals/corpus/` or anywhere machine-readable). The n≈40 question: **do SEND labs reply more than SKIP labs the student emailed anyway?** The DB makes retrieval cheap; it never becomes the judge — the **fit ranker** decides.
-- Nothing enters a `LabProfile` without a verbatim quote + URL (else `null`).
-- Never send. No bulk draft export. The SKIP list is a feature, not a failure.
+1. **Extend extraction** (`lib/agent/tools.ts`, the `finish` tool schema): add
+   `data_modality`, `team_composition`, `recruiting_signal` (each quote-backed or null).
+   Update research guidance (`lib/agent/prompts.ts`) to fetch the **team** and
+   **join-us/positions** pages, not just homepage + papers. Consider raising the per-session
+   tool limits (currently 5 webpage / 2 abstract / 2 paper) since ingestion pays once and
+   wants depth.
+2. **`researchLab()` refactor** (`lib/agent/index.ts`): extract the research loop (through
+   `finish`) into a function that returns the extracted result **without** calling
+   `writeEmail`. `runAgent` then calls `researchLab()` + its existing writer/evaluator, so the
+   **live email path behaves identically** (this is the correctness bar for the refactor).
+3. **DB layer** (`lib/db.ts`, new — mirror `lib/kv.ts`): Postgres client + `lab_profiles`
+   migration (JSONB for quote-backed fields, top-level columns for filter keys: `division`,
+   `data_modality`, `recruiting`, `last_refreshed`). Postgres + pgvector (one store).
+4. **Ingestion** (`scripts/ingest.ts` or `optimization/ingest/`, new, offline): enumerate →
+   `researchLab()` → `mapToLabProfile()` → upsert. Resumable, KV-cached. Reuses
+   `lib/scraper.ts` and `lib/pubmed.ts` unchanged.
+5. **Serving** (`app/api/research` stays for the general cold path; new `app/api/digest` for
+   the UCSD DB path): return the per-lab research digest + optional rank. New UX page for the
+   digest feed. Model the route on `app/api/research/route.ts` (auth/rate-limit patterns).
+6. **Ranker** (new, pure functions): `computeCredibilityTier`, connection typing,
+   `scoreLab`, `rankLabs` (pull from Postgres with the structured pre-filter).
+7. **`writer.ts` is NOT touched.** It becomes the optional downstream layer, later.
+
+---
+
+## 8. Build order & scope
+
+- **DB-first** (owner's call): populate a demoable UCSD DB before the ranker is proven.
+  Mitigation: **ingest the 12 corpus labs first** so the ranker sanity check (§5) can run
+  early, before the full-division Firecrawl spend completes.
+- **Pilot ONE division: biology/biomedical** (first users = Bio Cloud students). Bound the
+  ingestion cost before scaling to physics/chem/med.
+- **Verify ~20 labs before the batch** — extraction-quality tuning is the step that overruns.
+- Full order and gates: see `BUILD_STEPS.md`.
+
+---
+
+## 9. Success criteria
+
+- **Primary (the product):** over real UCSD bio labs, a student gets a clean, fast,
+  quote-backed research digest per lab, ordered by relevance to their profile, with explicit-no
+  labs barred. This is the thing that has to feel good.
+- **Secondary (the optional ranker):** an optional sort that puts higher-reply-likelihood labs
+  first, validated by the 0-for-8 ordering sanity check.
+
+---
+
+## 10. Non-negotiables & out of scope
+
+- Nothing enters a `LabProfile` without a verbatim source quote + URL (else `null`).
+- The tool **never sends**, and does **no bulk draft export**.
+- The only lab ever hidden is one that **explicitly** declines undergraduates.
+- **Out of scope this phase:** any change to `writer.ts` (it's the later optional layer);
+  vector retrieval beyond the optional relevance step (pgvector chunked retrieval scoped to
+  within-lab passage selection is a later refinement); divisions beyond biology.
 </content>

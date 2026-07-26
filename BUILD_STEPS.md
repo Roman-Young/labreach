@@ -1,74 +1,97 @@
 # LabReach — Phase C Build Steps (the logistical checklist)
 
 Companion to `PHASE_C_SPEC.md` (the *what/why*). This is the *do-this-then-this*.
-Scope: the 2-week **Option B** sprint (DB + SEND/MAYBE/SKIP screen; `writer.ts` untouched).
-Legend: **[OWNER]** = only Roman can do it (infra/login/human data). **[AGENT]** = Kairo can build it. **[GATE]** = must pass before the next thing starts.
+**Product:** a per-lab **research digest at scale** (not a SEND/MAYBE/SKIP screen). Ranker is an
+optional sort; `writer.ts` is untouched (it's the later optional layer). Structured fields +
+code ranker; RAG feeds relevance/content. **DB-first**, biology pilot.
+Legend: **[OWNER]** = only Roman (infra/login/human data). **[AGENT]** = Kairo can build it.
+**[GATE]** = must pass before the next thing.
 
 ---
 
-## Track 0 — Unblock in parallel (do these FIRST; they are waits, not work)
+## Track 0 — Owner unblocks (day 1, parallel; waits, not work)
 
-These have no code dependencies and gate the coding tracks, so start them on day 1.
-
-- [ ] **0.1 [OWNER]** Provision a **Postgres + pgvector** instance (Neon free tier or Vercel Postgres). *Done when:* you have a connection string.
-- [ ] **0.2 [OWNER]** Put the DB connection string in the Vercel project's env **and** local `.env`, and while there, finish the **T65** step — connect `labreach-kv` to the project so `KV_REST_API_URL`/`KV_REST_API_TOKEN` reach production. *Done when:* both DB and KV env vars exist in Vercel, not just locally.
-- [ ] **0.3 [OWNER]** Assemble the **Year-2 corpus as data** (task **T79**). From your sent mail, list the 12 Year-2 labs: lab name + URL, the Year-2 student profile you used, and each reply outcome (the 8 no-replies, the 2 replies). Drop it as `evals/corpus/year2.json`. *Done when:* a 12-row file exists. **This gates C.3 entirely.**
-- [ ] **0.4 [OWNER]** Approve the one-time **Firecrawl ingestion budget** — after **[AGENT]** produces the estimate (step C.1.0). *Done when:* you've said "yes, spend up to $X."
+- [ ] **0.1 [OWNER]** Provision **Postgres + pgvector** (Neon free tier / Vercel Postgres). *Done when:* a connection string exists.
+- [ ] **0.2 [OWNER]** Put the connection string in Vercel env **and** local `.env`; while there, finish **T65** (wire `labreach-kv` to the project so its env vars reach production). *Done when:* DB + KV env vars exist in Vercel, not just locally.
+- [ ] **0.3 [OWNER]** Assemble the **Year-2 corpus as data** → `evals/corpus/year2.json` (12 labs: name+URL, the Year-2 profile, each reply outcome — the 8 no-replies, the 2 replies). *Done when:* a 12-row file exists. Gates the ranker sanity check (Step 6).
+- [ ] **0.4 [OWNER]** Approve the one-time **Firecrawl ingestion budget** after the agent's estimate (Step 4.0). *Done when:* "yes, spend up to $X."
 
 ---
 
-## Phase C.0 — Schema & scaffolding  [AGENT]
+## Step 1 — Extend extraction  [AGENT] (needed before ingestion)
 
-- [ ] **C.0.1** Define the `LabProfile` type in `types/index.ts`. Fields, each with a `{quote, source}` or `null`: `piName`, `piTitle`, `piEmail`, `department`, `division`, `researchSummary`, `dataModalities` (the wet/dry signal), `recentFindings[]` (from papers), `teamComposition` (for complementarity inference), `recruitingSignal`, `labUrl`, `lastRefreshed`.
-- [ ] **C.0.2** Create `lib/db.ts` — a thin Postgres client (mirror the shape of `lib/kv.ts`). Add a migration creating a `lab_profiles` table (JSONB for the quote-backed fields + top-level columns for what you filter on: `division`, `data_modality`, `recruiting`, `last_refreshed`).
-- [ ] **C.0.3** Add the new env vars to `.env.example`.
-- [ ] **C.0 [GATE]** DB reachable from the app (a trivial write/read round-trips). Commit.
+The current `finish` schema (`lib/agent/tools.ts`) extracts only writer-facing evidence. The
+ranker and the honest digest need three signals it does **not** capture:
 
----
-
-## Phase C.1 — Ingestion pipeline  ← THE PRIORITY  [AGENT] (+0.4 for the batch)
-
-- [ ] **C.1.0 [AGENT]** Estimate the ingestion budget: (# bio labs) × (pages+papers per lab) × Firecrawl unit cost. Hand the number to **0.4**.
-- [ ] **C.1.1** **Extract `researchLab()` from `runAgent()`** (`lib/agent/index.ts`). It runs the existing Gemini tool-loop through `finish` and returns the `AgentResult` **evidence + PI info** — and **stops before `writeEmail`**. Refactor `runAgent` to call `researchLab()` then its existing writer/evaluator, so the **live path behaves identically**. *Done when:* one live email still generates unchanged.
-- [ ] **C.1.2** Write `mapToLabProfile(agentResult)` — turn the extracted evidence into a `LabProfile`, preserving every quote+source. No quote → `null`.
-- [ ] **C.1.3** Write the **directory enumerator**: given the UCSD biology/biomedical faculty-directory URL(s), scrape them into a list of `{labName, labUrl, piName, piEmail}`. This is directory expansion — the design's approved alternative to citation-ranked discovery.
-- [ ] **C.1.4** Write the **batch script** (`optimization/ingest/` or `scripts/ingest.ts`, offline — never on the request path): for each enumerated lab → `researchLab()` → `mapToLabProfile()` → upsert into Postgres. Make it **resumable** (skip labs already stored) and **KV-cached** so a re-run doesn't re-scrape. Consider raising the per-lab tool limits (currently 5 webpage / 2 abstract / 2 paper) since ingestion pays once and wants depth.
-- [ ] **C.1.5 [GATE]** Run on **~20 labs only**. Spot-check: are the quotes real, specific, correctly sourced? Tune the extraction prompt (`lib/agent/tools.ts` `finish` description) until you'd trust the profiles. **Do not batch until this looks right** — this is the step that overruns.
-- [ ] **C.1.6 [OWNER→AGENT]** With budget approved (0.4), run the **full bio division**. *Done when:* every enumerated bio lab has a stored `LabProfile`; row count matches the enumeration minus logged failures.
+- [ ] **1.1** Add to the `finish` schema: `data_modality` (wet/dry/mixed), `team_composition` (roles on the team page), `recruiting_signal` (quoted, incl. the explicit **"no undergrads"** flag). Each quote-backed or `null`.
+- [ ] **1.2** Update research guidance (`lib/agent/prompts.ts`) so the loop fetches the **team** and **join-us/positions** pages, not just homepage + papers.
+- [ ] **1.3** Consider raising the per-session tool limits (currently 5 webpage / 2 abstract / 2 paper in `tools.ts`) — ingestion pays once and wants depth.
+- [ ] **Step 1 [GATE]** On a couple of labs, the new fields populate with real quotes. Commit.
 
 ---
 
-## Phase C.2 — Fit ranker = the Option B screen  [AGENT]
+## Step 2 — `researchLab()` refactor  [AGENT] (the one real code risk)
 
-- [ ] **C.2.1** `computeCredibilityTier(profile): 0|1|2|3` — in code, from `StudentProfile`. Pure function, unit-tested.
-- [ ] **C.2.2** `computeModalityFit(profile, labProfile)` — wet/dry match; a mismatch with no complementarity signal returns a SKIP-forcing result.
-- [ ] **C.2.3** `scoreLab(profile, labProfile)` — combine domain overlap, modality fit, complementarity, level, recruiting signal → `{verdict: SEND|MAYBE|SKIP, reason}` (one-line reason, quote-referenced where possible).
-- [ ] **C.2.4** `rankLabs(profile, labProfiles[])` → sorted verdicts. Pull `labProfiles` from Postgres with the structured pre-filter (division, etc.), not a full-table scan.
-- [ ] **C.2.5** Expose it: `/api/screen` (POST profile → ranked verdicts) + a minimal results page. **No writing.** The SKIP list is the visible product.
-- [ ] **C.2 [GATE]** End-to-end: submit a profile, get SEND/MAYBE/SKIP + reasons over real UCSD bio labs. Commit.
+- [ ] **2.1** Extract a `researchLab(request)` from `runAgent()` (`lib/agent/index.ts`) that runs the Gemini tool-loop through `finish` and returns the extracted `AgentResult` **without** calling `writeEmail`.
+- [ ] **2.2** Refactor `runAgent` to call `researchLab()` then its existing writer/evaluator, so the **live email path behaves identically**.
+- [ ] **Step 2 [GATE]** Generate one email end-to-end via `/draft`; output is equivalent to pre-refactor. This is the correctness bar. Commit.
 
 ---
 
-## Phase C.3 — The 0-for-8 critical test  [AGENT, needs 0.3]  [GATE for Option C]
+## Step 3 — DB layer  [AGENT]
 
-- [ ] **C.3.1** Load `evals/corpus/year2.json` (from **0.3**).
-- [ ] **C.3.2** Run `rankLabs()` on the 12 Year-2 labs + Year-2 profile, **blind** to the outcomes.
-- [ ] **C.3.3** Compare: did it mark the **8** admiration labs SKIP/MAYBE and the **2** repliers SEND? Write it up as a repeatable eval (so you can re-run after tuning).
-- [ ] **C.3.4** Tune the scoring weights/thresholds until the split reproduces — or conclude the model is wrong and stop, which is the test doing its job.
-- [ ] **C.3 [GATE]** The split reproduces. **This is the sprint's definition of success**, and the green light for Option C (the writer re-integration, T77) later.
+- [ ] **3.1** Add `LabProfile` to `types/index.ts`: identity (PI name/title/email, division, URL) + the quote-backed fields from Step 1 (`findings[]`, `dataModality`, `teamComposition`, `recruitingSignal`, `lastRefreshed`).
+- [ ] **3.2** Add `lib/db.ts` (mirror `lib/kv.ts`) + a `lab_profiles` migration: JSONB for the quote-backed fields, top-level columns for filters (`division`, `data_modality`, `recruiting`, `last_refreshed`), and a column for the **raw harvested text** (the cache that kills re-scraping).
+- [ ] **3.3** Add DB env vars to `.env.example`.
+- [ ] **Step 3 [GATE]** DB round-trips a write/read from the app. Commit.
 
 ---
 
-## The dependency order at a glance
+## Step 4 — Enumerate + ingest  [AGENT] (+0.4 for the batch)  ← THE PRIORITY
+
+- [ ] **4.0 [AGENT]** Estimate the ingestion budget (# bio labs × pages+papers × Firecrawl unit cost); hand it to **0.4**.
+- [ ] **4.1** `mapToLabProfile(agentResult)` — evidence → `LabProfile`, preserving every quote+source (no quote → `null`).
+- [ ] **4.2** Directory enumerator: UCSD biology/biomedical faculty directory → `{labName, labUrl, piName, piEmail}` list (directory expansion — the approved discovery method).
+- [ ] **4.3** Offline, resumable, KV-cached batch script (`scripts/ingest.ts`): each lab → `researchLab()` → `mapToLabProfile()` → upsert to Postgres (store the raw text too). Reuse `lib/scraper.ts`, `lib/pubmed.ts` unchanged.
+- [ ] **4.4 [GATE]** **Ingest the 12 corpus labs first**, then spot-check ~20: quotes real + sourced, modality/team/recruiting populated where the page supports them. Tune the `finish` prompt until you'd trust the profiles. **Do not batch until this looks right** — the step that overruns.
+- [ ] **4.5 [OWNER→AGENT]** With budget approved, run the **full bio division**. *Done when:* every enumerated bio lab has a stored profile (minus logged failures).
+
+---
+
+## Step 5 — The research digest + serving  [AGENT]  ← THE PRODUCT
+
+- [ ] **5.1** New `app/api/digest/route.ts` (UCSD DB path; the general pasted-URL `app/api/research` cold path stays). Model auth/rate-limit on `app/api/research/route.ts`.
+- [ ] **5.2** For a submitted student profile: RAG-retrieve each lab's most relevant quote-backed findings, compose a readable **per-lab digest**, **bar labs that explicitly say "no undergrads"**, show everything else. No writing.
+- [ ] **5.3** A digest-feed UX page: fast, scannable, quote-backed. This is the thing that has to feel good.
+- [ ] **Step 5 [GATE]** Submit a profile → a clean, relevance-ordered, quote-backed digest per real UCSD bio lab, explicit-no labs barred. Commit.
+
+---
+
+## Step 6 — Optional ranker + its sanity check  [AGENT, needs 0.3]
+
+- [ ] **6.1** Pure functions: `computeCredibilityTier(profile)`, connection typing, `scoreLab(profile, lab)`, `rankLabs(profile, labs[])` (Postgres pre-filter). `score = Σ(type_weight × strength) × modality_multiplier`; `recruiting == explicit-no → barred`.
+- [ ] **6.2** Weights: hand-set priors from the findings → calibrate against the 53-corpus with the **0-for-8 ordering** as objective → logistic regression on the 53 as a regularized cross-check only (n=53: calibrate, don't freely learn).
+- [ ] **6.3** Expose ranking as an **optional sort** on the digest feed — never a filter (only explicit-no bars a lab).
+- [ ] **6.4 [GATE / sanity check]** Over the 12 corpus labs: the 8 admiration labs sink, the 2 repliers rise. This validates the *ranker*, and is **not** the product's success bar.
+
+---
+
+## Dependency order at a glance
 
 ```
-Day 1:  0.1 0.2 0.3 0.4-estimate   +   C.0.1 C.0.2 C.0.3    (owner waits ∥ agent scaffolds)
-then:   C.1.1 → C.1.2 → C.1.3 → C.1.4 → C.1.5(GATE, ~20 labs) → [0.4 approve] → C.1.6(full batch)
-then:   C.2.1 C.2.2 → C.2.3 → C.2.4 → C.2.5(GATE)
-then:   C.3 (needs 0.3 done)  →  GATE: 0-for-8 reproduces  →  sprint done
+Day 1:  0.1 0.2 0.3 0.4-estimate     ∥     Step 1 (extend extraction)
+then:   Step 2 (researchLab, GATE: live path unchanged) → Step 3 (DB)
+then:   Step 4.1-4.4 (enumerate, ingest 12 corpus + 20 spot, GATE) → [0.4] → 4.5 full batch
+then:   Step 5 (digest + UX, GATE)  →  Step 6 (optional ranker + 0-for-8 sanity)
 ```
 
-**Critical path** (the thing that determines the finish date): `C.1.1 → C.1.5 → C.1.6 → C.2 → C.3`. The two owner items that can silently stall it are **0.1/0.2** (no DB = nothing stores) and **0.3** (no corpus = C.3 can't run). Do those on day 1.
+**Critical path:** `Step 1 → Step 2 → Step 4.4 → Step 5`. The two owner items that silently
+stall it: **0.1/0.2** (no DB = nothing stores) and **0.3** (no corpus = no ranker sanity check).
+Do them day 1.
 
-**If the sprint slips:** protect **C.1** (the DB) — it's the priority and survives any later design change. C.2/C.3 can follow into a third week without waste.
+**If it slips:** protect **Step 4** (the DB + ingestion) and **Step 5** (the digest). The
+optional ranker (Step 6) can follow later without blocking the product.
+
+**Out of scope this phase:** any change to `writer.ts` (the later optional layer); vector
+retrieval beyond the Step-5 relevance step; divisions beyond biology; LLM-judge ranking.
 </content>
