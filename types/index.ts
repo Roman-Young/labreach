@@ -136,3 +136,47 @@ export interface ResearchRequest {
   profile: StudentProfile
   labUrl: string
 }
+
+// ── LabProfile: the cached, quote-backed record of one lab in the UCSD DB ──
+// Structured around the CONNECTION TYPES the ranker scores on, so matching a
+// student to a lab is a field-by-field comparison, not one fuzzy blob. Every
+// substantive field is quote-backed (EvidenceItem) or null — nothing enters
+// without a verbatim source. Fed by ingestion (researchLab), read by the fit
+// ranker + the digest. rawPages is retained so RAG/relevance always has the
+// full text and we can re-extract without re-scraping. See PHASE_C_SPEC.md.
+
+export type DataModality = 'wet' | 'dry' | 'mixed'
+
+// recruiting: 'explicit_no' is the ONLY hard bar in the product (a lab that
+// explicitly declines undergrads). Everything else stays visible/rankable.
+export type RecruitingStatus = 'explicit_no' | 'open' | 'unknown'
+
+export interface LabProfile {
+  // identity / contact
+  labUrl: string
+  labName: string | null
+  piName: string | null
+  piTitle: string | null
+  piEmail: string | null
+
+  // placement (cheap filtering; school matters once we scale past bio)
+  school: string | null // e.g. "Biological Sciences", "Medicine"
+  department: string | null // e.g. "Neurobiology", "Microbiology"
+  researchAreas: string[] // topical tags — domain overlap
+
+  // matchable signals — each maps to a connection type
+  researchSummary: string | null // 1-2 line readable overview (digest header)
+  findings: EvidenceItem[] // actual discoveries/claims
+  openProblems: EvidenceItem[] // future directions — the "problem" connection
+  techniques: EvidenceItem[] // methods used — "method" connection + modality read
+  organisms: string[] // model systems — the "system" connection
+  dataModality: { value: DataModality | null; evidence: EvidenceItem | null } // wet/dry
+  teamComposition: EvidenceItem[] // roles on team page — complementarity
+  recruiting: { status: RecruitingStatus; evidence: EvidenceItem | null } // the bar
+
+  // provenance / cache
+  publications: PublicationRef[]
+  rawPages: Record<string, string> | null // harvested markdown by page type
+  researchQuality: 'good' | 'limited' | null
+  lastRefreshed: string | null // ISO timestamp
+}
