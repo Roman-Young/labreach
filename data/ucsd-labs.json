@@ -1093,7 +1093,7 @@
   },
   {
     "name": "Kit Pogliano",
-    "title": "Distinguished Professor",
+    "title": "Dean and Distinguished Professor",
     "url": "https://biology.ucsd.edu/research/faculty/kpogliano",
     "department": "Molecular Biology",
     "school": "Biological Sciences"
@@ -1447,5 +1447,1188 @@
     "url": "http://jacobsschool.ucsd.edu/faculty/faculty_bios/index.sfe?fmp_recid=352",
     "department": "Bioengineering",
     "school": "Bioengineering"
+  },
+  {
+    "name": "Bertrand, Guy",
+    "title": "Distinguished Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/bertrand_guy.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Bethel, Neville",
+    "title": "Assistant Professor of Chemistry & Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/bethel_neville.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Budin, Itay",
+    "title": "Associate Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/budin__itay.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Burkart, Michael",
+    "title": "Professor, Department of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/burkart_michael_d.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Continetti, Robert",
+    "title": "Distinguished Professor of Chemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/continetti_robert_e.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Debelouchina, Galia",
+    "title": "Associate Professor, Department of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/debelouchina__galia__t.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Deshmukh, Lalit",
+    "title": "Associate Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/deshmukh__lalit.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Devaraj, Neal",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/devaraj_neal_k.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Donoghue, Daniel",
+    "title": "Distinguished Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/donoghue_daniel_j.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Ferguson, Fleur",
+    "title": "Assistant Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/ferguson_fleur.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Figueroa, Joshua",
+    "title": "Professor of Chemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/figueroa_joshua_s.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Ghosh, Gourisankar",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/ghosh_gourisankar.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Ghosh, Partho",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/ghosh_partho.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Godula, Kamil",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/godula_kamil.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Grassian, Vicki",
+    "title": "Distinguished Professor",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/grassian_vicki_h.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Griffith, Kent",
+    "title": "Assistant Professor, Department of Chemistry & Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/griffith_kent.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Guseman, Alex",
+    "title": "Assistant Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/guseman_alex.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Hermann, Thomas",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/hermann_thomas_c.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Herzik, Mark",
+    "title": "Assistant Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/herzik__mark__a.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Jennings, Patricia",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/jennings_patricia_a.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Lisa Jones",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/jones_lisa.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Joseph, Simpson",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/joseph_simpson.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Kim, Judy",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/kim_judy_e.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Komives, Elizabeth",
+    "title": "Distinguished Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/komives_elizabeth_a.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Komor, Alexis",
+    "title": "Associate Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/komor__alexis__c.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Kubiak, Clifford",
+    "title": "Distinguished Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/kubiak_clifford_p.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Kummel, Andrew",
+    "title": "Distinguished Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/kummel_andrew_c.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Li, Shaowei",
+    "title": "Associate Professor of Chemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/li_shaowei.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "McHugh, Colleen",
+    "title": "Assistant Professor of Chemistry and Biochemistry",
+    "url": "https://www.mchughlab.com/",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Mishanina, Tatiana",
+    "title": "Assistant Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/mishanina__tatiana__v.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Molinski, Tadeusz",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/molinski_tadeusz_f.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Muller, Ulrich",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/muller_ulrich_f.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "O'Connor, Joseph",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/o'connor_joseph_m.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Obara, Christopher",
+    "title": "Assistant Professor of Chemistry & Biochemistry and Pharmacology",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/obara_christopher.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Julia Ortony",
+    "title": "Associate Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/ortony_julia.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Paesani, Francesco",
+    "title": "Professor of Chemistry and Biochemistry, Materials Science and Engineering, San Diego Supercomputer Center",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/paesani_francesco.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Prather, Kimberly",
+    "title": "Distinguished Chair in Atmospheric Chemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/prather_kimberly_a.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Pun, Andrew",
+    "title": "Assistant Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/pun_andrew.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Rinehart, Jeffrey",
+    "title": "Associate Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/rinehart_jeffrey_d.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Romero, Erik",
+    "title": "Assistant Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/romero_erik.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Romero, Nathan",
+    "title": "Assistant Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/romero__nathan__a.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Sailor, Michael",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/sailor_michael_j.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Schimpf, Alina",
+    "title": "Associate Professor",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/schimpf_alina_m.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Schmidt, Valerie",
+    "title": "Associate Professor of Chemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/schmidt_valerie_a.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Schoeneberg, Johannes",
+    "title": "Assistant Professor of Chemistry & Biochemistry and Pharmacology",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/schoeneberg_johannes.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Sinha, Amitabha",
+    "title": "Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/sinha_amitabha.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Slade, Jonathan",
+    "title": "Associate Professor of Chemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/slade__jonathan__h.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Stauber, Julia",
+    "title": "Assistant Professor of Chemistry and Biochemistry",
+    "url": "https://chemistry.ucsd.edu/faculty/profiles/stauber_julia.html",
+    "department": "Chemistry & Biochemistry",
+    "school": "Physical Sciences"
+  },
+  {
+    "name": "Don Cleveland",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/don.cleveland",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Steven Dowdy",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/steven.dowdy",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Jeffrey Esko",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/jeffrey.esko",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Susan Ferro-Novick",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/susan.ferro-novick",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Pradipta Ghosh",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/pradipta.ghosh",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Lawrence Goldstein",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/lawrence.goldstein",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Bruce Hamilton",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/bruce.hamilton",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Stephen Hedrick",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/stephen.hedrick",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Richard Kolodner",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/richard.kolodner",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Graham McVicker",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/graham.mcvicker",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Alysson Muotri",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/alysson.muotri",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Peter Novick",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/peter.novick",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Seungeun Oh",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/seungeun.oh",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Tariq Rana",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/tariq.rana",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Bing Ren",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/bing.ren",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Jonathan Sebat",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/jonathan.sebat",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "George Sen",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/george.sen",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Deborah Spector",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/deborah.spector",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Ajit Varki",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/ajit.varki",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Dong Wang",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/dong.wang",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Jean Y.J. Wang",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/jean.wang",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Wei Wang",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/wei.wang.dr",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Karl Willert",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/karl.willert",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Gene Yeo",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/eugene.yeo",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Huilin Zhou",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/huilin.zhou",
+    "department": "Cellular & Molecular Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Joseph A. Adams, Ph.D.",
+    "title": "Professor of Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/joseph-adams.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Corina Antal, Ph.D.",
+    "title": "Assistant Professor of Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/corina-antal.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Geoffrey Chang, Ph.D.",
+    "title": "Professor of Pharmacology, Skaggs School of Pharmacy and Pharmaceutical Sciences",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/geoffrey-chang.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Richard Daneman, Ph.D.",
+    "title": "Associate Professor of Pharmacology and Neurosciences",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/richard-daneman.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Pieter Dorrestein, Ph.D.",
+    "title": "Professor, Departments of Pediatrics and Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/pieter-dorrestein.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Sylvia Evans, Ph.D.",
+    "title": "Professor of Pharmacology, Skaggs School of Pharmacy and Pharmaceutical Sciences",
+    "url": "https://pharmacology.ucsd.edu/entity/open.act?type=page&id=e4188aab0aaf6b3a0ff4016e42eb7b7d&confId=5e927fb70aaf69f5750909c1533d6c8d",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "David J. Gonzalez, Ph.D.",
+    "title": "Associate Professor of Pharmacology, Skaggs School of Pharmaceutical Sciences",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/david-gonzalez.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Åsa Gustafsson, Ph.D.",
+    "title": "Professor of Pharmacology, Skaggs School of Pharmacy and Pharmaceutical Sciences",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/asa-gustafsson.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "J. Silvio Gutkind, Ph.D.",
+    "title": "Chair and Distinguished Professor of Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/j-silvio-gutkind.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Tracy Handel, Ph.D.",
+    "title": "Distinguished Professor of Pharmacology, Skaggs School of Pharmacy and Pharmaceutical Sciences",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/tracy-handel.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Ryan Hibbs, Ph.D.",
+    "title": "Professor and Chair of Neurobiology Professor of Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/ryan-hibbs.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Vivian Hook, Ph.D.",
+    "title": "Distinguished Professor of Pharmaceutical Sciences, Pharmacology and Neurosciences",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/vivian-hook.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Juliana Idoyaga, Ph.D.",
+    "title": "Associate Professor of Pharmacology and Molecular Biology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/juliana-idoyaga.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "William J. Joiner, Ph.D.",
+    "title": "Associate Professor of Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/william-joiner.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Andrew Mendiola, Ph.D.",
+    "title": "Assistant Professor of Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/andrew-mendiola.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Alexandra Newton, Ph.D.",
+    "title": "Distinguished Professor of Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/alexandra-newton.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Christopher Obara, Ph.D.",
+    "title": "Assistant Professor of Pharmacology, Chemistry & Biochemistry",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/christopher-obara.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Padmini Rangamani, Ph.D.",
+    "title": "Professor Department of Pharmacology, School of Medicine Department of Mechanical and Aerospace Engineering, Jacobs School of Engineering University of California San Diego",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/padmini-rangamani.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Johannes Schöneberg, Ph.D.",
+    "title": "Assistant Professor of Pharmacology and Chemistry & Biochemistry",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/johannes-schoneberg.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Roger Sunahara, Ph.D.",
+    "title": "Professor of Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/roger-sunahara.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Susan S. Taylor, Ph.D.",
+    "title": "Distinguished Professor of Pharmacology, Chemistry and Biochemistry",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/susan-taylor.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "JoAnn Trejo, Ph.D.",
+    "title": "Professor of Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/joann-trejo.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Jing Yang Ph.D.",
+    "title": "Professor of Pharmacology and Pediatrics",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/jing-yang.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Jin Zhang, Ph.D.",
+    "title": "Vice-Chair and Professor of Pharmacology",
+    "url": "https://pharmacology.ucsd.edu/faculty/department-faculty1/jin-zhang.html",
+    "department": "Pharmacology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Jack Bui",
+    "title": "Professor",
+    "url": "https://builab.cloud.ucsd.edu/",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Aaron Carlin",
+    "title": "Professor",
+    "url": "http://homer.ucsd.edu/CarlinLab/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "David Cheresh",
+    "title": "Professor",
+    "url": "https://pathology.ucsd.edu/research/labs/cheresh/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Cole Ferguson",
+    "title": "Professor",
+    "url": "https://coleferguson.com/",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Pascal Gagneux",
+    "title": "Professor",
+    "url": "https://pathology.ucsd.edu/research/labs/gagneux/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Steven Gonias",
+    "title": "Professor",
+    "url": "https://pathology.ucsd.edu/research/labs/gonias/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Mariko Horii",
+    "title": "Professor",
+    "url": "https://pathology.ucsd.edu/research/labs/horii/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Richard Klemke",
+    "title": "Professor",
+    "url": "http://klemkelab.ucsd.edu/",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Gerald Morris",
+    "title": "Professor",
+    "url": "https://pathology.ucsd.edu/research/labs/morris/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Subhojit Roy",
+    "title": "Professor",
+    "url": "http://www.roylab.org/",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Mana Parast",
+    "title": "Professor",
+    "url": "https://pathology.ucsd.edu/research/labs/parast/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "David Pride",
+    "title": "Professor",
+    "url": "http://www.thepridelaboratory.org/",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Saravanan Raju",
+    "title": "Professor",
+    "url": "https://sites.ucsd.edu/rajulab/",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Diane Shelton",
+    "title": "Professor",
+    "url": "https://vetneuromuscular.ucsd.edu/",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Christina Sigurdson",
+    "title": "Professor",
+    "url": "http://sigurdsonlab.ucsd.edu/",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Francesca Soncin",
+    "title": "Professor",
+    "url": "https://pathology.ucsd.edu/research/labs/soncin/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Ina Stelzer",
+    "title": "Professor",
+    "url": "https://pathology.ucsd.edu/research/labs/stelzer/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Hiromi Wettersten",
+    "title": "Professor",
+    "url": "https://pathology.ucsd.edu/research/labs/wettersten/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Desgrosellier",
+    "title": "Professor",
+    "url": "https://pathology.ucsd.edu/research/labs/desgrosellier/index.html",
+    "department": "Pathology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Stephen Howell, M.D.",
+    "title": "Professor",
+    "url": "http://profiles.ucsd.edu/stephen.howell",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Alyssa Beck, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/alyssa.beck",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Sarah Boles, M.D.",
+    "title": "Professor",
+    "url": "http://profiles.ucsd.edu/sarah.boles",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Wenji Guo, M.D., Ph.D.",
+    "title": "Professor",
+    "url": "https://providers.ucsd.edu/details/1538604392/medical-oncology-cancer",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Teresa Helsten, M.D.",
+    "title": "Professor",
+    "url": "http://profiles.ucsd.edu/teresa.helsten",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Kelly E. McCann, M.D., Ph.D.",
+    "title": "Professor",
+    "url": "https://providers.ucsd.edu/details/1942599915/medical-oncology-cancer",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Barbara Parker, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/barbara.parker",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Rebecca Shatsky, M.D.",
+    "title": "Professor",
+    "url": "https://researcherprofiles.org/profile/198498",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Jessica Sullivan, D.O.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/jessica.sullivan",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Xiaojie \"Zoe\" Zhang, M.D.",
+    "title": "Professor",
+    "url": "https://providers.ucsd.edu/details/1700374188/medical-oncology-cancer",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Kay Yeung, M.D., Ph.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/kay.yeung",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Gregory Daniels, M.D., Ph.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/gregory.daniels",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Justin T. Moyers, M.D.",
+    "title": "Professor",
+    "url": "https://providers.ucsd.edu/details/1073925343/medical-oncology-cancer",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Soo Park, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/soo.park",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Shumei Kato, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/shumei.kato",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Sandip P. Patel, M.D., FASCO",
+    "title": "Professor",
+    "url": "https://providers.ucsd.edu/details/22420/medical-oncology-cancer",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Gregory Botta, M.D., Ph.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/gregory.botta",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Adam Burgoyne, M.D., Ph.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/adam.burgoyne",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Jeremy Chang, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/jeremy.chang",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Bassel El-Rayes, M.D.",
+    "title": "Professor",
+    "url": "https://providers.ucsd.edu/details/1437196433/medical-oncology-cancer",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Paul Fanta, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/paul.fanta",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Aaron Miller, M.D., Ph.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/aaron.miller",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Hitendra Patel, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/hitendra.patel",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Tony Reid, M.D., Ph.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/tony.reid",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Peter Vu, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/peter.vu",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Yu-Wei Chen, M.D",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/yu-wei.chen",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Rana McKay, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/rana.mckay",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Fred Millard, M.D.",
+    "title": "Professor",
+    "url": "http://profiles.ucsd.edu/frederick.millard",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "James Randall, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/jamesmichael.randall",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Tyler Stewart, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/tyler.stewart",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Assutina Sacco, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/assuntina.sacco",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Karen Yun, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/karen.yun",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Lyudmila Bazhenova, M.D., FASCO",
+    "title": "Professor",
+    "url": "http://profiles.ucsd.edu/lyudmila.bazhenova",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Kathryn Gold, M.D.",
+    "title": "Professor",
+    "url": "https://researcherprofiles.org/profile/181101",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Amanda Herrmann, M.D.",
+    "title": "Professor",
+    "url": "https://providers.ucsd.edu/details/1801390638/medical-oncology-cancer",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Hatim Husain, M.D.",
+    "title": "Professor",
+    "url": "https://profiles.ucsd.edu/hatim.husain",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "William Mitchell, M.D.",
+    "title": "Professor",
+    "url": "http://profiles.ucsd.edu/william.mitchell",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Hirotaka Miyashita, M.D., Ph.D.",
+    "title": "Professor",
+    "url": "https://providers.ucsd.edu/details/1356993414/medical-oncology-cancer",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Carlos Carrera, M.D.",
+    "title": "Professor",
+    "url": null,
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Paul Cheng, M.D.",
+    "title": "Professor",
+    "url": null,
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Saeeda Kirmani, M.D.",
+    "title": "Professor",
+    "url": "http://profiles.ucsd.edu/saeeda.kirmani",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Renate Pilz, M.D.",
+    "title": "Professor",
+    "url": "http://profiles.ucsd.edu/renate.pilz",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Klaus Wagner, M.D., Ph.D.",
+    "title": "Professor",
+    "url": null,
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Ida Wong-Sefidan, M.D.",
+    "title": "Professor",
+    "url": "http://profiles.ucsd.edu/ida.wong-sefidan",
+    "department": "Hematology-Oncology",
+    "school": "Medicine"
+  },
+  {
+    "name": "Catriona Jamieson, M.D., Ph.D.",
+    "title": "Professor of Medicine",
+    "url": "https://regenmed.ucsd.edu/research/jamieson-lab/index.html",
+    "department": "Regenerative Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Dan S. Kaufman, M.D., Ph.D.",
+    "title": "Professor of Medicine",
+    "url": "https://regenmed.ucsd.edu/research/kaufman-lab/index.html",
+    "department": "Regenerative Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Frank Furnari, Ph.D.",
+    "title": "Professor of Medicine",
+    "url": "https://www.furnarilab.com/",
+    "department": "Regenerative Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Robert A. J. Signer, Ph.D.",
+    "title": "Associate Professor of Medicine",
+    "url": "http://signerlab.com/",
+    "department": "Regenerative Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Leslie Crews, Ph.D.",
+    "title": "Assistant Professor of Medicine",
+    "url": "https://regenmed.ucsd.edu/research/crews-lab/index.html",
+    "department": "Regenerative Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Qingfei Jiang, Ph.D.",
+    "title": "Assistant Professor of Medicine",
+    "url": "https://regenmed.ucsd.edu/research/jiang-lab/index.html",
+    "department": "Regenerative Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Shiri Gur-Cohen, Ph.D.",
+    "title": "Assistant Professor of Medicine",
+    "url": "https://gurcohenlab.com/",
+    "department": "Regenerative Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Kentson Lam, M.D., Ph.D.",
+    "title": "Assistant Clinical Professor of Medicine",
+    "url": "https://regenmed.ucsd.edu/research/lam-lab/index.html",
+    "department": "Regenerative Medicine",
+    "school": "Medicine"
+  },
+  {
+    "name": "Elsy Buitrago Delgado, Ph.D.",
+    "title": "Assistant Professor of Medicine",
+    "url": "https://profiles.ucsd.edu/elsy.buitrago-delgado",
+    "department": "Regenerative Medicine",
+    "school": "Medicine"
   }
 ]

@@ -14,6 +14,12 @@ const DIRECTORIES = [
   { department: 'Molecular Biology', school: 'Biological Sciences', url: 'https://biology.ucsd.edu/research/academic-departments/mb/faculty.html' },
   { department: 'Ecology, Behavior & Evolution', school: 'Biological Sciences', url: 'https://biology.ucsd.edu/research/academic-departments/ebe/faculty.html' },
   { department: 'Bioengineering', school: 'Bioengineering', url: 'https://be.ucsd.edu/faculty' },
+  { department: 'Chemistry & Biochemistry', school: 'Physical Sciences', url: 'https://chemistry.ucsd.edu/faculty/index.shtml' },
+  { department: 'Cellular & Molecular Medicine', school: 'Medicine', url: 'https://cmm.ucsd.edu/faculty/index.html' },
+  { department: 'Pharmacology', school: 'Medicine', url: 'https://pharmacology.ucsd.edu/faculty/department-faculty.html' },
+  { department: 'Pathology', school: 'Medicine', url: 'https://pathology.ucsd.edu/research/labs/index.html' },
+  { department: 'Hematology-Oncology', school: 'Medicine', url: 'https://hem-onc.ucsd.edu/about/faculty.html' },
+  { department: 'Regenerative Medicine', school: 'Medicine', url: 'https://regenmed.ucsd.edu/about/faculty.html' },
 ]
 
 type Lab = { name: string; title: string; url: string | null; department: string; school: string }
