@@ -126,6 +126,8 @@ PAGES TO FETCH (fetch broadly — this profile is cached and reused, so depth is
 5. A publications page; then 1-2 recent papers' abstracts, and the full text (Discussion/Future Directions) of the single most relevant one via fetch_full_paper.
 6. The PI's email — check /people, /contact, or the team page.
 
+CRITICAL: FINDINGS are the core of the profile. Do NOT call finish() with an empty findings list — if you have not extracted at least 2 specific, quoted findings from the lab's papers or site, fetch an abstract or full paper and read more before finishing.
+
 Then call finish() with every field you can support with a quote. Leave unsupported fields empty rather than guessing.
 
 Begin by fetching the lab homepage.`
