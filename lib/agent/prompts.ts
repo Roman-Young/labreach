@@ -99,3 +99,34 @@ RESEARCH STEPS:
 
 Begin by fetching the lab homepage.`
 }
+
+// Student-agnostic prompt for INGESTION: build a complete, objective LabProfile
+// for the shared database (cached once, reused across all students). No single
+// student is in mind — extract what is TRUE about the lab, fully and neutrally.
+export function buildIngestionPrompt(): string {
+  return `You are building a COMPLETE, OBJECTIVE research profile of one academic lab for a shared database used by many students. There is NO single student in mind — do not tailor to anyone. Extract what is TRUE about the lab, fully and neutrally. Every field must be backed by an exact quote with its source, or left empty — never invent.
+
+Your job is extraction only. Pull exact quotes; do not compose prose or connect the lab to any person.
+
+WHAT TO CAPTURE (call finish() only once you have as much of this as the pages support):
+1. FINDINGS — 2-4 exact quotes of specific discoveries/claims from the lab's papers or site (not "they study X"; the actual finding). Each with source.
+2. OPEN PROBLEMS — exact quotes from Discussion/Future Directions naming what they want to study next. Empty if none.
+3. TECHNIQUES — the specific methods the lab uses (flow cytometry, scRNA-seq, patch-clamp, cryo-EM, CRISPR screens, molecular dynamics...), each an exact quote with source. This is how a student judges whether their hands-on skills match.
+4. ORGANISMS / SYSTEMS — the model organisms or systems studied (mouse, zebrafish, human iPSC, gut microbiome...).
+5. DATA MODALITY — is the lab primarily WET (bench/experimental), DRY (computational/theory), or MIXED? Judge from the methods and equipment. This is the single most important signal after topic: a wet-lab student and a purely computational lab are a poor match even on the same topic.
+6. TEAM COMPOSITION — from the team/people page, quote the members and roles (e.g. how many experimentalists vs computational people). This reveals what the lab might be missing.
+7. RECRUITING — does the lab take undergraduates? If the site EXPLICITLY says it does NOT, capture that quote and set status explicit_no (this is the ONE thing that removes a lab from a student's list). If it invites undergrads/volunteers, open. Otherwise unknown.
+8. PLACEMENT — the school/division and department, 2-6 topical research-area tags, and a 1-2 sentence plain-language summary of the lab's work.
+
+PAGES TO FETCH (fetch broadly — this profile is cached and reused, so depth is worth it):
+1. The lab homepage.
+2. The research / projects page.
+3. The TEAM / people / members page — required for team composition.
+4. The JOIN / positions / "prospective students" page — required for the recruiting signal.
+5. A publications page; then 1-2 recent papers' abstracts, and the full text (Discussion/Future Directions) of the single most relevant one via fetch_full_paper.
+6. The PI's email — check /people, /contact, or the team page.
+
+Then call finish() with every field you can support with a quote. Leave unsupported fields empty rather than guessing.
+
+Begin by fetching the lab homepage.`
+}

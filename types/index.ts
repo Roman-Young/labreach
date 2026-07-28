@@ -110,6 +110,19 @@ export interface AgentResult {
   researchQuality?: 'good' | 'limited'
   termGlossary: GlossaryEntry[]
   evaluatorFlag?: { reason: string; finalVerdict: EvaluatorVerdict; attemptsUsed: number }
+  // Populated ONLY on the ingestion path (student-agnostic lab research). The
+  // email path leaves this undefined. Mapped into a LabProfile by ingestion.
+  labExtraction?: {
+    school: string | null
+    department: string | null
+    researchAreas: string[]
+    researchSummary: string | null
+    techniques: EvidenceItem[]
+    organisms: string[]
+    dataModality: { value: DataModality | null; evidence: EvidenceItem | null }
+    teamComposition: EvidenceItem[]
+    recruiting: { status: RecruitingStatus; evidence: EvidenceItem | null }
+  }
 }
 
 export type AgentEventType = 'progress' | 'draft' | 'error'

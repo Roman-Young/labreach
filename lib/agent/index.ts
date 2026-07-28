@@ -9,7 +9,7 @@ import { scrapePage } from '@/lib/scraper'
 import { withRetry } from '@/lib/retry'
 import type { AgentResult, ResearchRequest, ResearchEvidence } from '@/types'
 
-const MAX_ITERATIONS = 12
+const MAX_ITERATIONS = 15 // headroom for the deep ingestion prompt (homepage+research+team+join+papers)
 const MAX_EVALUATOR_PASSES = 3 // initial draft + up to 2 refinement regenerations
 
 // Returns a critique string if the extracted evidence is too thin/generic, null if it's acceptable.
@@ -38,14 +38,16 @@ function checkEvidenceQuality(evidence: ResearchEvidence): string | null {
   return null
 }
 
-export async function runAgent(
-  request: ResearchRequest,
+// Research one lab into an AgentResult (evidence + optional labExtraction), WITHOUT
+// writing an email. The systemPrompt selects the mode: buildSystemPrompt (student-
+// centric, the email path) or buildIngestionPrompt (student-agnostic, the DB path).
+export async function researchLab(
+  labUrl: string,
+  systemPrompt: string,
   onProgress: (message: string) => void,
 ): Promise<AgentResult> {
   const apiKey = process.env.GOOGLE_AI_API_KEY
   if (!apiKey) throw new Error('GOOGLE_AI_API_KEY is not set')
-
-  const systemPrompt = await buildSystemPrompt(request.profile)
 
   const genAI = new GoogleGenerativeAI(apiKey)
   const model = genAI.getGenerativeModel({
@@ -63,7 +65,7 @@ export async function runAgent(
   onProgress('Fetching lab page...')
   let homepageMarkdown = ''
   try {
-    homepageMarkdown = (await scrapePage(request.labUrl)).slice(0, 12000)
+    homepageMarkdown = (await scrapePage(labUrl)).slice(0, 12000)
     counts.fetch_webpage++
     onProgress('Analyzing lab research...')
   } catch {
@@ -71,8 +73,8 @@ export async function runAgent(
   }
 
   const firstMessage = homepageMarkdown
-    ? `Research this lab and draft a personalized cold email for my student profile.\n\nLab URL: ${request.labUrl}\n\nHomepage content (already fetched — do not call fetch_webpage for this URL again):\n\n${homepageMarkdown}`
-    : `Research this lab and draft a personalized cold email for my student profile.\n\nLab URL: ${request.labUrl}`
+    ? `Research this lab thoroughly.\n\nLab URL: ${labUrl}\n\nHomepage content (already fetched — do not call fetch_webpage for this URL again):\n\n${homepageMarkdown}`
+    : `Research this lab thoroughly.\n\nLab URL: ${labUrl}`
 
   let response = await withRetry(() => chat.sendMessage(firstMessage))
 
@@ -117,68 +119,99 @@ export async function runAgent(
         }
       }
 
-      onProgress('Writing your email...')
-      // Use the evaluator prompt saved from /admin/calibrate if one exists,
-      // else the code default — so a calibrated judge gates real emails.
-      const evaluatorPrompt = await getActiveEvaluatorPrompt()
-      let currentDraft = await writeEmail(ar, request, undefined, onProgress)
-      let evaluation = await evaluateDraft({
-        draft: currentDraft,
-        evidence: ar.evidence,
-        profile: request.profile,
-        evaluatorPrompt,
-        onProgress,
-      })
-      let verdict = evaluation.verdict
-      let attempts = 1
-
-      while (!verdict.overallPass && attempts < MAX_EVALUATOR_PASSES) {
-        const critique = buildCritique(verdict)
-        onProgress('Revising based on quality checks...')
-        currentDraft = await writeEmail(ar, request, critique, onProgress)
-        evaluation = await evaluateDraft({
-          draft: currentDraft,
-          evidence: ar.evidence,
-          profile: request.profile,
-          evaluatorPrompt,
-          onProgress,
-        })
-        verdict = evaluation.verdict
-        attempts++
-      }
-
-      logEvaluatorVerdict({
-        labName: ar.labName,
-        piName: ar.piName,
-        labUrl: request.labUrl,
-        subject: currentDraft.subject,
-        body: currentDraft.body,
-        evidence: ar.evidence,
-        verdict,
-        attemptsUsed: attempts,
-        studentInterests: request.profile.interests,
-        experienceLevel: request.profile.experienceLevel,
-        studentProfile: request.profile,
-        evaluatorPromptVersion: evaluation.evaluatorPromptVersion,
-      }).catch(() => {})
-
-      const finalResult: AgentResult = {
-        ...ar,
-        ...currentDraft,
-        evaluatorFlag: verdict.overallPass
-          ? undefined
-          : {
-              reason: 'This draft did not pass all quality checks after revision attempts.',
-              finalVerdict: verdict,
-              attemptsUsed: attempts,
-            },
-      }
-      return finalResult
+      return ar
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response = await withRetry(() => chat.sendMessage(functionResponses as any))
   }
 
-  throw new Error('Agent did not produce a draft within the allowed iterations')
+  // The loop ended without a finish() (the model ran long or stopped calling tools).
+  // A batch ingestion must not hard-fail a lab, so force one finish() with whatever
+  // evidence has already been gathered rather than throwing.
+  onProgress('Wrapping up research...')
+  const forced = await withRetry(() =>
+    chat.sendMessage(
+      'You have gathered enough. Call finish() NOW with all of the evidence and fields you have collected so far. Do not fetch anything else.'
+    )
+  )
+  const forcedCalls = forced.response.functionCalls()
+  if (forcedCalls && forcedCalls.length) {
+    const forcedResults = await Promise.all(
+      forcedCalls.map((fc) =>
+        executeTool(fc.name, fc.args as Record<string, unknown>, counts, onProgress)
+      )
+    )
+    for (const r of forcedResults) if (r.finished && r.agentResult) return r.agentResult
+  }
+  throw new Error('Agent did not produce research evidence even after a forced finish')
+}
+
+// The live email path: research the lab (student-centric prompt), then write and
+// evaluate the email. Behavior is identical to the pre-refactor runAgent — the
+// research loop was extracted into researchLab(); nothing downstream changed.
+export async function runAgent(
+  request: ResearchRequest,
+  onProgress: (message: string) => void,
+): Promise<AgentResult> {
+  const systemPrompt = await buildSystemPrompt(request.profile)
+  const ar = await researchLab(request.labUrl, systemPrompt, onProgress)
+
+  onProgress('Writing your email...')
+  // Use the evaluator prompt saved from /admin/calibrate if one exists,
+  // else the code default — so a calibrated judge gates real emails.
+  const evaluatorPrompt = await getActiveEvaluatorPrompt()
+  let currentDraft = await writeEmail(ar, request, undefined, onProgress)
+  let evaluation = await evaluateDraft({
+    draft: currentDraft,
+    evidence: ar.evidence,
+    profile: request.profile,
+    evaluatorPrompt,
+    onProgress,
+  })
+  let verdict = evaluation.verdict
+  let attempts = 1
+
+  while (!verdict.overallPass && attempts < MAX_EVALUATOR_PASSES) {
+    const critique = buildCritique(verdict)
+    onProgress('Revising based on quality checks...')
+    currentDraft = await writeEmail(ar, request, critique, onProgress)
+    evaluation = await evaluateDraft({
+      draft: currentDraft,
+      evidence: ar.evidence,
+      profile: request.profile,
+      evaluatorPrompt,
+      onProgress,
+    })
+    verdict = evaluation.verdict
+    attempts++
+  }
+
+  logEvaluatorVerdict({
+    labName: ar.labName,
+    piName: ar.piName,
+    labUrl: request.labUrl,
+    subject: currentDraft.subject,
+    body: currentDraft.body,
+    evidence: ar.evidence,
+    verdict,
+    attemptsUsed: attempts,
+    studentInterests: request.profile.interests,
+    experienceLevel: request.profile.experienceLevel,
+    studentProfile: request.profile,
+    evaluatorPromptVersion: evaluation.evaluatorPromptVersion,
+  }).catch(() => {})
+
+  const finalResult: AgentResult = {
+    ...ar,
+    ...currentDraft,
+    evaluatorFlag: verdict.overallPass
+      ? undefined
+      : {
+          reason: 'This draft did not pass all quality checks after revision attempts.',
+          finalVerdict: verdict,
+          attemptsUsed: attempts,
+        },
+  }
+  return finalResult
 }

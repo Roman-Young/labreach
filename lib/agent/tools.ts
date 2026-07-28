@@ -1,7 +1,14 @@
 import { SchemaType } from '@google/generative-ai'
 import { scrapePage } from '@/lib/scraper'
 import { searchPubMed, fetchAbstract, getPMCID } from '@/lib/pubmed'
-import type { AgentResult, PublicationRef, EvidenceItem, ResearchEvidence } from '@/types'
+import type {
+  AgentResult,
+  PublicationRef,
+  EvidenceItem,
+  ResearchEvidence,
+  DataModality,
+  RecruitingStatus,
+} from '@/types'
 
 function extractKeySection(markdown: string): string {
   // Find the first valuable section: Discussion, Future Directions, Conclusions, Significance
@@ -21,7 +28,7 @@ export const GEMINI_FUNCTION_DECLARATIONS = [
   {
     name: 'fetch_webpage',
     description:
-      'Fetch the content of a webpage and return it as markdown. Use this to read the lab homepage, publications page, people/team page, or contact page. Do not call this more than 5 times per session.',
+      'Fetch the content of a webpage and return it as markdown. Use this to read the lab homepage, research page, publications page, people/team page, join/positions page, or contact page. Do not call this more than 10 times per session.',
     parameters: {
       type: SchemaType.OBJECT,
       properties: {
@@ -163,6 +170,69 @@ export const GEMINI_FUNCTION_DECLARATIONS = [
             required: ['term', 'explanation'],
           },
         },
+        // ── Lab-profile fields (INGESTION path only; the email path leaves these empty) ──
+        techniques: {
+          type: SchemaType.ARRAY,
+          description:
+            'Specific experimental or computational methods the lab uses (flow cytometry, scRNA-seq, patch-clamp, cryo-EM, CRISPR screens, molecular dynamics, etc.). Each an exact quote naming the method, with source. Empty array if none found.',
+          items: {
+            type: SchemaType.OBJECT,
+            properties: {
+              quote: { type: SchemaType.STRING },
+              source: { type: SchemaType.STRING },
+              source_type: { type: SchemaType.STRING, description: '"lab_website" | "pubmed_abstract" | "pubmed_full_text"' },
+            },
+            required: ['quote', 'source'],
+          },
+        },
+        organisms: {
+          type: SchemaType.ARRAY,
+          description: 'Model organisms or systems studied (mouse, zebrafish, human iPSC, gut microbiome, Drosophila...). Lowercase plain strings. Empty array if unclear.',
+          items: { type: SchemaType.STRING },
+        },
+        data_modality: {
+          type: SchemaType.OBJECT,
+          description: 'Is the lab primarily WET (bench/experimental), DRY (computational/theory), or MIXED? Judge from the methods, equipment, and how they describe the work.',
+          properties: {
+            value: { type: SchemaType.STRING, description: '"wet" | "dry" | "mixed"' },
+            quote: { type: SchemaType.STRING, description: 'An exact supporting quote; empty string if inferred without a direct quote.' },
+            source: { type: SchemaType.STRING },
+          },
+          required: ['value'],
+        },
+        team_composition: {
+          type: SchemaType.ARRAY,
+          description:
+            'Quotes of the members / roles on the team or people page (member titles, "our group of experimentalists", etc.). Reveals gaps the lab may need filled — the complementarity signal. Empty array if no team page found.',
+          items: {
+            type: SchemaType.OBJECT,
+            properties: {
+              quote: { type: SchemaType.STRING },
+              source: { type: SchemaType.STRING },
+              source_type: { type: SchemaType.STRING },
+            },
+            required: ['quote', 'source'],
+          },
+        },
+        recruiting: {
+          type: SchemaType.OBJECT,
+          description:
+            'Is the lab recruiting undergraduates? If the site EXPLICITLY says it does NOT take undergrads, set status "explicit_no" with the exact quote. If it invites undergrads/volunteers, "open". Otherwise "unknown".',
+          properties: {
+            status: { type: SchemaType.STRING, description: '"explicit_no" | "open" | "unknown"' },
+            quote: { type: SchemaType.STRING },
+            source: { type: SchemaType.STRING },
+          },
+          required: ['status'],
+        },
+        school: { type: SchemaType.STRING, description: 'School/division the lab belongs to (e.g. "Biological Sciences"). Empty string if unclear.' },
+        department: { type: SchemaType.STRING, description: 'Department/section (e.g. "Neurobiology"). Empty string if unclear.' },
+        research_areas: {
+          type: SchemaType.ARRAY,
+          description: 'Topical tags for what the lab works on (immunology, neurodegeneration, microbiome...). 2-6 lowercase plain strings.',
+          items: { type: SchemaType.STRING },
+        },
+        research_summary: { type: SchemaType.STRING, description: 'A 1-2 sentence plain-language summary of the lab\'s work, grounded in the actual pages. For a student to read quickly.' },
       },
       required: [
         'candidate_findings',
@@ -193,8 +263,8 @@ export async function executeTool(
   onProgress: (message: string) => void,
 ): Promise<{ result: string; finished: boolean; agentResult?: AgentResult }> {
   if (name === 'fetch_webpage') {
-    if (counts.fetch_webpage >= 5) {
-      return { result: 'Error: fetch_webpage call limit reached (5 per session)', finished: false }
+    if (counts.fetch_webpage >= 10) {
+      return { result: 'Error: fetch_webpage call limit reached (10 per session)', finished: false }
     }
     counts.fetch_webpage++
     const url = input.url as string
@@ -290,6 +360,62 @@ export async function executeTool(
       researchQuality: (input.research_quality as 'good' | 'limited') ?? 'good',
       termGlossary: ((input.term_glossary as Array<{ term: string; explanation: string }>) ?? []),
     }
+
+    // Lab-profile extraction (ingestion path only). The email prompt never asks
+    // for these fields, so on the live path they're absent and labExtraction
+    // stays undefined — the email pipeline is untouched.
+    const hasLabFields =
+      input.data_modality !== undefined ||
+      input.research_summary !== undefined ||
+      input.techniques !== undefined ||
+      input.recruiting !== undefined
+    if (hasLabFields) {
+      const toModality = (raw: unknown) => {
+        const m = (raw as { value?: string; quote?: string; source?: string }) ?? {}
+        const value =
+          m.value === 'wet' || m.value === 'dry' || m.value === 'mixed'
+            ? (m.value as DataModality)
+            : null
+        return {
+          value,
+          evidence: m.quote
+            ? { quote: m.quote, source: m.source ?? '', sourceType: 'lab_website' as const }
+            : null,
+        }
+      }
+      const toRecruiting = (raw: unknown) => {
+        const r = (raw as { status?: string; quote?: string; source?: string }) ?? {}
+        const status: RecruitingStatus =
+          r.status === 'explicit_no' || r.status === 'open'
+            ? (r.status as RecruitingStatus)
+            : 'unknown'
+        return {
+          status,
+          evidence: r.quote
+            ? { quote: r.quote, source: r.source ?? '', sourceType: 'lab_website' as const }
+            : null,
+        }
+      }
+      const toStrings = (raw: unknown) =>
+        ((raw as string[]) ?? [])
+          .filter((s) => typeof s === 'string' && s.trim())
+          .map((s) => s.trim())
+      const nonEmpty = (s: unknown) =>
+        typeof s === 'string' && s.trim() ? (s as string).trim() : null
+
+      agentResult.labExtraction = {
+        school: nonEmpty(input.school),
+        department: nonEmpty(input.department),
+        researchAreas: toStrings(input.research_areas),
+        researchSummary: nonEmpty(input.research_summary),
+        techniques: toEvidenceItems(input.techniques),
+        organisms: toStrings(input.organisms),
+        dataModality: toModality(input.data_modality),
+        teamComposition: toEvidenceItems(input.team_composition),
+        recruiting: toRecruiting(input.recruiting),
+      }
+    }
+
     return { result: 'Done', finished: true, agentResult }
   }
 
