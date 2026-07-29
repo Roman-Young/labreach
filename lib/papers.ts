@@ -13,7 +13,9 @@ const MAILTO = 'labreach@ucsd.edu'
 
 export interface AuthorWork {
   title: string
+  type: string // OpenAlex work type: article | preprint | review | dataset | software | ...
   year: number | null
+  citedByCount: number
   abstract: string | null
   doi: string | null
   pmid: string | null
@@ -43,15 +45,16 @@ function reconstructAbstract(inverted: Record<string, number[]> | null | undefin
  */
 export async function searchAuthorWorks(
   authorName: string,
-  opts: { institutionSearch?: string; limit?: number } = {},
+  opts: { institutionSearch?: string; limit?: number; sort?: string } = {},
 ): Promise<AuthorWork[]> {
-  const limit = Math.min(opts.limit ?? 25, 50)
+  const limit = Math.min(opts.limit ?? 25, 100)
+  const sort = opts.sort ?? 'cited_by_count:desc'
   const clauses = [`raw_author_name.search:${authorName}`]
   if (opts.institutionSearch) clauses.push(`raw_affiliation_strings.search:${opts.institutionSearch}`)
   // encodeURIComponent encodes the ',' / ':' too; OpenAlex URL-decodes before parsing, so this is safe.
   const url =
     `${OPENALEX}/works?filter=${encodeURIComponent(clauses.join(','))}` +
-    `&per-page=${limit}&sort=cited_by_count:desc&mailto=${MAILTO}`
+    `&per-page=${limit}&sort=${sort}&mailto=${MAILTO}`
 
   try {
     const res = await fetch(url)
@@ -65,7 +68,9 @@ export async function searchAuthorWorks(
       const rawPmid = typeof ids.pmid === 'string' ? ids.pmid : null
       return {
         title: (w.title as string) || (w.display_name as string) || '',
+        type: (w.type as string) ?? '',
         year: (w.publication_year as number) ?? null,
+        citedByCount: (w.cited_by_count as number) ?? 0,
         abstract: reconstructAbstract(w.abstract_inverted_index as Record<string, number[]> | undefined),
         doi: rawDoi ? rawDoi.replace('https://doi.org/', '') : null,
         pmid: rawPmid ? rawPmid.replace(/^.*pubmed\.ncbi\.nlm\.nih\.gov\//, '') : null,

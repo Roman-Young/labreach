@@ -65,6 +65,16 @@ const statements = [
   `CREATE INDEX IF NOT EXISTS idx_lab_chunks_lab_url ON lab_chunks(lab_url)`,
   `CREATE INDEX IF NOT EXISTS idx_lab_chunks_type    ON lab_chunks(type)`,
   `CREATE INDEX IF NOT EXISTS idx_lab_chunks_tsv     ON lab_chunks USING gin(content_tsv)`,
+
+  // ── v2: rich per-paper chunk fields (idempotent). `type` now holds the KIND
+  // ('paper' | 'overview' | 'future_direction'); `content` is the woven summary;
+  // `source`/`source_label` stays; source_id is the traceable DOI/PMID. ──
+  `ALTER TABLE lab_chunks
+     ADD COLUMN IF NOT EXISTS title        text,
+     ADD COLUMN IF NOT EXISTS year         int,
+     ADD COLUMN IF NOT EXISTS anchor_quote text,
+     ADD COLUMN IF NOT EXISTS source_id    text,
+     ADD COLUMN IF NOT EXISTS meta         jsonb`,
 ]
 
 for (const stmt of statements) {
