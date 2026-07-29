@@ -10,7 +10,7 @@ async function main() {
 
   const url = process.argv[2] || 'https://knightlab.ucsd.edu'
   console.log(`\nIngesting: ${url}\n`)
-  const profile = await ingestLab(url, (m) => console.log('  ·', m))
+  const { profile } = await ingestLab(url, (m) => console.log('  ·', m))
   console.log(`\nstored: ${profile.labName} | modality=${profile.dataModality.value} | recruiting=${profile.recruiting.status} | ${profile.researchAreas.length} areas`)
 
   const sql = requireSql()

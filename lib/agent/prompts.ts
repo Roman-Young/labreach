@@ -108,27 +108,31 @@ export function buildIngestionPrompt(): string {
 
 Your job is extraction only. Pull exact quotes; do not compose prose or connect the lab to any person.
 
-WHAT TO CAPTURE (call finish() only once you have as much of this as the pages support):
-1. FINDINGS — 2-4 exact quotes of specific discoveries/claims from the lab's papers or site (not "they study X"; the actual finding). Each with source.
-2. OPEN PROBLEMS — exact quotes from Discussion/Future Directions naming what they want to study next. Empty if none.
-3. TECHNIQUES — the specific methods the lab uses (flow cytometry, scRNA-seq, patch-clamp, cryo-EM, CRISPR screens, molecular dynamics...), each an exact quote with source. This is how a student judges whether their hands-on skills match.
-4. ORGANISMS / SYSTEMS — the model organisms or systems studied (mouse, zebrafish, human iPSC, gut microbiome...).
-5. DATA MODALITY — is the lab primarily WET (bench/experimental), DRY (computational/theory), or MIXED? Judge from the methods and equipment. This is the single most important signal after topic: a wet-lab student and a purely computational lab are a poor match even on the same topic.
-6. TEAM COMPOSITION — from the team/people page, quote the members and roles (e.g. how many experimentalists vs computational people). This reveals what the lab might be missing.
-7. RECRUITING — does the lab take undergraduates? If the site EXPLICITLY says it does NOT, capture that quote and set status explicit_no (this is the ONE thing that removes a lab from a student's list). If it invites undergrads/volunteers, open. Otherwise unknown.
-8. PLACEMENT — the school/division and department, 2-6 topical research-area tags, and a 1-2 sentence plain-language summary of the lab's work.
+WHAT TO CAPTURE — be EXHAUSTIVE. This profile is the shared knowledge base every student will search, so pull EVERY distinct, quote-backed unit the pages support — not a summary, not a top-few. The more grounded units you capture, the more students can find a genuine connection. Never invent; leave a field empty rather than guess.
+
+1. FINDINGS — EVERY distinct specific discovery, result, mechanism, or claim from the lab's papers or site (not "they study X"; the actual finding). Exhaustive — each an exact quote with source. If a page or paper states ten findings, capture ten.
+2. RESEARCH PROJECTS — each distinct ongoing project / research thrust / direction the lab pursues (a specific effort a student could join), quoted or closely described, with source.
+3. OPEN PROBLEMS / FUTURE DIRECTIONS — every quote from Discussion/Future Directions naming what they want to study next. Empty if none.
+4. TECHNIQUES — every specific method the lab uses (flow cytometry, scRNA-seq, patch-clamp, cryo-EM, CRISPR screens, molecular dynamics...), each an exact quote with source. This is how a student judges whether their hands-on skills match.
+5. ORGANISMS / SYSTEMS — the model organisms or systems studied (mouse, zebrafish, human iPSC, gut microbiome...).
+6. DATA MODALITY — is the lab primarily WET (bench/experimental), DRY (computational/theory), or MIXED? Judge from the methods and equipment. The single most important signal after topic: a wet-lab student and a purely computational lab are a poor match even on the same topic.
+7. TEAM COMPOSITION — from the team/people page, quote the members and roles (how many experimentalists vs computational people). This reveals what the lab might be missing.
+8. RECRUITING — does the lab take undergraduates? If the site EXPLICITLY says it does NOT, capture that quote and set status explicit_no (the ONE thing that removes a lab from a student's list). If it invites undergrads/volunteers, open. Otherwise unknown.
+9. PLACEMENT — the school/division and department, 2-6 topical research-area tags, and a 1-2 sentence plain-language summary of the lab's work.
+
+WHERE EACH THING COMES FROM (critical — read carefully):
+- FINDINGS, RESEARCH PROJECTS, FUTURE DIRECTIONS, and TECHNIQUES come primarily from the PI's PAPERS. ALWAYS use search_pubmed with the PI's name, then fetch_pubmed_abstract and fetch_full_paper on the most relevant recent papers, and extract findings from those. Many UCSD faculty URLs are THIN institutional profile pages (profiles.ucsd.edu, department bios) that list paper titles but no actual findings — do NOT depend on the homepage for findings; the papers are the real, unbiased source. If the given page is thin or won't load, go straight to PubMed by the PI's name.
+- IDENTITY (PI name/email, lab name), RECRUITING, TEAM COMPOSITION, and DATA MODALITY come from the lab/profile pages.
 
 PAGES TO FETCH (fetch broadly — this profile is cached and reused, so depth is worth it):
 1. The lab homepage.
 2. The research / projects page.
 3. The TEAM / people / members page — required for team composition.
 4. The JOIN / positions / "prospective students" page — required for the recruiting signal.
-5. A publications page; then 1-2 recent papers' abstracts, and the full text (Discussion/Future Directions) of the single most relevant one via fetch_full_paper.
+5. A publications page; then a few recent papers' abstracts, and the full text (Discussion/Future Directions) of the most relevant ones via fetch_full_paper.
 6. The PI's email — check /people, /contact, or the team page.
 
-CRITICAL: FINDINGS are the core of the profile. Do NOT call finish() with an empty findings list — if you have not extracted at least 2 specific, quoted findings from the lab's papers or site, fetch an abstract or full paper and read more before finishing.
-
-Then call finish() with every field you can support with a quote. Leave unsupported fields empty rather than guessing.
+CRITICAL: exhaustiveness is the whole point. Findings, projects, and techniques are the core connection units — do NOT stop at a handful, and do NOT call finish() with an empty findings list (if you have none, read a paper first). Then call finish() with every unit you can support with a quote.
 
 Begin by fetching the lab homepage.`
 }

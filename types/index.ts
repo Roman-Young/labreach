@@ -118,11 +118,16 @@ export interface AgentResult {
     researchAreas: string[]
     researchSummary: string | null
     techniques: EvidenceItem[]
+    projects: EvidenceItem[]
     organisms: string[]
     dataModality: { value: DataModality | null; evidence: EvidenceItem | null }
     teamComposition: EvidenceItem[]
     recruiting: { status: RecruitingStatus; evidence: EvidenceItem | null }
   }
+  // Raw harvested page markdown (url -> markdown), captured during ingestion so a
+  // future re-extraction never has to re-scrape. Populated by researchLab; the
+  // email path leaves it undefined.
+  rawPages?: Record<string, string>
 }
 
 export type AgentEventType = 'progress' | 'draft' | 'error'
@@ -182,6 +187,7 @@ export interface LabProfile {
   findings: EvidenceItem[] // actual discoveries/claims
   openProblems: EvidenceItem[] // future directions — the "problem" connection
   techniques: EvidenceItem[] // methods used — "method" connection + modality read
+  projects: EvidenceItem[] // ongoing research projects/thrusts — the "project" connection
   organisms: string[] // model systems — the "system" connection
   dataModality: { value: DataModality | null; evidence: EvidenceItem | null } // wet/dry
   teamComposition: EvidenceItem[] // roles on team page — complementarity

@@ -9,10 +9,11 @@ async function main() {
   const { buildIngestionPrompt } = await import('../lib/agent/prompts')
 
   const url = process.argv[2] || 'https://knightlab.ucsd.edu'
-  console.log(`\nResearching (ingestion mode): ${url}\n`)
+  const piName = process.argv[3]
+  console.log(`\nResearching (ingestion mode): ${url}${piName ? ` (PI: ${piName})` : ''}\n`)
 
   const t0 = Date.now()
-  const ar = await researchLab(url, buildIngestionPrompt(), (m) => console.log('  ·', m))
+  const ar = await researchLab(url, buildIngestionPrompt(), (m) => console.log('  ·', m), piName)
   const secs = ((Date.now() - t0) / 1000).toFixed(0)
 
   console.log(`\n── result in ${secs}s ──`)

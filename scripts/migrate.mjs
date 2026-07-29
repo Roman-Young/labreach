@@ -39,6 +39,32 @@ const statements = [
   `CREATE INDEX IF NOT EXISTS idx_lab_profiles_recruiting   ON lab_profiles(recruiting)`,
   `CREATE INDEX IF NOT EXISTS idx_lab_profiles_areas        ON lab_profiles USING gin(research_areas)`,
   `CREATE INDEX IF NOT EXISTS idx_lab_profiles_organisms    ON lab_profiles USING gin(organisms)`,
+
+  // ── Pipeline / queue state on lab_profiles (idempotent) ──
+  // profile is nullable so a row can be seeded (pending) before it's extracted.
+  `ALTER TABLE lab_profiles
+     ALTER COLUMN profile DROP NOT NULL,
+     ADD COLUMN IF NOT EXISTS status       text NOT NULL DEFAULT 'pending',  -- pending | done | failed
+     ADD COLUMN IF NOT EXISTS error        text,
+     ADD COLUMN IF NOT EXISTS attempts     int  NOT NULL DEFAULT 0,
+     ADD COLUMN IF NOT EXISTS harvested_at timestamptz`,
+  `CREATE INDEX IF NOT EXISTS idx_lab_profiles_status ON lab_profiles(status)`,
+
+  // ── lab_chunks: the exhaustive, RAG-grade knowledge base (one row per connection unit) ──
+  // content_tsv (FTS) is the SPARSE half of hybrid search, built now — free, no model.
+  // An `embedding vector` column (the DENSE half) is added in the mandated follow-on.
+  `CREATE TABLE IF NOT EXISTS lab_chunks (
+    id          serial PRIMARY KEY,
+    lab_url     text NOT NULL REFERENCES lab_profiles(lab_url) ON DELETE CASCADE,
+    type        text NOT NULL,           -- finding | technique | project | future_direction | other
+    content     text NOT NULL,           -- the quote/claim (the embeddable, searchable unit)
+    source      text,                    -- paper title+year / page it came from
+    content_tsv tsvector GENERATED ALWAYS AS (to_tsvector('english', content)) STORED,
+    created_at  timestamptz NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_lab_chunks_lab_url ON lab_chunks(lab_url)`,
+  `CREATE INDEX IF NOT EXISTS idx_lab_chunks_type    ON lab_chunks(type)`,
+  `CREATE INDEX IF NOT EXISTS idx_lab_chunks_tsv     ON lab_chunks USING gin(content_tsv)`,
 ]
 
 for (const stmt of statements) {
@@ -46,7 +72,15 @@ for (const stmt of statements) {
   console.log('ok:', stmt.trim().split('\n')[0].slice(0, 60))
 }
 
-const count = rows(await sql.query('SELECT count(*)::int AS count FROM lab_profiles'))[0]?.count
+const profileCount = rows(await sql.query('SELECT count(*)::int AS c FROM lab_profiles'))[0]?.c
+const chunkCount = rows(await sql.query('SELECT count(*)::int AS c FROM lab_chunks'))[0]?.c
 const ext = rows(await sql.query("SELECT extname FROM pg_extension WHERE extname = 'vector'"))
-console.log(`\nlab_profiles rows: ${count} | pgvector: ${ext.length ? 'enabled' : 'MISSING'}`)
+const hasStatus = rows(await sql.query(
+  "SELECT 1 FROM information_schema.columns WHERE table_name='lab_profiles' AND column_name='status'",
+)).length
+const profileNullable = rows(await sql.query(
+  "SELECT is_nullable FROM information_schema.columns WHERE table_name='lab_profiles' AND column_name='profile'",
+))[0]?.is_nullable
+console.log(`\nlab_profiles: ${profileCount} rows (status col: ${hasStatus ? 'yes' : 'NO'}, profile nullable: ${profileNullable})`)
+console.log(`lab_chunks:   ${chunkCount} rows | pgvector: ${ext.length ? 'enabled' : 'MISSING'}`)
 console.log('migration complete ✓')

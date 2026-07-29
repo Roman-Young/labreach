@@ -7,9 +7,10 @@ import { buildCritique } from './critique'
 import { logEvaluatorVerdict } from './eval-log'
 import { scrapePage } from '@/lib/scraper'
 import { withRetry } from '@/lib/retry'
+import { extractResultFromPages } from '@/lib/rag/extract'
 import type { AgentResult, ResearchRequest, ResearchEvidence } from '@/types'
 
-const MAX_ITERATIONS = 15 // headroom for the deep ingestion prompt (homepage+research+team+join+papers)
+const MAX_ITERATIONS = 22 // headroom for exhaustive ingestion (up to 10 webpages + 5 abstracts + 3 papers + reasoning + finish)
 const MAX_EVALUATOR_PASSES = 3 // initial draft + up to 2 refinement regenerations
 
 // Returns a critique string if the extracted evidence is too thin/generic, null if it's acceptable.
@@ -45,6 +46,9 @@ export async function researchLab(
   labUrl: string,
   systemPrompt: string,
   onProgress: (message: string) => void,
+  // Optional PI name (ingestion): lets the agent search PubMed by name immediately,
+  // so it works even when the URL is a thin institutional profile or a dead link.
+  piName?: string | null,
 ): Promise<AgentResult> {
   const apiKey = process.env.GOOGLE_AI_API_KEY
   if (!apiKey) throw new Error('GOOGLE_AI_API_KEY is not set')
@@ -60,21 +64,27 @@ export async function researchLab(
 
   const chat = model.startChat()
   const counts: ToolCallCounts = { fetch_webpage: 0, fetch_pubmed_abstract: 0, fetch_full_paper: 0 }
+  // Every scraped page's full markdown is captured here (url -> markdown) so ingestion
+  // can re-extract without re-scraping. Attached to the returned AgentResult.
+  const rawPages: Record<string, string> = {}
 
   // Pre-fetch the homepage — Gemini always starts here, so we skip an entire round-trip
   onProgress('Fetching lab page...')
   let homepageMarkdown = ''
   try {
-    homepageMarkdown = (await scrapePage(labUrl)).slice(0, 12000)
+    const homepageFull = await scrapePage(labUrl)
+    rawPages[labUrl] = homepageFull.slice(0, 50000)
+    homepageMarkdown = homepageFull.slice(0, 12000)
     counts.fetch_webpage++
     onProgress('Analyzing lab research...')
   } catch {
     onProgress('Starting research...')
   }
 
+  const piLine = piName ? `The lab's PI is ${piName}. You can search PubMed for their papers immediately.\n\n` : ''
   const firstMessage = homepageMarkdown
-    ? `Research this lab thoroughly.\n\nLab URL: ${labUrl}\n\nHomepage content (already fetched — do not call fetch_webpage for this URL again):\n\n${homepageMarkdown}`
-    : `Research this lab thoroughly.\n\nLab URL: ${labUrl}`
+    ? `Research this lab thoroughly.\n\n${piLine}Lab URL: ${labUrl}\n\nHomepage content (already fetched — do not call fetch_webpage for this URL again):\n\n${homepageMarkdown}`
+    : `Research this lab thoroughly.\n\n${piLine}Lab URL: ${labUrl}\n\n(The homepage could not be fetched. Search PubMed for the PI's papers to gather findings, and try the PI's contact/profile page for identity and recruiting.)`
 
   let response = await withRetry(() => chat.sendMessage(firstMessage))
 
@@ -90,7 +100,7 @@ export async function researchLab(
     // so counter check-and-increment in executeTool runs synchronously before any await yields
     const results = await Promise.all(
       functionCalls.map((fc) =>
-        executeTool(fc.name, fc.args as Record<string, unknown>, counts, onProgress)
+        executeTool(fc.name, fc.args as Record<string, unknown>, counts, onProgress, rawPages)
       )
     )
 
@@ -119,6 +129,7 @@ export async function researchLab(
         }
       }
 
+      ar.rawPages = rawPages
       return ar
     }
 
@@ -139,11 +150,31 @@ export async function researchLab(
   if (forcedCalls && forcedCalls.length) {
     const forcedResults = await Promise.all(
       forcedCalls.map((fc) =>
-        executeTool(fc.name, fc.args as Record<string, unknown>, counts, onProgress)
+        executeTool(fc.name, fc.args as Record<string, unknown>, counts, onProgress, rawPages)
       )
     )
-    for (const r of forcedResults) if (r.finished && r.agentResult) return r.agentResult
+    for (const r of forcedResults) {
+      if (r.finished && r.agentResult) {
+        r.agentResult.rawPages = rawPages
+        return r.agentResult
+      }
+    }
   }
+  // Reliable fallback: the agentic loop flaked (never reached a good finish()).
+  // Statically extract from whatever pages we already cached — one structured
+  // Gemini call that cannot loop or refuse to finish. This is what makes ingestion
+  // robust: as long as any pages were gathered, we get a result.
+  if (Object.keys(rawPages).length > 0) {
+    onProgress('Extracting from gathered pages...')
+    try {
+      const ar = await extractResultFromPages(rawPages, { piName })
+      ar.rawPages = rawPages
+      if (ar.evidence.candidateFindings.length > 0) return ar
+    } catch {
+      // fall through to the throw below
+    }
+  }
+
   throw new Error('Agent did not produce research evidence even after a forced finish')
 }
 

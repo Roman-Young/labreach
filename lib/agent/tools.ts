@@ -56,7 +56,7 @@ export const GEMINI_FUNCTION_DECLARATIONS = [
   {
     name: 'fetch_pubmed_abstract',
     description:
-      'Fetch the full abstract of a PubMed paper by PMID. Use for the 1-2 most relevant papers to get detailed content for the email. Do not call this more than 2 times per session.',
+      'Fetch the full abstract of a PubMed paper by PMID. Papers are the primary source of a lab\'s findings — use this on the most relevant papers. Do not call this more than 5 times per session.',
     parameters: {
       type: SchemaType.OBJECT,
       properties: {
@@ -68,7 +68,7 @@ export const GEMINI_FUNCTION_DECLARATIONS = [
   {
     name: 'fetch_full_paper',
     description:
-      'Fetch the full text of a paper from PubMed Central if it is freely available. Use this on the 1-2 most relevant papers after finding their PMIDs. Returns the Discussion and Future Directions sections — the most valuable content for understanding what the PI wants to study next and building specific connections. Do not call this more than 2 times per session.',
+      'Fetch the full text of a paper from PubMed Central if it is freely available. Use this on the most relevant papers after finding their PMIDs. Returns the Discussion and Future Directions sections — the most valuable content for understanding what the PI wants to study next and building specific connections. Do not call this more than 3 times per session.',
     parameters: {
       type: SchemaType.OBJECT,
       properties: {
@@ -88,7 +88,7 @@ export const GEMINI_FUNCTION_DECLARATIONS = [
         candidate_findings: {
           type: SchemaType.ARRAY,
           description:
-            "2-4 exact quotes of specific findings, mechanisms, or claims from this lab's actual papers or website — not paraphrases. Each needs the exact source (paper title + year + section, or webpage name). If you cannot quote an actual finding, read more before calling finish().",
+            "Exact quotes of specific findings, mechanisms, or claims from this lab's actual papers or website — not paraphrases, each with its exact source (paper title + year + section, or webpage name). HOW MANY to extract is set by the task instructions (a few for an email; exhaustively for ingestion). If you cannot quote an actual finding, read more before calling finish().",
           items: {
             type: SchemaType.OBJECT,
             properties: {
@@ -126,6 +126,20 @@ export const GEMINI_FUNCTION_DECLARATIONS = [
               note: { type: SchemaType.STRING, description: 'Brief note on why this might be useful' },
             },
             required: ['quote', 'source', 'source_type'],
+          },
+        },
+        research_projects: {
+          type: SchemaType.ARRAY,
+          description:
+            "INGESTION ONLY. The lab's distinct ongoing research projects / thrusts / directions — each a specific effort a student could join — as an exact quote or close description with source. Be exhaustive. Empty array on the email path.",
+          items: {
+            type: SchemaType.OBJECT,
+            properties: {
+              quote: { type: SchemaType.STRING },
+              source: { type: SchemaType.STRING },
+              source_type: { type: SchemaType.STRING },
+            },
+            required: ['quote', 'source'],
           },
         },
         pi_name: { type: SchemaType.STRING, description: 'PI full name as found on the website' },
@@ -261,6 +275,9 @@ export async function executeTool(
   input: Record<string, unknown>,
   counts: ToolCallCounts,
   onProgress: (message: string) => void,
+  // Optional accumulator: when provided (ingestion), each scraped page's full
+  // markdown is cached here (url -> markdown) so we can re-extract without re-scraping.
+  pages?: Record<string, string>,
 ): Promise<{ result: string; finished: boolean; agentResult?: AgentResult }> {
   if (name === 'fetch_webpage') {
     if (counts.fetch_webpage >= 10) {
@@ -272,6 +289,7 @@ export async function executeTool(
     onProgress(`Fetching: ${reason}...`)
     try {
       const markdown = await scrapePage(url)
+      if (pages) pages[url] = markdown.slice(0, 50000)
       return { result: markdown.slice(0, 12000), finished: false }
     } catch (e) {
       return { result: `Error fetching ${url}: ${(e as Error).message}`, finished: false }
@@ -290,8 +308,8 @@ export async function executeTool(
   }
 
   if (name === 'fetch_pubmed_abstract') {
-    if (counts.fetch_pubmed_abstract >= 2) {
-      return { result: 'Error: fetch_pubmed_abstract call limit reached (2 per session)', finished: false }
+    if (counts.fetch_pubmed_abstract >= 5) {
+      return { result: 'Error: fetch_pubmed_abstract call limit reached (5 per session)', finished: false }
     }
     counts.fetch_pubmed_abstract++
     const pmid = input.pmid as string
@@ -306,8 +324,8 @@ export async function executeTool(
   }
 
   if (name === 'fetch_full_paper') {
-    if (counts.fetch_full_paper >= 2) {
-      return { result: 'Error: fetch_full_paper call limit reached (2 per session)', finished: false }
+    if (counts.fetch_full_paper >= 3) {
+      return { result: 'Error: fetch_full_paper call limit reached (3 per session)', finished: false }
     }
     counts.fetch_full_paper++
     const pmid = input.pmid as string
@@ -320,6 +338,7 @@ export async function executeTool(
       onProgress('Reading full paper from PubMed Central...')
       const pmcUrl = `https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${pmcid}/`
       const markdown = await scrapePage(pmcUrl)
+      if (pages) pages[pmcUrl] = markdown.slice(0, 50000)
       const keyContent = extractKeySection(markdown)
       return { result: `Full paper content (PMC${pmcid}) — Discussion/Future Directions:\n\n${keyContent}`, finished: false }
     } catch (e) {
@@ -409,6 +428,7 @@ export async function executeTool(
         researchAreas: toStrings(input.research_areas),
         researchSummary: nonEmpty(input.research_summary),
         techniques: toEvidenceItems(input.techniques),
+        projects: toEvidenceItems(input.research_projects),
         organisms: toStrings(input.organisms),
         dataModality: toModality(input.data_modality),
         teamComposition: toEvidenceItems(input.team_composition),
