@@ -1,6 +1,7 @@
 import { SchemaType } from '@google/generative-ai'
 import { scrapePage } from '@/lib/scraper'
 import { searchPubMed, fetchAbstract, getPMCID } from '@/lib/pubmed'
+import { searchAuthorWorks, fetchEuropePMCFullText } from '@/lib/papers'
 import type {
   AgentResult,
   PublicationRef,
@@ -51,6 +52,21 @@ export const GEMINI_FUNCTION_DECLARATIONS = [
         },
       },
       required: ['query'],
+    },
+  },
+  {
+    name: 'search_author_papers',
+    description:
+      'Find a researcher published papers WITH abstracts by their name, scoped to UCSD (via OpenAlex). This is the BEST and BROADEST source of a lab findings — better than search_pubmed at disambiguating common names and at coverage (it returns ~25 papers with abstracts in ONE call). Use this FIRST to gather findings, especially when the lab page is a thin institutional profile or will not load.',
+    parameters: {
+      type: SchemaType.OBJECT,
+      properties: {
+        author_name: {
+          type: SchemaType.STRING,
+          description: 'The full name of the PI (e.g. Cornelis Murre or Rob Knight)',
+        },
+      },
+      required: ['author_name'],
     },
   },
   {
@@ -268,6 +284,7 @@ export interface ToolCallCounts {
   fetch_webpage: number
   fetch_pubmed_abstract: number
   fetch_full_paper: number
+  search_author_papers: number
 }
 
 export async function executeTool(
@@ -293,6 +310,30 @@ export async function executeTool(
       return { result: markdown.slice(0, 12000), finished: false }
     } catch (e) {
       return { result: `Error fetching ${url}: ${(e as Error).message}`, finished: false }
+    }
+  }
+
+  if (name === 'search_author_papers') {
+    if (counts.search_author_papers >= 3) {
+      return { result: 'Error: search_author_papers call limit reached (3 per session)', finished: false }
+    }
+    counts.search_author_papers++
+    const author = input.author_name as string
+    onProgress(`Finding ${author}'s papers...`)
+    try {
+      const works = await searchAuthorWorks(author, { institutionSearch: 'San Diego', limit: 25 })
+      if (works.length === 0) {
+        return { result: `No OpenAlex works found for "${author}". Try search_pubmed instead.`, finished: false }
+      }
+      const lines = works.map(
+        (w) => `- (${w.year ?? '?'}) ${w.title}${w.abstract ? `\n  ABSTRACT: ${w.abstract}` : ' [no abstract available]'}`,
+      )
+      const text = `Papers for ${author} (OpenAlex, UCSD-scoped, ${works.length} results, most-cited first):\n\n${lines.join('\n\n')}`
+      // Cache into the page bundle so the static-extract fallback sees these abstracts too.
+      if (pages) pages[`openalex:${author}`] = text.slice(0, 60000)
+      return { result: text.slice(0, 30000), finished: false }
+    } catch (e) {
+      return { result: `OpenAlex error: ${(e as Error).message}`, finished: false }
     }
   }
 
@@ -333,7 +374,13 @@ export async function executeTool(
     try {
       const pmcid = await getPMCID(pmid)
       if (!pmcid) {
-        return { result: 'Paper not available in PubMed Central — likely paywalled. Use abstract only.', finished: false }
+        // NCBI PMC lacks it — try Europe PMC (9M+ full texts, broader coverage).
+        const epmc = await fetchEuropePMCFullText(pmid)
+        if (epmc) {
+          if (pages) pages[`europepmc:${pmid}`] = epmc.slice(0, 50000)
+          return { result: `Full paper text (Europe PMC, PMID ${pmid}) — Discussion/Future Directions:\n\n${extractKeySection(epmc)}`, finished: false }
+        }
+        return { result: 'Paper not available in PubMed Central or Europe PMC — likely paywalled. Use abstract only.', finished: false }
       }
       onProgress('Reading full paper from PubMed Central...')
       const pmcUrl = `https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${pmcid}/`

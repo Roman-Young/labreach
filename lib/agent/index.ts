@@ -63,7 +63,7 @@ export async function researchLab(
   })
 
   const chat = model.startChat()
-  const counts: ToolCallCounts = { fetch_webpage: 0, fetch_pubmed_abstract: 0, fetch_full_paper: 0 }
+  const counts: ToolCallCounts = { fetch_webpage: 0, fetch_pubmed_abstract: 0, fetch_full_paper: 0, search_author_papers: 0 }
   // Every scraped page's full markdown is captured here (url -> markdown) so ingestion
   // can re-extract without re-scraping. Attached to the returned AgentResult.
   const rawPages: Record<string, string> = {}
