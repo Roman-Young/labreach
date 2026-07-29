@@ -117,6 +117,12 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
 
   const chunks: LabChunkV2[] = []
 
+  // Authoritative source ids come from OpenAlex (g.papers), matched by title —
+  // more reliable than trusting the model to copy SOURCE_ID out of the header.
+  const normT = (s: string | null) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim()
+  const titleToSid = new Map<string, string | null>()
+  for (const gp of g.papers) titleToSid.set(normT(gp.title), gp.sourceId)
+
   // Per-paper chunks — content is the woven did/found/used/why summary.
   for (const raw of (p.papers as Array<Record<string, unknown>>) ?? []) {
     const did = str(raw.did)
@@ -134,7 +140,7 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
       content,
       anchorQuote: str(raw.anchor_quote),
       sourceLabel: title ? `${title}${year ? ` (${year})` : ''}` : null,
-      sourceId: str(raw.source_id),
+      sourceId: titleToSid.get(normT(title)) ?? str(raw.source_id),
       meta: { did: did ?? '', found: found ?? '', used: used ?? '', why: why ?? '' },
     })
   }

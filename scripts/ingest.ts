@@ -57,7 +57,7 @@ async function main() {
 
   // ── run (harvest + extract) ─────────────────────────────────────────────
   if (cmd === 'run') {
-    const { ingestLab } = await import('../lib/ingest')
+    const { ingestLabV2 } = await import('../lib/ingest')
     const { getLabs, markFailed } = await import('../lib/rag/store')
     const { mapWithConcurrency } = await import('../lib/pool')
 
@@ -82,7 +82,7 @@ async function main() {
     const t0 = Date.now()
     await mapWithConcurrency(labs, concurrency, async (lab) => {
       try {
-        const { chunkCount } = await ingestLab(lab.labUrl, () => {}, lab.piName)
+        const { chunkCount } = await ingestLabV2(lab.labUrl, () => {}, lab.piName)
         done++
         console.log(`  ✓ [${done + failed}/${labs.length}] ${lab.piName ?? lab.labUrl} — ${chunkCount} chunks`)
       } catch (e) {

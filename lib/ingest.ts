@@ -1,8 +1,24 @@
 import { researchLab } from '@/lib/agent'
 import { buildIngestionPrompt } from '@/lib/agent/prompts'
 import { mapToLabProfile, toChunks } from '@/lib/rag/chunk'
-import { storeLab } from '@/lib/rag/store'
+import { storeLab, storeLabV2 } from '@/lib/rag/store'
+import { gatherLab } from '@/lib/rag/gather'
+import { extractLabV2 } from '@/lib/rag/extract2'
 import type { LabProfile } from '@/types'
+
+// v2 ingestion (default): deterministic gather -> single static extraction ->
+// rich per-paper chunks. Cheaper (~1 Gemini call + ~2 Firecrawl credits/lab) and
+// higher quality than the v1 agentic path (see scripts/audit.ts head-to-head).
+export async function ingestLabV2(
+  labUrl: string,
+  onProgress: (m: string) => void = () => {},
+  piName?: string | null,
+): Promise<{ profile: LabProfile; chunkCount: number }> {
+  const g = await gatherLab(labUrl, piName ?? null, onProgress)
+  const { profile, chunks } = await extractLabV2(g)
+  await storeLabV2(profile, chunks)
+  return { profile, chunkCount: chunks.length }
+}
 
 // Research + map + store one lab — the unit the batch runner parallelizes.
 // Student-agnostic (ingestion prompt): exhaustive chunks + the whole-lab profile,

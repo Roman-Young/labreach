@@ -1,6 +1,7 @@
 import { requireSql } from '@/lib/db'
 import type { LabProfile } from '@/types'
 import type { LabChunk } from './chunk'
+import type { LabChunkV2 } from './extract2'
 
 type Row = Record<string, unknown>
 const asRows = (r: unknown): Row[] => (Array.isArray(r) ? (r as Row[]) : ((r as { rows?: Row[] }).rows ?? []))
@@ -117,6 +118,46 @@ export async function storeLab(profile: LabProfile, chunks: LabChunk[]): Promise
     await sql.query(
       'INSERT INTO lab_chunks (lab_url, type, content, source) VALUES ($1, $2, $3, $4)',
       [profile.labUrl, c.type, c.content, c.source],
+    )
+  }
+}
+
+// v2 store: same profile upsert, but rich per-paper chunks (kind/title/year/
+// anchor_quote/source_id/meta). `type` holds the kind; `source` holds source_label.
+export async function storeLabV2(profile: LabProfile, chunks: LabChunkV2[]): Promise<void> {
+  const sql = requireSql()
+  const { rawPages, ...profileJson } = profile
+
+  await sql.query(
+    `INSERT INTO lab_profiles
+       (lab_url, lab_name, pi_name, pi_email, school, department, data_modality, recruiting,
+        research_areas, organisms, profile, raw_pages, research_quality, last_refreshed,
+        status, error, harvested_at, updated_at)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::text[],$10::text[],$11::jsonb,$12::jsonb,$13,$14,
+             'done', NULL, now(), now())
+     ON CONFLICT (lab_url) DO UPDATE SET
+       lab_name = EXCLUDED.lab_name, pi_name = EXCLUDED.pi_name, pi_email = EXCLUDED.pi_email,
+       school     = COALESCE(lab_profiles.school, EXCLUDED.school),
+       department = COALESCE(lab_profiles.department, EXCLUDED.department),
+       data_modality = EXCLUDED.data_modality, recruiting = EXCLUDED.recruiting,
+       research_areas = EXCLUDED.research_areas, organisms = EXCLUDED.organisms,
+       profile = EXCLUDED.profile, raw_pages = EXCLUDED.raw_pages,
+       research_quality = EXCLUDED.research_quality, last_refreshed = EXCLUDED.last_refreshed,
+       status = 'done', error = NULL, harvested_at = now(), updated_at = now()`,
+    [
+      profile.labUrl, profile.labName, profile.piName, profile.piEmail, profile.school,
+      profile.department, profile.dataModality.value, profile.recruiting.status,
+      profile.researchAreas, profile.organisms, JSON.stringify(profileJson),
+      rawPages ? JSON.stringify(rawPages) : null, profile.researchQuality, profile.lastRefreshed,
+    ],
+  )
+
+  await sql.query('DELETE FROM lab_chunks WHERE lab_url = $1', [profile.labUrl])
+  for (const c of chunks) {
+    await sql.query(
+      `INSERT INTO lab_chunks (lab_url, type, title, year, content, anchor_quote, source, source_id, meta)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb)`,
+      [profile.labUrl, c.kind, c.title, c.year, c.content, c.anchorQuote, c.sourceLabel, c.sourceId, c.meta ? JSON.stringify(c.meta) : null],
     )
   }
 }
