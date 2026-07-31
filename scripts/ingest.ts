@@ -58,14 +58,31 @@ async function main() {
   // ── run (harvest + extract) ─────────────────────────────────────────────
   if (cmd === 'run') {
     const { ingestLabV2 } = await import('../lib/ingest')
-    const { getLabs, markFailed } = await import('../lib/rag/store')
+    const { getLabs, markFailed, markNoSources } = await import('../lib/rag/store')
     const { mapWithConcurrency } = await import('../lib/pool')
 
     const sample = num('sample')
     const limit = num('limit')
     const concurrency = num('concurrency') ?? 5
+    const timeoutMs = (num('timeout') ?? 150) * 1000 // per-lab wall-clock budget
     const only = flag('only')
-    const status = has('retry-failed') ? ['pending', 'failed'] : ['pending']
+    // --retry-failed also re-runs no_sources labs: that status is reached when a lab yields
+    // 0 papers, which can happen from a TRANSIENT all-source outage, not just genuine
+    // emptiness. Re-running is cheap (a truly empty lab just fails fast again) and it means
+    // no transient failure can permanently bury a real lab. (B4 belt: terminal only after a
+    // deliberate retry pass still finds nothing.)
+    const status = has('retry-failed') ? ['pending', 'failed', 'no_sources'] : ['pending']
+
+    // Race one lab's ingest against a wall-clock budget. A lab that hangs (slow scrape,
+    // retry storm on a huge bundle) must not hold its concurrency slot forever — time it
+    // out, mark it failed, and move on; a later smaller/slower --retry-failed pass gets it.
+    const withTimeout = <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
+      let timer: ReturnType<typeof setTimeout>
+      const timeout = new Promise<never>((_, rej) => {
+        timer = setTimeout(() => rej(new Error(`timeout after ${ms / 1000}s (${label})`)), ms)
+      })
+      return Promise.race([p, timeout]).finally(() => clearTimeout(timer)) as Promise<T>
+    }
 
     const all = await getLabs({ status, department: only })
     let labs = all
@@ -79,21 +96,73 @@ async function main() {
     console.log(`running ingest on ${labs.length} labs (concurrency ${concurrency})...\n`)
     let done = 0
     let failed = 0
+    let noSources = 0
+    const seen = () => done + failed + noSources
+
+    // COST CIRCUIT BREAKER: a client-side timeout still BILLS (Gemini generated the output
+    // before we abort), and so does every retry. So a Gemini outage silently burns credit on
+    // wasted attempts — exactly how a batch can cost far more than planned. If the recent
+    // failure rate spikes (>=8 of the last 10 completed labs), we abort the run and leave the
+    // rest `pending` (no call, no spend). Resume with --retry-failed once Gemini is healthy.
+    const recent: boolean[] = []
+    let aborted = false
+    const record = (ok: boolean): void => {
+      recent.push(ok)
+      if (recent.length > 12) recent.shift()
+      if (!aborted && recent.length >= 10 && recent.filter((x) => !x).length >= 8) {
+        aborted = true
+        console.log(`\n⛔ CIRCUIT BREAKER: ${recent.filter((x) => !x).length}/${recent.length} recent labs failing — likely a Gemini outage. Aborting to avoid burning credit; resume with --retry-failed when healthy.`)
+      }
+    }
+
     const t0 = Date.now()
     await mapWithConcurrency(labs, concurrency, async (lab) => {
+      if (aborted) return // circuit open: skip — lab stays pending, no Gemini call, no spend
       try {
-        const { chunkCount } = await ingestLabV2(lab.labUrl, () => {}, lab.piName)
-        done++
-        console.log(`  ✓ [${done + failed}/${labs.length}] ${lab.piName ?? lab.labUrl} — ${chunkCount} chunks`)
+        const { chunkCount, paperCount } = await withTimeout(
+          ingestLabV2(lab.labUrl, () => {}, lab.piName), timeoutMs, lab.piName ?? lab.labUrl)
+        if (chunkCount === 0 && paperCount > 0) {
+          // Papers WERE found but 0 chunks survived (guard dropped all, or a transient
+          // extract hiccup). Retryable — do NOT bury as terminal no_sources.
+          failed++
+          await markFailed(lab.labUrl, `0 chunks despite ${paperCount} papers (guard/transient)`)
+          console.log(`  ✗ [${seen()}/${labs.length}] ${lab.piName ?? lab.labUrl} — 0 chunks / ${paperCount} papers → retry`)
+          record(false)
+        } else if (chunkCount === 0) {
+          // Genuinely nothing to find: no papers AND no scrapeable site (not a Gemini failure).
+          noSources++
+          await markNoSources(lab.labUrl)
+          console.log(`  ~ [${seen()}/${labs.length}] ${lab.piName ?? lab.labUrl} — no papers/site — no_sources`)
+        } else {
+          done++
+          console.log(`  ✓ [${seen()}/${labs.length}] ${lab.piName ?? lab.labUrl} — ${chunkCount} chunks`)
+          record(true)
+        }
       } catch (e) {
         failed++
         const msg = (e as Error).message
         await markFailed(lab.labUrl, msg)
-        console.log(`  ✗ [${done + failed}/${labs.length}] ${lab.piName ?? lab.labUrl} — ${msg.slice(0, 90)}`)
+        console.log(`  ✗ [${seen()}/${labs.length}] ${lab.piName ?? lab.labUrl} — ${msg.slice(0, 90)}`)
+        record(false)
       }
     })
     const secs = ((Date.now() - t0) / 1000).toFixed(0)
-    console.log(`\ndone: ${done} ok, ${failed} failed, ${secs}s`)
+    console.log(`\ndone: ${done} ok, ${noSources} no_sources, ${failed} failed, ${secs}s${aborted ? ' (ABORTED early by circuit breaker — rest left pending)' : ''}`)
+    return
+  }
+
+  // ── embed (backfill dense embeddings; resumable) ──────────────────────────
+  if (cmd === 'embed') {
+    const { backfillEmbeddings, createEmbeddingIndex } = await import('../lib/rag/embed')
+    const limit = num('limit')
+    const t0 = Date.now()
+    const { embedded, estTokens } = await backfillEmbeddings((m) => console.log(m), limit)
+    console.log(`\nembedded ${embedded} chunks (~${estTokens} tokens, ~$${((estTokens / 1e6) * 0.15).toFixed(4)} est) in ${((Date.now() - t0) / 1000).toFixed(0)}s`)
+    if (!limit && embedded > 0) {
+      console.log('building HNSW index...')
+      await createEmbeddingIndex()
+      console.log('index built.')
+    }
     return
   }
 
@@ -134,7 +203,7 @@ async function main() {
     return
   }
 
-  console.log('usage: npx tsx scripts/ingest.ts <seed|run|reextract|status> [flags]')
+  console.log('usage: npx tsx scripts/ingest.ts <seed|run|embed|reextract|status> [flags]')
   process.exit(1)
 }
 

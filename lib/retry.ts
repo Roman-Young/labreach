@@ -17,10 +17,19 @@ export async function withRetry<T>(
         msg.includes('resource_exhausted') || msg.includes('exhausted') ||
         // transient network / fetch errors (e.g. "Error fetching from generativelanguage...")
         msg.includes('fetch failed') || msg.includes('error fetching') ||
-        msg.includes('econnreset') || msg.includes('etimedout')
-      if (!isRetryable || i === attempts - 1) throw lastError
-      // exponential backoff: 3s, 6s, 12s (helps rate-limit windows recover)
-      await new Promise((r) => setTimeout(r, delayMs * Math.pow(2, i)))
+        msg.includes('econnreset') || msg.includes('etimedout') ||
+        // transient malformed/empty LLM JSON body (clean finishReason but unparseable)
+        msg.includes('unexpected end of json') || msg.includes('unexpected token') ||
+        msg.includes('is not valid json')
+      // Also retry aborted requests (per-fetch AbortSignal.timeout fired) so a single
+      // slow call doesn't kill the lab — the per-lab budget is the real ceiling.
+      const retryable = isRetryable || msg.includes('aborted') || msg.includes('timeout')
+      if (!retryable || i === attempts - 1) throw lastError
+      // Exponential backoff WITH FULL JITTER: base 3s/6s/12s × random[0.5,1.0). Without
+      // jitter, labs that hit a rate-limit window at concurrency N back off in lockstep and
+      // re-storm the API at the same instant (thundering herd on 1 req/s Semantic Scholar).
+      const backoff = delayMs * Math.pow(2, i) * (0.5 + Math.random() * 0.5)
+      await new Promise((r) => setTimeout(r, backoff))
     }
   }
   throw lastError

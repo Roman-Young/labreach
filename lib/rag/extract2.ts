@@ -86,7 +86,12 @@ Also extract: lab_overview (from homepage/About text only), explicit future_dire
 SOURCE BUNDLE:
 `
 
-const BUNDLE_CAP = 200000
+// The summarizer's input budget — deliberately LEANER than the raw cache. Each paper's
+// abstract + trimmed site + the top papers' full text is all the model needs to write
+// did/found/used/why; the COMPLETE papers live in raw_pages (120k each) for the RAG
+// passage-chunking step. A bloated bundle just makes the structured call slow + flaky
+// (a 200k dense bundle was ~56s and intermittently returned truncated JSON).
+const BUNDLE_CAP = 130000
 
 export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfile; chunks: LabChunkV2[] }> {
   const apiKey = process.env.GOOGLE_AI_API_KEY
@@ -105,11 +110,29 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
       temperature: 0,
       responseMimeType: 'application/json',
       responseSchema: RESPONSE_SCHEMA as unknown as Schema,
-    },
+      // Disable dynamic "thinking": 2.5-flash defaults to it, and thinking tokens bill at
+      // the OUTPUT rate AND add latency (inflating both cost and the ~56s call time). This
+      // is grounded structured extraction — it doesn't need reasoning tokens.
+      thinkingConfig: { thinkingBudget: 0 },
+    } as unknown as Record<string, unknown>,
   })
 
-  const res = await withRetry(() => model.generateContent(`${INSTRUCTION}${bundle}`))
-  const p = JSON.parse(res.response.text()) as Record<string, unknown>
+  // Wrap BOTH the call and the JSON.parse in the retry: Gemini occasionally returns a
+  // truncated/empty body that fails to parse even on a clean finishReason. Retrying
+  // in-process (rather than hard-failing the lab out to the --retry-failed sweep) keeps
+  // a transient bad response from dropping a lab mid-batch.
+  // attempts:2 so the retry chain (each Gemini call is slow on a big bundle) can't outlive
+  // the batch's per-lab timeout and keep running / flip a timed-out lab back to done.
+  const p = await withRetry(async () => {
+    const res = await model.generateContent(`${INSTRUCTION}${bundle}`)
+    // COST INSTRUMENTATION: log the FULL token breakdown incl. `thoughts` (Gemini 2.5-flash
+    // bills reasoning tokens at the OUTPUT rate). Under-counting these is what made the batch
+    // cost ~3× my estimate. Grep '[usage]' from a run to get real per-lab cost. thoughts>0
+    // here means thinkingBudget:0 did NOT take effect and must be forced (see docs/cost.md).
+    const u = (res.response as { usageMetadata?: Record<string, number> }).usageMetadata
+    if (u) console.log(`[usage] in=${u.promptTokenCount ?? 0} out=${u.candidatesTokenCount ?? 0} thoughts=${u.thoughtsTokenCount ?? 0} total=${u.totalTokenCount ?? 0}`)
+    return JSON.parse(res.response.text()) as Record<string, unknown>
+  }, { attempts: 2 })
 
   const str = (x: unknown): string | null => (typeof x === 'string' && x.trim() ? x.trim() : null)
   const strs = (x: unknown): string[] =>
@@ -140,7 +163,10 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
       content,
       anchorQuote: str(raw.anchor_quote),
       sourceLabel: title ? `${title}${year ? ` (${year})` : ''}` : null,
-      sourceId: titleToSid.get(normT(title)) ?? str(raw.source_id),
+      // Trust ONLY the title→id map built from the gathered papers. On a title miss, prefer
+      // null over the model's copied source_id — a missing citation beats a WRONG one that
+      // sends a student to an unrelated paper (the model can mis-copy an adjacent header's id).
+      sourceId: titleToSid.get(normT(title)) ?? null,
       meta: { did: did ?? '', found: found ?? '', used: used ?? '', why: why ?? '' },
     })
   }
@@ -176,6 +202,60 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
     })
   }
 
+  // GROUNDING GUARD — the product's core promise is that every anchor quote is VERBATIM
+  // from the source. Enforce it in code, not by trusting the prompt: drop any chunk whose
+  // quote can't be found in the exact text the model was shown (`bundle`, not raw_pages —
+  // the model can only honestly quote what it saw). This is what stops fabrication when a
+  // lab's papers weren't gathered and the model invents plausible summaries from a thin
+  // page (observed: a chemistry lab with only a faculty page produced 21/22 fabricated
+  // quotes). A `paper` chunk with no verbatim quote is untrustworthy and is dropped; an
+  // overview/future-direction may stand without a quote but never with a fabricated one.
+  const normQ = (s: string) =>
+    s
+      .toLowerCase()
+      .replace(/[‘’ʼ´`]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[‐–—]/g, '-')
+      .replace(/…/g, '...')
+      .replace(/\s+/g, ' ')
+      .trim()
+  const haystack = normQ(bundle)
+
+  // QB3 DEDUP — a PMCID paper is in the bundle as BOTH a `paper:` (abstract) and a
+  // `fulltext:` section, and the schema invites "one entry per section", so the model can
+  // emit the SAME paper twice. Collapse paper chunks by source_id (else normalized title),
+  // keeping the richest (longest) content; non-paper chunks pass through untouched.
+  const seenPaper = new Map<string, number>()
+  const deduped: LabChunkV2[] = []
+  for (const c of chunks) {
+    if (c.kind !== 'paper') {
+      deduped.push(c)
+      continue
+    }
+    const key = c.sourceId || normT(c.title)
+    if (!key) {
+      deduped.push(c)
+      continue
+    }
+    const idx = seenPaper.get(key)
+    if (idx === undefined) {
+      seenPaper.set(key, deduped.length)
+      deduped.push(c)
+    } else if (c.content.length > deduped[idx].content.length) {
+      deduped[idx] = c
+    }
+  }
+
+  const grounded = deduped.filter((c) => {
+    if (!c.anchorQuote) return c.kind !== 'paper'
+    const q = normQ(c.anchorQuote)
+    if (!haystack.includes(q)) return false
+    // Reject a too-short quote on a paper: a 2-3 word generic phrase ("gene expression")
+    // trivially matches the bundle while the summary around it could be fabricated.
+    if (c.kind === 'paper' && q.split(' ').filter(Boolean).length < 5) return false
+    return true
+  })
+
   // Lab facets → LabProfile (findings/etc. now live in chunks, so those arrays stay empty).
   const mod = (p.data_modality ?? {}) as { value?: string; quote?: string }
   const rec = (p.recruiting ?? {}) as { status?: string; quote?: string }
@@ -185,9 +265,22 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
   const profile: LabProfile = {
     labUrl: g.labUrl,
     labName: str(p.lab_name),
-    piName: str(p.pi_name) ?? g.piName,
+    // The SEEDED name (from the UCSD directory enumerator) is authoritative for identity —
+    // the model's guess reads paper headers and returns co-authors ("Kolodner, Putnam") or
+    // mis-formatted names, corrupting the outreach target. Only fall back to the model when
+    // there is no seed name.
+    piName: g.piName ?? str(p.pi_name),
     piTitle: null,
-    piEmail: str(p.pi_email),
+    // Ground the email like a quote: keep it ONLY if it appears verbatim in the source the
+    // model saw. An outreach product must never emit a fabricated/transposed address.
+    piEmail: (() => {
+      const e = str(p.pi_email)
+      // Must LOOK like an email AND be grounded. The shape check rejects URL/filename
+      // fragments the model sometimes returns as an email (e.g. "ortony_julia.html" from a
+      // faculty-profile URL), which would otherwise pass grounding by matching the page URL.
+      if (!e || !/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(e)) return null
+      return haystack.includes(normQ(e)) ? e : null
+    })(),
     school: str(p.school),
     department: str(p.department),
     researchAreas: strs(p.research_areas),
@@ -202,9 +295,9 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
     recruiting: { status: recStatus, evidence: rec.quote ? { quote: rec.quote, source: '', sourceType: 'lab_website' } : null },
     publications: [],
     rawPages: g.pages,
-    researchQuality: chunks.filter((c) => c.kind === 'paper').length >= 3 ? 'good' : 'limited',
+    researchQuality: grounded.filter((c) => c.kind === 'paper').length >= 3 ? 'good' : 'limited',
     lastRefreshed: new Date().toISOString(),
   }
 
-  return { profile, chunks }
+  return { profile, chunks: grounded }
 }

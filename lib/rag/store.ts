@@ -74,6 +74,19 @@ export async function markFailed(labUrl: string, error: string): Promise<void> {
   )
 }
 
+// A lab that yielded NO usable sources — no papers found in the cascade and no
+// scrapeable site — so extraction produced zero chunks. This is not a failure to
+// retry (there is nothing to find), so it gets its own terminal status and does
+// NOT bump attempts. A lab with real papers but no site still succeeds ('done').
+export async function markNoSources(labUrl: string): Promise<void> {
+  const sql = requireSql()
+  await sql.query(
+    `UPDATE lab_profiles SET status = 'no_sources', error = NULL, updated_at = now()
+     WHERE lab_url = $1`,
+    [labUrl],
+  )
+}
+
 export async function statusCounts(): Promise<Array<{ department: string; status: string; count: number }>> {
   const sql = requireSql()
   return asRows(await sql.query(
@@ -94,16 +107,18 @@ export async function storeLab(profile: LabProfile, chunks: LabChunk[]): Promise
         research_areas, organisms, profile, raw_pages, research_quality, last_refreshed,
         status, error, harvested_at, updated_at)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::text[],$10::text[],$11::jsonb,$12::jsonb,$13,$14,
-             'done', NULL, now(), now())
+             'pending', NULL, now(), now())
      ON CONFLICT (lab_url) DO UPDATE SET
-       lab_name = EXCLUDED.lab_name, pi_name = EXCLUDED.pi_name, pi_email = EXCLUDED.pi_email,
+       lab_name = EXCLUDED.lab_name,
+       pi_name    = COALESCE(lab_profiles.pi_name, EXCLUDED.pi_name),
+       pi_email = EXCLUDED.pi_email,
        school     = COALESCE(lab_profiles.school, EXCLUDED.school),
        department = COALESCE(lab_profiles.department, EXCLUDED.department),
        data_modality = EXCLUDED.data_modality, recruiting = EXCLUDED.recruiting,
        research_areas = EXCLUDED.research_areas, organisms = EXCLUDED.organisms,
        profile = EXCLUDED.profile, raw_pages = EXCLUDED.raw_pages,
        research_quality = EXCLUDED.research_quality, last_refreshed = EXCLUDED.last_refreshed,
-       status = 'done', error = NULL, harvested_at = now(), updated_at = now()`,
+       error = NULL, harvested_at = now(), updated_at = now()`,
     [
       profile.labUrl, profile.labName, profile.piName, profile.piEmail, profile.school,
       profile.department, profile.dataModality.value, profile.recruiting.status,
@@ -120,6 +135,10 @@ export async function storeLab(profile: LabProfile, chunks: LabChunk[]): Promise
       [profile.labUrl, c.type, c.content, c.source],
     )
   }
+
+  // B1 crash-safety: flip to 'done' only after all chunks are written (status stays
+  // 'pending' if the process dies mid-store, so the lab re-runs cleanly).
+  await sql.query(`UPDATE lab_profiles SET status = 'done', updated_at = now() WHERE lab_url = $1`, [profile.labUrl])
 }
 
 // v2 store: same profile upsert, but rich per-paper chunks (kind/title/year/
@@ -134,16 +153,18 @@ export async function storeLabV2(profile: LabProfile, chunks: LabChunkV2[]): Pro
         research_areas, organisms, profile, raw_pages, research_quality, last_refreshed,
         status, error, harvested_at, updated_at)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::text[],$10::text[],$11::jsonb,$12::jsonb,$13,$14,
-             'done', NULL, now(), now())
+             'pending', NULL, now(), now())
      ON CONFLICT (lab_url) DO UPDATE SET
-       lab_name = EXCLUDED.lab_name, pi_name = EXCLUDED.pi_name, pi_email = EXCLUDED.pi_email,
+       lab_name = EXCLUDED.lab_name,
+       pi_name    = COALESCE(lab_profiles.pi_name, EXCLUDED.pi_name),
+       pi_email = EXCLUDED.pi_email,
        school     = COALESCE(lab_profiles.school, EXCLUDED.school),
        department = COALESCE(lab_profiles.department, EXCLUDED.department),
        data_modality = EXCLUDED.data_modality, recruiting = EXCLUDED.recruiting,
        research_areas = EXCLUDED.research_areas, organisms = EXCLUDED.organisms,
        profile = EXCLUDED.profile, raw_pages = EXCLUDED.raw_pages,
        research_quality = EXCLUDED.research_quality, last_refreshed = EXCLUDED.last_refreshed,
-       status = 'done', error = NULL, harvested_at = now(), updated_at = now()`,
+       error = NULL, harvested_at = now(), updated_at = now()`,
     [
       profile.labUrl, profile.labName, profile.piName, profile.piEmail, profile.school,
       profile.department, profile.dataModality.value, profile.recruiting.status,
@@ -160,4 +181,10 @@ export async function storeLabV2(profile: LabProfile, chunks: LabChunkV2[]): Pro
       [profile.labUrl, c.kind, c.title, c.year, c.content, c.anchorQuote, c.sourceLabel, c.sourceId, c.meta ? JSON.stringify(c.meta) : null],
     )
   }
+
+  // B1 crash-safety: flip to 'done' ONLY after every chunk is written. The Neon HTTP driver
+  // has no cross-statement transaction, so a crash between the profile upsert and here must
+  // leave the row re-runnable — it stays 'pending' until this final write, never 'done' with
+  // 0/partial chunks (which no run flag would ever re-process).
+  await sql.query(`UPDATE lab_profiles SET status = 'done', updated_at = now() WHERE lab_url = $1`, [profile.labUrl])
 }

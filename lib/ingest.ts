@@ -13,11 +13,13 @@ export async function ingestLabV2(
   labUrl: string,
   onProgress: (m: string) => void = () => {},
   piName?: string | null,
-): Promise<{ profile: LabProfile; chunkCount: number }> {
+): Promise<{ profile: LabProfile; chunkCount: number; paperCount: number }> {
   const g = await gatherLab(labUrl, piName ?? null, onProgress)
   const { profile, chunks } = await extractLabV2(g)
   await storeLabV2(profile, chunks)
-  return { profile, chunkCount: chunks.length }
+  // paperCount lets the batch tell "genuinely nothing to find" (0 papers -> no_sources,
+  // terminal) from "papers existed but 0 chunks survived" (retryable failed, not buried).
+  return { profile, chunkCount: chunks.length, paperCount: g.papers.length }
 }
 
 // Research + map + store one lab — the unit the batch runner parallelizes.

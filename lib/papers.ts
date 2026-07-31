@@ -19,6 +19,7 @@ export interface AuthorWork {
   abstract: string | null
   doi: string | null
   pmid: string | null
+  pmcid?: string | null // PMC id (e.g. "PMC1234567") — carried when a source exposes it; needed for open full-text fetch
   isOpenAccess: boolean
   openAccessUrl: string | null
 }
@@ -57,7 +58,7 @@ export async function searchAuthorWorks(
     `&per-page=${limit}&sort=${sort}&mailto=${MAILTO}`
 
   try {
-    const res = await fetch(url)
+    const res = await fetch(url, { signal: AbortSignal.timeout(20000) })
     if (!res.ok) return []
     const data = (await res.json()) as { results?: Array<Record<string, unknown>> }
     const results = data.results ?? []
@@ -84,22 +85,66 @@ export async function searchAuthorWorks(
 }
 
 // Europe PMC (https://europepmc.org) has 9M+ full texts — broader than the NCBI
-// PMC open-access subset. Returns the paper's full text as plain text (XML tags
-// stripped), or null if not available there. Used as a fallback when NCBI PMC
-// lacks the paper, to broaden Discussion / Future-Directions coverage.
-export async function fetchEuropePMCFullText(pmid: string): Promise<string | null> {
+const clean = (s: string): string =>
+  s.replace(/<[^>]+>/g, ' ').replace(/&[a-z0-9#]+;/gi, ' ').replace(/\s+/g, ' ').trim()
+
+// Turn a JATS full-text XML into readable text ORDERED BY CONNECTION VALUE, not by
+// document order. A student connects on what a paper FOUND and what it MEANS
+// (Significance / Results / Discussion / Conclusions), not on the procedural Methods.
+// So we drop the reference list + back matter (pure noise), then emit
+//   abstract → high-value sections → intro/background → methods
+// last. When a long paper is truncated to the cache/prompt cap, Methods is what gets
+// cut, and the results/discussion survive. Method subsections inherit their parent
+// section, so a "Methods > Cleavage Assay" block travels with Methods.
+function sectionPrioritizedText(xml: string): string | null {
+  const abstract = clean(xml.match(/<abstract[\s\S]*?<\/abstract>/i)?.[0] ?? '')
+  let body = xml.match(/<body[\s\S]*?<\/body>/i)?.[0] ?? xml
+  body = body
+    .replace(/<ref-list[\s\S]*?<\/ref-list>/gi, ' ')
+    .replace(/<back[\s\S]*?<\/back>/gi, ' ')
+    .replace(/<table-wrap[\s\S]*?<\/table-wrap>/gi, ' ')
+    .replace(/<fig[\s\S]*?<\/fig>/gi, ' ')
+    .replace(/<title>([\s\S]*?)<\/title>/gi, (_m, t: string) => ` @@@SEC@@@${clean(t)}@@@SEC@@@ `)
+  const parts = clean(body).split('@@@SEC@@@')
+
+  const DROP = /^(acknowledg|author contribution|competing|conflict|funding|data availability|supplementary|supporting|ethic|declaration|reference|abbreviation)/i
+  const METHODS = /^(materials?\s*(and\s*)?methods?|methods?|experimental|star.?methods|study (design|population)|statistical|data collection)/i
+  const HIGH = /^(results?|discussion|conclusion|significance|finding|summary)/i
+  const CONTEXT = /^(introduction|background|overview)/i
+
+  const high: string[] = []
+  const context: string[] = []
+  const methods: string[] = []
+  if (parts[0]?.trim()) context.push(parts[0].trim()) // untitled lead text ≈ intro
+  let bucket: string[] | null = context
+  for (let i = 1; i < parts.length; i += 2) {
+    const title = (parts[i] ?? '').trim()
+    const seg = (parts[i + 1] ?? '').trim()
+    if (DROP.test(title)) bucket = null
+    else if (HIGH.test(title)) bucket = high
+    else if (CONTEXT.test(title)) bucket = context
+    else if (METHODS.test(title)) bucket = methods
+    // else: a subsection inherits the current parent bucket
+    if (bucket && seg) bucket.push(title ? `[${title}] ${seg}` : seg)
+  }
+  const out = clean([abstract, ...high, ...context, ...methods].filter(Boolean).join('\n\n'))
+  return out.length > 400 ? out : null
+}
+
+// PMC open-access subset. Returns the paper's full text as readable, connection-
+// prioritized plain text (see sectionPrioritizedText), or null if not available.
+// Full text is served ONLY by PMCID as a single path segment:
+//   /webservices/rest/PMC1234567/fullTextXML   (verified live; a pmid/MED path 404s).
+export async function fetchEuropePMCFullText(id: string, source: 'MED' | 'PMC' = 'MED'): Promise<string | null> {
+  const pmcid = id.startsWith('PMC') ? id : source === 'PMC' ? `PMC${id.replace(/^PMC/, '')}` : null
+  if (!pmcid) return null
   try {
-    const url = `https://www.ebi.ac.uk/europepmc/webservices/rest/MED/${pmid}/fullTextXML`
-    const res = await fetch(url)
+    const url = `https://www.ebi.ac.uk/europepmc/webservices/rest/${pmcid}/fullTextXML`
+    const res = await fetch(url, { signal: AbortSignal.timeout(20000) })
     if (!res.ok) return null
     const xml = await res.text()
     if (!xml || xml.length < 400) return null
-    const text = xml
-      .replace(/<[^>]+>/g, ' ') // strip tags
-      .replace(/&[a-z]+;/gi, ' ') // strip entities
-      .replace(/\s+/g, ' ')
-      .trim()
-    return text.length > 400 ? text : null
+    return sectionPrioritizedText(xml)
   } catch {
     return null
   }
