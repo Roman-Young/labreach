@@ -153,7 +153,9 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
   // TWO bounded calls — papers (the larger output) then facets (small) — each within its own
   // cap so neither runs away. Sequential to keep in-flight Gemini calls low. Merge into one
   // object so the chunk-building + profile code below is unchanged.
-  const pp = await runCall(PAPERS_SCHEMA, INSTRUCTION_PAPERS, 12000)
+  // Papers cap is 20k (was 12k): the most paper-rich labs truncated their JSON at 12k on both
+  // attempts and failed. 20k clears them while staying far under the old ~65k runaway.
+  const pp = await runCall(PAPERS_SCHEMA, INSTRUCTION_PAPERS, 20000)
   const pf = await runCall(FACETS_SCHEMA, INSTRUCTION_FACETS, 4000)
   const p: Record<string, unknown> = { ...pf, papers: pp.papers }
 
