@@ -23,28 +23,38 @@ export interface LabChunkV2 {
 
 const STR = { type: SchemaType.STRING }
 
-const RESPONSE_SCHEMA = {
+// TWO schemas / TWO calls. Combining papers + all lab facets in one structured call makes
+// gemini-2.5-flash RUN AWAY on some labs (65k-token output → 250s timeout → truncated JSON
+// → fail). Splitting into a lean papers call and a small facets call bounds each output
+// structurally, so neither can run away. source_id/year are taken from the gathered papers
+// (not the model), so the papers schema stays minimal.
+const PAPERS_SCHEMA = {
   type: SchemaType.OBJECT,
   properties: {
     papers: {
       type: SchemaType.ARRAY,
-      description:
-        'One entry per paper in the bundle (each PAPER:/FULL TEXT: section). Summarize substantively — a student must be able to form a specific hook.',
+      description: 'One entry per PAPER in the bundle. Summarize substantively — a student must be able to form a specific hook.',
       items: {
         type: SchemaType.OBJECT,
         properties: {
           title: STR,
           year: { type: SchemaType.INTEGER },
-          source_id: { type: SchemaType.STRING, description: 'Copy the SOURCE_ID from the paper header EXACTLY (doi:.. or pmid:..).' },
           did: { type: SchemaType.STRING, description: 'What the lab DID — the approach/experiment. 1-2 sentences.' },
-          found: { type: SchemaType.STRING, description: 'What they FOUND — key results/claims, specific and quantitative where the text supports it. 1-2 sentences.' },
+          found: { type: SchemaType.STRING, description: 'What they FOUND — key results, specific/quantitative where supported. 1-2 sentences.' },
           used: { type: SchemaType.STRING, description: 'What they USED — methods, systems, data, techniques. 1 sentence.' },
-          why: { type: SchemaType.STRING, description: 'Why it MATTERS — significance and what they believe it is useful for. 1 sentence.' },
+          why: { type: SchemaType.STRING, description: 'Why it MATTERS — significance. 1 sentence.' },
           anchor_quote: { type: SchemaType.STRING, description: 'ONE verbatim quote copied from this paper text, backing the summary.' },
         },
         required: ['title', 'did', 'found', 'anchor_quote'],
       },
     },
+  },
+  required: ['papers'],
+}
+
+const FACETS_SCHEMA = {
+  type: SchemaType.OBJECT,
+  properties: {
     lab_overview: {
       type: SchemaType.OBJECT,
       description: 'Broad overview from the homepage/About text ONLY (not a paper). Empty content if there is no site text.',
@@ -67,21 +77,26 @@ const RESPONSE_SCHEMA = {
     school: STR,
     department: STR,
   },
-  required: ['papers'],
 }
 
-const INSTRUCTION = `You are building a rich, objective research profile of one academic lab for a shared database that undergraduates search to find labs to email. Work ONLY from the provided source bundle (papers + any homepage/About text). Every claim must be grounded in the text — never invent, and copy anchor quotes VERBATIM.
-
-For EACH paper in the bundle, write a substantive, specific summary an undergraduate could form a real hook from:
+const INSTRUCTION_PAPERS = `You are summarizing one academic lab's papers for a database undergraduates search to find labs to email. Work ONLY from the provided bundle. For EACH paper write a substantive, specific summary a student could form a real hook from:
 - did: the approach/experiment
 - found: the key results (specific and quantitative where the text supports it)
 - used: methods / systems / data / techniques
 - why: significance — what it means and what they believe it is useful for
-Plus ONE verbatim anchor_quote copied from that paper's text, and copy the paper's SOURCE_ID exactly from its header.
+Plus ONE verbatim anchor_quote copied from that paper's text.
 
-Hard rules: Do NOT store paper titles as findings. Do NOT paraphrase a quote — copy it verbatim. If the bundle lacks the text to support a field, leave it empty rather than guessing.
+Hard rules: Do NOT store paper titles as findings. Do NOT paraphrase a quote — copy it verbatim. If the bundle lacks text to support a field, leave it empty rather than guessing.
 
-Also extract: lab_overview (from homepage/About text only), explicit future_directions, and the lab facets — data_modality (wet/dry/mixed), recruiting (explicit_no/open/unknown), techniques, organisms, research_areas, a 1-2 sentence research_summary, pi_name, pi_email, lab_name, school, department.
+SOURCE BUNDLE:
+`
+
+const INSTRUCTION_FACETS = `From this academic lab's source bundle, extract the lab's facets, grounded ONLY in the text (copy quotes verbatim; leave a field empty rather than guessing):
+- lab_overview: a broad overview from the homepage/About text ONLY (not a paper)
+- future_directions: explicit open questions / next steps the lab states
+- data_modality (wet/dry/mixed), recruiting (explicit_no/open/unknown)
+- techniques, organisms, research_areas, a 1-2 sentence research_summary
+- pi_name, pi_email, lab_name, school, department
 
 SOURCE BUNDLE:
 `
@@ -97,42 +112,50 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
   const apiKey = process.env.GOOGLE_AI_API_KEY
   if (!apiKey) throw new Error('GOOGLE_AI_API_KEY is not set')
 
+  // Build the summarizer bundle from ABSTRACTS + SITE only. Full-text pages are still cached
+  // (raw_pages) for the retrieval layer (T87) but are deliberately NOT fed to the summarizer:
+  // feeding huge full papers makes the model run away (Benjamin Smarr = 65k-token output →
+  // 250s timeout → ~$0.16 wasted). Abstracts give bounded, cheap (~$0.008/lab), reliable
+  // summaries in ~10s; paper DEPTH belongs in the embedded full-text, not in these summaries.
   let bundle = ''
   for (const [k, v] of Object.entries(g.pages)) {
+    if (k.startsWith('fulltext:')) continue
     bundle += `\n\n===== ${k} =====\n${v}`
     if (bundle.length >= BUNDLE_CAP) break
   }
   bundle = bundle.slice(0, BUNDLE_CAP)
 
-  const model = new GoogleGenerativeAI(apiKey).getGenerativeModel({
-    model: 'gemini-2.5-flash',
-    generationConfig: {
-      temperature: 0,
-      responseMimeType: 'application/json',
-      responseSchema: RESPONSE_SCHEMA as unknown as Schema,
-      // Disable dynamic "thinking": 2.5-flash defaults to it, and thinking tokens bill at
-      // the OUTPUT rate AND add latency (inflating both cost and the ~56s call time). This
-      // is grounded structured extraction — it doesn't need reasoning tokens.
-      thinkingConfig: { thinkingBudget: 0 },
-    } as unknown as Record<string, unknown>,
-  })
+  const genAI = new GoogleGenerativeAI(apiKey)
+  // One bounded structured call. maxOutputTokens caps each output so neither the papers list
+  // nor the facets can run away (runaway output was causing 65k-token / 250s / truncated-JSON
+  // fails). withRetry(attempts:2) also recovers a transient bad/empty body without outliving
+  // the batch's per-lab timeout. Logs the FULL token breakdown incl. `thoughts` — grep
+  // '[usage]' for real per-lab cost; thoughts>0 means thinkingBudget:0 didn't apply.
+  const runCall = async (schema: unknown, instruction: string, maxOutputTokens: number): Promise<Record<string, unknown>> => {
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      generationConfig: {
+        temperature: 0,
+        responseMimeType: 'application/json',
+        responseSchema: schema as Schema,
+        maxOutputTokens,
+        thinkingConfig: { thinkingBudget: 0 },
+      } as unknown as Record<string, unknown>,
+    })
+    return withRetry(async () => {
+      const res = await model.generateContent(`${instruction}${bundle}`)
+      const u = (res.response as { usageMetadata?: Record<string, number> }).usageMetadata
+      if (u) console.log(`[usage] in=${u.promptTokenCount ?? 0} out=${u.candidatesTokenCount ?? 0} thoughts=${u.thoughtsTokenCount ?? 0}`)
+      return JSON.parse(res.response.text()) as Record<string, unknown>
+    }, { attempts: 2 })
+  }
 
-  // Wrap BOTH the call and the JSON.parse in the retry: Gemini occasionally returns a
-  // truncated/empty body that fails to parse even on a clean finishReason. Retrying
-  // in-process (rather than hard-failing the lab out to the --retry-failed sweep) keeps
-  // a transient bad response from dropping a lab mid-batch.
-  // attempts:2 so the retry chain (each Gemini call is slow on a big bundle) can't outlive
-  // the batch's per-lab timeout and keep running / flip a timed-out lab back to done.
-  const p = await withRetry(async () => {
-    const res = await model.generateContent(`${INSTRUCTION}${bundle}`)
-    // COST INSTRUMENTATION: log the FULL token breakdown incl. `thoughts` (Gemini 2.5-flash
-    // bills reasoning tokens at the OUTPUT rate). Under-counting these is what made the batch
-    // cost ~3× my estimate. Grep '[usage]' from a run to get real per-lab cost. thoughts>0
-    // here means thinkingBudget:0 did NOT take effect and must be forced (see docs/cost.md).
-    const u = (res.response as { usageMetadata?: Record<string, number> }).usageMetadata
-    if (u) console.log(`[usage] in=${u.promptTokenCount ?? 0} out=${u.candidatesTokenCount ?? 0} thoughts=${u.thoughtsTokenCount ?? 0} total=${u.totalTokenCount ?? 0}`)
-    return JSON.parse(res.response.text()) as Record<string, unknown>
-  }, { attempts: 2 })
+  // TWO bounded calls — papers (the larger output) then facets (small) — each within its own
+  // cap so neither runs away. Sequential to keep in-flight Gemini calls low. Merge into one
+  // object so the chunk-building + profile code below is unchanged.
+  const pp = await runCall(PAPERS_SCHEMA, INSTRUCTION_PAPERS, 12000)
+  const pf = await runCall(FACETS_SCHEMA, INSTRUCTION_FACETS, 4000)
+  const p: Record<string, unknown> = { ...pf, papers: pp.papers }
 
   const str = (x: unknown): string | null => (typeof x === 'string' && x.trim() ? x.trim() : null)
   const strs = (x: unknown): string[] =>
