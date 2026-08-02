@@ -60,25 +60,27 @@ function Badge({ children, tone }: { children: React.ReactNode; tone: 'teal' | '
   return <span className={`inline-block px-2 py-0.5 text-xs rounded-full border ${tones[tone]}`}>{children}</span>
 }
 
-function FindingCard({ f }: { f: DigestFinding }) {
+// preview=true (browse): title-led, summary clamped to 2 lines, quote hidden — scannable.
+// preview=false (expanded lab detail): the full summary + verbatim quote.
+function FindingCard({ f, preview }: { f: DigestFinding; preview?: boolean }) {
   const href = sourceHref(f.sourceId)
   return (
     <div className="border-l-2 border-slate-700 pl-3 py-1">
-      <p className="text-sm text-slate-200 leading-relaxed">{f.content}</p>
-      {f.anchorQuote && (
-        <p className="mt-1.5 text-xs text-slate-400 italic border-l-2 border-teal-500/40 pl-2">
-          &ldquo;{f.anchorQuote}&rdquo;
-        </p>
-      )}
-      <div className="mt-1.5 flex items-center gap-2 text-xs text-slate-500">
-        <span className="uppercase tracking-wide">{f.type.replace('_', ' ')}</span>
-        {f.title && <span className="truncate max-w-md">· {f.title}</span>}
+      <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <span className="uppercase tracking-wide shrink-0">{f.type.replace('_', ' ')}</span>
+        {f.title && <span className="truncate text-slate-400">{f.title}</span>}
         {href && (
-          <a href={href} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300">
+          <a href={href} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300 shrink-0">
             source ↗
           </a>
         )}
       </div>
+      <p className={`text-sm text-slate-200 leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
+      {!preview && f.anchorQuote && (
+        <p className="mt-1.5 text-xs text-slate-400 italic border-l-2 border-teal-500/40 pl-2">
+          &ldquo;{f.anchorQuote}&rdquo;
+        </p>
+      )}
     </div>
   )
 }
@@ -144,9 +146,10 @@ function LabCard({ lab, profile }: { lab: LabDigest; profile: string }) {
 
       <div className="mt-4 space-y-3">
         {shown.map((f, i) => (
-          <FindingCard key={i} f={f} />
+          <FindingCard key={i} f={f} preview={!(expanded && full)} />
         ))}
       </div>
+      {expanded && full && <p className="mt-3 text-xs text-slate-500">{full.length} relevant papers/notes from this lab, most relevant first.</p>}
 
       {fullError && <p className="mt-2 text-xs text-red-400">{fullError}</p>}
 

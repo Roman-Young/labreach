@@ -16,15 +16,6 @@ function json(obj: unknown, status = 200): Response {
 }
 
 export async function POST(req: NextRequest) {
-  // Public cap is 3/hour to stop abuse, not to throttle the admin's own testing.
-  if (!checkAdminAuth(req)) {
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '127.0.0.1'
-    const { allowed } = await checkRateLimit(ip)
-    if (!allowed) {
-      return json({ error: 'Too many requests. Please wait an hour before trying again.' }, 429)
-    }
-  }
-
   let body: { profile?: string; topLabs?: number; labUrl?: string }
   try {
     body = await req.json()
@@ -41,12 +32,24 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // Stage B — a specific lab's full research, if a labUrl is given; otherwise Stage A browse.
+    // Stage B — a specific lab's full research. Part of one browsing session and a cheap
+    // single-lab read, so it is NOT rate-limited (expanding labs shouldn't burn the cap).
     if (body.labUrl) {
       const lab = await buildLabResearch(body.labUrl, profile)
       if (!lab) return json({ error: 'Lab not found.' }, 404)
       return json({ lab })
     }
+
+    // Stage A browse — the only rate-limited path. The digest is a ~free DB read (one embed + SQL),
+    // NOT the expensive LLM agent, so it gets its own generous bucket, not the agent's 3/hour.
+    if (!checkAdminAuth(req)) {
+      const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '127.0.0.1'
+      const { allowed } = await checkRateLimit(ip, { max: 30, bucket: 'digest' })
+      if (!allowed) {
+        return json({ error: 'Too many digests this hour. Please wait a bit before trying again.' }, 429)
+      }
+    }
+
     const topLabs = Math.min(Math.max(body.topLabs ?? 20, 1), 40)
     const labs = await buildDigest(profile, { topLabs })
     return json({ count: labs.length, labs })
