@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { checkAdminAuth } from '@/lib/admin-auth'
-import { buildDigest } from '@/lib/rag/digest'
+import { buildDigest, buildLabResearch } from '@/lib/rag/digest'
 
 // The research-digest endpoint (BUILD_STEPS Step 5) — the UCSD DB path. Given a student profile /
 // research interests, return a relevance-ordered, quote-backed per-lab digest from the ingested
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  let body: { profile?: string; topLabs?: number }
+  let body: { profile?: string; topLabs?: number; labUrl?: string }
   try {
     body = await req.json()
   } catch {
@@ -41,7 +41,13 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const topLabs = Math.min(Math.max(body.topLabs ?? 15, 1), 30)
+    // Stage B — a specific lab's full research, if a labUrl is given; otherwise Stage A browse.
+    if (body.labUrl) {
+      const lab = await buildLabResearch(body.labUrl, profile)
+      if (!lab) return json({ error: 'Lab not found.' }, 404)
+      return json({ lab })
+    }
+    const topLabs = Math.min(Math.max(body.topLabs ?? 20, 1), 40)
     const labs = await buildDigest(profile, { topLabs })
     return json({ count: labs.length, labs })
   } catch (err) {

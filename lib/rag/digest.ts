@@ -1,5 +1,5 @@
 import { requireSql } from '@/lib/db'
-import { retrieveLabs } from './retrieve'
+import { retrieveLabs, retrieveLabChunks } from './retrieve'
 
 // The research digest — THE PRODUCT (BUILD_STEPS Step 5). For a student's profile / interests,
 // return a relevance-ordered, per-lab digest of that lab's real, quote-backed findings, so the
@@ -42,9 +42,12 @@ const asRows = (r: unknown): Array<Record<string, unknown>> =>
 
 const str = (x: unknown): string | null => (typeof x === 'string' && x.trim() ? x : null)
 
+// STAGE A — the lab-browse surface. Rank LABS by fit and return a generous list (broad
+// connections included, ranked below direct ones), each with a small preview of its most
+// relevant findings. The student scans, then opens a lab for its full research (Stage B).
 export async function buildDigest(profile: string, opts: DigestOpts = {}): Promise<LabDigest[]> {
-  const topLabs = opts.topLabs ?? 15
-  const findingsPerLab = opts.findingsPerLab ?? 4
+  const topLabs = opts.topLabs ?? 20 // generous by design — the student filters, not us
+  const findingsPerLab = opts.findingsPerLab ?? 3 // just a preview here; Stage B shows all
 
   // Over-fetch labs: the explicit-no bar removes some, so retrieve a cushion and trim after.
   const labs = await retrieveLabs(profile, { topLabs: topLabs + 10, chunksPerLab: findingsPerLab })
@@ -88,4 +91,45 @@ export async function buildDigest(profile: string, opts: DigestOpts = {}): Promi
     if (digests.length >= topLabs) break
   }
   return digests
+}
+
+// STAGE B — the lab-detail surface. Once the student picks a lab, return MOST/ALL of its research
+// ranked by relevance to their profile, so they pick and choose what resonates (keeping their own
+// connection to it). Generous: a lab has ~19 chunks and we return up to maxFindings of them.
+export async function buildLabResearch(
+  labUrl: string,
+  profile: string,
+  opts: { maxFindings?: number } = {},
+): Promise<LabDigest | null> {
+  const maxFindings = opts.maxFindings ?? 40
+  const chunks = await retrieveLabChunks(profile, labUrl)
+
+  const sql = requireSql()
+  const rows = asRows(
+    await sql.query(
+      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting
+       FROM lab_profiles WHERE lab_url = $1`,
+      [labUrl],
+    ),
+  )
+  const m = rows[0]
+  if (!m) return null
+
+  return {
+    labUrl,
+    labName: str(m.lab_name),
+    piName: str(m.pi_name),
+    piEmail: str(m.pi_email),
+    department: str(m.department),
+    dataModality: str(m.data_modality),
+    recruiting: str(m.recruiting),
+    relevance: chunks[0]?.rrf ?? 0,
+    findings: chunks.slice(0, maxFindings).map((c) => ({
+      type: c.type,
+      title: c.title,
+      content: c.content,
+      anchorQuote: c.anchorQuote,
+      sourceId: c.sourceId,
+    })),
+  }
 }

@@ -83,8 +83,13 @@ function FindingCard({ f }: { f: DigestFinding }) {
   )
 }
 
-function LabCard({ lab }: { lab: LabDigest }) {
+function LabCard({ lab, profile }: { lab: LabDigest; profile: string }) {
   const [copied, setCopied] = useState(false)
+  const [full, setFull] = useState<DigestFinding[] | null>(null)
+  const [expanded, setExpanded] = useState(false)
+  const [loadingFull, setLoadingFull] = useState(false)
+  const [fullError, setFullError] = useState('')
+
   const copyEmail = () => {
     if (!lab.piEmail) return
     navigator.clipboard.writeText(lab.piEmail).then(() => {
@@ -92,6 +97,37 @@ function LabCard({ lab }: { lab: LabDigest }) {
       setTimeout(() => setCopied(false), 1500)
     })
   }
+
+  const toggleFull = async () => {
+    if (expanded) {
+      setExpanded(false)
+      return
+    }
+    if (full) {
+      setExpanded(true)
+      return
+    }
+    setLoadingFull(true)
+    setFullError('')
+    try {
+      const res = await fetch('/api/digest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile, labUrl: lab.labUrl }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Could not load the lab.')
+      setFull((data.lab as LabDigest).findings)
+      setExpanded(true)
+    } catch (e) {
+      setFullError(e instanceof Error ? e.message : 'Could not load the lab.')
+    } finally {
+      setLoadingFull(false)
+    }
+  }
+
+  const shown = expanded && full ? full : lab.findings
+
   return (
     <div className="bg-slate-900/60 border border-slate-700/60 rounded-xl p-5">
       <div className="flex items-start justify-between gap-3">
@@ -107,12 +143,17 @@ function LabCard({ lab }: { lab: LabDigest }) {
       </div>
 
       <div className="mt-4 space-y-3">
-        {lab.findings.map((f, i) => (
+        {shown.map((f, i) => (
           <FindingCard key={i} f={f} />
         ))}
       </div>
 
+      {fullError && <p className="mt-2 text-xs text-red-400">{fullError}</p>}
+
       <div className="mt-4 pt-3 border-t border-slate-800 flex items-center gap-3 flex-wrap">
+        <button onClick={toggleFull} disabled={loadingFull} className="text-xs text-teal-400 hover:text-teal-300 disabled:opacity-50">
+          {loadingFull ? 'Loading…' : expanded ? '↑ Show less' : 'Show all relevant research →'}
+        </button>
         <a href={lab.labUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-teal-300">
           lab page ↗
         </a>
@@ -128,6 +169,7 @@ function LabCard({ lab }: { lab: LabDigest }) {
 
 export default function DigestPage() {
   const [profileText, setProfileText] = useState('')
+  const [submittedProfile, setSubmittedProfile] = useState('')
   const [hasSaved, setHasSaved] = useState(false)
   const [labs, setLabs] = useState<LabDigest[] | null>(null)
   const [loading, setLoading] = useState(false)
@@ -167,6 +209,7 @@ export default function DigestPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong.')
       setLabs(data.labs as LabDigest[])
+      setSubmittedProfile(profile)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.')
     } finally {
@@ -213,7 +256,7 @@ export default function DigestPage() {
           </p>
           <div className="space-y-4">
             {labs.map((lab) => (
-              <LabCard key={lab.labUrl} lab={lab} />
+              <LabCard key={lab.labUrl} lab={lab} profile={submittedProfile} />
             ))}
           </div>
         </section>

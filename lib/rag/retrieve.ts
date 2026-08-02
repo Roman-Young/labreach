@@ -55,6 +55,8 @@ export interface RetrieveOpts {
 export interface RetrieveLabsOpts extends RetrieveOpts {
   topLabs?: number
   chunksPerLab?: number
+  scoreTopN?: number
+  scoreDecay?: number
 }
 
 const asRows = (r: unknown): Array<Record<string, unknown>> =>
@@ -130,6 +132,19 @@ export async function retrieveChunks(query: string, opts: RetrieveOpts = {}): Pr
     ),
   )
 
+  return fuseRankings(denseRows, sparseRows, k, wDense, wSparse)
+}
+
+// Reciprocal Rank Fusion of two rank-ordered candidate lists into one RRF-scored chunk list
+// (best first). Each list's row order IS its rank. Shared by the cross-lab search and the
+// single-lab detail path so both fuse identically.
+function fuseRankings(
+  denseRows: Array<Record<string, unknown>>,
+  sparseRows: Array<Record<string, unknown>>,
+  k: number,
+  wDense: number,
+  wSparse: number,
+): RetrievedChunk[] {
   const fused = new Map<number, RetrievedChunk>()
   const bump = (rows: Array<Record<string, unknown>>, arm: 'dense' | 'sparse', w: number): void => {
     rows.forEach((r, i) => {
@@ -147,17 +162,66 @@ export async function retrieveChunks(query: string, opts: RetrieveOpts = {}): Pr
   }
   bump(denseRows, 'dense', wDense)
   bump(sparseRows, 'sparse', wSparse)
-
   return [...fused.values()].sort((a, b) => b.rrf - a.rrf)
 }
 
-// Aggregate fused chunks up to LAB level by max-passage (a lab's score = its single best
-// chunk). Max is deliberately volume-neutral: a 40-paper lab gets no free boost over an
-// 8-paper lab, which sum/mean pooling would hand it. Upgrade to top-n-mean only if
-// spot-checks show single-chunk flukes.
+// Rank ALL of ONE lab's chunks against the query (Stage B — the lab-detail surface). A lab has
+// ~19 chunks, so this is exact (no ANN, no candidate cap): dense = every embedded chunk ordered
+// by cosine, sparse = the lab's chunks matching the OR-tsquery, fused by RRF. Returns the whole
+// lab's research ordered by relevance so the student can pick and choose — generous by design.
+export async function retrieveLabChunks(
+  query: string,
+  labUrl: string,
+  opts: RetrieveOpts = {},
+): Promise<RetrievedChunk[]> {
+  const sql = requireSql()
+  const k = opts.k ?? RRF_K
+  const wDense = opts.wDense ?? 1
+  const wSparse = opts.wSparse ?? 1
+
+  const qvec = await embedQuery(query)
+  const vec = `[${qvec.join(',')}]`
+
+  const denseRows = asRows(
+    await sql.query(
+      `SELECT ${SELECT_COLS}
+       FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url = lc.lab_url
+       WHERE lc.lab_url = $1 AND lc.embedding IS NOT NULL
+       ORDER BY lc.embedding <=> $2::vector`,
+      [labUrl, vec],
+    ),
+  )
+  const sparseRows = asRows(
+    await sql.query(
+      `WITH q AS (
+         SELECT to_tsquery('english', array_to_string(tsvector_to_array(to_tsvector('english', $2)), ' | ')) AS tsq
+       )
+       SELECT ${SELECT_COLS}
+       FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url = lc.lab_url, q
+       WHERE lc.lab_url = $1 AND lc.content_tsv @@ q.tsq
+       ORDER BY ts_rank_cd(lc.content_tsv, q.tsq) DESC`,
+      [labUrl, query],
+    ),
+  )
+  return fuseRankings(denseRows, sparseRows, k, wDense, wSparse)
+}
+
+// Aggregate fused chunks up to LAB level by DECAY-WEIGHTED sum of a lab's best chunks:
+//   score = Σ_i rrf_i · decay^i   (chunks sorted best-first, i = 0,1,2…, capped at scoreTopN)
+// This is the middle ground between the two extremes, each of which fails:
+//   • max-passage (decay=0): a lab = its single best chunk → scores too FLAT at the top to
+//     separate direct fits from broad ones, and a single tangential keyword hit ties a real fit.
+//   • plain sum (decay=1): rewards breadth of hits, but BURIES a focused specialist (few but
+//     bullseye papers, e.g. the DNA-mismatch-repair lab) under labs with more moderate hits.
+// Decay (~0.5) gives the best chunk full weight — so a sharp 1–2 paper bullseye stays competitive
+// — while extra relevant papers add a diminishing DEPTH bonus, so genuinely-in-the-area labs
+// still outrank one-keyword labs. Bounded at scoreTopN so it rewards *relevant* depth, never raw
+// paper volume. (Ordering rule: direct connections above broad ones; the reference product spec.)
 export async function retrieveLabs(query: string, opts: RetrieveLabsOpts = {}): Promise<RetrievedLab[]> {
   const topLabs = opts.topLabs ?? 10
   const chunksPerLab = opts.chunksPerLab ?? 3
+  const scoreTopN = opts.scoreTopN ?? 5
+  const decay = opts.scoreDecay ?? 0.5
   const chunks = await retrieveChunks(query, opts)
 
   const byLab = new Map<string, RetrievedChunk[]>()
@@ -169,11 +233,12 @@ export async function retrieveLabs(query: string, opts: RetrieveLabsOpts = {}): 
 
   const labs: RetrievedLab[] = [...byLab.entries()].map(([labUrl, cs]) => {
     cs.sort((a, b) => b.rrf - a.rrf)
+    const score = cs.slice(0, scoreTopN).reduce((s, c, i) => s + c.rrf * Math.pow(decay, i), 0)
     return {
       labUrl,
       piName: cs[0].piName,
       department: cs[0].department,
-      score: cs[0].rrf, // max-passage
+      score,
       hitCount: cs.length,
       topChunks: cs.slice(0, chunksPerLab),
     }
