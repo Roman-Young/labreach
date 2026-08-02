@@ -1,0 +1,91 @@
+import { requireSql } from '@/lib/db'
+import { retrieveLabs } from './retrieve'
+
+// The research digest — THE PRODUCT (BUILD_STEPS Step 5). For a student's profile / interests,
+// return a relevance-ordered, per-lab digest of that lab's real, quote-backed findings, so the
+// student can decide who to email. This is DELIBERATELY deterministic assembly of the findings
+// already extracted at ingest time — NOT a fresh LLM composition. That is the project's spine:
+// "batch the research, never batch the authorship" (reference/labreach.md §8). We retrieve the
+// most relevant quote-backed chunks and hand them back as notes; the student writes the email.
+//
+// The ONLY hard bar is a lab that explicitly declines undergrads (recruiting = 'explicit_no').
+// Everything else is shown; ordering is by retrieval relevance (an optional ranker sort is Step 6,
+// not this layer).
+
+export interface DigestFinding {
+  type: string // 'paper' | 'overview' | 'future_direction'
+  title: string | null
+  content: string // the woven did/found/used/why summary (the readable finding)
+  anchorQuote: string | null // verbatim source quote backing it (grounding)
+  sourceId: string | null // DOI/PMID when known
+}
+
+export interface LabDigest {
+  labUrl: string
+  labName: string | null
+  piName: string | null
+  piEmail: string | null
+  department: string | null
+  dataModality: string | null // 'wet' | 'dry' | 'mixed'
+  recruiting: string | null // 'open' | 'unknown' ('explicit_no' is barred out entirely)
+  relevance: number // retrieval score (max-passage RRF) — for ordering/debug, not shown raw
+  findings: DigestFinding[]
+}
+
+export interface DigestOpts {
+  topLabs?: number
+  findingsPerLab?: number
+}
+
+const asRows = (r: unknown): Array<Record<string, unknown>> =>
+  (Array.isArray(r) ? r : ((r as { rows?: unknown[] }).rows ?? [])) as Array<Record<string, unknown>>
+
+const str = (x: unknown): string | null => (typeof x === 'string' && x.trim() ? x : null)
+
+export async function buildDigest(profile: string, opts: DigestOpts = {}): Promise<LabDigest[]> {
+  const topLabs = opts.topLabs ?? 15
+  const findingsPerLab = opts.findingsPerLab ?? 4
+
+  // Over-fetch labs: the explicit-no bar removes some, so retrieve a cushion and trim after.
+  const labs = await retrieveLabs(profile, { topLabs: topLabs + 10, chunksPerLab: findingsPerLab })
+  if (labs.length === 0) return []
+
+  // One round-trip for the card metadata of every candidate lab. recruiting is the hard bar;
+  // the rest fills the card. (ANY($1) keeps it a single parameterized query.)
+  const sql = requireSql()
+  const urls = labs.map((l) => l.labUrl)
+  const metaRows = asRows(
+    await sql.query(
+      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting
+       FROM lab_profiles WHERE lab_url = ANY($1)`,
+      [urls],
+    ),
+  )
+  const meta = new Map(metaRows.map((r) => [String(r.lab_url), r]))
+
+  const digests: LabDigest[] = []
+  for (const lab of labs) {
+    const m = meta.get(lab.labUrl)
+    if (!m) continue
+    if (m.recruiting === 'explicit_no') continue // THE hard bar — declines undergrads, never shown
+    digests.push({
+      labUrl: lab.labUrl,
+      labName: str(m.lab_name),
+      piName: str(m.pi_name) ?? lab.piName,
+      piEmail: str(m.pi_email),
+      department: str(m.department) ?? lab.department,
+      dataModality: str(m.data_modality),
+      recruiting: str(m.recruiting),
+      relevance: lab.score,
+      findings: lab.topChunks.map((c) => ({
+        type: c.type,
+        title: c.title,
+        content: c.content,
+        anchorQuote: c.anchorQuote,
+        sourceId: c.sourceId,
+      })),
+    })
+    if (digests.length >= topLabs) break
+  }
+  return digests
+}
