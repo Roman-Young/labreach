@@ -42,6 +42,17 @@ function profileToText(p: Partial<StudentProfile>): string {
   return parts.filter(Boolean).join('. ').trim()
 }
 
+// Strip HTML-tag remnants that leaked into paper titles at ingest: the angle brackets were
+// removed but the tag names survived (e.g. "CD8<sup>+</sup>" → "CD8 sup + /sup"). Only rewrites a
+// matched open+close pair (backreference), keeping the inner content, so real words are never lost.
+function cleanTitle(t: string | null): string | null {
+  if (!t) return null
+  return t
+    .replace(/\b(sup|sub|sc|i|b|em|strong)\b\s+(.+?)\s+\/\1\b/g, '$2')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
+
 // DOI (has a slash) → doi.org; all-digits → PubMed; otherwise no link.
 function sourceHref(id: string | null): string | null {
   if (!id) return null
@@ -68,7 +79,7 @@ function FindingCard({ f, preview }: { f: DigestFinding; preview?: boolean }) {
     <div className="border-l-2 border-slate-700 pl-3 py-1">
       <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
         <span className="uppercase tracking-wide shrink-0">{f.type.replace('_', ' ')}</span>
-        {f.title && <span className="truncate text-slate-400">{f.title}</span>}
+        {f.title && <span className="truncate text-slate-400">{cleanTitle(f.title)}</span>}
         {href && (
           <a href={href} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300 shrink-0">
             source ↗
