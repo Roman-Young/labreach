@@ -10,6 +10,29 @@ import type { StudentProfile } from '@/types'
 
 const STORAGE_KEY = 'labreach_profile' // shared with the home profile form
 
+// Interest areas derived from the DB's actual research_areas vocabulary, so every one is
+// guaranteed to return labs. This is the FLOOR everyone stands on — a student with no experience
+// still gets relevant labs by picking a few; the resume (if any) personalizes on top.
+const INTERESTS = [
+  'Cancer & oncology',
+  'Immunology & immunotherapy',
+  'Microbiome & infectious disease',
+  'Neuroscience & neurodegeneration',
+  'Stem cells & regenerative medicine',
+  'Developmental biology',
+  'Genetics, genomics & epigenetics',
+  'Computational biology / bioinformatics / ML',
+  'Structural biology & biophysics',
+  'Biochemistry & chemical biology',
+  'Drug discovery & pharmacology',
+  'Cardiovascular & metabolic disease',
+  'Aging',
+  'Synthetic biology & bioengineering',
+  'Systems biology',
+  'Ecology & evolution',
+  'Public health / clinical informatics',
+]
+
 interface DigestFinding {
   type: string
   title: string | null
@@ -96,7 +119,7 @@ function FindingCard({ f, preview }: { f: DigestFinding; preview?: boolean }) {
   )
 }
 
-function LabCard({ lab, profile }: { lab: LabDigest; profile: string }) {
+function LabCard({ lab, query }: { lab: LabDigest; query: string }) {
   const [copied, setCopied] = useState(false)
   const [full, setFull] = useState<DigestFinding[] | null>(null)
   const [expanded, setExpanded] = useState(false)
@@ -126,7 +149,7 @@ function LabCard({ lab, profile }: { lab: LabDigest; profile: string }) {
       const res = await fetch('/api/digest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile, labUrl: lab.labUrl }),
+        body: JSON.stringify({ profile: query, labUrl: lab.labUrl }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Could not load the lab.')
@@ -183,11 +206,15 @@ function LabCard({ lab, profile }: { lab: LabDigest; profile: string }) {
 
 export default function DigestPage() {
   const [profileText, setProfileText] = useState('')
-  const [submittedProfile, setSubmittedProfile] = useState('')
+  const [interests, setInterests] = useState<string[]>([])
+  const [effectiveQuery, setEffectiveQuery] = useState('')
   const [hasSaved, setHasSaved] = useState(false)
   const [labs, setLabs] = useState<LabDigest[] | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const toggleInterest = (i: string) =>
+    setInterests((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]))
 
   useEffect(() => {
     try {
@@ -207,8 +234,8 @@ export default function DigestPage() {
 
   const submit = async () => {
     const profile = profileText.trim()
-    if (!profile) {
-      setError('Describe your research interests and background first.')
+    if (!profile && interests.length === 0) {
+      setError('Pick a few interests, or paste your resume / experience — either works.')
       return
     }
     setLoading(true)
@@ -218,12 +245,12 @@ export default function DigestPage() {
       const res = await fetch('/api/digest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile }),
+        body: JSON.stringify({ profile, interests }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong.')
       setLabs(data.labs as LabDigest[])
-      setSubmittedProfile(profile)
+      setEffectiveQuery((data.query as string) ?? profile) // the distilled query — reused for lab expand
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.')
     } finally {
@@ -242,11 +269,34 @@ export default function DigestPage() {
       </header>
 
       <div className="bg-slate-900/60 border border-slate-700/60 rounded-xl p-4">
+        <p className="text-sm font-medium text-slate-300 mb-2">What are you interested in?</p>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {INTERESTS.map((i) => {
+            const on = interests.includes(i)
+            return (
+              <button
+                key={i}
+                onClick={() => toggleInterest(i)}
+                className={`px-2.5 py-1 text-xs rounded-full border transition-colors ${
+                  on
+                    ? 'bg-teal-500/20 text-teal-200 border-teal-500/50'
+                    : 'bg-slate-800 text-slate-400 border-slate-600 hover:border-slate-500'
+                }`}
+              >
+                {i}
+              </button>
+            )
+          })}
+        </div>
+
+        <p className="text-sm font-medium text-slate-300 mb-1">
+          Paste your resume or experience <span className="text-slate-500 font-normal">— optional, sharpens the match</span>
+        </p>
         <textarea
           value={profileText}
           onChange={(e) => setProfileText(e.target.value)}
           rows={5}
-          placeholder="e.g. 2nd-year bioinformatics major. I've run flow cytometry on gut immune cells and done some Python scRNA-seq analysis. Interested in mucosal immunology, the microbiome, and computational genomics."
+          placeholder="Paste your whole resume, or just describe your research experience — e.g. flow cytometry on gut immune cells, scRNA-seq in R/Seurat, a peptide-matching pipeline. We pull out the research-relevant parts automatically."
           className="w-full px-3 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 resize-y"
         />
         <div className="mt-3 flex items-center justify-between">
@@ -265,12 +315,18 @@ export default function DigestPage() {
 
       {labs && (
         <section className="mt-8">
-          <p className="text-sm text-slate-400 mb-4">
-            {labs.length > 0 ? `${labs.length} labs, most relevant first` : 'No matching labs — try describing your interests differently.'}
+          <p className="text-sm text-slate-400 mb-1">
+            {labs.length > 0 ? `${labs.length} labs, most relevant first` : 'No matching labs — try adding a few interests.'}
           </p>
+          {effectiveQuery && labs.length > 0 && (
+            <details className="mb-4 text-xs text-slate-500">
+              <summary className="cursor-pointer hover:text-slate-400">what we matched on</summary>
+              <p className="mt-1 italic text-slate-500">{effectiveQuery}</p>
+            </details>
+          )}
           <div className="space-y-4">
             {labs.map((lab) => (
-              <LabCard key={lab.labUrl} lab={lab} profile={submittedProfile} />
+              <LabCard key={lab.labUrl} lab={lab} query={effectiveQuery} />
             ))}
           </div>
         </section>
