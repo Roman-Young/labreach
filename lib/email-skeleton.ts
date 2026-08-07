@@ -33,7 +33,7 @@ export const BANNER =
 // fine and the student verifies it.
 function lastName(pi: string | null): string {
   if (!pi) return '[PI last name]'
-  let s = pi.replace(/,?\s*(ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|dds|sc\.?d\.?|fasco)\.?/gi, '').trim()
+  const s = pi.replace(/,?\s*(ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|dds|sc\.?d\.?|fasco)\.?/gi, '').trim()
   if (s.includes(',')) return s.split(',')[0].trim() // "Lastname, First" → Lastname
   const toks = s.split(/\s+/).filter(Boolean)
   return toks.length ? toks[toks.length - 1] : pi
