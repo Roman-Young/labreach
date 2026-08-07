@@ -1,18 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { StudentProfile } from '@/types'
+import { useDigest, type LabDigest } from './shared'
 
-// The research-digest feed (BUILD_STEPS Step 5.3) — the product surface. Student describes their
-// interests/background → POST /api/digest → a relevance-ordered, quote-backed per-lab digest of
-// real UCSD bio labs (explicit-no labs already barred server-side). It deliberately does NOT write
-// or draft an email — "batch the research, never batch the authorship" (reference/labreach.md §8).
+// Page 1 — intake. Collect who they are + what they're into, RAG, then go to the lab list. The
+// interest chips are the FLOOR (a no-experience student still gets labs); the resume is optional
+// and sharpens the match (it's distilled to research signal server-side).
 
-const STORAGE_KEY = 'labreach_profile' // shared with the home profile form
-
-// Interest areas derived from the DB's actual research_areas vocabulary, so every one is
-// guaranteed to return labs. This is the FLOOR everyone stands on — a student with no experience
-// still gets relevant labs by picking a few; the resume (if any) personalizes on top.
+const STORAGE_KEY = 'labreach_profile' // shared with the older home form
+const YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Other']
 const INTERESTS = [
   'Cancer & oncology',
   'Immunology & immunotherapy',
@@ -33,227 +31,61 @@ const INTERESTS = [
   'Public health / clinical informatics',
 ]
 
-interface DigestFinding {
-  type: string
-  title: string | null
-  content: string
-  anchorQuote: string | null
-  sourceId: string | null
-}
-interface LabDigest {
-  labUrl: string
-  labName: string | null
-  piName: string | null
-  piEmail: string | null
-  department: string | null
-  dataModality: string | null
-  recruiting: string | null
-  relevance: number
-  findings: DigestFinding[]
-}
+const inputClass =
+  'w-full px-3 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500'
 
-// Compose a free-text query from a saved StudentProfile so the digest continues from the home form.
-function profileToText(p: Partial<StudentProfile>): string {
-  const parts = [
-    p.major ? `${p.major} major` : '',
-    p.interests?.length ? `Interested in: ${p.interests.join(', ')}` : '',
-    p.otherInterest ?? '',
-    p.relevantExperience ? `Experience: ${p.relevantExperience}` : '',
-    p.relevantCourses ? `Coursework: ${p.relevantCourses}` : '',
-    p.whyResearch ?? '',
-  ]
-  return parts.filter(Boolean).join('. ').trim()
-}
+export default function IntakePage() {
+  const router = useRouter()
+  const { profile, setProfile, setResults } = useDigest()
 
-// Strip HTML-tag remnants that leaked into paper titles at ingest: the angle brackets were
-// removed but the tag names survived (e.g. "CD8<sup>+</sup>" → "CD8 sup + /sup"). Only rewrites a
-// matched open+close pair (backreference), keeping the inner content, so real words are never lost.
-function cleanTitle(t: string | null): string | null {
-  if (!t) return null
-  return t
-    .replace(/\b(sup|sub|sc|i|b|em|strong)\b\s+(.+?)\s+\/\1\b/g, '$2')
-    .replace(/\s{2,}/g, ' ')
-    .trim()
-}
-
-// DOI (has a slash) → doi.org; all-digits → PubMed; otherwise no link.
-function sourceHref(id: string | null): string | null {
-  if (!id) return null
-  if (id.includes('/')) return `https://doi.org/${id}`
-  if (/^\d+$/.test(id)) return `https://pubmed.ncbi.nlm.nih.gov/${id}`
-  return null
-}
-
-function Badge({ children, tone }: { children: React.ReactNode; tone: 'teal' | 'green' | 'slate' | 'amber' }) {
-  const tones = {
-    teal: 'bg-teal-500/10 text-teal-300 border-teal-500/30',
-    green: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
-    slate: 'bg-slate-700/40 text-slate-400 border-slate-600/50',
-    amber: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
-  }
-  return <span className={`inline-block px-2 py-0.5 text-xs rounded-full border ${tones[tone]}`}>{children}</span>
-}
-
-// preview=true (browse): title-led, summary clamped to 2 lines, quote hidden — scannable.
-// preview=false (expanded lab detail): the full summary + verbatim quote.
-function FindingCard({ f, preview }: { f: DigestFinding; preview?: boolean }) {
-  const href = sourceHref(f.sourceId)
-  return (
-    <div className="border-l-2 border-slate-700 pl-3 py-1">
-      <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-        <span className="uppercase tracking-wide shrink-0">{f.type.replace('_', ' ')}</span>
-        {f.title && <span className="truncate text-slate-400">{cleanTitle(f.title)}</span>}
-        {href && (
-          <a href={href} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300 shrink-0">
-            source ↗
-          </a>
-        )}
-      </div>
-      <p className={`text-sm text-slate-200 leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
-      {!preview && f.anchorQuote && (
-        <p className="mt-1.5 text-xs text-slate-400 italic border-l-2 border-teal-500/40 pl-2">
-          &ldquo;{f.anchorQuote}&rdquo;
-        </p>
-      )}
-    </div>
-  )
-}
-
-function LabCard({ lab, query }: { lab: LabDigest; query: string }) {
-  const [copied, setCopied] = useState(false)
-  const [full, setFull] = useState<DigestFinding[] | null>(null)
-  const [expanded, setExpanded] = useState(false)
-  const [loadingFull, setLoadingFull] = useState(false)
-  const [fullError, setFullError] = useState('')
-
-  const copyEmail = () => {
-    if (!lab.piEmail) return
-    navigator.clipboard.writeText(lab.piEmail).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
-    })
-  }
-
-  const toggleFull = async () => {
-    if (expanded) {
-      setExpanded(false)
-      return
-    }
-    if (full) {
-      setExpanded(true)
-      return
-    }
-    setLoadingFull(true)
-    setFullError('')
-    try {
-      const res = await fetch('/api/digest', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile: query, labUrl: lab.labUrl }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Could not load the lab.')
-      setFull((data.lab as LabDigest).findings)
-      setExpanded(true)
-    } catch (e) {
-      setFullError(e instanceof Error ? e.message : 'Could not load the lab.')
-    } finally {
-      setLoadingFull(false)
-    }
-  }
-
-  const shown = expanded && full ? full : lab.findings
-
-  return (
-    <div className="bg-slate-900/60 border border-slate-700/60 rounded-xl p-5">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="text-lg font-semibold text-teal-300">{lab.piName ?? lab.labName ?? 'Lab'}</h3>
-          {lab.labName && lab.labName !== lab.piName && <p className="text-sm text-slate-400">{lab.labName}</p>}
-          <p className="text-xs text-slate-500 mt-0.5">{lab.department}</p>
-        </div>
-        <div className="flex flex-col items-end gap-1 shrink-0">
-          {lab.recruiting === 'open' && <Badge tone="green">recruiting: open</Badge>}
-          {lab.dataModality && <Badge tone={lab.dataModality === 'wet' ? 'teal' : lab.dataModality === 'dry' ? 'amber' : 'slate'}>{lab.dataModality} lab</Badge>}
-        </div>
-      </div>
-
-      <div className="mt-4 space-y-3">
-        {shown.map((f, i) => (
-          <FindingCard key={i} f={f} preview={!(expanded && full)} />
-        ))}
-      </div>
-      {expanded && full && <p className="mt-3 text-xs text-slate-500">{full.length} relevant papers/notes from this lab, most relevant first.</p>}
-
-      {fullError && <p className="mt-2 text-xs text-red-400">{fullError}</p>}
-
-      <div className="mt-4 pt-3 border-t border-slate-800 flex items-center gap-3 flex-wrap">
-        <button onClick={toggleFull} disabled={loadingFull} className="text-xs text-teal-400 hover:text-teal-300 disabled:opacity-50">
-          {loadingFull ? 'Loading…' : expanded ? '↑ Show less' : 'Show all relevant research →'}
-        </button>
-        <a href={lab.labUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-teal-300">
-          lab page ↗
-        </a>
-        {lab.piEmail && (
-          <button onClick={copyEmail} className="text-xs font-mono text-slate-300 hover:text-teal-300">
-            {copied ? '✓ copied' : `${lab.piEmail} ⧉`}
-          </button>
-        )}
-      </div>
-    </div>
-  )
-}
-
-export default function DigestPage() {
-  const [profileText, setProfileText] = useState('')
-  const [interests, setInterests] = useState<string[]>([])
-  const [effectiveQuery, setEffectiveQuery] = useState('')
-  const [hasSaved, setHasSaved] = useState(false)
-  const [labs, setLabs] = useState<LabDigest[] | null>(null)
+  const [name, setName] = useState(profile.name)
+  const [year, setYear] = useState(profile.year)
+  const [major, setMajor] = useState(profile.major)
+  const [interests, setInterests] = useState<string[]>(profile.interests)
+  const [resume, setResume] = useState(profile.resume)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const toggleInterest = (i: string) =>
-    setInterests((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]))
-
+  // One-time prefill from the older home profile form, if this flow has no state yet.
   useEffect(() => {
+    if (profile.name || profile.interests.length || profile.resume) return
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) {
-        const saved = JSON.parse(raw) as Partial<StudentProfile>
-        const text = profileToText(saved)
-        if (text) {
-          setProfileText(text)
-          setHasSaved(true)
-        }
-      }
+      if (!raw) return
+      const s = JSON.parse(raw) as Partial<StudentProfile>
+      if (s.name) setName(s.name)
+      if (s.year) setYear(s.year)
+      if (s.major) setMajor(s.major)
+      if (s.interests?.length) setInterests(s.interests.filter((i) => INTERESTS.includes(i)))
+      const exp = [s.relevantExperience, s.relevantCourses, s.whyResearch].filter(Boolean).join('. ')
+      if (exp) setResume(exp)
     } catch {
-      /* ignore malformed saved profile */
+      /* ignore */
     }
-  }, [])
+  }, [profile])
+
+  const toggle = (i: string) => setInterests((p) => (p.includes(i) ? p.filter((x) => x !== i) : [...p, i]))
 
   const submit = async () => {
-    const profile = profileText.trim()
-    if (!profile && interests.length === 0) {
+    if (!resume.trim() && interests.length === 0) {
       setError('Pick a few interests, or paste your resume / experience — either works.')
       return
     }
     setLoading(true)
     setError('')
-    setLabs(null)
+    setProfile({ name, year, major, interests, resume })
     try {
       const res = await fetch('/api/digest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile, interests }),
+        body: JSON.stringify({ profile: resume, interests }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong.')
-      setLabs(data.labs as LabDigest[])
-      setEffectiveQuery((data.query as string) ?? profile) // the distilled query — reused for lab expand
+      setResults((data.query as string) ?? resume, data.labs as LabDigest[])
+      router.push('/digest/labs')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.')
-    } finally {
       setLoading(false)
     }
   }
@@ -263,74 +95,70 @@ export default function DigestPage() {
       <header className="mb-8">
         <h1 className="text-2xl font-bold text-white">Research Digest</h1>
         <p className="text-sm text-slate-400 mt-1">
-          Every UCSD lab, pre-researched. Describe what you&rsquo;re into — get each lab&rsquo;s real, quote-backed
-          work, ordered by fit. You decide who to email; LabReach never writes it for you.
+          Every UCSD lab, pre-researched. Tell us about you, get each lab&rsquo;s real, quote-backed work ordered by
+          fit, and pick who to email — LabReach never writes it for you.
         </p>
       </header>
 
-      <div className="bg-slate-900/60 border border-slate-700/60 rounded-xl p-4">
-        <p className="text-sm font-medium text-slate-300 mb-2">What are you interested in?</p>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {INTERESTS.map((i) => {
-            const on = interests.includes(i)
-            return (
-              <button
-                key={i}
-                onClick={() => toggleInterest(i)}
-                className={`px-2.5 py-1 text-xs rounded-full border transition-colors ${
-                  on
-                    ? 'bg-teal-500/20 text-teal-200 border-teal-500/50'
-                    : 'bg-slate-800 text-slate-400 border-slate-600 hover:border-slate-500'
-                }`}
-              >
-                {i}
-              </button>
-            )
-          })}
+      <div className="bg-slate-900/60 border border-slate-700/60 rounded-xl p-4 space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input className={inputClass} placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} />
+          <select className={inputClass} value={year} onChange={(e) => setYear(e.target.value)}>
+            <option value="">Year…</option>
+            {YEARS.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+          <input className={inputClass} placeholder="Major" value={major} onChange={(e) => setMajor(e.target.value)} />
         </div>
 
-        <p className="text-sm font-medium text-slate-300 mb-1">
-          Paste your resume or experience <span className="text-slate-500 font-normal">— optional, sharpens the match</span>
-        </p>
-        <textarea
-          value={profileText}
-          onChange={(e) => setProfileText(e.target.value)}
-          rows={5}
-          placeholder="Paste your whole resume, or just describe your research experience — e.g. flow cytometry on gut immune cells, scRNA-seq in R/Seurat, a peptide-matching pipeline. We pull out the research-relevant parts automatically."
-          className="w-full px-3 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 resize-y"
-        />
-        <div className="mt-3 flex items-center justify-between">
-          <span className="text-xs text-slate-500">{hasSaved ? 'Pre-filled from your saved profile — edit freely.' : ''}</span>
+        <div>
+          <p className="text-sm font-medium text-slate-300 mb-2">What are you interested in?</p>
+          <div className="flex flex-wrap gap-2">
+            {INTERESTS.map((i) => {
+              const on = interests.includes(i)
+              return (
+                <button
+                  key={i}
+                  onClick={() => toggle(i)}
+                  className={`px-2.5 py-1 text-xs rounded-full border transition-colors ${
+                    on ? 'bg-teal-500/20 text-teal-200 border-teal-500/50' : 'bg-slate-800 text-slate-400 border-slate-600 hover:border-slate-500'
+                  }`}
+                >
+                  {i}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        <div>
+          <p className="text-sm font-medium text-slate-300 mb-1">
+            Paste your resume or experience <span className="text-slate-500 font-normal">— optional, sharpens the match</span>
+          </p>
+          <textarea
+            value={resume}
+            onChange={(e) => setResume(e.target.value)}
+            rows={5}
+            placeholder="Paste your whole resume, or just describe your research experience — e.g. flow cytometry on gut immune cells, scRNA-seq in R/Seurat, a peptide-matching pipeline. We pull out the research-relevant parts automatically."
+            className={`${inputClass} resize-y`}
+          />
+        </div>
+
+        <div className="flex items-center justify-end">
           <button
             onClick={submit}
             disabled={loading}
             className="px-4 py-2 bg-teal-600 hover:bg-teal-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg"
           >
-            {loading ? 'Building your digest…' : 'Get my digest'}
+            {loading ? 'Finding labs…' : 'Find my labs →'}
           </button>
         </div>
       </div>
 
       {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
-
-      {labs && (
-        <section className="mt-8">
-          <p className="text-sm text-slate-400 mb-1">
-            {labs.length > 0 ? `${labs.length} labs, most relevant first` : 'No matching labs — try adding a few interests.'}
-          </p>
-          {effectiveQuery && labs.length > 0 && (
-            <details className="mb-4 text-xs text-slate-500">
-              <summary className="cursor-pointer hover:text-slate-400">what we matched on</summary>
-              <p className="mt-1 italic text-slate-500">{effectiveQuery}</p>
-            </details>
-          )}
-          <div className="space-y-4">
-            {labs.map((lab) => (
-              <LabCard key={lab.labUrl} lab={lab} query={effectiveQuery} />
-            ))}
-          </div>
-        </section>
-      )}
     </main>
   )
 }
