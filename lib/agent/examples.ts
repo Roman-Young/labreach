@@ -1,5 +1,5 @@
 import { kvGet, KV_KEYS } from '@/lib/kv'
-import type { TrainingSession, SessionEntry } from '@/app/api/admin/sessions/route'
+import type { TrainingSession, SessionEntry } from './training-types'
 import type { StudentProfile } from '@/types'
 
 export interface TrainingArc {

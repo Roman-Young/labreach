@@ -34,6 +34,30 @@ page.on('pageerror', (e) => errs.push('pageerror: ' + e.message))
 const path = () => new URL(page.url()).pathname
 
 try {
+  // ── SECURITY (regression) — assert the launch-hardening holds so it can't silently revert ──
+  console.log('\n— SECURITY —')
+  const postJson = (p, obj) =>
+    fetch(B + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(obj) })
+
+  const hdr = await fetch(B + '/digest')
+  ok(hdr.headers.get('x-frame-options') === 'DENY', 'X-Frame-Options: DENY present')
+  ok(hdr.headers.get('x-content-type-options') === 'nosniff', 'X-Content-Type-Options: nosniff present')
+  ok(!!hdr.headers.get('strict-transport-security'), 'HSTS header present')
+  ok(!!hdr.headers.get('referrer-policy'), 'Referrer-Policy header present')
+
+  // input caps on the one live LLM-cost route: oversized array is bounded (not crashed/unbounded),
+  // and an over-long profile is rejected BEFORE any model call.
+  const oversized = await postJson('/api/digest', { interests: Array(500).fill('immunology') })
+  ok(oversized.status === 200, `oversized interests array handled, not crashed (got ${oversized.status})`)
+  const longProfile = await postJson('/api/digest', { profile: 'a'.repeat(13000) })
+  ok(longProfile.status === 400, `over-long profile rejected pre-LLM (got ${longProfile.status})`)
+
+  // the retired writer/calibration routes must stay gone — attack surface stays reduced.
+  for (const dead of ['/api/refine', '/api/research', '/api/re-evaluate', '/api/admin/sessions']) {
+    const r = await postJson(dead, {})
+    ok(r.status === 404, `${dead} is retired (got ${r.status})`)
+  }
+
   console.log('\n— EDGE CASES —')
   await page.goto(B + '/digest/compose', { waitUntil: 'networkidle' })
   await page.waitForTimeout(1200)

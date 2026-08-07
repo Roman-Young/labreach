@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { kvGet, kvSet, KV_KEYS } from '@/lib/kv'
 import { withRetry } from '@/lib/retry'
-import type { TrainingSession } from '@/app/api/admin/sessions/route'
+import type { TrainingSession } from './training-types'
 
 export async function updateLearningSynthesis(): Promise<void> {
   const apiKey = process.env.GOOGLE_AI_API_KEY
