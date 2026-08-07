@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useDigest, FindingCard } from '../shared'
+import { useDigest, FindingCard, LINK, BTN, chip } from '../shared'
 import { buildSkeleton, type TemplateStyle, type AskStyle } from '@/lib/email-skeleton'
 
 // Page 4 — compose. Turn the starred findings into a deterministic email SKELETON (never an LLM
@@ -56,7 +56,7 @@ export default function ComposePage() {
   // Regenerate on any deliberate change (style / ask / starred set). Manual edits persist until then.
   useEffect(() => setText(generated), [generated])
 
-  if (!hydrated) return <main className="max-w-3xl mx-auto px-4 py-10 text-sm text-slate-500">Loading…</main>
+  if (!hydrated) return <main className="max-w-3xl mx-auto px-4 py-10 text-sm text-[#8A8478]">Loading…</main>
   if (!selectedLab || starred.length === 0) return null
 
   const copy = () =>
@@ -69,42 +69,30 @@ export default function ComposePage() {
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
-      <button onClick={() => router.push('/digest/lab')} className="text-sm text-slate-400 hover:text-teal-300 mb-4">
+      <button onClick={() => router.push('/digest/lab')} className={`text-sm mb-5 ${LINK}`}>
         ← back to {selectedLab.piName ?? 'the lab'}&rsquo;s research
       </button>
 
-      <h1 className="text-2xl font-bold text-white">Your email skeleton</h1>
-      <p className="mt-2 text-sm rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-200 px-3 py-2">
-        This is a <strong>skeleton, not an email.</strong> Fill every <code className="text-amber-100">[bracketed prompt]</code> in your
+      <h1 className="text-[26px] font-semibold tracking-tight leading-tight text-[#20242B]">Your email skeleton</h1>
+      <p className="mt-3 text-sm rounded-md border border-[#A8842C]/40 bg-[#A8842C]/[0.08] text-[#7A5C12] px-3.5 py-2.5 leading-relaxed">
+        This is a <strong>skeleton, not an email.</strong> Fill every <code className="text-[#5E4711]">[bracketed prompt]</code> in your
         own voice — the specifics and the human details have to be yours. Don&rsquo;t send it as-is.
       </p>
 
       {/* controls */}
       <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-500">Style</span>
+          <span className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Style</span>
           {STYLES.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => setStyle(s.id)}
-              className={`px-2.5 py-1 text-xs rounded-full border ${
-                style === s.id ? 'bg-teal-500/20 text-teal-200 border-teal-500/50' : 'bg-slate-800 text-slate-400 border-slate-600 hover:border-slate-500'
-              }`}
-            >
+            <button key={s.id} onClick={() => setStyle(s.id)} className={chip(style === s.id)}>
               {s.label}
             </button>
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-500">Ask</span>
+          <span className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Ask</span>
           {ASKS.map((a) => (
-            <button
-              key={a.id}
-              onClick={() => setAsk(a.id)}
-              className={`px-2.5 py-1 text-xs rounded-full border ${
-                ask === a.id ? 'bg-teal-500/20 text-teal-200 border-teal-500/50' : 'bg-slate-800 text-slate-400 border-slate-600 hover:border-slate-500'
-              }`}
-            >
+            <button key={a.id} onClick={() => setAsk(a.id)} className={chip(ask === a.id)}>
               {a.label}
             </button>
           ))}
@@ -116,23 +104,23 @@ export default function ComposePage() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={20}
-        className="mt-4 w-full px-3 py-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-100 text-sm font-mono leading-relaxed focus:outline-none focus:border-teal-500 resize-y"
+        className="mt-4 w-full px-3.5 py-3 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] text-sm font-mono leading-relaxed focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C] resize-y"
       />
-      <div className="mt-2 flex items-center gap-3">
-        <button onClick={copy} className="px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white text-sm rounded-lg">
+      <div className="mt-2.5 flex items-center gap-3">
+        <button onClick={copy} className={`px-3.5 py-1.5 text-sm ${BTN}`}>
           {copied ? '✓ copied' : 'Copy skeleton'}
         </button>
-        <span className="text-xs text-slate-500">Changing style, ask, or starred findings regenerates the skeleton.</span>
+        <span className="text-xs text-[#8A8478]">Changing style, ask, or starred findings regenerates the skeleton.</span>
       </div>
 
       {/* add more research from this lab */}
       <div className="mt-8">
-        <button onClick={() => setShowMore((v) => !v)} className="text-sm text-teal-400 hover:text-teal-300">
+        <button onClick={() => setShowMore((v) => !v)} className={`text-sm ${LINK}`}>
           {showMore ? '↑ Hide' : `↓ Star more research from this lab (${unstarred.length})`}
         </button>
         {showMore && (
           <div className="mt-3 space-y-3">
-            {unstarred.length === 0 && <p className="text-xs text-slate-500">You&rsquo;ve starred everything from this lab.</p>}
+            {unstarred.length === 0 && <p className="text-xs text-[#8A8478]">You&rsquo;ve starred everything from this lab.</p>}
             {unstarred.map((f, i) => (
               <FindingCard key={i} f={f} starred={false} onToggleStar={() => toggleStar(f)} copyable />
             ))}

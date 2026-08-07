@@ -21,6 +21,14 @@ export interface DigestFinding {
   sourceId: string | null // DOI/PMID when known
 }
 
+// The lab's OWN stated way to apply/join (a form, a positions page, an explicit recruiting line) —
+// quote-backed, or null. Tightened re-extraction pass 2026-08-07; see scripts/enrich-apply.ts.
+export interface ApplyInfo {
+  instructions: string
+  quote: string
+  url: string | null
+}
+
 export interface LabDigest {
   labUrl: string
   labName: string | null
@@ -29,6 +37,8 @@ export interface LabDigest {
   department: string | null
   dataModality: string | null // 'wet' | 'dry' | 'mixed'
   recruiting: string | null // 'open' | 'unknown' ('explicit_no' is barred out entirely)
+  plainSummary: string | null // plain-language "what/how/why" for a first-year (enrich pass)
+  applyInfo: ApplyInfo | null // the lab's own stated application process, quote-backed, or null
   relevance: number // retrieval score (max-passage RRF) — for ordering/debug, not shown raw
   findings: DigestFinding[]
 }
@@ -42,6 +52,25 @@ const asRows = (r: unknown): Array<Record<string, unknown>> =>
   (Array.isArray(r) ? r : ((r as { rows?: unknown[] }).rows ?? [])) as Array<Record<string, unknown>>
 
 const str = (x: unknown): string | null => (typeof x === 'string' && x.trim() ? x : null)
+
+// apply_info is JSONB — the driver may hand it back as a parsed object or a raw string. Coerce, and
+// keep only well-formed entries (the enrich guard already dropped bare emails / dead pages / bios).
+function applyInfoOf(x: unknown): ApplyInfo | null {
+  if (!x) return null
+  let o: unknown = x
+  if (typeof x === 'string') {
+    try {
+      o = JSON.parse(x)
+    } catch {
+      return null
+    }
+  }
+  const a = o as { instructions?: unknown; quote?: unknown; url?: unknown }
+  if (typeof a?.instructions === 'string' && a.instructions.trim() && typeof a?.quote === 'string' && a.quote.trim()) {
+    return { instructions: a.instructions.trim(), quote: a.quote.trim(), url: typeof a.url === 'string' && a.url.trim() ? a.url : null }
+  }
+  return null
+}
 
 // STAGE A — the lab-browse surface. Rank LABS by fit and return a generous list (broad
 // connections included, ranked below direct ones), each with a small preview of its most
@@ -60,7 +89,7 @@ export async function buildDigest(profile: string, opts: DigestOpts = {}): Promi
   const urls = labs.map((l) => l.labUrl)
   const metaRows = asRows(
     await sql.query(
-      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting
+      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting, plain_summary, apply_info
        FROM lab_profiles WHERE lab_url = ANY($1)`,
       [urls],
     ),
@@ -80,6 +109,8 @@ export async function buildDigest(profile: string, opts: DigestOpts = {}): Promi
       department: str(m.department) ?? lab.department,
       dataModality: str(m.data_modality),
       recruiting: str(m.recruiting),
+      plainSummary: str(m.plain_summary),
+      applyInfo: applyInfoOf(m.apply_info),
       relevance: lab.score,
       findings: lab.topChunks.map((c) => ({
         type: c.type,
@@ -109,7 +140,7 @@ export async function buildLabResearch(
   const sql = requireSql()
   const rows = asRows(
     await sql.query(
-      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting
+      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting, plain_summary, apply_info
        FROM lab_profiles WHERE lab_url = $1`,
       [labUrl],
     ),
@@ -125,6 +156,8 @@ export async function buildLabResearch(
     department: str(m.department),
     dataModality: str(m.data_modality),
     recruiting: str(m.recruiting),
+    plainSummary: str(m.plain_summary),
+    applyInfo: applyInfoOf(m.apply_info),
     relevance: chunks[0]?.rrf ?? 0,
     findings: chunks.slice(0, maxFindings).map((c) => ({
       type: c.type,

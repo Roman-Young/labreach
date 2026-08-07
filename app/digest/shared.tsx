@@ -13,6 +13,11 @@ export interface DigestFinding {
   anchorQuote: string | null
   sourceId: string | null
 }
+export interface ApplyInfo {
+  instructions: string
+  quote: string
+  url: string | null
+}
 export interface LabDigest {
   labUrl: string
   labName: string | null
@@ -21,6 +26,8 @@ export interface LabDigest {
   department: string | null
   dataModality: string | null
   recruiting: string | null
+  plainSummary: string | null
+  applyInfo: ApplyInfo | null
   relevance: number
   findings: DigestFinding[]
 }
@@ -30,6 +37,7 @@ export interface FlowProfile {
   major: string
   interests: string[]
   resume: string
+  topLabs: number // how many labs to return (user-set slider, 5–30) — kept small to avoid overload
 }
 
 // ── helpers ─────────────────────────────────────────────────────────────────
@@ -50,14 +58,22 @@ export function sourceHref(id: string | null): string | null {
 export const findingKey = (f: DigestFinding): string => `${f.type}|${(f.title ?? '').slice(0, 40)}|${f.content.slice(0, 60)}`
 
 // ── presentational ──────────────────────────────────────────────────────────
+// Editorial identity: paper #FBF8F1 · ink #20242B · muted #6E7076 · hairline #E7E0D2 · navy accent
+// #1B3A5C · gold (stars/quotes) #A8842C. Typography is the site-wide system sans (globals.css) — no
+// custom font, so the digest matches the rest of the app.
+
+// Shared editorial tokens, so every page speaks one visual language (hairlines, navy accent, no
+// glowing cards). Kept as full literal class strings so Tailwind picks them up at build.
+export const LINK = 'text-[#1B3A5C] hover:underline'
+export const BTN = 'bg-[#1B3A5C] hover:bg-[#12293f] text-[#FBF8F1] disabled:opacity-40 disabled:cursor-not-allowed rounded-md font-medium transition-colors'
+export const INPUT = 'w-full px-3 py-2.5 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] placeholder-[#A29B8C] text-sm focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C]'
+export const chip = (on: boolean): string =>
+  `px-2.5 py-1 text-xs rounded-full border transition-colors ${on ? 'bg-[#1B3A5C] text-[#FBF8F1] border-[#1B3A5C]' : 'bg-transparent text-[#6E7076] border-[#D9D2C4] hover:border-[#1B3A5C]/50'}`
+
+// Metadata rendered as quiet small-caps text, not colored pills. Navy for the recruiting signal.
 export function Badge({ children, tone }: { children: React.ReactNode; tone: 'teal' | 'green' | 'slate' | 'amber' }) {
-  const tones = {
-    teal: 'bg-teal-500/10 text-teal-300 border-teal-500/30',
-    green: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
-    slate: 'bg-slate-700/40 text-slate-400 border-slate-600/50',
-    amber: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
-  }
-  return <span className={`inline-block px-2 py-0.5 text-xs rounded-full border ${tones[tone]}`}>{children}</span>
+  const color = tone === 'green' ? 'text-[#1B3A5C] font-medium' : 'text-[#8A8478]'
+  return <span className={`text-[11px] uppercase tracking-[0.1em] ${color}`}>{children}</span>
 }
 
 export function FindingCard({
@@ -86,12 +102,12 @@ export function FindingCard({
     })
   }
   return (
-    <div className="border-l-2 border-slate-700 pl-3 py-1">
-      <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-        <span className="uppercase tracking-wide shrink-0">{f.type.replace('_', ' ')}</span>
-        {f.title && <span className="truncate text-slate-400">{cleanTitle(f.title)}</span>}
+    <div className={`border-l-2 pl-3.5 py-1 ${starred ? 'border-[#A8842C]' : 'border-[#E7E0D2]'}`}>
+      <div className="flex items-center gap-2 text-[11px] text-[#8A8478] mb-1">
+        <span className="uppercase tracking-[0.12em] shrink-0">{f.type.replace('_', ' ')}</span>
+        {f.title && <span className="truncate italic text-[#6E7076]">{cleanTitle(f.title)}</span>}
         {href && (
-          <a href={href} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300 shrink-0">
+          <a href={href} target="_blank" rel="noopener noreferrer" className="text-[#1B3A5C] hover:underline shrink-0">
             source ↗
           </a>
         )}
@@ -99,7 +115,7 @@ export function FindingCard({
           {copyable && (
             <button
               onClick={copy}
-              className="text-slate-500 hover:text-teal-300"
+              className="text-[#8A8478] hover:text-[#1B3A5C]"
               title="Copy this finding — paste it into your own LLM to have it explained"
             >
               {copied ? '✓ copied' : '⧉ copy'}
@@ -108,7 +124,7 @@ export function FindingCard({
           {onToggleStar && (
             <button
               onClick={onToggleStar}
-              className={starred ? 'text-amber-300' : 'text-slate-600 hover:text-slate-400'}
+              className={starred ? 'text-[#A8842C] font-medium' : 'text-[#B7AF9E] hover:text-[#6E7076]'}
               title={starred ? 'Starred — added to your email' : 'Star this to use it in your email'}
             >
               {starred ? '★ starred' : '☆ star'}
@@ -116,12 +132,36 @@ export function FindingCard({
           )}
         </span>
       </div>
-      <p className={`text-sm text-slate-200 leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
+      <p className={`text-[15px] text-[#20242B] leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
       {!preview && f.anchorQuote && (
-        <p className="mt-1.5 text-xs text-slate-400 italic border-l-2 border-teal-500/40 pl-2">
+        <p className="mt-1.5 text-[13px] text-[#6E7076] italic border-l-2 border-[#A8842C]/50 pl-2.5">
           &ldquo;{f.anchorQuote}&rdquo;
         </p>
       )}
+    </div>
+  )
+}
+
+// The lab's OWN stated application process — the single highest-value line on a lab (following a
+// lab's stated process beats any cold email). Rendered as a quiet gold-keyed callout, evidence
+// shown, with the real link when there is one. Only ~7% of labs have a trustworthy one (tightened
+// extraction), so its presence is itself a signal.
+export function ApplyInfoCard({ apply }: { apply: ApplyInfo }) {
+  return (
+    <div className="rounded-md border border-[#A8842C]/35 bg-[#A8842C]/[0.06] px-4 py-3">
+      <p className="text-[11px] uppercase tracking-[0.12em] text-[#A8842C] font-medium">How to join — from the lab&rsquo;s own site</p>
+      <p className="mt-1.5 text-[15px] text-[#20242B] leading-relaxed">{apply.instructions}</p>
+      {apply.url && (
+        <a
+          href={apply.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-1.5 inline-block text-sm text-[#1B3A5C] hover:underline break-all"
+        >
+          {apply.url.replace(/^mailto:/, '✉ ')} ↗
+        </a>
+      )}
+      <p className="mt-2 text-[12px] text-[#6E7076] italic">&ldquo;{apply.quote}&rdquo;</p>
     </div>
   )
 }
@@ -136,7 +176,7 @@ interface FlowState {
   starred: DigestFinding[] // the finding objects the student starred, for the email
 }
 const EMPTY: FlowState = {
-  profile: { name: '', year: '', major: '', interests: [], resume: '' },
+  profile: { name: '', year: '', major: '', interests: [], resume: '', topLabs: 15 },
   query: '',
   labs: [],
   selectedLabUrl: null,

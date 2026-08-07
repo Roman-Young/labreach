@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { StudentProfile } from '@/types'
-import { useDigest, type LabDigest } from './shared'
+import { useDigest, BTN, INPUT, chip, type LabDigest } from './shared'
 
 // Page 1 — intake. Collect who they are + what they're into, RAG, then go to the lab list. The
 // interest chips are the FLOOR (a no-experience student still gets labs); the resume is optional
@@ -31,8 +31,7 @@ const INTERESTS = [
   'Public health / clinical informatics',
 ]
 
-const inputClass =
-  'w-full px-3 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500'
+const inputClass = INPUT
 
 export default function IntakePage() {
   const router = useRouter()
@@ -43,6 +42,7 @@ export default function IntakePage() {
   const [major, setMajor] = useState(profile.major)
   const [interests, setInterests] = useState<string[]>(profile.interests)
   const [resume, setResume] = useState(profile.resume)
+  const [topLabs, setTopLabs] = useState(profile.topLabs || 15)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -73,12 +73,12 @@ export default function IntakePage() {
     }
     setLoading(true)
     setError('')
-    setProfile({ name, year, major, interests, resume })
+    setProfile({ name, year, major, interests, resume, topLabs })
     try {
       const res = await fetch('/api/digest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile: resume, interests }),
+        body: JSON.stringify({ profile: resume, interests, topLabs }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong.')
@@ -93,14 +93,14 @@ export default function IntakePage() {
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
       <header className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Research Digest</h1>
-        <p className="text-sm text-slate-400 mt-1">
+        <h1 className="text-[28px] font-semibold tracking-tight leading-tight text-[#20242B]">Research Digest</h1>
+        <p className="text-sm text-[#6E7076] mt-2 max-w-xl leading-relaxed">
           Every UCSD lab, pre-researched. Tell us about you, get each lab&rsquo;s real, quote-backed work ordered by
           fit, and pick who to email — LabReach never writes it for you.
         </p>
       </header>
 
-      <div className="bg-slate-900/60 border border-slate-700/60 rounded-xl p-4 space-y-4">
+      <div className="border border-[#E7E0D2] bg-white/40 rounded-lg p-5 space-y-5">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <input className={inputClass} placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} />
           <select className={inputClass} value={year} onChange={(e) => setYear(e.target.value)}>
@@ -115,18 +115,12 @@ export default function IntakePage() {
         </div>
 
         <div>
-          <p className="text-sm font-medium text-slate-300 mb-2">What are you interested in?</p>
+          <p className="text-sm font-medium text-[#20242B] mb-2">What are you interested in?</p>
           <div className="flex flex-wrap gap-2">
             {INTERESTS.map((i) => {
               const on = interests.includes(i)
               return (
-                <button
-                  key={i}
-                  onClick={() => toggle(i)}
-                  className={`px-2.5 py-1 text-xs rounded-full border transition-colors ${
-                    on ? 'bg-teal-500/20 text-teal-200 border-teal-500/50' : 'bg-slate-800 text-slate-400 border-slate-600 hover:border-slate-500'
-                  }`}
-                >
+                <button key={i} onClick={() => toggle(i)} className={chip(on)}>
                   {i}
                 </button>
               )
@@ -135,8 +129,8 @@ export default function IntakePage() {
         </div>
 
         <div>
-          <p className="text-sm font-medium text-slate-300 mb-1">
-            Paste your resume or experience <span className="text-slate-500 font-normal">— optional, sharpens the match</span>
+          <p className="text-sm font-medium text-[#20242B] mb-1">
+            Paste your resume or experience <span className="text-[#8A8478] font-normal">— optional, sharpens the match</span>
           </p>
           <textarea
             value={resume}
@@ -147,18 +141,32 @@ export default function IntakePage() {
           />
         </div>
 
+        <div>
+          <label htmlFor="topLabs" className="flex items-center justify-between text-sm font-medium text-[#20242B]">
+            <span>How many labs to show?</span>
+            <span className="text-[#1B3A5C] font-semibold tabular-nums">{topLabs}</span>
+          </label>
+          <input
+            id="topLabs"
+            type="range"
+            min={5}
+            max={30}
+            step={1}
+            value={topLabs}
+            onChange={(e) => setTopLabs(Number(e.target.value))}
+            className="mt-2 w-full accent-[#1B3A5C]"
+          />
+          <p className="text-xs text-[#8A8478] mt-1">Fewer keeps it focused; more casts a wider net. The most relevant always come first.</p>
+        </div>
+
         <div className="flex items-center justify-end">
-          <button
-            onClick={submit}
-            disabled={loading}
-            className="px-4 py-2 bg-teal-600 hover:bg-teal-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg"
-          >
+          <button onClick={submit} disabled={loading} className={`px-4 py-2 text-sm ${BTN}`}>
             {loading ? 'Finding labs…' : 'Find my labs →'}
           </button>
         </div>
       </div>
 
-      {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+      {error && <p className="mt-4 text-sm text-[#9B2C2C]">{error}</p>}
     </main>
   )
 }

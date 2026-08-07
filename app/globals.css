@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
+/* Site-wide light "paper" theme — paper #FBF8F1 · ink #20242B. The product is the research digest,
+   which established this editorial look; the whole app follows it now. */
 body {
-  background-color: #0a0f1e;
-  color: #e2e8f0;
+  background-color: #FBF8F1;
+  color: #20242B;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -14,12 +16,12 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #EDE7D9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #D9D2C4;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #C4BBA8;
 }
