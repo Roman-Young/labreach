@@ -4,6 +4,26 @@ const WINDOW_MS = 60 * 60 * 1000    // 1 hour
 const WINDOW_SECONDS = 60 * 60
 const DEFAULT_MAX = 3
 
+// Global daily spend ceiling — ONE shared counter across all users (not per-IP), so it bounds
+// worst-case LLM cost even against IP rotation. Deliberately GENEROUS: the digest is ~$0.0015/call,
+// so this is an anti-runaway/anti-abuse backstop, never a per-user gate — real users should never
+// hit it. Fails OPEN on any KV error: a KV blip must not take the tool down (the env kill switch is
+// the KV-independent hard stop). The read-then-write isn't atomic, which is fine — we're bounding a
+// worst case, not metering exact billing.
+export async function checkDailyCap(key: string, max: number): Promise<{ allowed: boolean; count: number }> {
+  const day = new Date().toISOString().slice(0, 10) // UTC day; resets at 00:00 UTC
+  const k = `dailycap:${key}:${day}`
+  try {
+    const raw = await kvGet(k)
+    const count = raw ? Number(raw) || 0 : 0
+    if (count >= max) return { allowed: false, count }
+    await kvSet(k, String(count + 1), 26 * 60 * 60) // ~26h TTL so each day's key self-expires
+    return { allowed: true, count: count + 1 }
+  } catch {
+    return { allowed: true, count: 0 } // fail open — never bar users on infrastructure failure
+  }
+}
+
 interface RateEntry {
   count: number
   resetAt: number

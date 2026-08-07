@@ -1,8 +1,13 @@
 import { NextRequest } from 'next/server'
-import { checkRateLimit } from '@/lib/rate-limit'
+import { checkRateLimit, checkDailyCap } from '@/lib/rate-limit'
 import { checkAdminAuth } from '@/lib/admin-auth'
 import { buildDigest, buildLabResearch } from '@/lib/rag/digest'
 import { distillProfile } from '@/lib/rag/distill'
+
+// Generous global daily ceiling on browse (the only paid-LLM path). At ~$0.0015/call this bounds a
+// runaway/abuse day to a few dollars while sitting far above any real usage — set it high so real
+// users never hit it; tune without a redeploy via env. LLM_DISABLED=1 is the instant kill switch.
+const LLM_DAILY_CAP = Number(process.env.LLM_DAILY_CAP) || 5000
 
 // The research-digest endpoint (BUILD_STEPS Step 5) — the UCSD DB path. Given a student profile /
 // research interests, return a relevance-ordered, quote-backed per-lab digest from the ingested
@@ -17,6 +22,12 @@ function json(obj: unknown, status = 200): Response {
 }
 
 export async function POST(req: NextRequest) {
+  // Kill switch — KV-independent hard stop. Flip LLM_DISABLED=1 in the dashboard to halt all model
+  // calls instantly (leaked key, cost bug, abuse) with no redeploy. Blocks both stages by design.
+  if (process.env.LLM_DISABLED === '1') {
+    return json({ error: 'The lab digest is paused for maintenance — please check back shortly.' }, 503)
+  }
+
   let body: { profile?: string; interests?: string[]; topLabs?: number; labUrl?: string }
   try {
     body = await req.json()
@@ -55,6 +66,11 @@ export async function POST(req: NextRequest) {
       const { allowed } = await checkRateLimit(ip, { max: 30, bucket: 'digest' })
       if (!allowed) {
         return json({ error: 'Too many digests this hour. Please wait a bit before trying again.' }, 429)
+      }
+      // Generous global daily ceiling (anti-runaway backstop, not a per-user gate). Fails open.
+      const cap = await checkDailyCap('digest', LLM_DAILY_CAP)
+      if (!cap.allowed) {
+        return json({ error: "The digest has hit today's usage limit. Please try again tomorrow." }, 503)
       }
     }
 
