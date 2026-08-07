@@ -16,6 +16,7 @@ export interface SkeletonFinding {
 export interface SkeletonInput {
   style: TemplateStyle
   ask: AskStyle
+  hasResume?: boolean // freshmen often have none — never claim an attachment that doesn't exist
   name: string
   year: string
   major: string
@@ -104,7 +105,7 @@ export function buildSkeleton(input: SkeletonInput): string {
       `A couple of things stood out to me:\n${bullets}\n\n` +
       `[One or two lines on relevant coursework, a project, or skills you'd bring.]\n\n` +
       `${askLine(input.ask)}\n\n` +
-      `My resume is attached. Thank you for your time and consideration.\n\n` +
+      `${input.hasResume ? 'My resume is attached. ' : ''}Thank you for your time and consideration.\n\n` +
       `Best,\n${N}\n[your email]`
     )
   }
@@ -117,7 +118,7 @@ export function buildSkeleton(input: SkeletonInput): string {
     `Dear ${prof},\n\n` +
     `My name is ${N} and I am a ${Y} ${M} at ${U}.${clause}\n\n` +
     `[One sentence tying it to something real about you — a course, a project, or a skill you'd bring.]\n\n` +
-    `${askLine(input.ask)} My resume is attached.\n\n` +
+    `${askLine(input.ask)}${input.hasResume ? ' My resume is attached.' : ''}\n\n` +
     `Thank you for your time,\n${N}\n[your email]`
   )
 }

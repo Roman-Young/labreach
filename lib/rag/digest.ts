@@ -15,6 +15,7 @@ import { retrieveLabs, retrieveLabChunks } from './retrieve'
 export interface DigestFinding {
   type: string // 'paper' | 'overview' | 'future_direction'
   title: string | null
+  year: number | null
   content: string // the woven did/found/used/why summary (the readable finding)
   anchorQuote: string | null // verbatim source quote backing it (grounding)
   sourceId: string | null // DOI/PMID when known
@@ -83,6 +84,7 @@ export async function buildDigest(profile: string, opts: DigestOpts = {}): Promi
       findings: lab.topChunks.map((c) => ({
         type: c.type,
         title: c.title,
+        year: c.year,
         content: c.content,
         anchorQuote: c.anchorQuote,
         sourceId: c.sourceId,
@@ -127,6 +129,7 @@ export async function buildLabResearch(
     findings: chunks.slice(0, maxFindings).map((c) => ({
       type: c.type,
       title: c.title,
+      year: c.year,
       content: c.content,
       anchorQuote: c.anchorQuote,
       sourceId: c.sourceId,

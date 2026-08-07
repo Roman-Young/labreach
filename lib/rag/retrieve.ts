@@ -28,6 +28,7 @@ export interface RetrievedChunk {
   department: string | null
   type: string
   title: string | null
+  year: number | null
   content: string
   anchorQuote: string | null
   sourceId: string | null
@@ -62,7 +63,7 @@ export interface RetrieveLabsOpts extends RetrieveOpts {
 const asRows = (r: unknown): Array<Record<string, unknown>> =>
   (Array.isArray(r) ? r : ((r as { rows?: unknown[] }).rows ?? [])) as Array<Record<string, unknown>>
 
-const SELECT_COLS = `lc.id, lc.lab_url, p.pi_name, p.department, lc.type, lc.title, lc.content, lc.anchor_quote, lc.source_id`
+const SELECT_COLS = `lc.id, lc.lab_url, p.pi_name, p.department, lc.type, lc.title, lc.year, lc.content, lc.anchor_quote, lc.source_id`
 
 function toChunk(r: Record<string, unknown>): RetrievedChunk {
   return {
@@ -72,6 +73,7 @@ function toChunk(r: Record<string, unknown>): RetrievedChunk {
     department: (r.department as string) ?? null,
     type: String(r.type),
     title: (r.title as string) ?? null,
+    year: typeof r.year === 'number' ? r.year : null,
     content: String(r.content),
     anchorQuote: (r.anchor_quote as string) ?? null,
     sourceId: (r.source_id as string) ?? null,

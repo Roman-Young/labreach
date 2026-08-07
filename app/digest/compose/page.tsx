@@ -40,6 +40,7 @@ export default function ComposePage() {
         ? buildSkeleton({
             style,
             ask,
+            hasResume: profile.resume.trim().length > 0,
             name: profile.name,
             year: profile.year,
             major: profile.major,
