@@ -65,13 +65,26 @@ export function FindingCard({
   preview,
   starred,
   onToggleStar,
+  copyable,
 }: {
   f: DigestFinding
   preview?: boolean
   starred?: boolean
   onToggleStar?: () => void
+  copyable?: boolean
 }) {
   const href = sourceHref(f.sourceId)
+  const [copied, setCopied] = useState(false)
+  const copy = () => {
+    const title = cleanTitle(f.title)
+    const blob = [title, f.content, f.anchorQuote ? `Quote: “${f.anchorQuote}”` : '']
+      .filter(Boolean)
+      .join('\n\n')
+    navigator.clipboard.writeText(blob).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    })
+  }
   return (
     <div className="border-l-2 border-slate-700 pl-3 py-1">
       <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
@@ -82,15 +95,26 @@ export function FindingCard({
             source ↗
           </a>
         )}
-        {onToggleStar && (
-          <button
-            onClick={onToggleStar}
-            className={`ml-auto shrink-0 ${starred ? 'text-amber-300' : 'text-slate-600 hover:text-slate-400'}`}
-            title={starred ? 'Starred — added to your email' : 'Star this to use it in your email'}
-          >
-            {starred ? '★ starred' : '☆ star'}
-          </button>
-        )}
+        <span className="ml-auto shrink-0 flex items-center gap-3">
+          {copyable && (
+            <button
+              onClick={copy}
+              className="text-slate-500 hover:text-teal-300"
+              title="Copy this finding — paste it into your own LLM to have it explained"
+            >
+              {copied ? '✓ copied' : '⧉ copy'}
+            </button>
+          )}
+          {onToggleStar && (
+            <button
+              onClick={onToggleStar}
+              className={starred ? 'text-amber-300' : 'text-slate-600 hover:text-slate-400'}
+              title={starred ? 'Starred — added to your email' : 'Star this to use it in your email'}
+            >
+              {starred ? '★ starred' : '☆ star'}
+            </button>
+          )}
+        </span>
       </div>
       <p className={`text-sm text-slate-200 leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
       {!preview && f.anchorQuote && (

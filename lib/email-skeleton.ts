@@ -47,6 +47,13 @@ function findingRef(f: SkeletonFinding): string {
   return `${words}…`
 }
 
+// One starred finding → an inline prompt; several → a short bulleted list under a lead-in (inlining
+// multiple prompts in a sentence reads badly). Used by the concise + warm styles.
+function findingsClause(refs: SkeletonFinding[], suffix: string, leadIn: string): string {
+  if (refs.length === 1) return ` [${findingRef(refs[0])} — ${suffix}]`
+  return `\n\n${leadIn}\n` + refs.map((f) => `- [${findingRef(f)} — ${suffix}]`).join('\n')
+}
+
 function askLine(ask: AskStyle): string {
   switch (ask) {
     case 'accepting':
@@ -72,14 +79,12 @@ export function buildSkeleton(input: SkeletonInput): string {
   const head = `${BANNER}\n\n`
 
   if (input.style === 'warm') {
-    const bullets = refs
-      .map((f) => `[${findingRef(f)} — in your own words, what about it stuck with you.]`)
-      .join(' ')
+    const clause = findingsClause(refs, 'in your own words, what about it stuck with you.', 'A few things pulled me toward your lab:')
     return (
       head +
       `Subject: Interest in your research on ${topic}\n\n` +
       `Dear ${prof},\n\n` +
-      `I hope this email finds you well. My name is ${N}, a ${Y} studying ${M} at ${U}. ${bullets}\n\n` +
+      `I hope this email finds you well. My name is ${N}, a ${Y} studying ${M} at ${U}.${clause}\n\n` +
       `[Two or three sentences of your own story: what you've explored so far (a class, a project, prior research), and — honestly — where your gaps are and what you're eager to learn.]\n\n` +
       `[One sentence on why THIS lab in particular, tied to the work above, rather than a generic interest in the field.]\n\n` +
       `If you or someone in your group is open to it, I'd be grateful for the chance to talk about your research and how I might contribute. I can work around your schedule. Thank you so much for your time.\n\n` +
@@ -105,14 +110,12 @@ export function buildSkeleton(input: SkeletonInput): string {
   }
 
   // concise (default)
-  const bullets = refs
-    .map((f) => `[${findingRef(f)} — say what genuinely struck you about it.]`)
-    .join(' ')
+  const clause = findingsClause(refs, 'say what genuinely struck you about it.', 'A couple of things in your work caught my eye:')
   return (
     head +
     `Subject: Undergraduate research interest — ${labName || `${lastName(piName)} Lab`}\n\n` +
     `Dear ${prof},\n\n` +
-    `My name is ${N} and I am a ${Y} ${M} at ${U}. ${bullets}\n\n` +
+    `My name is ${N} and I am a ${Y} ${M} at ${U}.${clause}\n\n` +
     `[One sentence tying it to something real about you — a course, a project, or a skill you'd bring.]\n\n` +
     `${askLine(input.ask)} My resume is attached.\n\n` +
     `Thank you for your time,\n${N}\n[your email]`

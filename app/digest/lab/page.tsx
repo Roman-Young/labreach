@@ -85,7 +85,7 @@ export default function LabPage() {
       {findings && (
         <div className="mt-4 space-y-3">
           {findings.map((f, i) => (
-            <FindingCard key={i} f={f} starred={isStarred(f)} onToggleStar={() => toggleStar(f)} />
+            <FindingCard key={i} f={f} starred={isStarred(f)} onToggleStar={() => toggleStar(f)} copyable />
           ))}
         </div>
       )}

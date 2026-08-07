@@ -131,7 +131,7 @@ export default function ComposePage() {
           <div className="mt-3 space-y-3">
             {unstarred.length === 0 && <p className="text-xs text-slate-500">You&rsquo;ve starred everything from this lab.</p>}
             {unstarred.map((f, i) => (
-              <FindingCard key={i} f={f} starred={false} onToggleStar={() => toggleStar(f)} />
+              <FindingCard key={i} f={f} starred={false} onToggleStar={() => toggleStar(f)} copyable />
             ))}
           </div>
         )}
