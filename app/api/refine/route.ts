@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { kvGet, kvSet, KV_KEYS } from '@/lib/kv'
 import { writeEmail } from '@/lib/agent/writer'
+import { checkAdminAuth } from '@/lib/admin-auth'
 import type { AgentResult, StudentProfile, PublicationRef, ResearchEvidence } from '@/types'
 
 export const maxDuration = 30
@@ -23,6 +24,11 @@ interface RefineRequest {
 }
 
 export async function POST(req: NextRequest) {
+  // This is a legacy email-writer endpoint (the /draft UI that used it is retired) and it calls the
+  // paid LLM writer, so it was an unauthenticated, unmetered spend vector. Gate it behind admin auth
+  // until/unless the writer is revived as a first-class digest layer with its own rate limiting.
+  if (!checkAdminAuth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   const body = await req.json() as RefineRequest
   const { currentSubject, currentBody, feedback, profile, researchContext } = body
 
@@ -58,7 +64,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(written)
   } catch (e) {
-    return NextResponse.json({ error: (e as Error).message }, { status: 500 })
+    console.error('refine route error:', e)
+    return NextResponse.json({ error: 'Could not refine the draft. Please try again.' }, { status: 500 })
   }
 }
 

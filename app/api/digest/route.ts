@@ -25,7 +25,11 @@ export async function POST(req: NextRequest) {
   }
 
   const profile = (body.profile ?? '').trim()
-  const interests = Array.isArray(body.interests) ? body.interests.filter((s) => typeof s === 'string') : []
+  // Bound BOTH free-text inputs — profile is capped below; interests is an array, so cap its count
+  // AND each item's length so a crafted payload can't inflate the downstream distillation LLM call.
+  const interests = Array.isArray(body.interests)
+    ? body.interests.filter((s) => typeof s === 'string').slice(0, 40).map((s) => s.slice(0, 200))
+    : []
   if (profile.length > 12000) {
     return json({ error: 'That resume is too long — please keep it under ~12000 characters.' }, 400)
   }
@@ -65,7 +69,9 @@ export async function POST(req: NextRequest) {
     const labs = await buildDigest(query, { topLabs })
     return json({ count: labs.length, labs, query })
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-    return json({ error: message }, 500)
+    // Log the real error server-side; return a generic message so internals (DB/LLM/stack) never
+    // reach the client. The explicit 4xx returns above carry intentional, safe user-facing text.
+    console.error('digest route error:', err)
+    return json({ error: 'Something went wrong while building your digest. Please try again.' }, 500)
   }
 }
