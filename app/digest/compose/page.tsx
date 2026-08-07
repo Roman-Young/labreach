@@ -22,7 +22,7 @@ const ASKS: { id: AskStyle; label: string }[] = [
 
 export default function ComposePage() {
   const router = useRouter()
-  const { selectedLab, profile, starred, labFindings, toggleStar, isStarred } = useDigest()
+  const { selectedLab, profile, starred, labFindings, toggleStar, isStarred, hydrated } = useDigest()
   const [style, setStyle] = useState<TemplateStyle>('concise')
   const [ask, setAsk] = useState<AskStyle>('meeting')
   const [text, setText] = useState('')
@@ -30,8 +30,9 @@ export default function ComposePage() {
   const [showMore, setShowMore] = useState(false)
 
   useEffect(() => {
+    if (!hydrated) return // wait for localStorage before deciding to redirect
     if (!selectedLab || starred.length === 0) router.replace('/digest/lab')
-  }, [selectedLab, starred.length, router])
+  }, [hydrated, selectedLab, starred.length, router])
 
   const generated = useMemo(
     () =>
@@ -54,6 +55,7 @@ export default function ComposePage() {
   // Regenerate on any deliberate change (style / ask / starred set). Manual edits persist until then.
   useEffect(() => setText(generated), [generated])
 
+  if (!hydrated) return <main className="max-w-3xl mx-auto px-4 py-10 text-sm text-slate-500">Loading…</main>
   if (!selectedLab || starred.length === 0) return null
 
   const copy = () =>

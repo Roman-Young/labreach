@@ -7,12 +7,14 @@ import { useDigest, Badge, FindingCard } from '../shared'
 // it selects the lab and goes to its detail page.
 export default function LabsPage() {
   const router = useRouter()
-  const { labs, query, selectLab } = useDigest()
+  const { labs, query, selectLab, hydrated } = useDigest()
 
   const open = (labUrl: string) => {
     selectLab(labUrl)
     router.push('/digest/lab')
   }
+
+  if (!hydrated) return <main className="max-w-3xl mx-auto px-4 py-10 text-sm text-slate-500">Loading…</main>
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">

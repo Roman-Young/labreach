@@ -8,12 +8,13 @@ import { useDigest, Badge, FindingCard, type DigestFinding, type LabDigest } fro
 // email skeleton on the compose page.
 export default function LabPage() {
   const router = useRouter()
-  const { selectedLab, query, toggleStar, isStarred, starred, setLabFindings } = useDigest()
+  const { selectedLab, query, toggleStar, isStarred, starred, setLabFindings, hydrated } = useDigest()
   const [findings, setFindings] = useState<DigestFinding[] | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
+    if (!hydrated) return // wait for localStorage before deciding to redirect
     if (!selectedLab) {
       router.replace('/digest/labs')
       return
@@ -42,8 +43,9 @@ export default function LabPage() {
     return () => {
       cancelled = true
     }
-  }, [selectedLab, query, router])
+  }, [hydrated, selectedLab, query, router])
 
+  if (!hydrated) return <main className="max-w-3xl mx-auto px-4 py-10 text-sm text-slate-500">Loading…</main>
   if (!selectedLab) return null
   const lab = selectedLab
   const starCount = starred.length

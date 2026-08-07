@@ -146,6 +146,7 @@ const EMPTY: FlowState = {
 const STORAGE = 'labreach_flow'
 
 interface DigestCtx extends FlowState {
+  hydrated: boolean // true once localStorage has loaded — pages must wait before redirecting
   setProfile: (p: FlowProfile) => void
   setResults: (query: string, labs: LabDigest[]) => void
   selectLab: (labUrl: string) => void
@@ -184,6 +185,7 @@ export function DigestProvider({ children }: { children: React.ReactNode }) {
 
   const value: DigestCtx = {
     ...state,
+    hydrated,
     selectedLab,
     setProfile: (profile) => setState((s) => ({ ...s, profile })),
     setResults: (query, labs) => setState((s) => ({ ...s, query, labs })),
