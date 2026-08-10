@@ -83,7 +83,7 @@ export default function LabsPage() {
                         e.stopPropagation()
                         hideLab(lab.labUrl)
                       }}
-                      className="text-[#8A8478] hover:text-[#9B2C2C]"
+                      className="p-2.5 -m-2.5 text-[#8A8478] hover:text-[#9B2C2C]"
                       title="Hide this lab — already in it, already emailed, or not interested"
                     >
                       ✕ hide

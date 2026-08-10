@@ -118,7 +118,7 @@ export default function ComposePage() {
 
       {/* the starred research, visible while writing — the source material for every bracket */}
       <div className="mt-5 rounded-lg border border-[#A8842C]/30 bg-[#A8842C]/[0.05] px-4 py-3">
-        <button onClick={() => setShowStarred((v) => !v)} className="w-full text-left text-[11px] uppercase tracking-[0.12em] text-[#7A5C12] font-medium">
+        <button onClick={() => setShowStarred((v) => !v)} className="w-full text-left py-1.5 -my-1.5 text-[11px] uppercase tracking-[0.12em] text-[#7A5C12] font-medium">
           ★ Your starred research ({starred.length}) {showStarred ? '▾' : '▸'}
         </button>
         {showStarred && (
@@ -135,7 +135,7 @@ export default function ComposePage() {
 
       {/* controls */}
       <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Style</span>
           {STYLES.map((s) => (
             <button key={s.id} onClick={() => pickStyle(s.id)} className={chip(style === s.id)}>
@@ -143,7 +143,7 @@ export default function ComposePage() {
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Ask</span>
           {ASKS.map((a) => (
             <button key={a.id} onClick={() => pickAsk(a.id)} className={chip(ask === a.id)}>
@@ -158,15 +158,15 @@ export default function ComposePage() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={20}
-        className="mt-4 w-full px-3.5 py-3 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] text-sm font-mono leading-relaxed focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C] resize-y"
+        className="mt-4 w-full px-3.5 py-3 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] text-base sm:text-sm font-mono leading-relaxed focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C] resize-y"
       />
       <div className="mt-2.5 flex flex-wrap items-center gap-3">
-        <button onClick={copy} className={`px-3.5 py-1.5 text-sm ${BTN}`}>
+        <button onClick={copy} className={`px-3.5 py-2 sm:py-1.5 text-sm ${BTN}`}>
           {copied ? '✓ copied' : 'Copy skeleton'}
         </button>
         <button
           onClick={regenerate}
-          className="px-3.5 py-1.5 text-sm border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] transition-colors"
+          className="px-3.5 py-2 sm:py-1.5 text-sm border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] transition-colors"
           title="Rebuild the skeleton from your current style, ask, and starred research — replaces your edits"
         >
           ↻ Regenerate

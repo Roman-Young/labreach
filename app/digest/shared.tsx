@@ -29,6 +29,7 @@ export interface LabDigest {
   recruiting: string | null
   plainSummary: string | null
   applyInfo: ApplyInfo | null
+  trajectory: string | null // synthesized "where this lab is heading" (replaces raw future-direction quotes)
   researchAreas: string[] // lab's primary areas — feeds the email subject line topic
   relevance: number
   findings: DigestFinding[]
@@ -68,9 +69,12 @@ export const findingKey = (f: DigestFinding): string => `${f.type}|${(f.title ??
 // glowing cards). Kept as full literal class strings so Tailwind picks them up at build.
 export const LINK = 'text-[#1B3A5C] hover:underline'
 export const BTN = 'bg-[#1B3A5C] hover:bg-[#12293f] text-[#FBF8F1] disabled:opacity-40 disabled:cursor-not-allowed rounded-md font-medium transition-colors'
-export const INPUT = 'w-full px-3 py-2.5 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] placeholder-[#A29B8C] text-sm focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C]'
+// text-base below sm: iOS Safari auto-zooms the page when focusing an input under 16px.
+export const INPUT = 'w-full px-3 py-2.5 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] placeholder-[#A29B8C] text-base sm:text-sm focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C]'
+// Chips get more vertical padding below sm (thumb-sized tap targets); whitespace-nowrap stops a
+// label from wrapping inside its own pill on narrow screens (they wrap as whole chips instead).
 export const chip = (on: boolean): string =>
-  `px-2.5 py-1 text-xs rounded-full border transition-colors ${on ? 'bg-[#1B3A5C] text-[#FBF8F1] border-[#1B3A5C]' : 'bg-transparent text-[#6E7076] border-[#D9D2C4] hover:border-[#1B3A5C]/50'}`
+  `px-3 py-1.5 sm:px-2.5 sm:py-1 text-xs whitespace-nowrap rounded-full border transition-colors ${on ? 'bg-[#1B3A5C] text-[#FBF8F1] border-[#1B3A5C]' : 'bg-transparent text-[#6E7076] border-[#D9D2C4] hover:border-[#1B3A5C]/50'}`
 
 // Metadata rendered as quiet small-caps text, not colored pills. Navy for the recruiting signal.
 export function Badge({ children, tone }: { children: React.ReactNode; tone: 'teal' | 'green' | 'slate' | 'amber' }) {
@@ -123,7 +127,7 @@ export function FindingCard({
           {copyable && (
             <button
               onClick={copy}
-              className="px-3 py-1.5 text-[13px] border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] hover:bg-white/60 transition-colors"
+              className="px-3.5 py-2 sm:px-3 sm:py-1.5 text-[13px] border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] hover:bg-white/60 transition-colors"
               title="Copy this finding — paste it into your own LLM to have it explained"
             >
               {copied ? '✓ copied' : '⧉ copy'}
@@ -132,7 +136,7 @@ export function FindingCard({
           {onToggleStar && (
             <button
               onClick={onToggleStar}
-              className={`px-3 py-1.5 text-[13px] border rounded-md transition-colors ${
+              className={`px-3.5 py-2 sm:px-3 sm:py-1.5 text-[13px] border rounded-md transition-colors ${
                 starred
                   ? 'border-[#A8842C] bg-[#A8842C]/10 text-[#7A5C12] font-medium'
                   : 'border-[#D9D2C4] text-[#6E7076] hover:border-[#A8842C] hover:text-[#7A5C12]'

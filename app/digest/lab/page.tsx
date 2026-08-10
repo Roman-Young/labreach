@@ -120,6 +120,13 @@ export default function LabPage() {
         </div>
       )}
 
+      {lab.trajectory && (
+        <div className="mt-4 rounded-lg border border-[#A8842C]/30 bg-[#A8842C]/[0.05] px-5 py-4">
+          <p className="text-[11px] uppercase tracking-[0.12em] text-[#7A5C12] font-medium mb-1.5">Where they&rsquo;re heading</p>
+          <p className="text-[14px] text-[#3A3F47] leading-relaxed">{lab.trajectory}</p>
+        </div>
+      )}
+
       {lab.applyInfo && (
         <div className="mt-4">
           <ApplyInfoCard apply={lab.applyInfo} />
@@ -139,7 +146,7 @@ export default function LabPage() {
               paste it into ChatGPT or Claude — &ldquo;explain this to me like I&rsquo;m a freshman&rdquo; — then come back and star what
               genuinely interests you.
             </span>
-            <button onClick={dismissTip} className="shrink-0 text-[#8A8478] hover:text-[#20242B]" title="Dismiss">
+            <button onClick={dismissTip} className="shrink-0 p-2.5 -m-2 text-[#8A8478] hover:text-[#20242B]" title="Dismiss">
               ✕
             </button>
           </div>
@@ -165,15 +172,15 @@ export default function LabPage() {
       )}
 
       {/* sticky compose bar */}
-      <div className="fixed bottom-0 left-0 right-0 border-t border-[#E7E0D2] bg-[#FBF8F1]/95 backdrop-blur">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
-          <span className="text-sm text-[#6E7076]">
+      <div className="fixed bottom-0 left-0 right-0 border-t border-[#E7E0D2] bg-[#FBF8F1]/95 backdrop-blur pb-[env(safe-area-inset-bottom)]">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <span className="text-[13px] sm:text-sm leading-snug text-[#6E7076]">
             {starCount === 0 ? 'Star at least one finding to build an email' : `${starCount} finding${starCount > 1 ? 's' : ''} starred`}
           </span>
           <button
             onClick={() => router.push('/digest/compose')}
             disabled={starCount === 0}
-            className={`px-4 py-2 text-sm ${BTN}`}
+            className={`px-4 py-2 text-sm whitespace-nowrap shrink-0 ${BTN}`}
           >
             Write an email →
           </button>

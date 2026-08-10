@@ -39,6 +39,7 @@ export interface LabDigest {
   recruiting: string | null // 'open' | 'unknown' ('explicit_no' is barred out entirely)
   plainSummary: string | null // plain-language "what/how/why" for a first-year (enrich pass)
   applyInfo: ApplyInfo | null // the lab's own stated application process, quote-backed, or null
+  trajectory: string | null // synthesized "where this lab is heading" (enrich pass, 2026-08-10)
   researchAreas: string[] // the lab's primary areas — feeds the email subject-line topic
   relevance: number // retrieval score (max-passage RRF) — for ordering/debug, not shown raw
   findings: DigestFinding[]
@@ -103,7 +104,7 @@ export async function buildDigest(profile: string, opts: DigestOpts = {}): Promi
   const urls = labs.map((l) => l.labUrl)
   const metaRows = asRows(
     await sql.query(
-      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting, plain_summary, apply_info, research_areas
+      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting, plain_summary, apply_info, trajectory, research_areas
        FROM lab_profiles WHERE lab_url = ANY($1)`,
       [urls],
     ),
@@ -125,6 +126,7 @@ export async function buildDigest(profile: string, opts: DigestOpts = {}): Promi
       recruiting: str(m.recruiting),
       plainSummary: str(m.plain_summary),
       applyInfo: applyInfoOf(m.apply_info),
+      trajectory: str(m.trajectory),
       researchAreas: areasOf(m.research_areas),
       relevance: lab.score,
       findings: lab.topChunks.map((c) => ({
@@ -155,7 +157,7 @@ export async function buildLabResearch(
   const sql = requireSql()
   const rows = asRows(
     await sql.query(
-      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting, plain_summary, apply_info, research_areas
+      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting, plain_summary, apply_info, trajectory, research_areas
        FROM lab_profiles WHERE lab_url = $1`,
       [labUrl],
     ),
@@ -173,6 +175,7 @@ export async function buildLabResearch(
     recruiting: str(m.recruiting),
     plainSummary: str(m.plain_summary),
     applyInfo: applyInfoOf(m.apply_info),
+    trajectory: str(m.trajectory),
     researchAreas: areasOf(m.research_areas),
     relevance: chunks[0]?.rrf ?? 0,
     findings: chunks.slice(0, maxFindings).map((c) => ({

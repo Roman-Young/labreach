@@ -172,7 +172,7 @@ export default function IntakePage() {
         </div>
 
         <div className="flex items-center justify-end">
-          <button onClick={submit} disabled={loading} className={`px-4 py-2 text-sm ${BTN}`}>
+          <button onClick={submit} disabled={loading} className={`w-full sm:w-auto px-4 py-2.5 sm:py-2 text-sm ${BTN}`}>
             {loading ? 'Finding labs…' : 'Find my labs →'}
           </button>
         </div>
