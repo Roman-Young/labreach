@@ -39,6 +39,7 @@ export interface LabDigest {
   recruiting: string | null // 'open' | 'unknown' ('explicit_no' is barred out entirely)
   plainSummary: string | null // plain-language "what/how/why" for a first-year (enrich pass)
   applyInfo: ApplyInfo | null // the lab's own stated application process, quote-backed, or null
+  researchAreas: string[] // the lab's primary areas — feeds the email subject-line topic
   relevance: number // retrieval score (max-passage RRF) — for ordering/debug, not shown raw
   findings: DigestFinding[]
 }
@@ -72,6 +73,19 @@ function applyInfoOf(x: unknown): ApplyInfo | null {
   return null
 }
 
+// research_areas may come back as a Postgres array or a JSON string depending on column/driver.
+function areasOf(x: unknown): string[] {
+  let v: unknown = x
+  if (typeof x === 'string') {
+    try {
+      v = JSON.parse(x)
+    } catch {
+      return []
+    }
+  }
+  return Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string' && !!s.trim()) : []
+}
+
 // STAGE A — the lab-browse surface. Rank LABS by fit and return a generous list (broad
 // connections included, ranked below direct ones), each with a small preview of its most
 // relevant findings. The student scans, then opens a lab for its full research (Stage B).
@@ -89,7 +103,7 @@ export async function buildDigest(profile: string, opts: DigestOpts = {}): Promi
   const urls = labs.map((l) => l.labUrl)
   const metaRows = asRows(
     await sql.query(
-      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting, plain_summary, apply_info
+      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting, plain_summary, apply_info, research_areas
        FROM lab_profiles WHERE lab_url = ANY($1)`,
       [urls],
     ),
@@ -111,6 +125,7 @@ export async function buildDigest(profile: string, opts: DigestOpts = {}): Promi
       recruiting: str(m.recruiting),
       plainSummary: str(m.plain_summary),
       applyInfo: applyInfoOf(m.apply_info),
+      researchAreas: areasOf(m.research_areas),
       relevance: lab.score,
       findings: lab.topChunks.map((c) => ({
         type: c.type,
@@ -140,7 +155,7 @@ export async function buildLabResearch(
   const sql = requireSql()
   const rows = asRows(
     await sql.query(
-      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting, plain_summary, apply_info
+      `SELECT lab_url, lab_name, pi_name, pi_email, department, data_modality, recruiting, plain_summary, apply_info, research_areas
        FROM lab_profiles WHERE lab_url = $1`,
       [labUrl],
     ),
@@ -158,6 +173,7 @@ export async function buildLabResearch(
     recruiting: str(m.recruiting),
     plainSummary: str(m.plain_summary),
     applyInfo: applyInfoOf(m.apply_info),
+    researchAreas: areasOf(m.research_areas),
     relevance: chunks[0]?.rrf ?? 0,
     findings: chunks.slice(0, maxFindings).map((c) => ({
       type: c.type,

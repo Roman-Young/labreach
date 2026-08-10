@@ -64,7 +64,11 @@ export default function IntakePage() {
     }
   }, [profile])
 
-  const toggle = (i: string) => setInterests((p) => (p.includes(i) ? p.filter((x) => x !== i) : [...p, i]))
+  // Cap at 5: keeps the student focused AND keeps retrieval sharp — averaging many interests into
+  // one query dilutes the embedding the same way a raw full resume did (see lib/rag/distill.ts).
+  const MAX_INTERESTS = 5
+  const toggle = (i: string) =>
+    setInterests((p) => (p.includes(i) ? p.filter((x) => x !== i) : p.length >= MAX_INTERESTS ? p : [...p, i]))
 
   const submit = async () => {
     if (!resume.trim() && interests.length === 0) {
@@ -115,12 +119,20 @@ export default function IntakePage() {
         </div>
 
         <div>
-          <p className="text-sm font-medium text-[#20242B] mb-2">What are you interested in?</p>
+          <p className="text-sm font-medium text-[#20242B] mb-2">
+            What are you interested in? <span className="text-[#8A8478] font-normal">— pick up to {MAX_INTERESTS}</span>
+            {interests.length > 0 && (
+              <span className={`ml-2 text-xs ${interests.length >= MAX_INTERESTS ? 'text-[#A8842C] font-medium' : 'text-[#8A8478]'}`}>
+                {interests.length} of {MAX_INTERESTS}
+              </span>
+            )}
+          </p>
           <div className="flex flex-wrap gap-2">
             {INTERESTS.map((i) => {
               const on = interests.includes(i)
+              const full = !on && interests.length >= MAX_INTERESTS
               return (
-                <button key={i} onClick={() => toggle(i)} className={chip(on)}>
+                <button key={i} onClick={() => toggle(i)} disabled={full} className={`${chip(on)} ${full ? 'opacity-40 cursor-not-allowed' : ''}`}>
                   {i}
                 </button>
               )

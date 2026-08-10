@@ -1,13 +1,15 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useDigest, FindingCard, LINK, BTN, chip } from '../shared'
+import { useDigest, FindingCard, findingKey, LINK, BTN, chip } from '../shared'
 import { buildSkeleton, type TemplateStyle, type AskStyle } from '@/lib/email-skeleton'
 
 // Page 4 — compose. Turn the starred findings into a deterministic email SKELETON (never an LLM
-// writer). Three styles + three ask variants (from the 2026-08-07 template research), editable,
-// copyable, with a panel to star more of the lab's research.
+// writer). 2026-08-10 rework (Roman's walkthrough): starred research shown in a reference panel
+// beside the editor; manual edits PERSIST (localStorage via the flow context) and are never
+// silently clobbered — style/ask clicks rebuild explicitly, and starring more research requires
+// hitting ↻ Regenerate; subject format "Interested in X | UCSD Major Undergrad".
 
 const STYLES: { id: TemplateStyle; label: string }[] = [
   { id: 'concise', label: 'Concise' },
@@ -22,42 +24,77 @@ const ASKS: { id: AskStyle; label: string }[] = [
 
 export default function ComposePage() {
   const router = useRouter()
-  const { selectedLab, profile, starred, labFindings, toggleStar, isStarred, hydrated } = useDigest()
+  const { selectedLab, profile, starred, labFindings, toggleStar, isStarred, hydrated, draft, setDraft } = useDigest()
   const [style, setStyle] = useState<TemplateStyle>('concise')
   const [ask, setAsk] = useState<AskStyle>('meeting')
   const [text, setText] = useState('')
   const [copied, setCopied] = useState(false)
   const [showMore, setShowMore] = useState(false)
+  const [showStarred, setShowStarred] = useState(true)
+  const restored = useRef(false)
 
   useEffect(() => {
     if (!hydrated) return // wait for localStorage before deciding to redirect
     if (!selectedLab || starred.length === 0) router.replace('/digest/lab')
   }, [hydrated, selectedLab, starred.length, router])
 
-  const generated = useMemo(
-    () =>
-      selectedLab
-        ? buildSkeleton({
-            style,
-            ask,
-            hasResume: profile.resume.trim().length > 0,
-            name: profile.name,
-            year: profile.year,
-            major: profile.major,
-            university: 'UCSD',
-            piName: selectedLab.piName,
-            labName: selectedLab.labName,
-            findings: starred.map((f) => ({ title: f.title, content: f.content })),
-          })
-        : '',
-    [style, ask, profile, selectedLab, starred],
+  // Subject topic: the lab's own primary research area reads best; fall back to the student's
+  // first interest. buildSkeleton bracket-prompts if both are missing.
+  const subjectTopic = useMemo(
+    () => selectedLab?.researchAreas?.[0] ?? profile.interests[0] ?? null,
+    [selectedLab, profile.interests],
   )
 
-  // Regenerate on any deliberate change (style / ask / starred set). Manual edits persist until then.
-  useEffect(() => setText(generated), [generated])
+  const build = (s: TemplateStyle, a: AskStyle) =>
+    selectedLab
+      ? buildSkeleton({
+          style: s,
+          ask: a,
+          hasResume: profile.resume.trim().length > 0,
+          name: profile.name,
+          year: profile.year,
+          major: profile.major,
+          university: 'UCSD',
+          piName: selectedLab.piName,
+          labName: selectedLab.labName,
+          subjectTopic,
+          findings: starred.map((f) => ({ title: f.title, content: f.content })),
+        })
+      : ''
+
+  // One-time init after hydration: restore the saved draft (survives tab close) or generate fresh.
+  useEffect(() => {
+    if (!hydrated || restored.current || !selectedLab || starred.length === 0) return
+    restored.current = true
+    if (draft?.text) {
+      setStyle(draft.style as TemplateStyle)
+      setAsk(draft.ask as AskStyle)
+      setText(draft.text)
+    } else {
+      setText(build(style, ask))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated, selectedLab, starred.length])
+
+  // Persist every edit (text, style, ask) into the flow context → localStorage.
+  useEffect(() => {
+    if (!hydrated || !restored.current || !text) return
+    setDraft({ text, style, ask })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, style, ask])
 
   if (!hydrated) return <main className="max-w-3xl mx-auto px-4 py-10 text-sm text-[#8A8478]">Loading…</main>
   if (!selectedLab || starred.length === 0) return null
+
+  const pickStyle = (s: TemplateStyle) => {
+    setStyle(s)
+    setText(build(s, ask))
+  }
+  const pickAsk = (a: AskStyle) => {
+    setAsk(a)
+    setText(build(style, a))
+  }
+  const regenerate = () => setText(build(style, ask))
 
   const copy = () =>
     navigator.clipboard.writeText(text).then(() => {
@@ -79,12 +116,29 @@ export default function ComposePage() {
         own voice — the specifics and the human details have to be yours. Don&rsquo;t send it as-is.
       </p>
 
+      {/* the starred research, visible while writing — the source material for every bracket */}
+      <div className="mt-5 rounded-lg border border-[#A8842C]/30 bg-[#A8842C]/[0.05] px-4 py-3">
+        <button onClick={() => setShowStarred((v) => !v)} className="w-full text-left text-[11px] uppercase tracking-[0.12em] text-[#7A5C12] font-medium">
+          ★ Your starred research ({starred.length}) {showStarred ? '▾' : '▸'}
+        </button>
+        {showStarred && (
+          <div className="mt-2 space-y-3">
+            {starred.map((f) => (
+              <div key={findingKey(f)} className="border-l-2 border-[#A8842C] pl-3">
+                {f.title && <p className="text-[13px] font-medium text-[#20242B]">{f.title}</p>}
+                <p className="mt-0.5 text-[13px] text-[#6E7076] leading-relaxed">{f.content}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* controls */}
       <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
         <div className="flex items-center gap-2">
           <span className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Style</span>
           {STYLES.map((s) => (
-            <button key={s.id} onClick={() => setStyle(s.id)} className={chip(style === s.id)}>
+            <button key={s.id} onClick={() => pickStyle(s.id)} className={chip(style === s.id)}>
               {s.label}
             </button>
           ))}
@@ -92,25 +146,34 @@ export default function ComposePage() {
         <div className="flex items-center gap-2">
           <span className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Ask</span>
           {ASKS.map((a) => (
-            <button key={a.id} onClick={() => setAsk(a.id)} className={chip(ask === a.id)}>
+            <button key={a.id} onClick={() => pickAsk(a.id)} className={chip(ask === a.id)}>
               {a.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* editable skeleton */}
+      {/* editable skeleton — edits persist across tab close; only explicit actions rebuild */}
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={20}
         className="mt-4 w-full px-3.5 py-3 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] text-sm font-mono leading-relaxed focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C] resize-y"
       />
-      <div className="mt-2.5 flex items-center gap-3">
+      <div className="mt-2.5 flex flex-wrap items-center gap-3">
         <button onClick={copy} className={`px-3.5 py-1.5 text-sm ${BTN}`}>
           {copied ? '✓ copied' : 'Copy skeleton'}
         </button>
-        <span className="text-xs text-[#8A8478]">Changing style, ask, or starred findings regenerates the skeleton.</span>
+        <button
+          onClick={regenerate}
+          className="px-3.5 py-1.5 text-sm border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] transition-colors"
+          title="Rebuild the skeleton from your current style, ask, and starred research — replaces your edits"
+        >
+          ↻ Regenerate
+        </button>
+        <span className="text-xs text-[#8A8478]">
+          Your edits are saved automatically. Style/Ask rebuild the skeleton; after starring more research, hit ↻ Regenerate.
+        </span>
       </div>
 
       {/* add more research from this lab */}
@@ -121,8 +184,8 @@ export default function ComposePage() {
         {showMore && (
           <div className="mt-3 space-y-3">
             {unstarred.length === 0 && <p className="text-xs text-[#8A8478]">You&rsquo;ve starred everything from this lab.</p>}
-            {unstarred.map((f, i) => (
-              <FindingCard key={i} f={f} starred={false} onToggleStar={() => toggleStar(f)} copyable />
+            {unstarred.map((f) => (
+              <FindingCard key={findingKey(f)} f={f} starred={false} onToggleStar={() => toggleStar(f)} copyable />
             ))}
           </div>
         )}

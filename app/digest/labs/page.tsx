@@ -1,18 +1,24 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDigest, Badge, LINK } from '../shared'
 
-// Page 2 — the fit-ranked lab list. Each card is a preview (title-led, clamped findings); clicking
-// it selects the lab and goes to its detail page.
+// Page 2 — the fit-ranked lab list. Each card is a summary-only preview; clicking it opens the
+// detail page. Cards can be hidden ("already in this lab" / "not interested") — persisted client-
+// side across searches, with an unhide section at the bottom.
 export default function LabsPage() {
   const router = useRouter()
-  const { labs, query, selectLab, hydrated } = useDigest()
+  const { labs, query, selectLab, hydrated, hiddenLabs, hideLab, unhideLab } = useDigest()
+  const [showHidden, setShowHidden] = useState(false)
 
   const open = (labUrl: string) => {
     selectLab(labUrl)
     router.push('/digest/lab')
   }
+
+  const visible = labs.filter((l) => !hiddenLabs.includes(l.labUrl))
+  const hidden = labs.filter((l) => hiddenLabs.includes(l.labUrl))
 
   if (!hydrated) return <main className="max-w-3xl mx-auto px-4 py-10 text-sm text-[#8A8478]">Loading…</main>
 
@@ -31,7 +37,7 @@ export default function LabsPage() {
         </div>
       ) : (
         <>
-          <p className="text-sm text-[#6E7076] mb-1">{labs.length} labs, most relevant first — open one to see its research.</p>
+          <p className="text-sm text-[#6E7076] mb-1">{visible.length} labs, most relevant first — open one to see its research.</p>
           {query && (
             <details className="mb-5 text-xs text-[#8A8478]">
               <summary className="cursor-pointer hover:text-[#6E7076]">what we matched on</summary>
@@ -39,11 +45,15 @@ export default function LabsPage() {
             </details>
           )}
           <div className="space-y-4">
-            {labs.map((lab) => (
-              <button
+            {visible.map((lab) => (
+              <div
                 key={lab.labUrl}
+                data-lab-card
+                role="button"
+                tabIndex={0}
                 onClick={() => open(lab.labUrl)}
-                className="w-full text-left border border-[#E7E0D2] bg-white/40 rounded-lg p-5 hover:border-[#1B3A5C]/50 hover:bg-white/70 transition-colors"
+                onKeyDown={(e) => e.key === 'Enter' && open(lab.labUrl)}
+                className="w-full text-left border border-[#E7E0D2] bg-white/40 rounded-lg p-5 hover:border-[#1B3A5C]/50 hover:bg-white/70 transition-colors cursor-pointer"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -67,11 +77,43 @@ export default function LabsPage() {
 
                 <div className="mt-3 flex items-center gap-4 text-xs">
                   {lab.applyInfo && <span className="text-[#A8842C] font-medium uppercase tracking-[0.1em]">▸ lists how to join</span>}
-                  <span className="ml-auto text-[#1B3A5C]">Open lab →</span>
+                  <span className="ml-auto flex items-center gap-4">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        hideLab(lab.labUrl)
+                      }}
+                      className="text-[#8A8478] hover:text-[#9B2C2C]"
+                      title="Hide this lab — already in it, already emailed, or not interested"
+                    >
+                      ✕ hide
+                    </button>
+                    <span className="text-[#1B3A5C]">Open lab →</span>
+                  </span>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
+
+          {hidden.length > 0 && (
+            <div className="mt-8 border-t border-[#E7E0D2] pt-4">
+              <button onClick={() => setShowHidden((v) => !v)} className={`text-sm ${LINK}`}>
+                {showHidden ? '↑ Collapse hidden labs' : `Hidden labs (${hidden.length}) — show`}
+              </button>
+              {showHidden && (
+                <div className="mt-3 space-y-2">
+                  {hidden.map((lab) => (
+                    <div key={lab.labUrl} className="flex items-center justify-between text-sm text-[#6E7076] border border-[#E7E0D2] rounded-md px-4 py-2.5">
+                      <span>{lab.piName ?? lab.labName ?? 'Lab'}</span>
+                      <button onClick={() => unhideLab(lab.labUrl)} className={LINK}>
+                        Unhide
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </>
       )}
     </main>

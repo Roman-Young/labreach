@@ -9,6 +9,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 export interface DigestFinding {
   type: string
   title: string | null
+  year: number | null
   content: string
   anchorQuote: string | null
   sourceId: string | null
@@ -28,6 +29,7 @@ export interface LabDigest {
   recruiting: string | null
   plainSummary: string | null
   applyInfo: ApplyInfo | null
+  researchAreas: string[] // lab's primary areas — feeds the email subject line topic
   relevance: number
   findings: DigestFinding[]
 }
@@ -111,11 +113,17 @@ export function FindingCard({
             source ↗
           </a>
         )}
-        <span className="ml-auto shrink-0 flex items-center gap-3">
+      </div>
+      <p className={`text-[15px] text-[#20242B] leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
+      {/* Verbatim anchor quotes stay in the DATA (grounding + the copy blob) but are no longer
+          rendered — they doubled the page for first-years without adding decision value. The
+          source ↗ link above remains the trust anchor. (Roman, 2026-08-10.) */}
+      {(copyable || onToggleStar) && !preview && (
+        <div className="mt-2 flex items-center gap-2">
           {copyable && (
             <button
               onClick={copy}
-              className="text-[#8A8478] hover:text-[#1B3A5C]"
+              className="px-3 py-1.5 text-[13px] border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] hover:bg-white/60 transition-colors"
               title="Copy this finding — paste it into your own LLM to have it explained"
             >
               {copied ? '✓ copied' : '⧉ copy'}
@@ -124,19 +132,17 @@ export function FindingCard({
           {onToggleStar && (
             <button
               onClick={onToggleStar}
-              className={starred ? 'text-[#A8842C] font-medium' : 'text-[#B7AF9E] hover:text-[#6E7076]'}
+              className={`px-3 py-1.5 text-[13px] border rounded-md transition-colors ${
+                starred
+                  ? 'border-[#A8842C] bg-[#A8842C]/10 text-[#7A5C12] font-medium'
+                  : 'border-[#D9D2C4] text-[#6E7076] hover:border-[#A8842C] hover:text-[#7A5C12]'
+              }`}
               title={starred ? 'Starred — added to your email' : 'Star this to use it in your email'}
             >
               {starred ? '★ starred' : '☆ star'}
             </button>
           )}
-        </span>
-      </div>
-      <p className={`text-[15px] text-[#20242B] leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
-      {!preview && f.anchorQuote && (
-        <p className="mt-1.5 text-[13px] text-[#6E7076] italic border-l-2 border-[#A8842C]/50 pl-2.5">
-          &ldquo;{f.anchorQuote}&rdquo;
-        </p>
+        </div>
       )}
     </div>
   )
@@ -174,6 +180,8 @@ interface FlowState {
   selectedLabUrl: string | null
   labFindings: DigestFinding[] // the selected lab's full research (set by the lab page)
   starred: DigestFinding[] // the finding objects the student starred, for the email
+  hiddenLabs: string[] // labUrls the student hid ("already in it" / "not interested") — survives new searches
+  draft: { text: string; style: string; ask: string } | null // compose edits — survive tab close; cleared on new lab
 }
 const EMPTY: FlowState = {
   profile: { name: '', year: '', major: '', interests: [], resume: '', topLabs: 15 },
@@ -182,6 +190,8 @@ const EMPTY: FlowState = {
   selectedLabUrl: null,
   labFindings: [],
   starred: [],
+  hiddenLabs: [],
+  draft: null,
 }
 const STORAGE = 'labreach_flow'
 
@@ -194,6 +204,9 @@ interface DigestCtx extends FlowState {
   setLabFindings: (findings: DigestFinding[]) => void
   toggleStar: (f: DigestFinding) => void
   isStarred: (f: DigestFinding) => boolean
+  hideLab: (labUrl: string) => void
+  unhideLab: (labUrl: string) => void
+  setDraft: (draft: FlowState['draft']) => void
 }
 const Ctx = createContext<DigestCtx | null>(null)
 
@@ -229,7 +242,7 @@ export function DigestProvider({ children }: { children: React.ReactNode }) {
     selectedLab,
     setProfile: (profile) => setState((s) => ({ ...s, profile })),
     setResults: (query, labs) => setState((s) => ({ ...s, query, labs })),
-    selectLab: (labUrl) => setState((s) => ({ ...s, selectedLabUrl: labUrl, labFindings: [], starred: [] })),
+    selectLab: (labUrl) => setState((s) => ({ ...s, selectedLabUrl: labUrl, labFindings: [], starred: [], draft: null })),
     setLabFindings: (labFindings) => setState((s) => ({ ...s, labFindings })),
     toggleStar: (f) =>
       setState((s) => {
@@ -237,6 +250,9 @@ export function DigestProvider({ children }: { children: React.ReactNode }) {
         return { ...s, starred: s.starred.some((x) => findingKey(x) === k) ? s.starred.filter((x) => findingKey(x) !== k) : [...s.starred, f] }
       }),
     isStarred: (f) => state.starred.some((x) => findingKey(x) === findingKey(f)),
+    hideLab: (labUrl) => setState((s) => ({ ...s, hiddenLabs: s.hiddenLabs.includes(labUrl) ? s.hiddenLabs : [...s.hiddenLabs, labUrl] })),
+    unhideLab: (labUrl) => setState((s) => ({ ...s, hiddenLabs: s.hiddenLabs.filter((u) => u !== labUrl) })),
+    setDraft: (draft) => setState((s) => ({ ...s, draft })),
   }
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>

@@ -76,10 +76,10 @@ try {
   await page.fill('textarea', 'IgA-coated maternal microbiota, single-cell RNA-seq with Seurat, flow cytometry.')
   await page.getByRole('button', { name: /find my labs/i }).click()
   await page.waitForURL('**/digest/labs', { timeout: 60000 })
-  const labCount = await page.locator('button:has(h3)').count()
+  const labCount = await page.locator('[data-lab-card]').count()
   ok(labCount >= 5, `labs page shows ${labCount} labs`)
 
-  await page.locator('button:has(h3)').first().click()
+  await page.locator('[data-lab-card]').first().click()
   await page.waitForURL('**/digest/lab', { timeout: 20000 })
   await page.waitForSelector('text=Star the research', { timeout: 45000 })
   await page.waitForTimeout(1500)
@@ -89,7 +89,7 @@ try {
   await page.waitForTimeout(200)
   ok((await page.locator('text=/findings starred/').first().innerText()).includes('2'), 'sticky bar shows 2 starred')
 
-  await page.getByText('⧉ copy', { exact: false }).first().click()
+  await page.getByRole('button', { name: '⧉ copy' }).first().click()
   await page.waitForTimeout(300)
   let clip = ''
   try { clip = await page.evaluate(() => navigator.clipboard.readText()) } catch (e) { clip = 'ERR' }

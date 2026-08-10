@@ -2,16 +2,50 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useDigest, Badge, FindingCard, ApplyInfoCard, LINK, BTN, type DigestFinding, type LabDigest } from '../shared'
+import { useDigest, Badge, FindingCard, ApplyInfoCard, findingKey, LINK, BTN, type DigestFinding, type LabDigest } from '../shared'
 
-// Page 3 — the selected lab's full research. Every finding is starrable; starred findings feed the
-// email skeleton on the compose page.
+// Page 3 — the selected lab's research, ANTI-OVERLOAD edition (Roman, 2026-08-10): orientation
+// first (plain-terms panel, apply info), then just the top 3 recent+relevant papers with a
+// "show all" reveal. Quotes and overview/future-direction chunks are no longer displayed — papers
+// only, the plain summary covers the overview job. Every finding is starrable; starred findings
+// feed the email skeleton on the compose page.
+
+const TIP_KEY = 'labreach_workflow_tip_dismissed'
+
+// Top 3 = recency-weighted relevance: prefer the most relevant papers from the last ~5 years
+// (a first-year emailing about a 2013 paper reads badly); backfill with older ones only if the
+// recent pool is thin. Input list is already relevance-ordered by the API.
+function topThree(papers: DigestFinding[]): DigestFinding[] {
+  const cutoff = new Date().getFullYear() - 5
+  const recent = papers.filter((p) => p.year && p.year >= cutoff)
+  const older = papers.filter((p) => !p.year || p.year < cutoff)
+  return [...recent, ...older].slice(0, 3)
+}
+
 export default function LabPage() {
   const router = useRouter()
   const { selectedLab, query, toggleStar, isStarred, starred, setLabFindings, hydrated } = useDigest()
   const [findings, setFindings] = useState<DigestFinding[] | null>(null)
+  const [showAll, setShowAll] = useState(false)
+  const [tipDismissed, setTipDismissed] = useState(true) // assume dismissed until localStorage read
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    try {
+      setTipDismissed(localStorage.getItem(TIP_KEY) === '1')
+    } catch {
+      /* ignore */
+    }
+  }, [])
+  const dismissTip = () => {
+    setTipDismissed(true)
+    try {
+      localStorage.setItem(TIP_KEY, '1')
+    } catch {
+      /* ignore */
+    }
+  }
 
   useEffect(() => {
     if (!hydrated) return // wait for localStorage before deciding to redirect
@@ -30,9 +64,11 @@ export default function LabPage() {
         const data = await res.json()
         if (!res.ok) throw new Error(data.error ?? 'Could not load the lab.')
         if (!cancelled) {
-          const fs = (data.lab as LabDigest).findings
-          setFindings(fs)
-          setLabFindings(fs)
+          // Papers only: the plain-terms panel replaced "overview" chunks, and raw future-direction
+          // quotes are hidden pending the synthesized trajectory field. Anti-overload by design.
+          const papers = (data.lab as LabDigest).findings.filter((f) => f.type === 'paper')
+          setFindings(papers)
+          setLabFindings(papers)
         }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : 'Could not load the lab.')
@@ -78,31 +114,54 @@ export default function LabPage() {
       </div>
 
       {lab.plainSummary && (
-        <div className="mt-5 border-t border-[#E7E0D2] pt-4">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-[#8A8478] mb-1.5">What this lab does — in plain terms</p>
-          <p className="text-[15px] text-[#20242B] leading-relaxed">{lab.plainSummary}</p>
+        <div className="mt-5 rounded-lg border border-[#1B3A5C]/25 bg-[#1B3A5C]/[0.05] px-5 py-4">
+          <p className="text-[11px] uppercase tracking-[0.12em] text-[#1B3A5C] font-medium mb-1.5">What this lab does — in plain terms</p>
+          <p className="text-[16px] text-[#20242B] leading-relaxed">{lab.plainSummary}</p>
         </div>
       )}
 
       {lab.applyInfo && (
-        <div className="mt-5">
+        <div className="mt-4">
           <ApplyInfoCard apply={lab.applyInfo} />
         </div>
       )}
 
-      <p className="mt-7 text-sm text-[#6E7076]">
-        Star the research that interests you — you&rsquo;ll build an email from what you pick.
-      </p>
+      <div className="mt-8 border-t border-[#E7E0D2] pt-5">
+        <p className="text-[11px] uppercase tracking-[0.12em] text-[#8A8478]">Their research — most relevant to you</p>
+        <p className="mt-1.5 text-sm text-[#6E7076]">
+          Star the research that interests you — you&rsquo;ll build an email from what you pick.
+        </p>
+
+        {!tipDismissed && (
+          <div className="mt-3 flex items-start justify-between gap-3 rounded-md border border-[#E7E0D2] bg-white/50 px-4 py-3 text-[13px] text-[#6E7076] leading-relaxed">
+            <span>
+              <span className="font-medium text-[#20242B]">Tip:</span> if an excerpt feels too dense, hit <span className="text-[#1B3A5C]">⧉ copy</span> and
+              paste it into ChatGPT or Claude — &ldquo;explain this to me like I&rsquo;m a freshman&rdquo; — then come back and star what
+              genuinely interests you.
+            </span>
+            <button onClick={dismissTip} className="shrink-0 text-[#8A8478] hover:text-[#20242B]" title="Dismiss">
+              ✕
+            </button>
+          </div>
+        )}
+      </div>
 
       {loading && <p className="mt-4 text-sm text-[#8A8478]">Loading this lab&rsquo;s research…</p>}
       {error && <p className="mt-4 text-sm text-[#9B2C2C]">{error}</p>}
 
       {findings && (
-        <div className="mt-4 space-y-3">
-          {findings.map((f, i) => (
-            <FindingCard key={i} f={f} starred={isStarred(f)} onToggleStar={() => toggleStar(f)} copyable />
-          ))}
-        </div>
+        <>
+          <div className="mt-4 space-y-4">
+            {(showAll ? findings : topThree(findings)).map((f) => (
+              <FindingCard key={findingKey(f)} f={f} starred={isStarred(f)} onToggleStar={() => toggleStar(f)} copyable />
+            ))}
+          </div>
+          {findings.length > 3 && (
+            <button onClick={() => setShowAll((v) => !v)} className={`mt-4 text-sm ${LINK}`}>
+              {showAll ? '↑ Show fewer' : `↓ Show all ${findings.length} research items`}
+            </button>
+          )}
+        </>
       )}
 
       {/* sticky compose bar */}
