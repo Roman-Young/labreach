@@ -142,9 +142,14 @@ export default function LabPage() {
         {!tipDismissed && (
           <div className="mt-3 flex items-start justify-between gap-3 rounded-md border border-[#E7E0D2] bg-white/50 px-4 py-3 text-[13px] text-[#6E7076] leading-relaxed">
             <span>
-              <span className="font-medium text-[#20242B]">Tip:</span> if an excerpt feels too dense, hit <span className="text-[#1B3A5C]">⧉ copy</span> and
-              paste it into ChatGPT or Claude — &ldquo;explain this to me like I&rsquo;m a freshman&rdquo; — then come back and star what
-              genuinely interests you.
+              <span className="font-medium text-[#20242B]">Tip:</span>{' '}
+              some excerpts get dense fast, and that&rsquo;s normal. If one doesn&rsquo;t
+              click, hit <span className="text-[#1B3A5C]">⧉ copy</span>{' '}
+              and paste it into ChatGPT or Claude (e.g. &ldquo;explain this like I&rsquo;m a first-year&rdquo;, or, to go deeper,
+              &ldquo;what future directions could come from this specific finding?&rdquo;). This isn&rsquo;t just about decoding one
+              paper. Building a real feel for a lab&rsquo;s work is what makes your email sound like you instead of a template, and
+              it&rsquo;s exactly the understanding you&rsquo;ll want if you land an interview. Everyone learns differently, so ask it
+              whatever actually makes things click for you, then come back and star what interests you.
             </span>
             <button onClick={dismissTip} className="shrink-0 p-2.5 -m-2 text-[#8A8478] hover:text-[#20242B]" title="Dismiss">
               ✕
