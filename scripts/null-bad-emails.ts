@@ -49,7 +49,7 @@ async function main() {
 
   const all = rows(await sql.query(`SELECT lab_url, pi_name, pi_email FROM lab_profiles WHERE status='done'`))
   const withEmail = all.filter((l) => l.pi_email && String(l.pi_email).trim())
-  const parts = all.map((l) => ({ ...l, pi: nameParts(l.pi_name as string) }))
+  const parts = all.map((l) => ({ lab: l, pi: nameParts(l.pi_name as string) }))
 
   // duplicate emails across distinct labs
   const byEmail = new Map<string, number>()
@@ -71,9 +71,9 @@ async function main() {
       continue
     }
     // belongs to a DIFFERENT PI in our DB?
-    const other = parts.find((o) => o.lab_url !== l.lab_url && strongMatch(local, o.pi))
+    const other = parts.find((o) => o.lab.lab_url !== l.lab_url && strongMatch(local, o.pi))
     if (other) {
-      bad.push({ url: l.lab_url as string, pi: l.pi_name as string, email, why: `belongs to a different PI (${other.pi_name})` })
+      bad.push({ url: l.lab_url as string, pi: l.pi_name as string, email, why: `belongs to a different PI (${other.lab.pi_name})` })
       continue
     }
     // otherwise: no name signal but unique + not generic + not another PI → likely a cryptic alias, KEEP
