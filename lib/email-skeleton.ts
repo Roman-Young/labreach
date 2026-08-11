@@ -54,15 +54,15 @@ function findingRef(f: SkeletonFinding): string {
 // The reaction prompt, made DIRECTIVE with example patterns rather than a bare "say why". The
 // student still writes it — the examples show the shape of a genuine reaction, not the words.
 const REACT_HINT =
-  'one sentence, in your own words — e.g. "I hadn\'t realized ___ could ___" or "I\'d assumed ___, but your result…"'
+  'one sentence in your own words (e.g. "I hadn\'t realized ___ could ___", or "I\'d assumed ___, but your result…")'
 
 // One starred finding → an inline prompt; several → a short bulleted list under a lead-in (inlining
 // multiple prompts in a sentence reads badly).
 function findingsClause(refs: SkeletonFinding[]): string {
-  if (refs.length === 1) return ` [Their work: "${findingRef(refs[0])}" — react to it: ${REACT_HINT}]`
+  if (refs.length === 1) return ` [Their work: "${findingRef(refs[0])}". React to it: ${REACT_HINT}]`
   return (
     `\n\nA couple of things in your work caught my eye:\n` +
-    refs.map((f) => `- ["${findingRef(f)}" — react: ${REACT_HINT}]`).join('\n')
+    refs.map((f) => `- ["${findingRef(f)}". React: ${REACT_HINT}]`).join('\n')
   )
 }
 
@@ -78,7 +78,7 @@ function subjectLine(input: SkeletonInput): string {
 function askLine(ask: AskStyle): string {
   switch (ask) {
     case 'accepting':
-      return "Are you currently taking undergraduate students in your lab? I'd be glad to discuss how I might contribute — or to send a few questions by email if that's easier."
+      return "Are you currently taking undergraduate students in your lab? I'd be glad to discuss how I might contribute, or to send a few questions by email if that's easier."
     case 'volunteer':
       return "I'd be glad to volunteer to get involved before any commitment. Would you be open to a brief conversation about your work and whether there's room for an undergraduate to help? I can also send my questions by email if that's easier."
     case 'meeting':
@@ -101,7 +101,7 @@ export function buildSkeleton(input: SkeletonInput): string {
     `${subjectLine(input)}\n\n` +
     `Dear ${prof},\n\n` +
     `My name is ${N} and I am a ${Y} ${M} at ${U}.${clause}\n\n` +
-    `[Your background, honestly — one or two sentences. If you've done research before: what you did and what it taught you. ` +
+    `[Your background, honestly (one or two sentences). If you've done research before: what you did and what it taught you. ` +
     `If not: what you're learning now (a class, a project, a skill) and why you're eager. Don't inflate it; "how much there's still to learn" is a fine, confident note.]\n\n` +
     `${askLine(input.ask)}${input.hasResume ? ' My resume is attached.' : ''} I have ~[X] hours/week available and can commit [2+ quarters].\n\n` +
     `Thank you for your time,\n${N}\n[your email]`
