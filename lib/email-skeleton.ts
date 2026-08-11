@@ -67,12 +67,13 @@ function findingsClause(refs: SkeletonFinding[]): string {
 }
 
 // Uniform subject line (Roman's format, 2026-08-10): short, scannable, front-loads the shared
-// interest, identifies the sender class in four words.
-function subjectLine(input: SkeletonInput): string {
+// interest, identifies the sender class in four words. Returned WITHOUT a "Subject:" prefix — the
+// compose page shows it in its own field so the copyable body never carries the subject (2026-08-11).
+function subjectText(input: SkeletonInput): string {
   const topic = (input.subjectTopic ?? '').trim() || '[your research interest]'
   const U = input.university.trim() || 'UCSD'
   const M = input.major.trim() || '[major]'
-  return `Subject: Interested in ${topic} | ${U} ${M} Undergrad`
+  return `Interested in ${topic} | ${U} ${M} Undergrad`
 }
 
 function askLine(ask: AskStyle): string {
@@ -87,7 +88,12 @@ function askLine(ask: AskStyle): string {
   }
 }
 
-export function buildSkeleton(input: SkeletonInput): string {
+export interface Skeleton {
+  subject: string // shown in its own field; NOT part of the copyable body
+  body: string // "Dear …" through the sign-off
+}
+
+export function buildSkeleton(input: SkeletonInput): Skeleton {
   const { name, year, major, university, piName } = input
   const N = name.trim() || '[your name]'
   const Y = year.trim() || '[year]'
@@ -97,13 +103,13 @@ export function buildSkeleton(input: SkeletonInput): string {
   const refs = input.findings.length ? input.findings : [{ title: null, content: '[the finding you picked]' }]
   const clause = findingsClause(refs)
 
-  return (
-    `${subjectLine(input)}\n\n` +
+  const body =
     `Dear ${prof},\n\n` +
     `My name is ${N} and I am a ${Y} ${M} at ${U}.${clause}\n\n` +
     `[Your background, honestly (one or two sentences). If you've done research before: what you did and what it taught you. ` +
     `If not: what you're learning now (a class, a project, a skill) and why you're eager. Don't inflate it; "how much there's still to learn" is a fine, confident note.]\n\n` +
     `${askLine(input.ask)}${input.hasResume ? ' My resume is attached.' : ''} I have ~[X] hours/week available and can commit [2+ quarters].\n\n` +
     `Thank you for your time,\n${N}\n[your email]`
-  )
+
+  return { subject: subjectText(input), body }
 }

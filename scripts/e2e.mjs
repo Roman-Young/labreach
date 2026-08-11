@@ -113,6 +113,10 @@ try {
   ok(skel.includes('Sophomore') && skel.includes('Bioinformatics'), 'skeleton has year + major')
   ok(skel.includes('Dear Professor'), 'skeleton greets the PI')
   ok(/~15 min|conversation/.test(skel), 'default meeting ask present')
+  // subject lives in its OWN field, never in the copyable body
+  const subj = await page.locator('input').first().inputValue()
+  ok(/Interested in .+ Undergrad/.test(subj), `subject field populated (${subj})`)
+  ok(!skel.includes('Subject:') && !skel.startsWith('Interested in'), 'subject is NOT in the email body')
 
   await page.getByRole('button', { name: 'Offer to volunteer' }).click()
   await page.waitForTimeout(300)

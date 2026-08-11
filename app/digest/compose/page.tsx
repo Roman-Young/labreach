@@ -2,16 +2,17 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useDigest, FindingCard, findingKey, LINK, BTN, chip } from '../shared'
+import { useDigest, FindingCard, findingKey, LINK, BTN, chip, type DigestFinding } from '../shared'
 import { buildSkeleton, type AskStyle } from '@/lib/email-skeleton'
 import { EMAIL_EXAMPLES, type EmailExample } from '@/lib/email-examples'
 
 // Page 4 — compose. Turn the starred findings into a deterministic email SKELETON (never an LLM
-// writer). 2026-08-11: ONE skeleton, no cosmetic styles — range/tone taught by the annotated real
-// examples. `ask` axis stays. Layout: full-width editor as the hero; the starred research (the
-// source for every bracket) lives in a SLIDE-IN DRAWER opened on demand via the ★ Reference button,
-// so it never permanently takes screen space. Examples + star-more sit full-width below the fold
-// (read before drafting, not during). Manual edits PERSIST (localStorage) and are never clobbered.
+// writer). 2026-08-11: ONE skeleton, no cosmetic styles. Layout learned from two rejected tries
+// (side rail, slide-in drawer): the real problem was VOLUME, not placement — each finding is a
+// ~150-word paragraph. So the reference is now COMPACT: one-line titles, expand a single one only
+// if you want to re-read it. That's small enough to sit inline above a full-width editor, no rail
+// or drawer. Subject lives in its OWN field (not the body), so "Copy email" never drags "Subject:"
+// into the pasted message. Edits PERSIST (localStorage) and are never silently clobbered.
 
 const ASKS: { id: AskStyle; label: string }[] = [
   { id: 'meeting', label: 'Brief meeting' },
@@ -19,8 +20,14 @@ const ASKS: { id: AskStyle; label: string }[] = [
   { id: 'volunteer', label: 'Offer to volunteer' },
 ]
 
-// Render an example email with each annotated quote highlighted inline + numbered, notes beneath.
-// Quotes are verbatim substrings of body; a non-matching quote just shows its note (defensive).
+// one-line label for a collapsed finding: its title, else the first ~12 words of its content
+function findingLabel(f: DigestFinding): string {
+  const t = (f.title ?? '').trim()
+  if (t) return t
+  const w = f.content.trim().split(/\s+/).slice(0, 12).join(' ')
+  return `${w}…`
+}
+
 function ExampleCard({ ex }: { ex: EmailExample }) {
   const marks = ex.annotations
     .map((a, i) => ({ ...a, num: i + 1, start: ex.body.indexOf(a.quote) }))
@@ -34,7 +41,6 @@ function ExampleCard({ ex }: { ex: EmailExample }) {
       cursor = m.start + m.quote.length
     }
   }
-
   const nodes: React.ReactNode[] = []
   let pos = 0
   nonOverlap.forEach((m, i) => {
@@ -48,7 +54,6 @@ function ExampleCard({ ex }: { ex: EmailExample }) {
     pos = m.start + m.quote.length
   })
   if (pos < ex.body.length) nodes.push(ex.body.slice(pos))
-
   return (
     <div className="rounded-lg border border-[#E7E0D2] bg-white/50 p-4">
       <p className="text-[11px] uppercase tracking-[0.1em] text-[#8A8478] mb-2">{ex.scenario}</p>
@@ -69,27 +74,19 @@ export default function ComposePage() {
   const router = useRouter()
   const { selectedLab, profile, starred, labFindings, toggleStar, isStarred, hydrated, draft, setDraft } = useDigest()
   const [ask, setAsk] = useState<AskStyle>('meeting')
-  const [text, setText] = useState('')
-  const [copied, setCopied] = useState(false)
+  const [subject, setSubject] = useState('')
+  const [body, setBody] = useState('')
+  const [copied, setCopied] = useState<'' | 'subject' | 'body'>('')
+  const [expanded, setExpanded] = useState<string | null>(null) // which starred finding is open
   const [showMore, setShowMore] = useState(false)
   const [showExamples, setShowExamples] = useState(false)
-  const [showRef, setShowRef] = useState(false) // starred-research drawer
   const restored = useRef(false)
 
   useEffect(() => {
-    if (!hydrated) return // wait for localStorage before deciding to redirect
+    if (!hydrated) return
     if (!selectedLab || starred.length === 0) router.replace('/digest/lab')
   }, [hydrated, selectedLab, starred.length, router])
 
-  // Esc closes the drawer.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setShowRef(false)
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [])
-
-  // Subject topic: the lab's own primary research area reads best; fall back to the student's
-  // first interest. buildSkeleton bracket-prompts if both are missing.
   const subjectTopic = useMemo(
     () => selectedLab?.researchAreas?.[0] ?? profile.interests[0] ?? null,
     [selectedLab, profile.interests],
@@ -109,41 +106,50 @@ export default function ComposePage() {
           subjectTopic,
           findings: starred.map((f) => ({ title: f.title, content: f.content })),
         })
-      : ''
+      : { subject: '', body: '' }
 
-  // One-time init after hydration: restore the saved draft (survives tab close) or generate fresh.
+  // One-time init after hydration: restore the saved draft or generate fresh. Handles the older
+  // draft shape ({ text }) by treating it as the body and regenerating the subject.
   useEffect(() => {
     if (!hydrated || restored.current || !selectedLab || starred.length === 0) return
     restored.current = true
-    if (draft?.text) {
-      setAsk(draft.ask as AskStyle)
-      setText(draft.text)
+    const fresh = build(ask)
+    if (draft?.body || draft?.text) {
+      setAsk((draft.ask as AskStyle) ?? 'meeting')
+      setSubject(draft.subject ?? fresh.subject)
+      setBody(draft.body ?? draft.text ?? fresh.body)
     } else {
-      setText(build(ask))
+      setSubject(fresh.subject)
+      setBody(fresh.body)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated, selectedLab, starred.length])
 
-  // Persist every edit (text, ask) into the flow context → localStorage.
+  // Persist edits.
   useEffect(() => {
-    if (!hydrated || !restored.current || !text) return
-    setDraft({ text, ask })
+    if (!hydrated || !restored.current || !body) return
+    setDraft({ subject, body, ask })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text, ask])
+  }, [subject, body, ask])
 
   if (!hydrated) return <main className="max-w-3xl mx-auto px-4 py-10 text-sm text-[#8A8478]">Loading…</main>
   if (!selectedLab || starred.length === 0) return null
 
   const pickAsk = (a: AskStyle) => {
     setAsk(a)
-    setText(build(a))
+    const s = build(a)
+    setSubject(s.subject)
+    setBody(s.body)
   }
-  const regenerate = () => setText(build(ask))
-
-  const copy = () =>
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
+  const regenerate = () => {
+    const s = build(ask)
+    setSubject(s.subject)
+    setBody(s.body)
+  }
+  const copyText = (which: 'subject' | 'body', value: string) =>
+    navigator.clipboard.writeText(value).then(() => {
+      setCopied(which)
+      setTimeout(() => setCopied(''), 1500)
     })
 
   const unstarred = labFindings.filter((f) => !isStarred(f))
@@ -162,7 +168,32 @@ export default function ComposePage() {
         voice; the specifics have to be yours. Don&rsquo;t send it as-is.
       </p>
 
-      {/* ask + reference trigger */}
+      {/* compact starred research: one-line titles, expand a single one to re-read it */}
+      <div className="mt-4 rounded-md border border-[#A8842C]/25 bg-[#A8842C]/[0.04] px-3 py-2">
+        <p className="text-[11px] uppercase tracking-[0.12em] text-[#7A5C12] font-medium">
+          ★ Your starred research ({starred.length}) — what each bracket reacts to
+        </p>
+        <div className="mt-1 divide-y divide-[#A8842C]/15">
+          {starred.map((f) => {
+            const key = findingKey(f)
+            const open = expanded === key
+            return (
+              <div key={key}>
+                <button
+                  onClick={() => setExpanded(open ? null : key)}
+                  className="w-full flex items-start gap-2 py-1.5 text-left text-[13px] text-[#3A3F47] hover:text-[#20242B]"
+                >
+                  <span className="text-[#A8842C] mt-0.5">{open ? '▾' : '▸'}</span>
+                  <span className={open ? 'font-medium' : ''}>{findingLabel(f)}</span>
+                </button>
+                {open && <p className="pb-2 pl-5 text-[12.5px] text-[#6E7076] leading-relaxed">{f.content}</p>}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* ask */}
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <span className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Your ask</span>
         {ASKS.map((a) => (
@@ -170,29 +201,43 @@ export default function ComposePage() {
             {a.label}
           </button>
         ))}
-        <button
-          onClick={() => setShowRef(true)}
-          className="ml-auto px-3 py-1.5 text-[13px] rounded-md border border-[#A8842C]/50 bg-[#A8842C]/[0.08] text-[#7A5C12] font-medium hover:bg-[#A8842C]/15 transition-colors"
-          title="Show your starred research while you write"
-        >
-          ★ Reference ({starred.length})
-        </button>
       </div>
 
-      {/* full-width editor — the hero */}
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        className="mt-3 w-full min-h-[440px] lg:min-h-[64vh] px-3.5 py-3 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] text-base sm:text-sm font-mono leading-relaxed focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C] resize-y"
-      />
+      {/* subject — its own field, kept OUT of the copyable body */}
+      <div className="mt-4">
+        <label className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Subject</label>
+        <div className="mt-1 flex gap-2">
+          <input
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            className="flex-1 min-w-0 px-3 py-2 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] text-base sm:text-sm focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C]"
+          />
+          <button
+            onClick={() => copyText('subject', subject)}
+            className="shrink-0 px-3 py-2 text-[13px] border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] transition-colors"
+          >
+            {copied === 'subject' ? '✓' : 'Copy'}
+          </button>
+        </div>
+      </div>
+
+      {/* body — full-width editor, the hero */}
+      <div className="mt-4">
+        <label className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Email</label>
+        <textarea
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          className="mt-1 w-full min-h-[420px] lg:min-h-[58vh] px-3.5 py-3 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] text-base sm:text-sm font-mono leading-relaxed focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C] resize-y"
+        />
+      </div>
       <div className="mt-2.5 flex flex-wrap items-center gap-3">
-        <button onClick={copy} className={`px-3.5 py-2 sm:py-1.5 text-sm ${BTN}`}>
-          {copied ? '✓ copied' : 'Copy skeleton'}
+        <button onClick={() => copyText('body', body)} className={`px-3.5 py-2 sm:py-1.5 text-sm ${BTN}`}>
+          {copied === 'body' ? '✓ copied' : 'Copy email'}
         </button>
         <button
           onClick={regenerate}
           className="px-3.5 py-2 sm:py-1.5 text-sm border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] transition-colors"
-          title="Rebuild the skeleton from your current ask and starred research (replaces your edits)"
+          title="Rebuild subject + email from your current ask and starred research (replaces your edits)"
         >
           ↻ Regenerate
         </button>
@@ -233,37 +278,6 @@ export default function ComposePage() {
             ))}
           </div>
         )}
-      </div>
-
-      {/* ── slide-in starred-research drawer ────────────────────────────────── */}
-      <div className={`fixed inset-0 z-40 ${showRef ? '' : 'pointer-events-none'}`} aria-hidden={!showRef}>
-        <div
-          onClick={() => setShowRef(false)}
-          className={`absolute inset-0 bg-black/20 transition-opacity duration-200 ${showRef ? 'opacity-100' : 'opacity-0'}`}
-        />
-        <aside
-          className={`absolute right-0 top-0 h-full w-[400px] max-w-[88vw] bg-[#FBF8F1] border-l border-[#E7E0D2] shadow-2xl overflow-y-auto transition-transform duration-200 ${
-            showRef ? 'translate-x-0' : 'translate-x-full'
-          }`}
-        >
-          <div className="sticky top-0 flex items-center justify-between gap-3 bg-[#FBF8F1]/95 backdrop-blur border-b border-[#E7E0D2] px-4 py-3">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.12em] text-[#7A5C12] font-medium">★ Your starred research ({starred.length})</p>
-              <p className="text-[11px] text-[#8A8478]">The source for every bracket. Write from this.</p>
-            </div>
-            <button onClick={() => setShowRef(false)} className="shrink-0 p-2 -m-1 text-[#8A8478] hover:text-[#20242B]" title="Close (Esc)">
-              ✕
-            </button>
-          </div>
-          <div className="px-4 py-3 space-y-4">
-            {starred.map((f) => (
-              <div key={findingKey(f)} className="border-l-2 border-[#A8842C] pl-3">
-                {f.title && <p className="text-[13px] font-medium text-[#20242B] leading-snug">{f.title}</p>}
-                <p className="mt-1 text-[13px] text-[#6E7076] leading-relaxed">{f.content}</p>
-              </div>
-            ))}
-          </div>
-        </aside>
       </div>
     </main>
   )
