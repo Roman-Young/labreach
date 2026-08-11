@@ -13,46 +13,10 @@ export {} // module scope
 process.loadEnvFile('.env.local')
 
 import FirecrawlApp from '@mendable/firecrawl-js'
+import { nameParts, strongMatch, GENERIC, EMAIL_RE } from '../lib/name-match'
 
 const rows = (r: unknown): Array<Record<string, unknown>> =>
   (Array.isArray(r) ? r : ((r as { rows?: unknown[] }).rows ?? [])) as Array<Record<string, unknown>>
-const strip = (s: string) =>
-  s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z\s,]/g, ' ').replace(/\s+/g, ' ').trim()
-
-// Returns first + ALL surname segments (handles hyphenated/compound names like
-// "Schmid-Schoenbein" → ["schmid","schoenbein"], so gschmid@ still matches).
-function nameParts(pi: string | null): { first: string; lasts: string[] } {
-  if (!pi) return { first: '', lasts: [] }
-  const s = strip(pi.replace(/^dr\.?\s+/i, '').replace(/[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi, ''))
-  let first = '',
-    rest: string[] = []
-  if (s.includes(',')) {
-    const [l, f] = s.split(',')
-    first = (f || '').trim().split(' ')[0] || ''
-    rest = (l || '').trim().split(' ').filter(Boolean)
-  } else {
-    const toks = s.split(' ').filter(Boolean)
-    first = toks[0] || ''
-    rest = toks.slice(1)
-  }
-  return { first, lasts: rest.filter((t) => t.length >= 3) }
-}
-const COMMON = new Set(['zhang', 'li', 'wang', 'chen', 'liu', 'yang', 'huang', 'wu', 'xu', 'sun', 'zhao', 'zhou', 'kim', 'lee', 'park', 'cho', 'choi', 'singh', 'kumar', 'patel', 'shah', 'smith', 'brown', 'jones', 'garcia', 'nguyen', 'tran', 'khan', 'ali', 'das'])
-const GENERIC = /(^|[.-])(info|admin|contact|webmaster|help|support|no-?reply|donotreply|registered|available|found|application|service|online)@/i
-const EMAIL_RE = /[a-z0-9](?:[a-z0-9._%+-]*[a-z0-9])?@[a-z0-9.-]+\.(?:edu|org|com|net|gov)/gi
-
-function strongMatch(email: string, pi: { first: string; lasts: string[] }): boolean {
-  if (GENERIC.test(email)) return false
-  const local = email.split('@')[0].toLowerCase()
-  const last = pi.lasts.find((l) => local.includes(l)) // any surname segment present?
-  if (!last) return false
-  // local-part IS exactly a surname (e.g. "ecker@salk.edu", "gage@salk.edu") — safe on an
-  // uncommon surname even with no first-name signal; a common one still needs disambiguation.
-  if (local === last && !COMMON.has(last)) return true
-  const fullFirst = pi.first.length >= 3 && local.includes(pi.first)
-  const initLast = !!pi.first && local.startsWith(pi.first[0])
-  return COMMON.has(last) ? fullFirst : fullFirst || initLast
-}
 
 const SHARED = ['profiles.ucsd.edu', 'providers.ucsd.edu', 'ucsd.edu']
 function candidateUrls(labUrl: string): string[] {

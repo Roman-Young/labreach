@@ -11,36 +11,13 @@ export {} // module scope
 //   npx tsx scripts/null-bad-emails.ts --execute  → set pi_email = NULL for the wrong ones
 process.loadEnvFile('.env.local')
 
+import { nameParts, localMatchesPi, GENERIC, type PiName } from '../lib/name-match'
+
 const rows = (r: unknown): Array<Record<string, unknown>> =>
   (Array.isArray(r) ? r : ((r as { rows?: unknown[] }).rows ?? [])) as Array<Record<string, unknown>>
-const strip = (s: string) =>
-  s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z\s,]/g, ' ').replace(/\s+/g, ' ').trim()
 
-function nameParts(pi: string | null): { first: string; last: string } {
-  if (!pi) return { first: '', last: '' }
-  const s = strip(pi.replace(/^dr\.?\s+/i, '').replace(/[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi, ''))
-  if (s.includes(',')) {
-    const [l, f] = s.split(',')
-    return { first: (f || '').trim().split(' ')[0] || '', last: (l || '').trim().split(' ').pop() || '' }
-  }
-  const toks = s.split(' ').filter(Boolean)
-  return { first: toks[0] || '', last: toks[toks.length - 1] || '' }
-}
-const COMMON = new Set(['zhang', 'li', 'wang', 'chen', 'liu', 'yang', 'huang', 'wu', 'xu', 'sun', 'zhao', 'zhou', 'kim', 'lee', 'park', 'cho', 'choi', 'singh', 'kumar', 'patel', 'shah', 'smith', 'brown', 'jones', 'garcia', 'nguyen', 'tran', 'khan', 'ali', 'das'])
-// Generic/support mailboxes — judged by the LOCAL-PART only, never the domain (ferhatay@lji.org is
-// a real personal address; contact@lji.org is not). Topic/lab inboxes (phages@, musclelab@) are
-// KEPT — they're reachable lab contacts, not wrong.
-const GENERIC = /(^|[.-])(info|admin|contact|webmaster|help|support|no-?reply|donotreply|registered|available|found|application|service|online)@/i
-
-// strong: local-part clearly belongs to this person
-function strongMatch(local: string, pi: { first: string; last: string }): boolean {
-  if (pi.last.length < 3 || !local.includes(pi.last)) return false
-  if (local === pi.last && !COMMON.has(pi.last)) return true
-  const fullFirst = pi.first.length >= 3 && local.includes(pi.first)
-  const initLast = !!pi.first && local.startsWith(pi.first[0])
-  if (COMMON.has(pi.last)) return fullFirst
-  return fullFirst || initLast
-}
+// strong: local-part clearly belongs to this person (shared logic — lib/name-match.ts)
+const strongMatch = (local: string, pi: PiName): boolean => localMatchesPi(local, pi)
 
 async function main() {
   const { requireSql } = await import('../lib/db')

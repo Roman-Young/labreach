@@ -5,22 +5,10 @@ export {} // module scope
 // in at ingest. Writes nothing.  npx tsx scripts/audit-emails.ts
 process.loadEnvFile('.env.local')
 
+import { nameParts, weakNameSignal, GENERIC } from '../lib/name-match'
+
 const rows = (r: unknown): Array<Record<string, unknown>> =>
   (Array.isArray(r) ? r : ((r as { rows?: unknown[] }).rows ?? [])) as Array<Record<string, unknown>>
-const strip = (s: string) =>
-  s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z\s,]/g, ' ').replace(/\s+/g, ' ').trim()
-
-function nameParts(pi: string | null): { first: string; last: string } {
-  if (!pi) return { first: '', last: '' }
-  const s = strip(pi.replace(/^dr\.?\s+/i, '').replace(/[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi, ''))
-  if (s.includes(',')) {
-    const [l, f] = s.split(',')
-    return { first: (f || '').trim().split(' ')[0] || '', last: (l || '').trim().split(' ').pop() || '' }
-  }
-  const toks = s.split(' ').filter(Boolean)
-  return { first: toks[0] || '', last: toks[toks.length - 1] || '' }
-}
-const GENERIC = /^(info|admin|contact|webmaster|help|support|office|lab|no-?reply|donotreply|hr|jobs|careers|registered|available|found|application|service|online)@/i
 
 async function main() {
   const { requireSql } = await import('../lib/db')
@@ -38,11 +26,8 @@ async function main() {
       flagged.push({ pi: l.pi_name as string, email, why: 'generic mailbox' })
       continue
     }
-    const hasLast = pi.last.length >= 3 && local.includes(pi.last)
-    const hasFirst = pi.first.length >= 3 && local.includes(pi.first)
-    const hasInitLast = !!pi.first && pi.last.length >= 3 && local.includes(`${pi.first[0]}${pi.last}`)
-    if (!hasLast && !hasFirst && !hasInitLast) {
-      flagged.push({ pi: l.pi_name as string, email, why: `no name signal (PI: ${pi.first} ${pi.last})` })
+    if (!weakNameSignal(local, pi)) {
+      flagged.push({ pi: l.pi_name as string, email, why: `no name signal (PI: ${pi.first} ${pi.lasts.join(' ')})` })
     }
   }
 

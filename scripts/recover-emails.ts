@@ -12,51 +12,21 @@ export {} // module scope (isolates top-level `main` from sibling CLI scripts)
 //   npx tsx scripts/recover-emails.ts --execute  → applies ONLY the strong, grounded, name-matched
 process.loadEnvFile('.env.local')
 
+import { nameParts, localMatchesPi, GENERIC, EMAIL_RE, OBF_RE, type PiName } from '../lib/name-match'
+
 const rows = (r: unknown): Array<Record<string, unknown>> =>
   (Array.isArray(r) ? r : ((r as { rows?: unknown[] }).rows ?? [])) as Array<Record<string, unknown>>
 
-const strip = (s: string) =>
-  s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z\s,]/g, ' ').replace(/\s+/g, ' ').trim()
-
-function nameParts(pi: string | null): { first: string; last: string } {
-  if (!pi) return { first: '', last: '' }
-  const s = strip(pi.replace(/^dr\.?\s+/i, '').replace(/[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi, ''))
-  if (s.includes(',')) {
-    const [l, f] = s.split(',')
-    return { first: (f || '').trim().split(' ')[0] || '', last: (l || '').trim().split(' ').pop() || '' }
-  }
-  const toks = s.split(' ').filter(Boolean)
-  return { first: toks[0] || '', last: toks[toks.length - 1] || '' }
-}
-
-// Common surnames where first-initial+last is NOT enough (many people share them) — require the
-// full first name in the local part before trusting the match.
-const COMMON = new Set([
-  'zhang', 'li', 'wang', 'chen', 'liu', 'yang', 'huang', 'wu', 'xu', 'sun', 'ma', 'zhao', 'zhou', 'kim',
-  'lee', 'park', 'cho', 'choi', 'singh', 'kumar', 'patel', 'shah', 'smith', 'johnson', 'brown', 'jones',
-  'garcia', 'martinez', 'nguyen', 'tran', 'gonzalez', 'rodriguez', 'khan', 'ali', 'das',
-])
-
-const EMAIL_RE = /[a-z0-9](?:[a-z0-9._%+-]*[a-z0-9])?@[a-z0-9.-]+\.(?:edu|org|com|net|gov)/gi
-const OBF_RE = /([a-z0-9._%+-]+)\s*(?:\[at\]|\(at\)|\sat\s|&#0*64;)\s*([a-z0-9.-]+?)\s*(?:\[dot\]|\(dot\)|\sdot\s|\.)\s*(edu|org|com|net|gov)/gi
-const GENERIC = /^(info|admin|contact|webmaster|help|support|office|lab|no-?reply|donotreply|hr|jobs|careers|registered|available|found|application|service|online)@/i
-
-// Gate B. Returns {strong, reason}. Strong = safe to auto-write (paired with Gate A + not obfuscated).
-function nameMatch(email: string, pi: { first: string; last: string }): { strong: boolean; reason: string } {
-  const local = email.split('@')[0].toLowerCase()
+// Gate B (shared logic in lib/name-match.ts) with human-readable reasons for the review output.
+function nameMatch(email: string, pi: PiName): { strong: boolean; reason: string } {
   if (GENERIC.test(email)) return { strong: false, reason: 'generic mailbox' }
-  if (pi.last.length < 3) return { strong: false, reason: 'no usable PI last name' }
-  if (!local.includes(pi.last)) return { strong: false, reason: `local-part lacks last name "${pi.last}"` }
-  if (local === pi.last && !COMMON.has(pi.last)) return { strong: true, reason: `local-part IS the surname "${pi.last}"` }
-  const hasFullFirst = pi.first.length >= 3 && local.includes(pi.first)
-  const hasFirstInit = !!pi.first && local.startsWith(pi.first[0])
-  if (COMMON.has(pi.last)) {
-    return hasFullFirst
-      ? { strong: true, reason: `full name in local-part (${pi.first} ${pi.last}); common surname disambiguated` }
-      : { strong: false, reason: `common surname "${pi.last}" without full first name — REVIEW` }
-  }
-  if (hasFullFirst || hasFirstInit) return { strong: true, reason: `local-part matches PI (${pi.first} ${pi.last})` }
-  return { strong: false, reason: `last name present but no first-name signal — REVIEW` }
+  if (!pi.lasts.length) return { strong: false, reason: 'no usable PI last name' }
+  const local = email.split('@')[0].toLowerCase()
+  if (!pi.lasts.some((l) => local.includes(l)))
+    return { strong: false, reason: `local-part lacks last name "${pi.lasts.join('/')}"` }
+  return localMatchesPi(local, pi)
+    ? { strong: true, reason: `local-part matches PI (${pi.first} ${pi.lasts.join(' ')})` }
+    : { strong: false, reason: 'surname present but not identifying (common surname or no first-name signal) — REVIEW' }
 }
 
 async function main() {
@@ -94,7 +64,7 @@ async function main() {
     } else {
       // pick something to eyeball: a name-containing address if any, else the first non-generic
       const cand =
-        [...plain, ...obfs].find((e) => pi.last.length >= 3 && e.split('@')[0].includes(pi.last)) ??
+        [...plain, ...obfs].find((e) => pi.lasts.some((l) => e.split('@')[0].includes(l))) ??
         [...plain, ...obfs].find((e) => !GENERIC.test(e)) ??
         [...plain, ...obfs][0]
       if (cand) review.push({ pi: l.pi_name as string, email: cand, reason: nameMatch(cand, pi).reason, obf: !plain.has(cand) })
