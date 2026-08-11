@@ -50,25 +50,33 @@ function authorStatus(a: PaperAuthor, pi: PiIdentity): AuthorStatus {
   if (a.orcid && pi.orcid) return a.orcid === pi.orcid ? 'is_pi' : 'not_pi'
 
   const aFirst = (a.first.split(' ')[0] ?? '').trim()
-  if (aFirst.length >= 2 && pi.first.length >= 2) {
-    // Both sides carry a real first name — compare. startsWith covers "rob"/"robert" and
-    // middle-name tails; true nicknames (bob/robert) can false-negative here, which is why
-    // rule-3 affiliation and the ORCID tier exist as rescues.
-    if (aFirst === pi.first || aFirst.startsWith(pi.first) || pi.first.startsWith(aFirst)) return 'is_pi'
-    return 'not_pi'
-  }
-  if (aFirst.length === 1 && pi.first) {
-    // Initial only: a MISMATCHED initial excludes ("q jiang" is not "fay jiang"); a matching
-    // initial is compatible but not identifying.
-    if (aFirst !== pi.first[0]) return 'not_pi'
-  }
-  // Compatible initials / missing first name — affiliation decides what it can:
+  const nameConfirms =
+    aFirst.length >= 2 &&
+    pi.first.length >= 2 &&
+    (aFirst === pi.first || aFirst.startsWith(pi.first) || pi.first.startsWith(aFirst))
+  if (nameConfirms) return 'is_pi'
+
+  // A MISMATCHED initial excludes outright ("q jiang" is not "fay jiang") — a single letter has
+  // no nickname/typo ambiguity, so this is safe without an affiliation rescue.
+  if (aFirst.length === 1 && pi.first && aFirst !== pi.first[0]) return 'not_pi'
+
+  // AFFILIATION RESCUE — checked for every remaining case, including a full-name MISMATCH, not
+  // just initials-only. This is the fix for the 2026-08-11 false-positive wave: "Randy Hampton"
+  // vs. an author's real "Randolph Y Hampton" (a nickname), and a typo in our own stored pi_name
+  // ("Assutina" vs. the real "Assuntina" Sacco) both hard-excluded on name alone before this
+  // rescue could run — wrongly quarantining a PI's own papers. A clear UCSD/La Jolla affiliation
+  // on a surname-matching author outweighs a superficial first-name mismatch.
   if (UCSD_AFFIL.test(a.affiliation)) return 'is_pi'
-  // Explicitly placed at an institution OUTSIDE the San Diego region → someone else. (Recall
-  // caveat, accepted: a PI's pre-UCSD initials-only papers could false-flag here — but
-  // initials-only records are physics-venue style, the exact contamination zone; biomedical
-  // records carry full names and confirm at the name tier regardless of affiliation.)
+
+  // Explicitly placed at an institution OUTSIDE the San Diego region → someone else, REGARDLESS
+  // of whether the name superficially confirmed-or-not (this is what makes de Silva's dermatology
+  // paper and Evans's fusion-physics paper correctly excluded even though the name check alone
+  // can't run on initials).
   if (a.affiliation.trim() && !SD_REGION.test(a.affiliation)) return 'not_pi'
+
+  // A full-name MISMATCH with no affiliation signal either way (can't confirm, can't rule out) is
+  // NOT enough on its own to condemn a paper — nicknames and data-entry typos are common enough
+  // (see above) that name-mismatch-alone must never be the sole basis for 'not_pi'. Honest unknown.
   return 'unknown'
 }
 
