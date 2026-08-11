@@ -84,7 +84,7 @@ function askLine(ask: AskStyle): string {
       return "I'd be glad to volunteer to get involved before any commitment. Would you be open to a brief conversation about your work and whether there's room for an undergraduate to help? I can also send my questions by email if that's easier."
     case 'meeting':
     default:
-      return "Would you be open to a brief (~15 min) conversation about your work and whether there might be room for an undergraduate to contribute? I'm happy to meet whenever's convenient, or to send a couple of questions by email if that's easier."
+      return "Would you be open to a brief 15 minute conversation about your work and whether there might be room for an undergraduate to contribute? I'm happy to meet whenever's convenient, or to send a couple of questions by email if that's easier."
   }
 }
 

@@ -112,7 +112,7 @@ try {
   ok(skel.includes('Test Student'), 'skeleton has the name')
   ok(skel.includes('Sophomore') && skel.includes('Bioinformatics'), 'skeleton has year + major')
   ok(skel.includes('Dear Professor'), 'skeleton greets the PI')
-  ok(/~15 min|conversation/.test(skel), 'default meeting ask present')
+  ok(/15 minute conversation/.test(skel), 'default meeting ask present')
   // subject lives in its OWN field, never in the copyable body
   const subj = await page.locator('input').first().inputValue()
   ok(/Interested in .+ Undergrad/.test(subj), `subject field populated (${subj})`)
