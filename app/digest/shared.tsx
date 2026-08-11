@@ -185,7 +185,7 @@ interface FlowState {
   labFindings: DigestFinding[] // the selected lab's full research (set by the lab page)
   starred: DigestFinding[] // the finding objects the student starred, for the email
   hiddenLabs: string[] // labUrls the student hid ("already in it" / "not interested") — survives new searches
-  draft: { text: string; style: string; ask: string } | null // compose edits — survive tab close; cleared on new lab
+  draft: { text: string; ask: string } | null // compose edits — survive tab close; cleared on new lab
 }
 const EMPTY: FlowState = {
   profile: { name: '', year: '', major: '', interests: [], resume: '', topLabs: 15 },

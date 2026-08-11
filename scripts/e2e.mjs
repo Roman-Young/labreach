@@ -118,9 +118,9 @@ try {
   await page.waitForTimeout(300)
   ok((await page.locator('textarea').inputValue()).includes('volunteer'), 'ask switches to volunteer')
 
-  await page.getByRole('button', { name: 'Bulleted' }).click()
+  await page.getByText('See real emails that got responses').click()
   await page.waitForTimeout(300)
-  ok((await page.locator('textarea').inputValue()).includes('- ['), 'bulleted style produces bullet prompts')
+  ok((await page.getByText('Why these lines work').count()) >= 1, 'annotated example emails render')
 
   await page.getByText(/Star more research/).click()
   await page.waitForTimeout(400)

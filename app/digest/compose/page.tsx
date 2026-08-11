@@ -3,34 +3,78 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDigest, FindingCard, findingKey, LINK, BTN, chip } from '../shared'
-import { buildSkeleton, type TemplateStyle, type AskStyle } from '@/lib/email-skeleton'
+import { buildSkeleton, type AskStyle } from '@/lib/email-skeleton'
+import { EMAIL_EXAMPLES, type EmailExample } from '@/lib/email-examples'
 
 // Page 4 — compose. Turn the starred findings into a deterministic email SKELETON (never an LLM
-// writer). 2026-08-10 rework (Roman's walkthrough): starred research shown in a reference panel
-// beside the editor; manual edits PERSIST (localStorage via the flow context) and are never
-// silently clobbered — style/ask clicks rebuild explicitly, and starring more research requires
-// hitting ↻ Regenerate; subject format "Interested in X | UCSD Major Undergrad".
+// writer). 2026-08-11 rework (Roman's call): ONE skeleton, no cosmetic styles — range/tone are
+// taught by the annotated real examples below, a job a template can't do. The `ask` axis stays.
+// Starred research shown in a reference panel; manual edits PERSIST (localStorage via the flow
+// context) and are never silently clobbered — Ask rebuilds explicitly, ↻ Regenerate for new stars.
 
-const STYLES: { id: TemplateStyle; label: string }[] = [
-  { id: 'concise', label: 'Concise' },
-  { id: 'warm', label: 'Warm / narrative' },
-  { id: 'bulleted', label: 'Bulleted' },
-]
 const ASKS: { id: AskStyle; label: string }[] = [
   { id: 'meeting', label: 'Brief meeting' },
   { id: 'accepting', label: 'Are you accepting?' },
   { id: 'volunteer', label: 'Offer to volunteer' },
 ]
 
+// Render an example email with each annotated quote highlighted inline + numbered, and the notes
+// listed beneath. Quotes are verbatim substrings of body; a quote that doesn't match just shows
+// its note without a highlight (defensive — keeps the panel from breaking on an edit).
+function ExampleCard({ ex }: { ex: EmailExample }) {
+  // resolve non-overlapping matches, in document order
+  const marks = ex.annotations
+    .map((a, i) => ({ ...a, num: i + 1, start: ex.body.indexOf(a.quote) }))
+    .filter((m) => m.start >= 0)
+    .sort((a, b) => a.start - b.start)
+  const nonOverlap: typeof marks = []
+  let cursor = 0
+  for (const m of marks) {
+    if (m.start >= cursor) {
+      nonOverlap.push(m)
+      cursor = m.start + m.quote.length
+    }
+  }
+
+  const nodes: React.ReactNode[] = []
+  let pos = 0
+  nonOverlap.forEach((m, i) => {
+    if (m.start > pos) nodes.push(ex.body.slice(pos, m.start))
+    nodes.push(
+      <mark key={`m${i}`} className="bg-[#A8842C]/20 text-[#20242B] rounded px-0.5">
+        {m.quote}
+        <sup className="text-[10px] font-semibold text-[#7A5C12] ml-0.5">{m.num}</sup>
+      </mark>,
+    )
+    pos = m.start + m.quote.length
+  })
+  if (pos < ex.body.length) nodes.push(ex.body.slice(pos))
+
+  return (
+    <div className="rounded-lg border border-[#E7E0D2] bg-white/50 p-4">
+      <p className="text-[11px] uppercase tracking-[0.1em] text-[#8A8478] mb-2">{ex.scenario}</p>
+      <p className="whitespace-pre-wrap text-[13px] text-[#3A3F47] leading-relaxed font-serif">{nodes}</p>
+      <div className="mt-3 border-t border-[#E7E0D2] pt-3 space-y-2">
+        <p className="text-[11px] uppercase tracking-[0.1em] text-[#7A5C12] font-medium">Why these lines work</p>
+        {ex.annotations.map((a, i) => (
+          <p key={i} className="text-[12.5px] text-[#6E7076] leading-relaxed">
+            <span className="font-semibold text-[#7A5C12]">{i + 1}.</span> {a.note}
+          </p>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function ComposePage() {
   const router = useRouter()
   const { selectedLab, profile, starred, labFindings, toggleStar, isStarred, hydrated, draft, setDraft } = useDigest()
-  const [style, setStyle] = useState<TemplateStyle>('concise')
   const [ask, setAsk] = useState<AskStyle>('meeting')
   const [text, setText] = useState('')
   const [copied, setCopied] = useState(false)
   const [showMore, setShowMore] = useState(false)
   const [showStarred, setShowStarred] = useState(true)
+  const [showExamples, setShowExamples] = useState(false)
   const restored = useRef(false)
 
   useEffect(() => {
@@ -45,10 +89,9 @@ export default function ComposePage() {
     [selectedLab, profile.interests],
   )
 
-  const build = (s: TemplateStyle, a: AskStyle) =>
+  const build = (a: AskStyle) =>
     selectedLab
       ? buildSkeleton({
-          style: s,
           ask: a,
           hasResume: profile.resume.trim().length > 0,
           name: profile.name,
@@ -67,34 +110,29 @@ export default function ComposePage() {
     if (!hydrated || restored.current || !selectedLab || starred.length === 0) return
     restored.current = true
     if (draft?.text) {
-      setStyle(draft.style as TemplateStyle)
       setAsk(draft.ask as AskStyle)
       setText(draft.text)
     } else {
-      setText(build(style, ask))
+      setText(build(ask))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated, selectedLab, starred.length])
 
-  // Persist every edit (text, style, ask) into the flow context → localStorage.
+  // Persist every edit (text, ask) into the flow context → localStorage.
   useEffect(() => {
     if (!hydrated || !restored.current || !text) return
-    setDraft({ text, style, ask })
+    setDraft({ text, ask })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text, style, ask])
+  }, [text, ask])
 
   if (!hydrated) return <main className="max-w-3xl mx-auto px-4 py-10 text-sm text-[#8A8478]">Loading…</main>
   if (!selectedLab || starred.length === 0) return null
 
-  const pickStyle = (s: TemplateStyle) => {
-    setStyle(s)
-    setText(build(s, ask))
-  }
   const pickAsk = (a: AskStyle) => {
     setAsk(a)
-    setText(build(style, a))
+    setText(build(a))
   }
-  const regenerate = () => setText(build(style, ask))
+  const regenerate = () => setText(build(ask))
 
   const copy = () =>
     navigator.clipboard.writeText(text).then(() => {
@@ -133,24 +171,14 @@ export default function ComposePage() {
         )}
       </div>
 
-      {/* controls */}
-      <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Style</span>
-          {STYLES.map((s) => (
-            <button key={s.id} onClick={() => pickStyle(s.id)} className={chip(style === s.id)}>
-              {s.label}
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Ask</span>
-          {ASKS.map((a) => (
-            <button key={a.id} onClick={() => pickAsk(a.id)} className={chip(ask === a.id)}>
-              {a.label}
-            </button>
-          ))}
-        </div>
+      {/* ask control */}
+      <div className="mt-5 flex flex-wrap items-center gap-2">
+        <span className="text-xs text-[#8A8478] uppercase tracking-[0.1em]">Your ask</span>
+        {ASKS.map((a) => (
+          <button key={a.id} onClick={() => pickAsk(a.id)} className={chip(ask === a.id)}>
+            {a.label}
+          </button>
+        ))}
       </div>
 
       {/* editable skeleton — edits persist across tab close; only explicit actions rebuild */}
@@ -167,13 +195,34 @@ export default function ComposePage() {
         <button
           onClick={regenerate}
           className="px-3.5 py-2 sm:py-1.5 text-sm border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] transition-colors"
-          title="Rebuild the skeleton from your current style, ask, and starred research — replaces your edits"
+          title="Rebuild the skeleton from your current ask and starred research — replaces your edits"
         >
           ↻ Regenerate
         </button>
         <span className="text-xs text-[#8A8478]">
-          Your edits are saved automatically. Style/Ask rebuild the skeleton; after starring more research, hit ↻ Regenerate.
+          Your edits are saved automatically. Changing the ask rebuilds it; after starring more research, hit ↻ Regenerate.
         </span>
+      </div>
+
+      {/* annotated real examples — the range/tone teacher a template can't be */}
+      <div className="mt-8 border-t border-[#E7E0D2] pt-5">
+        <button onClick={() => setShowExamples((v) => !v)} className={`text-sm ${LINK}`}>
+          {showExamples ? '↑ Hide examples' : '↓ See real emails that got responses'}
+        </button>
+        {showExamples && (
+          <div className="mt-4">
+            <p className="text-[13px] text-[#6E7076] leading-relaxed mb-4">
+              Real outreach that earned replies (one led to a position). Yours should look <em>nothing</em> like a copy of these —
+              study <span className="font-medium text-[#20242B]">why</span> each highlighted line works, then write your own from your
+              starred research. PI names are anonymized.
+            </p>
+            <div className="space-y-4">
+              {EMAIL_EXAMPLES.map((ex) => (
+                <ExampleCard key={ex.id} ex={ex} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* add more research from this lab */}
