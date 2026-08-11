@@ -155,7 +155,7 @@ export default function ComposePage() {
   const unstarred = labFindings.filter((f) => !isStarred(f))
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-8">
+    <main className="max-w-5xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between gap-3">
         <button onClick={() => router.push('/digest/lab')} className={`text-sm ${LINK}`}>
           ← back to {selectedLab.piName ?? 'the lab'}&rsquo;s research
@@ -256,7 +256,7 @@ export default function ComposePage() {
               Study <span className="font-medium text-[#20242B]">why</span> each highlighted line works, then write your own from
               your starred research. Names are anonymized.
             </p>
-            <div className="space-y-4">
+            <div className="grid gap-4 lg:grid-cols-2">
               {EMAIL_EXAMPLES.map((ex) => (
                 <ExampleCard key={ex.id} ex={ex} />
               ))}
