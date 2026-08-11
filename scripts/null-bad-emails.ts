@@ -18,7 +18,7 @@ const strip = (s: string) =>
 
 function nameParts(pi: string | null): { first: string; last: string } {
   if (!pi) return { first: '', last: '' }
-  const s = strip(pi.replace(/[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi, ''))
+  const s = strip(pi.replace(/^dr\.?\s+/i, '').replace(/[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi, ''))
   if (s.includes(',')) {
     const [l, f] = s.split(',')
     return { first: (f || '').trim().split(' ')[0] || '', last: (l || '').trim().split(' ').pop() || '' }
@@ -35,6 +35,7 @@ const GENERIC = /(^|[.-])(info|admin|contact|webmaster|help|support|no-?reply|do
 // strong: local-part clearly belongs to this person
 function strongMatch(local: string, pi: { first: string; last: string }): boolean {
   if (pi.last.length < 3 || !local.includes(pi.last)) return false
+  if (local === pi.last && !COMMON.has(pi.last)) return true
   const fullFirst = pi.first.length >= 3 && local.includes(pi.first)
   const initLast = !!pi.first && local.startsWith(pi.first[0])
   if (COMMON.has(pi.last)) return fullFirst

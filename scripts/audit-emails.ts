@@ -12,7 +12,7 @@ const strip = (s: string) =>
 
 function nameParts(pi: string | null): { first: string; last: string } {
   if (!pi) return { first: '', last: '' }
-  const s = strip(pi.replace(/[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi, ''))
+  const s = strip(pi.replace(/^dr\.?\s+/i, '').replace(/[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi, ''))
   if (s.includes(',')) {
     const [l, f] = s.split(',')
     return { first: (f || '').trim().split(' ')[0] || '', last: (l || '').trim().split(' ').pop() || '' }

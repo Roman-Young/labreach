@@ -23,7 +23,7 @@ const strip = (s: string) =>
 // "Schmid-Schoenbein" → ["schmid","schoenbein"], so gschmid@ still matches).
 function nameParts(pi: string | null): { first: string; lasts: string[] } {
   if (!pi) return { first: '', lasts: [] }
-  const s = strip(pi.replace(/[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi, ''))
+  const s = strip(pi.replace(/^dr\.?\s+/i, '').replace(/[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi, ''))
   let first = '',
     rest: string[] = []
   if (s.includes(',')) {
@@ -46,6 +46,9 @@ function strongMatch(email: string, pi: { first: string; lasts: string[] }): boo
   const local = email.split('@')[0].toLowerCase()
   const last = pi.lasts.find((l) => local.includes(l)) // any surname segment present?
   if (!last) return false
+  // local-part IS exactly a surname (e.g. "ecker@salk.edu", "gage@salk.edu") — safe on an
+  // uncommon surname even with no first-name signal; a common one still needs disambiguation.
+  if (local === last && !COMMON.has(last)) return true
   const fullFirst = pi.first.length >= 3 && local.includes(pi.first)
   const initLast = !!pi.first && local.startsWith(pi.first[0])
   return COMMON.has(last) ? fullFirst : fullFirst || initLast
@@ -71,16 +74,68 @@ function candidateUrls(labUrl: string): string[] {
 
 const app = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY! })
 const TIMEOUT = 25000
+
+// Global rate limiter shared by every pool worker — Firecrawl caps at ~100-120 req/min (measured
+// 2026-08-11); stay safely under that with a sliding-window gate BEFORE every request, rather than
+// firing and hoping. This is what makes rate-limit errors rare instead of routine.
+const WINDOW_MS = 60_000
+const MAX_PER_WINDOW = 80
+const requestTimes: number[] = []
+async function throttle() {
+  for (;;) {
+    const now = Date.now()
+    while (requestTimes.length && now - requestTimes[0] > WINDOW_MS) requestTimes.shift()
+    if (requestTimes.length < MAX_PER_WINDOW) {
+      requestTimes.push(now)
+      return
+    }
+    await new Promise((r) => setTimeout(r, requestTimes[0] + WINDOW_MS - now + 50))
+  }
+}
+
+function retryAfterMs(msg: string): number | null {
+  const m = msg.match(/retry after (\d+)s/i)
+  return m ? parseInt(m[1], 10) * 1000 + 500 : null
+}
+
+let emptyStreak = 0 // consecutive "success but zero content" results — a real signal of throttling
 async function scrape(url: string): Promise<{ text: string; mailtos: string[] }> {
-  const deadline = new Promise<never>((_, rej) => setTimeout(() => rej(new Error('timeout')), TIMEOUT))
-  const res: any = await Promise.race([app.scrapeUrl(url, { formats: ['markdown', 'links'], timeout: TIMEOUT }), deadline])
-  const text: string = res?.markdown ?? ''
-  const links: string[] = Array.isArray(res?.links) ? res.links : []
-  const mailtos = links
-    .filter((l) => typeof l === 'string' && l.toLowerCase().startsWith('mailto:'))
-    .map((l) => l.slice(7).split('?')[0].trim().toLowerCase())
-    .filter(Boolean)
-  return { text, mailtos }
+  let lastErr: Error | null = null
+  for (let attempt = 0; attempt < 4; attempt++) {
+    await throttle()
+    try {
+      const deadline = new Promise<never>((_, rej) => setTimeout(() => rej(new Error('timeout')), TIMEOUT))
+      const res: any = await Promise.race([app.scrapeUrl(url, { formats: ['markdown', 'links'], timeout: TIMEOUT }), deadline])
+      // The SDK can resolve (not throw) with { success: false, error } under rate-limiting — that
+      // must surface as a real error, never as "this page had nothing" (2026-08-11 incident: a run
+      // silently degraded from 34 found to 5 because rate-limit responses looked like empty pages).
+      if (res && res.success === false) throw new Error(`firecrawl success:false — ${res.error ?? 'no error detail'}`)
+      const text: string = res?.markdown ?? ''
+      const links: string[] = Array.isArray(res?.links) ? res.links : []
+      const mailtos = links
+        .filter((l) => typeof l === 'string' && l.toLowerCase().startsWith('mailto:'))
+        .map((l) => l.slice(7).split('?')[0].trim().toLowerCase())
+        .filter(Boolean)
+      if (!text.trim() && !mailtos.length) {
+        emptyStreak++
+        if (emptyStreak >= 8) console.error(`  ! WARNING: ${emptyStreak} consecutive empty-but-"successful" scrapes — possible throttling, results may be unreliable`)
+      } else {
+        emptyStreak = 0
+      }
+      return { text, mailtos }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      const wait = retryAfterMs(msg)
+      if (wait !== null) {
+        console.error(`  ~ rate-limited on ${url}, retrying in ${Math.round(wait / 1000)}s (attempt ${attempt + 1}/4)`)
+        await new Promise((r) => setTimeout(r, wait))
+        lastErr = e instanceof Error ? e : new Error(msg)
+        continue
+      }
+      throw e // a real error (404/timeout/etc.) — don't retry, let the caller move to the next candidate
+    }
+  }
+  throw lastErr ?? new Error('rate-limited: exhausted retries')
 }
 
 async function huntOne(lab: Record<string, unknown>): Promise<{ pi: string; url: string; email: string | null; note: string }> {
@@ -92,8 +147,13 @@ async function huntOne(lab: Record<string, unknown>): Promise<{ pi: string; url:
     let got
     try {
       got = await scrape(url)
-    } catch {
-      continue // dead path (404/timeout) — try the next candidate
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      // Surface anything that ISN'T an ordinary dead-path (404/not-found/timeout) — a rate-limit,
+      // auth, or quota error must never be silently reported as "no email found" (2026-08-11: a
+      // run degraded from 34 found to 5 because errors were swallowed identically to real 404s).
+      if (!/404|not.?found|timeout/i.test(msg)) console.error(`  ! fetch error on ${url}: ${msg}`)
+      continue
     }
     const cands = new Set<string>([...got.mailtos])
     for (const m of got.text.matchAll(EMAIL_RE)) cands.add(m[0].toLowerCase())
@@ -116,6 +176,7 @@ async function pool<T, R>(items: T[], n: number, fn: (t: T) => Promise<R>): Prom
       while (i < items.length) {
         const idx = i++
         out[idx] = await fn(items[idx])
+        await new Promise((r) => setTimeout(r, 300)) // small gap between requests per worker — gentler on rate limits
       }
     }),
   )
