@@ -35,9 +35,13 @@ export interface SkeletonInput {
 // Best-effort last name for the greeting, from "Ananda Goldrath" / "Leslie Crews, Ph.D." /
 // "Ghosh, Partho". Falls back to the whole string — it's an editable skeleton, so a near-miss is
 // fine and the student verifies it.
+// Credentials must be a SEPARATE token (leading comma/space, trailing comma/space/end) — never a
+// substring, or "Wildonger"/"Dorrestein"/"Idoyaga" lose their inner "do"/"md" (2026-08-11 fix).
+const CREDENTIALS = /[,\s]+(?:ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|d\.?d\.?s\.?|sc\.?d\.?|m\.?b\.?a\.?|m\.?b\.?i\.?|fasco|facs|faap|famia)\.?(?=$|[,\s])/gi
+
 function lastName(pi: string | null): string {
   if (!pi) return '[PI last name]'
-  const s = pi.replace(/,?\s*(ph\.?d\.?|m\.?d\.?|d\.?o\.?|m\.?s\.?|m\.?p\.?h\.?|dds|sc\.?d\.?|fasco)\.?/gi, '').trim()
+  const s = pi.replace(CREDENTIALS, '').trim()
   if (s.includes(',')) return s.split(',')[0].trim() // "Lastname, First" → Lastname
   const toks = s.split(/\s+/).filter(Boolean)
   return toks.length ? toks[toks.length - 1] : pi
