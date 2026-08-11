@@ -20,7 +20,9 @@
 
 export interface PiName {
   first: string
-  lasts: string[] // every surname segment ≥3 chars, in order
+  lasts: string[] // surname segments ≥3 chars — the EMAIL-matching set (substring-safe)
+  lastsAll: string[] // every surname segment ≥2 chars — for EXACT token comparison (author
+  // surnames: "Ay"/"Lu"/"Oh" are real surnames that the ≥3 filter would wrongly drop)
 }
 
 export const strip = (s: string): string =>
@@ -40,7 +42,7 @@ const CREDENTIALS =
 // "Ananda Goldrath" / "Leslie Crews, Ph.D." / "Ghosh, Partho" / "Dr. Steven P. Briggs" /
 // "Geert Schmid-Schoenbein" → { first, lasts[] }.
 export function nameParts(pi: string | null): PiName {
-  if (!pi) return { first: '', lasts: [] }
+  if (!pi) return { first: '', lasts: [], lastsAll: [] }
   const s = strip(pi.replace(/^dr\.?\s+/i, '').replace(CREDENTIALS, ''))
   let first = ''
   let rest: string[] = []
@@ -54,7 +56,7 @@ export function nameParts(pi: string | null): PiName {
     first = toks[0] || ''
     rest = toks.slice(1)
   }
-  return { first, lasts: rest.filter((t) => t.length >= 3) }
+  return { first, lasts: rest.filter((t) => t.length >= 3), lastsAll: rest.filter((t) => t.length >= 2) }
 }
 
 // Surnames common enough that first-initial+last is NOT identifying — require the full first name.
