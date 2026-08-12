@@ -72,12 +72,15 @@ async function main() {
     confirmed++
     hits.push(`${s.piName} — "${s.title.slice(0, 50)}"  [${proven.author} → ${proven.owner}]`)
     if (execute) {
+      // RETURNING so the count is reliable — the neon driver yields an empty array (length 0) for an
+      // UPDATE without RETURNING, which silently under-reports even when rows were written.
       const res = await sql.query(
         `UPDATE lab_chunks SET quarantined = true, quarantine_reason = $3
-           WHERE lab_url = $1 AND source_id = $2 AND type = 'paper' AND quarantined = false`,
+           WHERE lab_url = $1 AND source_id = $2 AND type = 'paper' AND quarantined = false
+           RETURNING source_id`,
         [s.labUrl, s.sourceId, `samename:${s.reason}`],
       )
-      chunksAffected += (res as { rowCount?: number }).rowCount ?? (Array.isArray(res) ? res.length : 0)
+      chunksAffected += (Array.isArray(res) ? res.length : ((res as { rows?: unknown[] }).rows?.length ?? 0))
     }
   }
 
