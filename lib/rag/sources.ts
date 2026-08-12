@@ -1,6 +1,14 @@
 import { withRetry } from '@/lib/retry'
 import type { AuthorWork } from '@/lib/papers'
 import { searchPubMedByAuthor } from '@/lib/pubmed'
+import { nameParts } from '@/lib/name-match'
+import {
+  classifyPaperWithReason,
+  resolvePiOrcid,
+  fetchPaperAuthors,
+  mapEpmcAuthor,
+  type PaperAuthor,
+} from '@/lib/attribution'
 
 // Multi-source paper cascade for a PI, by name, scoped to San Diego. Replaces the
 // OpenAlex-only path (keyless OpenAlex now throttles/429s under batch load and
@@ -28,46 +36,24 @@ async function safe(fn: () => Promise<AuthorWork[]>): Promise<AuthorWork[]> {
   }
 }
 
-// Trailing academic degrees / honorifics to strip from a raw PI name.
-const DEGREES = new Set([
-  'md', 'phd', 'ms', 'msc', 'ma', 'mba', 'dvm', 'mph', 'fasco', 'famia', 'mbi', 'bs', 'ba', 'dr',
-])
-const isDegree = (part: string): boolean => DEGREES.has(part.toLowerCase().replace(/[.\s]/g, ''))
-
-// Parse a DB name into { last, firstInitial, full }. Handles trailing degrees
-// ('Aaron Miller, M.D., Ph.D.') and 'Last, First' inversion ('Continetti, Robert').
-// `last` is a single surname token and `firstInitial` an uppercase letter — the two
-// pieces a scoped author query needs; `full` is a natural 'First Last' display name.
-export function parseName(raw: string): { last: string; first: string; firstInitial: string; full: string } {
+// Parse a DB name into { last, lasts, first, firstInitial, full }. Delegates tokenization to the
+// canonical nameParts (lib/name-match) — the SINGLE source of truth — which strips trailing degrees
+// ('Aaron Miller, M.D., Ph.D.'), a leading 'Dr.', and 'Last, First' inversion ('Continetti, Robert'),
+// and returns EVERY surname segment. `lasts` is the search set (all segments, so a compound/married
+// name like 'Maho Niwa Rosen' searches BOTH 'Niwa' and 'Rosen', not just the last token — the bug
+// that sent 'Maho Niwa Rosen' to the radiologist 'Mark A. Rosen'); `last` is the most-specific single
+// surname for back-compat consumers; `firstInitial` an uppercase letter; `full` a natural display name.
+export function parseName(raw: string): { last: string; lasts: string[]; first: string; firstInitial: string; full: string } {
   const raw0 = (raw ?? '').trim()
-  const stripped = raw0.replace(/^dr\.?\s+/i, '')
-  const parts = stripped
-    .split(',')
-    .map((p) => p.trim())
-    .filter(Boolean)
-    .filter((p) => !isDegree(p))
-
-  let first = ''
-  let surname = ''
-  if (parts.length >= 2) {
-    // 'Last, First [Middle]' — the comma inverts the order.
-    surname = parts[0]
-    first = parts[1]
-  } else if (parts.length === 1) {
-    const toks = parts[0].split(/\s+/).filter(Boolean)
-    if (toks.length === 1) {
-      surname = toks[0]
-    } else {
-      first = toks[0]
-      surname = toks[toks.length - 1]
-    }
-  }
-
-  const last = (surname.split(/\s+/).filter(Boolean).pop() ?? surname).trim()
-  const firstToken = (first.split(/\s+/).filter(Boolean)[0] ?? '').replace(/[^a-zA-Z-]/g, '')
+  const np = nameParts(raw0)
+  // Search set: prefer ≥3-char segments (drops noise particles like 'de'); fall back to the ≥2-char
+  // set so a genuinely short surname ('Lu', 'Ay', 'Oh') is never emptied out and left unsearchable.
+  const lasts = np.lasts.length ? np.lasts : np.lastsAll
+  const last = lasts[lasts.length - 1] ?? '' // most-specific single surname (pubmed path, homepage match)
+  const firstToken = np.first
   const firstInitial = (firstToken[0] ?? '').toUpperCase()
-  const full = (first ? `${first} ${surname}` : surname).trim() || raw0
-  return { last, first: firstToken, firstInitial, full }
+  const full = (firstToken ? `${firstToken} ${lasts.join(' ')}` : lasts.join(' ')).trim() || raw0
+  return { last, lasts, first: firstToken, firstInitial, full }
 }
 
 // Strip HTML/XML tags + entities from abstract/title text; null if nothing is left.
@@ -110,6 +96,7 @@ function dedup(list: AuthorWork[]): AuthorWork[] {
     if (!existing.pmcid && p.pmcid) existing.pmcid = p.pmcid
     if (!existing.openAccessUrl && p.openAccessUrl) existing.openAccessUrl = p.openAccessUrl
     if (!existing.citedByCount && p.citedByCount) existing.citedByCount = p.citedByCount
+    if (!existing.authors?.length && p.authors?.length) existing.authors = p.authors
   }
   return order.map((k) => byKey.get(k) as AuthorWork)
 }
@@ -128,6 +115,11 @@ function mapEpmc(r: Record<string, unknown>): AuthorWork {
       if (openAccessUrl) break
     }
   }
+  // resultType=core returns the full author list inline (name + ORCID + affiliation). Preserve it
+  // for the attribution gate — the original ingest THREW THIS AWAY, which is what let same-surname
+  // strangers merge into a lab. Reuse the canonical mapEpmcAuthor so ingest and the verifier parse
+  // an author record identically.
+  const authorList = (r.authorList as { author?: Array<Record<string, unknown>> } | undefined)?.author ?? []
   return {
     title: stripHtml(r.title) ?? String(r.title ?? ''),
     type: source === 'PPR' ? 'preprint' : 'article',
@@ -139,6 +131,7 @@ function mapEpmc(r: Record<string, unknown>): AuthorWork {
     pmcid: (r.pmcid as string) || null,
     isOpenAccess: r.isOpenAccess === 'Y',
     openAccessUrl,
+    authors: authorList.length ? authorList.map(mapEpmcAuthor) : undefined,
   }
 }
 
@@ -163,10 +156,13 @@ async function epmcSafe(query: string, sort: string): Promise<{ works: AuthorWor
   }
 }
 
-export async function searchEuropePMC(name: string): Promise<AuthorWork[]> {
-  const { last, first, firstInitial } = parseName(name)
-  if (!last) return []
-  const initialWho = firstInitial ? `${last} ${firstInitial}` : last
+// One surname segment's two-pass EPMC search (recent + most-cited), with the common-name guard.
+// Broadening to search every segment of a compound/married surname is SAFE because gatherPapers'
+// attribution gate drops any stranger a broad segment query pulls in (e.g. the 'Rosen' segment of
+// 'Maho Niwa Rosen' surfaces the radiologist 'Mark A. Rosen' — the gate then removes him by ORCID/
+// affiliation/first-name before anything is chunked). Recall broad here; precision is the gate's job.
+async function epmcForSurname(surname: string, first: string, firstInitial: string): Promise<AuthorWork[]> {
+  const initialWho = firstInitial ? `${surname} ${firstInitial}` : surname
 
   // Primary pass with surname+initial — high recall, and fine for a unique name.
   const recent = await epmcSafe(`AUTH:"${initialWho}" AND AFF:"San Diego"`, 'P_PDATE_D desc')
@@ -180,7 +176,7 @@ export async function searchEuropePMC(name: string): Promise<AuthorWork[]> {
   let who = initialWho
   let recentWorks = recent.works
   if (recent.hitCount > 120 && first.length > 1) {
-    const precise = await epmcSafe(`AUTH:"${last} ${first}" AND AFF:"San Diego"`, 'P_PDATE_D desc')
+    const precise = await epmcSafe(`AUTH:"${surname} ${first}" AND AFF:"San Diego"`, 'P_PDATE_D desc')
     if (precise.works.length > 0) {
       // Distinguish a genuinely COMMON name from a PROLIFIC UNIQUE one — both trip >120.
       // If the full-name query collapses the count hard (< half the broad), the broad set
@@ -189,7 +185,7 @@ export async function searchEuropePMC(name: string): Promise<AuthorWork[]> {
       // both and keep the broad `who` for the cited pass. This preserves precision for
       // common names without silently losing a productive PI's initial-form papers.
       if (precise.hitCount < recent.hitCount * 0.5) {
-        who = `${last} ${first}`
+        who = `${surname} ${first}`
         recentWorks = precise.works
       } else {
         recentWorks = dedup([...recent.works, ...precise.works])
@@ -199,6 +195,15 @@ export async function searchEuropePMC(name: string): Promise<AuthorWork[]> {
 
   const cited = await epmcSafe(`AUTH:"${who}" AND AFF:"San Diego"`, 'CITED desc')
   return dedup([...recentWorks, ...cited.works])
+}
+
+export async function searchEuropePMC(name: string): Promise<AuthorWork[]> {
+  const { lasts, first, firstInitial } = parseName(name)
+  if (!lasts.length) return []
+  // One search per surname segment. Single-surname PIs (the common case) run exactly one — unchanged
+  // behavior; only compound/married names fan out and get unioned.
+  const perSurname = await Promise.all(lasts.map((sn) => epmcForSurname(sn, first, firstInitial)))
+  return dedup(perSurname.flat())
 }
 
 // ── C) Semantic Scholar — FALLBACK (interdisciplinary / engineering) ────────
@@ -263,6 +268,38 @@ const RESULT_CAP = 30
 const countAbstracts = (list: AuthorWork[]): number =>
   list.filter((p) => p.abstract && p.abstract.length > 40).length
 
+// ── The attribution gate ────────────────────────────────────────────────────
+// The single choke point that stops same-surname strangers from being chunked into a lab. Runs on
+// the fully-merged, deduped set right before the result cap. For each paper we need an author list:
+// EPMC papers carry it inline (mapEpmc); a PubMed/Semantic-Scholar-only paper does not, so we fetch
+// it by id (throttled). Then resolve the PI's ORCID once from the whole set and classify each paper:
+//   confirmed + ambiguous  → KEEP  (recall — an unprovable paper is not a wrong one; Roman 2026-08-11)
+//   contaminant            → DROP  (provably a different person — never chunked)
+//   no author list at all   → KEEP  (honest unknown; the gate never condemns on missing data)
+async function gatePapers(papers: AuthorWork[], piName: string): Promise<AuthorWork[]> {
+  const pi = nameParts(piName)
+  if (!pi.lastsAll.length) return papers // unusable PI name → cannot gate; don't silently drop everything
+
+  // Back-fill author lists for papers a non-EPMC source contributed (best-effort; a failed fetch
+  // just leaves the paper an honest unknown, which is kept below).
+  for (const p of papers) {
+    if (p.authors?.length) continue
+    const id = p.doi ? `doi:${p.doi}` : p.pmid ? `pmid:${p.pmid}` : null
+    if (!id) continue
+    const fetched = await fetchPaperAuthors(id)
+    if (fetched?.length) p.authors = fetched
+  }
+
+  const withAuthors = papers.filter((p): p is AuthorWork & { authors: PaperAuthor[] } => !!p.authors?.length)
+  const orcid = resolvePiOrcid(withAuthors.map((p) => p.authors), pi)
+  const piId = { ...pi, orcid }
+
+  return papers.filter((p) => {
+    if (!p.authors?.length) return true // honest unknown — keep
+    return classifyPaperWithReason(p.authors, piId).verdict !== 'contaminant'
+  })
+}
+
 export async function gatherPapers(piName: string): Promise<{ papers: AuthorWork[]; source: string }> {
   let acc: AuthorWork[] = []
   const used: string[] = []
@@ -290,5 +327,10 @@ export async function gatherPapers(piName: string): Promise<{ papers: AuthorWork
   }
 
   if (acc.length === 0) return { papers: [], source: 'none' }
-  return { papers: acc.slice(0, RESULT_CAP), source: used.join('+') }
+
+  // IDENTITY GATE — drop provably-different-person papers before they can be chunked (Phase 3 of the
+  // 2026-08-11 attribution cleanup). Without this, every fix downstream is just cleanup after the fact.
+  const gated = await gatePapers(acc, piName)
+  if (gated.length === 0) return { papers: [], source: 'none' }
+  return { papers: gated.slice(0, RESULT_CAP), source: used.join('+') }
 }

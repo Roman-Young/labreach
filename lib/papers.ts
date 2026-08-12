@@ -7,6 +7,8 @@
 // open-access subset. Abstracts are usually where a finding is stated, so this
 // deepens the findings for every lab, especially paywalled or website-less ones.
 
+import type { PaperAuthor } from '@/lib/attribution'
+
 const OPENALEX = 'https://api.openalex.org'
 // OpenAlex asks for a contact for its "polite pool" (better, more stable limits).
 const MAILTO = 'labreach@ucsd.edu'
@@ -22,6 +24,11 @@ export interface AuthorWork {
   pmcid?: string | null // PMC id (e.g. "PMC1234567") — carried when a source exposes it; needed for open full-text fetch
   isOpenAccess: boolean
   openAccessUrl: string | null
+  // Per-author identity records (name + ORCID + affiliation) when a source exposes them — EPMC's
+  // resultType=core carries them inline. Fed to the ingest attribution gate (gatherPapers) so a
+  // paper by a same-surnamed stranger is dropped before it's ever chunked. Undefined = the source
+  // gave no author list (the gate then treats the paper as an honest unknown and keeps it).
+  authors?: PaperAuthor[]
 }
 
 // OpenAlex stores abstracts as an inverted index (word -> [positions]); rebuild the text.
