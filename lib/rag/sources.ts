@@ -406,6 +406,20 @@ export async function gatherPapersFromDois(piName: string, dois: string[], since
   return gatherPapersFromRefs(piName, { dois }, sinceYear)
 }
 
+// Union of a PI's ORCID papers and their pub-page refs (DOIs/PMIDs), deduped by DOI/PMID/title. ORCID
+// gives the bulk (definitively theirs); the refs add any page-only paper the ORCID record omits (an
+// ORCID a PI hasn't kept up to date still misses recent work their own page lists). Max recall.
+export async function gatherPapersCombined(
+  piName: string,
+  refs: { orcid?: string; dois?: string[]; pmids?: string[] },
+  sinceYear = 0,
+): Promise<AuthorWork[]> {
+  const parts: AuthorWork[] = []
+  if (refs.orcid) parts.push(...(await gatherPapersFromOrcid(refs.orcid, sinceYear)))
+  if (refs.dois?.length || refs.pmids?.length) parts.push(...(await gatherPapersFromRefs(piName, { dois: refs.dois, pmids: refs.pmids }, sinceYear)))
+  return dedup(parts)
+}
+
 export async function gatherPapers(piName: string): Promise<{ papers: AuthorWork[]; source: string }> {
   let acc: AuthorWork[] = []
   const used: string[] = []

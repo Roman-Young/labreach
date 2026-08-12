@@ -1,5 +1,5 @@
 import { fetchEuropePMCFullText, type AuthorWork } from '@/lib/papers'
-import { gatherPapers, gatherPapersFromRefs, gatherPapersFromOrcid, gatherPapersFromNameUnfiltered, parseName } from './sources'
+import { gatherPapers, gatherPapersCombined, gatherPapersFromNameUnfiltered, parseName } from './sources'
 import { scrapePage } from '@/lib/scraper'
 
 // Deterministic gather: assemble a lab's full source bundle without an agentic loop.
@@ -159,17 +159,10 @@ export async function gatherLab(
         // Squarespace/Wix pages list citations with no inline DOIs/PMIDs but link the PI's ORCID.
         if (!orcid) orcid = pub.match(/orcid\.org\/(\d{4}-\d{4}-\d{4}-\d{3}[\dxX])/i)?.[1]
       }
-      const refCount = dois.length + pmids.length
-      // Prefer explicit refs when the page has a real list; else fall back to the PI's ORCID.
-      if (refCount >= 3) {
-        onProgress(`Found ${dois.length} DOIs + ${pmids.length} PMIDs; fetching + gating...`)
-        papers = await gatherPapersFromRefs(piName, { dois, pmids }, opts.sinceYear ?? 0)
-      } else if (orcid) {
-        onProgress(`Few refs on page; using ORCID ${orcid} (AUTHORID search)...`)
-        papers = await gatherPapersFromOrcid(orcid, opts.sinceYear ?? 0)
-      } else if (refCount) {
-        papers = await gatherPapersFromRefs(piName, { dois, pmids }, opts.sinceYear ?? 0)
-      }
+      // Union the PI's ORCID papers with the page's DOI/PMID refs — ORCID is the bulk, the refs add
+      // any page-only paper ORCID omits, deduped. Either source alone also works.
+      onProgress(`ORCID ${orcid ?? '—'} + ${dois.length} DOIs + ${pmids.length} PMIDs; fetching...`)
+      papers = await gatherPapersCombined(piName, { orcid, dois, pmids }, opts.sinceYear ?? 0)
     } catch {
       /* pub page unreadable — fall through with no papers rather than crash the ingest */
     }
