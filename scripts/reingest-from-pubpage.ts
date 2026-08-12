@@ -16,11 +16,12 @@ const rows = (r: unknown): Array<Record<string, unknown>> =>
 async function main() {
   const [labUrl, pubPageUrl] = process.argv.slice(2).filter((a) => a.startsWith('http'))
   const sinceArg = process.argv.indexOf('--since')
-  const sinceYear = sinceArg >= 0 ? parseInt(process.argv[sinceArg + 1], 10) : 2015
+  const sinceYear = sinceArg >= 0 ? parseInt(process.argv[sinceArg + 1], 10) : 2020
   const orcidArg = process.argv.indexOf('--orcid')
   const orcid = orcidArg >= 0 ? process.argv[orcidArg + 1] : undefined
-  if (!labUrl || (!pubPageUrl && !orcid)) {
-    console.error('usage: reingest-from-pubpage.ts <labUrl> [<pubPageUrl>] [--orcid ID] [--since YEAR]')
+  const nameUnfiltered = process.argv.includes('--name-search')
+  if (!labUrl || (!pubPageUrl && !orcid && !nameUnfiltered)) {
+    console.error('usage: reingest-from-pubpage.ts <labUrl> [<pubPageUrl>] [--orcid ID | --name-search] [--since YEAR]')
     process.exit(1)
   }
 
@@ -39,7 +40,7 @@ async function main() {
   console.log(`   before:   kept=${before[0]?.kept ?? 0} papers`)
 
   const t0 = Date.now()
-  const { chunkCount, paperCount } = await ingestLabV2(labUrl, (m) => console.log(`   · ${m}`), piName, { pubPageUrl, sinceYear, orcid })
+  const { chunkCount, paperCount } = await ingestLabV2(labUrl, (m) => console.log(`   · ${m}`), piName, { pubPageUrl, sinceYear, orcid, nameUnfiltered })
   console.log(`\n   ✓ ${paperCount} papers → ${chunkCount} chunks in ${((Date.now() - t0) / 1000).toFixed(0)}s`)
 
   const after = rows(await sql.query(

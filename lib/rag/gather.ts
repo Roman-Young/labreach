@@ -1,5 +1,5 @@
 import { fetchEuropePMCFullText, type AuthorWork } from '@/lib/papers'
-import { gatherPapers, gatherPapersFromDois, gatherPapersFromOrcid, parseName } from './sources'
+import { gatherPapers, gatherPapersFromRefs, gatherPapersFromOrcid, gatherPapersFromNameUnfiltered, parseName } from './sources'
 import { scrapePage } from '@/lib/scraper'
 
 // Deterministic gather: assemble a lab's full source bundle without an agentic loop.
@@ -128,7 +128,7 @@ export async function gatherLab(
   labUrl: string,
   piName: string | null,
   onProgress: (m: string) => void = () => {},
-  opts: { pubPageUrl?: string; sinceYear?: number; orcid?: string } = {},
+  opts: { pubPageUrl?: string; sinceYear?: number; orcid?: string; nameUnfiltered?: boolean } = {},
 ): Promise<GatheredLab> {
   const pages: Record<string, string> = {}
 
@@ -136,10 +136,16 @@ export async function gatherLab(
   //    known: take the DOIs off the PI's OWN publications page — higher recall (catches multi-
   //    institution work) and zero same-surname contamination possible (they're the PI's own DOIs).
   let selected: AuthorWork[] = []
-  if ((opts.pubPageUrl || opts.orcid) && piName) {
+  if (opts.nameUnfiltered && piName) {
+    onProgress('Name search (unfiltered by affiliation)...')
+    let papers: AuthorWork[] = []
+    try { papers = await gatherPapersFromNameUnfiltered(piName, opts.sinceYear ?? 0) } catch { /* fall through */ }
+    selected = selectPapers(papers)
+  } else if ((opts.pubPageUrl || opts.orcid) && piName) {
     let papers: AuthorWork[] = []
     try {
       let dois: string[] = []
+      let pmids: string[] = []
       let orcid = opts.orcid
       if (opts.pubPageUrl) {
         onProgress('Reading publications page...')
@@ -148,18 +154,21 @@ export async function gatherLab(
           (pub.match(/10\.\d{4,9}\/[^\s)\]"'<>]+/g) ?? [])
             .map((d) => d.replace(/[.,;]+$/, '').replace(/v\d+\.full\.pdf$/i, '').replace(/\.pdf$/i, '').toLowerCase()),
         )]
-        // Many pub pages (Squarespace/Wix) list citations with no inline DOIs but link the PI's ORCID.
+        // Many pages (esp. UCSD) link papers by PubMed ID rather than DOI.
+        pmids = [...new Set([...pub.matchAll(/(?:pubmed(?:\.ncbi\.nlm\.nih\.gov)?\/|pmid:?\s*)(\d{6,9})/gi)].map((m) => m[1]))]
+        // Squarespace/Wix pages list citations with no inline DOIs/PMIDs but link the PI's ORCID.
         if (!orcid) orcid = pub.match(/orcid\.org\/(\d{4}-\d{4}-\d{4}-\d{3}[\dxX])/i)?.[1]
       }
-      // Prefer DOIs when the page has a real list; else fall back to the PI's ORCID (AUTHORID search).
-      if (dois.length >= 3) {
-        onProgress(`Found ${dois.length} DOIs; fetching + gating...`)
-        papers = await gatherPapersFromDois(piName, dois, opts.sinceYear ?? 0)
+      const refCount = dois.length + pmids.length
+      // Prefer explicit refs when the page has a real list; else fall back to the PI's ORCID.
+      if (refCount >= 3) {
+        onProgress(`Found ${dois.length} DOIs + ${pmids.length} PMIDs; fetching + gating...`)
+        papers = await gatherPapersFromRefs(piName, { dois, pmids }, opts.sinceYear ?? 0)
       } else if (orcid) {
-        onProgress(`Few DOIs on page; using ORCID ${orcid} (AUTHORID search)...`)
+        onProgress(`Few refs on page; using ORCID ${orcid} (AUTHORID search)...`)
         papers = await gatherPapersFromOrcid(orcid, opts.sinceYear ?? 0)
-      } else if (dois.length) {
-        papers = await gatherPapersFromDois(piName, dois, opts.sinceYear ?? 0)
+      } else if (refCount) {
+        papers = await gatherPapersFromRefs(piName, { dois, pmids }, opts.sinceYear ?? 0)
       }
     } catch {
       /* pub page unreadable — fall through with no papers rather than crash the ingest */

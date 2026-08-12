@@ -341,14 +341,61 @@ export async function gatherPapersFromOrcid(orcid: string, sinceYear = 0): Promi
   return sinceYear ? works.filter((w) => !w.year || w.year >= sinceYear) : works
 }
 
-// Gather a PI's papers from an explicit DOI list (from their pub page): fetch metadata, drop anything
-// older than sinceYear (old trainee work in a former subfield dilutes the lab's current identity),
-// then run the SAME attribution gate as name-search (defensive — a pub page occasionally lists a
-// collaborator's paper the PI isn't actually an author on; the gate drops only provable non-authors).
-export async function gatherPapersFromDois(piName: string, dois: string[], sinceYear = 0): Promise<AuthorWork[]> {
-  const works = await fetchWorksByDois(dois)
+// Name search WITHOUT the "San Diego" affiliation constraint — for a PI with a distinctive surname
+// whose real papers are bylined at a former institution (a Stanford postdoc now at UCSD) and so are
+// dropped by AFF:"San Diego". Safe only because the attribution gate + a rare surname disambiguate;
+// do NOT use for common surnames. Full first name preferred; gate + year filter applied.
+export async function gatherPapersFromNameUnfiltered(piName: string, sinceYear = 0): Promise<AuthorWork[]> {
+  const { last, first } = parseName(piName)
+  if (!last) return []
+  const who = first.length > 1 ? `${last} ${first}` : last
+  const recent = await epmcSafe(`AUTH:"${who}"`, 'P_PDATE_D desc')
+  const cited = await epmcSafe(`AUTH:"${who}"`, 'CITED desc')
+  const works = dedup([...recent.works, ...cited.works])
+  const recentOnly = sinceYear ? works.filter((w) => !w.year || w.year >= sinceYear) : works
+  return gatePapers(recentOnly, piName)
+}
+
+// Same as fetchWorksByDois but by PMID — many lab/profile pages (esp. UCSD) link papers to PubMed
+// (ncbi.nlm.nih.gov/pubmed/<id>) rather than a DOI. Without this, a citation list that is entirely
+// PubMed links yields zero papers (which, since re-ingest replaces the set, silently empties a lab).
+export async function fetchWorksByPmids(pmids: string[]): Promise<AuthorWork[]> {
+  const out: AuthorWork[] = []
+  for (const pmid of pmids) {
+    try {
+      const url = `${EPMC}?query=${encodeURIComponent(`EXT_ID:${pmid} AND SRC:MED`)}&format=json&resultType=core&pageSize=1`
+      const data = await withRetry(async () => {
+        const res = await fetch(url, { signal: AbortSignal.timeout(20000) })
+        if (!res.ok) throw new Error(`EuropePMC PMID ${res.status}`)
+        return (await res.json()) as { resultList?: { result?: Array<Record<string, unknown>> } }
+      })
+      const r = data.resultList?.result?.[0]
+      if (r) out.push(mapEpmc(r))
+    } catch {
+      /* skip an id EPMC can't resolve */
+    }
+  }
+  return dedup(out)
+}
+
+// Gather a PI's papers from explicit references (DOIs and/or PMIDs off their pub page): fetch
+// metadata, drop anything older than sinceYear (old trainee work in a former subfield dilutes the
+// lab's current identity), then run the SAME attribution gate as name-search (defensive — a pub page
+// occasionally lists a collaborator's paper the PI isn't actually an author on; the gate drops only
+// provable non-authors).
+export async function gatherPapersFromRefs(
+  piName: string,
+  refs: { dois?: string[]; pmids?: string[] },
+  sinceYear = 0,
+): Promise<AuthorWork[]> {
+  const works = dedup([...(await fetchWorksByDois(refs.dois ?? [])), ...(await fetchWorksByPmids(refs.pmids ?? []))])
   const recent = sinceYear ? works.filter((w) => !w.year || w.year >= sinceYear) : works
   return gatePapers(recent, piName)
+}
+
+// Back-compat shim (DOIs only).
+export async function gatherPapersFromDois(piName: string, dois: string[], sinceYear = 0): Promise<AuthorWork[]> {
+  return gatherPapersFromRefs(piName, { dois }, sinceYear)
 }
 
 export async function gatherPapers(piName: string): Promise<{ papers: AuthorWork[]; source: string }> {
