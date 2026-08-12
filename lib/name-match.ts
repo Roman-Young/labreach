@@ -59,6 +59,29 @@ export function nameParts(pi: string | null): PiName {
   return { first, lasts: rest.filter((t) => t.length >= 3), lastsAll: rest.filter((t) => t.length >= 2) }
 }
 
+// Levenshtein edit distance — used to treat a DATA-ENTRY TYPO in a stored name as the same person,
+// not a different one. Our own pi_name field had "Assutina" for the real "Assuntina" Sacco; a strict
+// equal/prefix match then read her OWN papers as a same-surname stranger's. A distance-≤1 given-name
+// difference on a shared surname is overwhelmingly a typo/transliteration, never two distinct people
+// we could tell apart anyway — so callers treat it as a match. Erring toward "same person" is the
+// recall-safe direction (keep the paper), consistent with the ambiguous-stays-visible decision.
+export function editDistance(a: string, b: string): number {
+  const m = a.length, n = b.length
+  if (!m) return n
+  if (!n) return m
+  let prev = Array.from({ length: n + 1 }, (_, j) => j)
+  let cur = new Array(n + 1)
+  for (let i = 1; i <= m; i++) {
+    cur[0] = i
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost)
+    }
+    ;[prev, cur] = [cur, prev]
+  }
+  return prev[n]
+}
+
 // Surnames common enough that first-initial+last is NOT identifying — require the full first name.
 // (Union of the previously-diverged copies — kept net-neutral for email matching. The attribution
 // classifier in lib/attribution.ts never trusts initials at all, so it doesn't lean on this set.)
