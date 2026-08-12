@@ -82,6 +82,35 @@ export function editDistance(a: string, b: string): number {
   return prev[n]
 }
 
+// Common English nickname / formal-name pairs (bidirectional). Used so a paper author who is the PI
+// under a familiar form — "Randy" for "Randolph" Hampton, "Jim" for "James" Wilhelm — is recognized as
+// the SAME person and the PI's own work is never quarantined as a same-surname stranger's. This is the
+// load-bearing guard for the same-name cleanup: without it, ~8 PIs' own papers would be wrongly hidden.
+export const NICKNAMES: ReadonlyArray<readonly [string, string]> = [
+  ['randy', 'randolph'], ['jim', 'james'], ['joe', 'joseph'], ['terry', 'teresa'], ['terry', 'terrence'],
+  ['bob', 'robert'], ['rob', 'robert'], ['bill', 'william'], ['will', 'william'], ['mike', 'michael'],
+  ['dave', 'david'], ['dan', 'daniel'], ['chris', 'christopher'], ['tony', 'anthony'], ['rick', 'richard'],
+  ['dick', 'richard'], ['ben', 'benjamin'], ['sam', 'samuel'], ['alex', 'alexander'], ['nate', 'nathan'],
+  ['kate', 'katherine'], ['katie', 'katherine'], ['liz', 'elizabeth'], ['tom', 'thomas'], ['tim', 'timothy'],
+  ['greg', 'gregory'], ['jeff', 'jeffrey'], ['ron', 'ronald'], ['steve', 'steven'], ['ken', 'kenneth'],
+  ['pete', 'peter'], ['matt', 'matthew'], ['nick', 'nicholas'], ['andy', 'andrew'], ['ed', 'edward'],
+]
+export function isNickname(a: string, b: string): boolean {
+  const x = a.trim().toLowerCase(), y = b.trim().toLowerCase()
+  return !!x && !!y && NICKNAMES.some(([n, f]) => (x === n && y === f) || (x === f && y === n))
+}
+
+// The canonical "are these two first names the SAME person" test: exact / prefix (sam↔samantha) /
+// one-char typo (assutina↔assuntina) / known nickname (randy↔randolph). Erring toward "same" is the
+// recall-safe direction — it keeps a paper rather than hiding it over a name variant.
+export function firstNamesEquivalent(a: string, b: string): boolean {
+  const x = (a.split(' ')[0] ?? '').trim().toLowerCase(), y = (b.split(' ')[0] ?? '').trim().toLowerCase()
+  if (x.length < 2 || y.length < 2) return false
+  if (x === y || x.startsWith(y) || y.startsWith(x)) return true
+  if (Math.min(x.length, y.length) >= 4 && editDistance(x, y) <= 1) return true
+  return isNickname(x, y)
+}
+
 // Surnames common enough that first-initial+last is NOT identifying — require the full first name.
 // (Union of the previously-diverged copies — kept net-neutral for email matching. The attribution
 // classifier in lib/attribution.ts never trusts initials at all, so it doesn't lean on this set.)
