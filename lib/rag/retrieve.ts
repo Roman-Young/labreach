@@ -102,7 +102,7 @@ export async function retrieveChunks(query: string, opts: RetrieveOpts = {}): Pr
     txn.query(
       `SELECT ${SELECT_COLS}
        FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url = lc.lab_url
-       WHERE lc.embedding IS NOT NULL
+       WHERE lc.embedding IS NOT NULL AND lc.quarantined = false
        ORDER BY lc.embedding <=> $1::vector
        LIMIT ${cand}`,
       [vec],
@@ -127,7 +127,7 @@ export async function retrieveChunks(query: string, opts: RetrieveOpts = {}): Pr
        )
        SELECT ${SELECT_COLS}
        FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url = lc.lab_url, q
-       WHERE lc.content_tsv @@ q.tsq
+       WHERE lc.content_tsv @@ q.tsq AND lc.quarantined = false
        ORDER BY ts_rank_cd(lc.content_tsv, q.tsq) DESC
        LIMIT ${cand}`,
       [query],
@@ -188,7 +188,7 @@ export async function retrieveLabChunks(
     await sql.query(
       `SELECT ${SELECT_COLS}
        FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url = lc.lab_url
-       WHERE lc.lab_url = $1 AND lc.embedding IS NOT NULL
+       WHERE lc.lab_url = $1 AND lc.embedding IS NOT NULL AND lc.quarantined = false
        ORDER BY lc.embedding <=> $2::vector`,
       [labUrl, vec],
     ),
@@ -200,7 +200,7 @@ export async function retrieveLabChunks(
        )
        SELECT ${SELECT_COLS}
        FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url = lc.lab_url, q
-       WHERE lc.lab_url = $1 AND lc.content_tsv @@ q.tsq
+       WHERE lc.lab_url = $1 AND lc.content_tsv @@ q.tsq AND lc.quarantined = false
        ORDER BY ts_rank_cd(lc.content_tsv, q.tsq) DESC`,
       [labUrl, query],
     ),

@@ -112,7 +112,7 @@ async function main() {
         // lab's own page is a stub. Ordered newest-first.
         const chunkRows = asRows(await sql.query(
           `SELECT type, title, year, content FROM lab_chunks
-             WHERE lab_url=$1 AND type IN ('paper','future_direction')
+             WHERE lab_url=$1 AND type IN ('paper','future_direction') AND quarantined = false
              ORDER BY (type='future_direction') DESC, year DESC NULLS LAST
              LIMIT 6`,
           [lab.lab_url],

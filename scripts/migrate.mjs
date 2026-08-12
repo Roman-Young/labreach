@@ -75,6 +75,15 @@ const statements = [
      ADD COLUMN IF NOT EXISTS anchor_quote text,
      ADD COLUMN IF NOT EXISTS source_id    text,
      ADD COLUMN IF NOT EXISTS meta         jsonb`,
+
+  // ── v3: attribution quarantine (2026-08-11). Reversibly hides a chunk from retrieval + the
+  // lab page without deleting it — for papers proven to belong to a DIFFERENT same-surname person
+  // (scripts/verify-attribution.ts → scripts/quarantine-attribution.ts). `quarantine_reason` keeps
+  // the machine verdict for auditing/reversal. Mirrors the lab_profiles.status lifecycle pattern. ──
+  `ALTER TABLE lab_chunks
+     ADD COLUMN IF NOT EXISTS quarantined       boolean NOT NULL DEFAULT false,
+     ADD COLUMN IF NOT EXISTS quarantine_reason text`,
+  `CREATE INDEX IF NOT EXISTS idx_lab_chunks_quarantined ON lab_chunks(quarantined)`,
 ]
 
 for (const stmt of statements) {

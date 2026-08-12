@@ -75,12 +75,12 @@ async function main() {
         // Lab's own stated future-work lines first (the strongest trajectory signal), then the
         // ~6 most-recent papers — all already LLM-distilled and grounded from ingestion.
         const futures = asRows(await sql.query(
-          `SELECT type, title, year, content FROM lab_chunks WHERE lab_url=$1 AND type='future_direction'`,
+          `SELECT type, title, year, content FROM lab_chunks WHERE lab_url=$1 AND type='future_direction' AND quarantined = false`,
           [lab.lab_url],
         ))
         const papers = asRows(await sql.query(
           `SELECT type, title, year, content FROM lab_chunks
-             WHERE lab_url=$1 AND type='paper'
+             WHERE lab_url=$1 AND type='paper' AND quarantined = false
              ORDER BY year DESC NULLS LAST LIMIT 6`,
           [lab.lab_url],
         ))

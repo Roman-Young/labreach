@@ -13,6 +13,14 @@
 //   ambiguous   — a surname-matching author exists but the record carries only compatible initials
 //                 and no ORCID/affiliation. Kept VISIBLE per Roman's 2026-08-11 decision (recall);
 //                 only proven contaminants are quarantined/dropped.
+//
+// 2026-08-11 fix: authorStatus() originally returned 'not_pi' immediately on a full-name mismatch,
+// before affiliation ever got a chance to vouch — so a nickname ("Randy" for "Randolph Y Hampton")
+// or a typo in our OWN stored pi_name ("Assutina" for the real "Assuntina" Sacco) hard-excluded a
+// PI's own papers. Affiliation now rescues every case except a mismatched single initial (which
+// has no nickname/typo ambiguity). Disclosed residual limit: the affiliation tier confirms
+// INSTITUTION/DEPARTMENT, not individual identity — a same-surname colleague in the same UCSD
+// department could theoretically be rescued without being the PI. Only ORCID is definitive.
 
 import { withRetry } from '@/lib/retry'
 import { strip, type PiName } from '@/lib/name-match'
@@ -30,54 +38,64 @@ export interface PiIdentity extends PiName {
 
 export type AttributionVerdict = 'confirmed' | 'contaminant' | 'ambiguous'
 
+// Machine-readable reason a paper landed on its verdict — for reporting/auditing, not logic.
+export type AttributionReason =
+  | 'orcid_match'
+  | 'name_match'
+  | 'affiliation_match'
+  | 'no_surname_on_paper' // the PI's surname doesn't appear among any author — strongest signal
+  | 'orcid_mismatch'
+  | 'name_and_affiliation_exclude' // full first name mismatch + author explicitly outside SD region
+  | 'initial_mismatch' // single-letter initial contradicts the PI's first-initial
+  | 'no_signal' // ambiguous: compatible initials/no name, no affiliation either way
+
 // Strong institutional signal for "this author is our PI" — deliberately NOT bare "san diego"
 // (that free-text substring matches Scripps/SDSU/Navy/biotech and is exactly what let the original
 // ingest contaminate). la jolla is kept: UCSD's campus address, overwhelmingly UCSD-affiliated in
 // author strings, and rule 3 only fires on an author who ALSO matches the PI's surname.
 const UCSD_AFFIL = /(university of california[,. ]+san diego|uc san diego|ucsd|la jolla)/i
 
-// The broader San-Diego research region. Used only in the NEGATIVE direction: an initials-only
-// author whose affiliation is explicitly OUTSIDE this region is someone else (the "S. Evans at
-// Los Alamos" case on a 1,356-author physics paper). Kept broad so a San-Diego-region author is
-// never excluded by this test — exclusion by affiliation must be unambiguous.
+// The broader San-Diego research region. Used only in the NEGATIVE direction: an initials-only (or
+// name-mismatched) author whose affiliation is explicitly OUTSIDE this region is someone else (the
+// "S. Evans at Los Alamos" case on a 1,356-author physics paper). Kept broad so a San-Diego-region
+// author is never excluded by this test — exclusion by affiliation must be unambiguous.
 const SD_REGION = /(san diego|la jolla|ucsd|salk|scripps|sanford burnham|sbp discovery|lji)/i
 
 // Per-author judgment relative to the PI: is this specific author the PI, someone else, or unknowable?
-type AuthorStatus = 'is_pi' | 'not_pi' | 'unknown'
+interface AuthorJudgment {
+  status: 'is_pi' | 'not_pi' | 'unknown'
+  reason: AttributionReason
+}
 
-function authorStatus(a: PaperAuthor, pi: PiIdentity): AuthorStatus {
+function judgeAuthor(a: PaperAuthor, pi: PiIdentity): AuthorJudgment {
   // ORCID is definitive in both directions when both sides are known.
-  if (a.orcid && pi.orcid) return a.orcid === pi.orcid ? 'is_pi' : 'not_pi'
+  if (a.orcid && pi.orcid) return a.orcid === pi.orcid ? { status: 'is_pi', reason: 'orcid_match' } : { status: 'not_pi', reason: 'orcid_mismatch' }
 
   const aFirst = (a.first.split(' ')[0] ?? '').trim()
   const nameConfirms =
     aFirst.length >= 2 &&
     pi.first.length >= 2 &&
     (aFirst === pi.first || aFirst.startsWith(pi.first) || pi.first.startsWith(aFirst))
-  if (nameConfirms) return 'is_pi'
+  if (nameConfirms) return { status: 'is_pi', reason: 'name_match' }
 
   // A MISMATCHED initial excludes outright ("q jiang" is not "fay jiang") — a single letter has
   // no nickname/typo ambiguity, so this is safe without an affiliation rescue.
-  if (aFirst.length === 1 && pi.first && aFirst !== pi.first[0]) return 'not_pi'
+  if (aFirst.length === 1 && pi.first && aFirst !== pi.first[0]) return { status: 'not_pi', reason: 'initial_mismatch' }
 
   // AFFILIATION RESCUE — checked for every remaining case, including a full-name MISMATCH, not
-  // just initials-only. This is the fix for the 2026-08-11 false-positive wave: "Randy Hampton"
-  // vs. an author's real "Randolph Y Hampton" (a nickname), and a typo in our own stored pi_name
-  // ("Assutina" vs. the real "Assuntina" Sacco) both hard-excluded on name alone before this
-  // rescue could run — wrongly quarantining a PI's own papers. A clear UCSD/La Jolla affiliation
-  // on a surname-matching author outweighs a superficial first-name mismatch.
-  if (UCSD_AFFIL.test(a.affiliation)) return 'is_pi'
+  // just initials-only (see the module comment for why this fix mattered).
+  if (UCSD_AFFIL.test(a.affiliation)) return { status: 'is_pi', reason: 'affiliation_match' }
 
   // Explicitly placed at an institution OUTSIDE the San Diego region → someone else, REGARDLESS
   // of whether the name superficially confirmed-or-not (this is what makes de Silva's dermatology
   // paper and Evans's fusion-physics paper correctly excluded even though the name check alone
   // can't run on initials).
-  if (a.affiliation.trim() && !SD_REGION.test(a.affiliation)) return 'not_pi'
+  if (a.affiliation.trim() && !SD_REGION.test(a.affiliation)) return { status: 'not_pi', reason: 'name_and_affiliation_exclude' }
 
   // A full-name MISMATCH with no affiliation signal either way (can't confirm, can't rule out) is
   // NOT enough on its own to condemn a paper — nicknames and data-entry typos are common enough
-  // (see above) that name-mismatch-alone must never be the sole basis for 'not_pi'. Honest unknown.
-  return 'unknown'
+  // that name-mismatch-alone must never be the sole basis for 'not_pi'. Honest unknown.
+  return { status: 'unknown', reason: 'no_signal' }
 }
 
 // Surname match by EXACT TOKEN equality — "de Silva" tokens {de, silva} match PI last "silva";
@@ -88,15 +106,27 @@ function surnameMatches(authorLast: string, pi: PiIdentity): boolean {
   return pi.lastsAll.some((l) => toks.includes(l))
 }
 
-// Classify one paper's author list against the PI.
-export function classifyPaper(authors: PaperAuthor[], pi: PiIdentity): AttributionVerdict {
-  if (!pi.lastsAll.length) return 'ambiguous' // unusable PI name — never condemn on no evidence
+export interface ClassifyResult {
+  verdict: AttributionVerdict
+  reason: AttributionReason
+}
+
+// Classify one paper's author list against the PI, with the reason it landed there.
+export function classifyPaperWithReason(authors: PaperAuthor[], pi: PiIdentity): ClassifyResult {
+  if (!pi.lastsAll.length) return { verdict: 'ambiguous', reason: 'no_signal' } // unusable PI name
   const sameSurname = authors.filter((a) => surnameMatches(a.last, pi))
-  if (!sameSurname.length) return 'contaminant' // the PI is not on this paper at all
-  const statuses = sameSurname.map((a) => authorStatus(a, pi))
-  if (statuses.includes('is_pi')) return 'confirmed'
-  if (statuses.includes('unknown')) return 'ambiguous'
-  return 'contaminant' // every surname-matching author is provably someone else
+  if (!sameSurname.length) return { verdict: 'contaminant', reason: 'no_surname_on_paper' }
+  const judgments = sameSurname.map((a) => judgeAuthor(a, pi))
+  const confirmed = judgments.find((j) => j.status === 'is_pi')
+  if (confirmed) return { verdict: 'confirmed', reason: confirmed.reason }
+  const unknown = judgments.find((j) => j.status === 'unknown')
+  if (unknown) return { verdict: 'ambiguous', reason: unknown.reason }
+  return { verdict: 'contaminant', reason: judgments[0].reason } // every author judged not_pi
+}
+
+// Back-compat convenience — verdict only.
+export function classifyPaper(authors: PaperAuthor[], pi: PiIdentity): AttributionVerdict {
+  return classifyPaperWithReason(authors, pi).verdict
 }
 
 // Resolve the PI's ORCID from their own (possibly contaminated) paper set: the modal ORCID among
@@ -109,8 +139,8 @@ export function resolvePiOrcid(papersAuthors: PaperAuthor[][], pi: PiName): stri
       if (!a.orcid) continue
       if (!surnameMatches(a.last, { ...pi, orcid: null })) continue
       // independent confirmation WITHOUT the ORCID tier
-      const st = authorStatus({ ...a, orcid: null }, { ...pi, orcid: null })
-      if (st === 'is_pi') confirmedCount.set(a.orcid, (confirmedCount.get(a.orcid) ?? 0) + 1)
+      const j = judgeAuthor({ ...a, orcid: null }, { ...pi, orcid: null })
+      if (j.status === 'is_pi') confirmedCount.set(a.orcid, (confirmedCount.get(a.orcid) ?? 0) + 1)
     }
   }
   let best: string | null = null
