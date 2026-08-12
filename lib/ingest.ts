@@ -13,7 +13,7 @@ export async function ingestLabV2(
   labUrl: string,
   onProgress: (m: string) => void = () => {},
   piName?: string | null,
-  opts: { pubPageUrl?: string; sinceYear?: number } = {},
+  opts: { pubPageUrl?: string; sinceYear?: number; orcid?: string } = {},
 ): Promise<{ profile: LabProfile; chunkCount: number; paperCount: number }> {
   const g = await gatherLab(labUrl, piName ?? null, onProgress, opts)
   const { profile, chunks } = await extractLabV2(g)

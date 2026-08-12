@@ -17,8 +17,10 @@ async function main() {
   const [labUrl, pubPageUrl] = process.argv.slice(2).filter((a) => a.startsWith('http'))
   const sinceArg = process.argv.indexOf('--since')
   const sinceYear = sinceArg >= 0 ? parseInt(process.argv[sinceArg + 1], 10) : 2015
-  if (!labUrl || !pubPageUrl) {
-    console.error('usage: reingest-from-pubpage.ts <labUrl> <pubPageUrl> [--since YEAR]')
+  const orcidArg = process.argv.indexOf('--orcid')
+  const orcid = orcidArg >= 0 ? process.argv[orcidArg + 1] : undefined
+  if (!labUrl || (!pubPageUrl && !orcid)) {
+    console.error('usage: reingest-from-pubpage.ts <labUrl> [<pubPageUrl>] [--orcid ID] [--since YEAR]')
     process.exit(1)
   }
 
@@ -37,7 +39,7 @@ async function main() {
   console.log(`   before:   kept=${before[0]?.kept ?? 0} papers`)
 
   const t0 = Date.now()
-  const { chunkCount, paperCount } = await ingestLabV2(labUrl, (m) => console.log(`   · ${m}`), piName, { pubPageUrl, sinceYear })
+  const { chunkCount, paperCount } = await ingestLabV2(labUrl, (m) => console.log(`   · ${m}`), piName, { pubPageUrl, sinceYear, orcid })
   console.log(`\n   ✓ ${paperCount} papers → ${chunkCount} chunks in ${((Date.now() - t0) / 1000).toFixed(0)}s`)
 
   const after = rows(await sql.query(

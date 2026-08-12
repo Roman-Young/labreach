@@ -1,5 +1,5 @@
 import { fetchEuropePMCFullText, type AuthorWork } from '@/lib/papers'
-import { gatherPapers, gatherPapersFromDois, parseName } from './sources'
+import { gatherPapers, gatherPapersFromDois, gatherPapersFromOrcid, parseName } from './sources'
 import { scrapePage } from '@/lib/scraper'
 
 // Deterministic gather: assemble a lab's full source bundle without an agentic loop.
@@ -128,7 +128,7 @@ export async function gatherLab(
   labUrl: string,
   piName: string | null,
   onProgress: (m: string) => void = () => {},
-  opts: { pubPageUrl?: string; sinceYear?: number } = {},
+  opts: { pubPageUrl?: string; sinceYear?: number; orcid?: string } = {},
 ): Promise<GatheredLab> {
   const pages: Record<string, string> = {}
 
@@ -136,17 +136,31 @@ export async function gatherLab(
   //    known: take the DOIs off the PI's OWN publications page — higher recall (catches multi-
   //    institution work) and zero same-surname contamination possible (they're the PI's own DOIs).
   let selected: AuthorWork[] = []
-  if (opts.pubPageUrl && piName) {
-    onProgress('Reading publications page...')
+  if ((opts.pubPageUrl || opts.orcid) && piName) {
     let papers: AuthorWork[] = []
     try {
-      const pub = await scrapePage(opts.pubPageUrl)
-      const dois = [...new Set(
-        (pub.match(/10\.\d{4,9}\/[^\s)\]"'<>]+/g) ?? [])
-          .map((d) => d.replace(/[.,;]+$/, '').replace(/v\d+\.full\.pdf$/i, '').replace(/\.pdf$/i, '').toLowerCase()),
-      )]
-      onProgress(`Found ${dois.length} DOIs on the pub page; fetching + gating...`)
-      papers = await gatherPapersFromDois(piName, dois, opts.sinceYear ?? 0)
+      let dois: string[] = []
+      let orcid = opts.orcid
+      if (opts.pubPageUrl) {
+        onProgress('Reading publications page...')
+        const pub = await scrapePage(opts.pubPageUrl)
+        dois = [...new Set(
+          (pub.match(/10\.\d{4,9}\/[^\s)\]"'<>]+/g) ?? [])
+            .map((d) => d.replace(/[.,;]+$/, '').replace(/v\d+\.full\.pdf$/i, '').replace(/\.pdf$/i, '').toLowerCase()),
+        )]
+        // Many pub pages (Squarespace/Wix) list citations with no inline DOIs but link the PI's ORCID.
+        if (!orcid) orcid = pub.match(/orcid\.org\/(\d{4}-\d{4}-\d{4}-\d{3}[\dxX])/i)?.[1]
+      }
+      // Prefer DOIs when the page has a real list; else fall back to the PI's ORCID (AUTHORID search).
+      if (dois.length >= 3) {
+        onProgress(`Found ${dois.length} DOIs; fetching + gating...`)
+        papers = await gatherPapersFromDois(piName, dois, opts.sinceYear ?? 0)
+      } else if (orcid) {
+        onProgress(`Few DOIs on page; using ORCID ${orcid} (AUTHORID search)...`)
+        papers = await gatherPapersFromOrcid(orcid, opts.sinceYear ?? 0)
+      } else if (dois.length) {
+        papers = await gatherPapersFromDois(piName, dois, opts.sinceYear ?? 0)
+      }
     } catch {
       /* pub page unreadable — fall through with no papers rather than crash the ingest */
     }

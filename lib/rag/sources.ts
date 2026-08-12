@@ -327,6 +327,20 @@ export async function fetchWorksByDois(dois: string[]): Promise<AuthorWork[]> {
   return dedup(out)
 }
 
+// Search EPMC by the PI's ORCID (AUTHORID) — the fallback when a pub page lists citations with no
+// inline DOIs (e.g. a Squarespace site linking PDFs) but exposes the PI's ORCID. AUTHORID is
+// EPMC's own author↔paper link, so results are definitively the PI's — no attribution gate needed.
+export async function searchEuropePMCByOrcid(orcid: string): Promise<AuthorWork[]> {
+  const recent = await epmcSafe(`AUTHORID:"${orcid}"`, 'P_PDATE_D desc')
+  const cited = await epmcSafe(`AUTHORID:"${orcid}"`, 'CITED desc')
+  return dedup([...recent.works, ...cited.works])
+}
+
+export async function gatherPapersFromOrcid(orcid: string, sinceYear = 0): Promise<AuthorWork[]> {
+  const works = await searchEuropePMCByOrcid(orcid)
+  return sinceYear ? works.filter((w) => !w.year || w.year >= sinceYear) : works
+}
+
 // Gather a PI's papers from an explicit DOI list (from their pub page): fetch metadata, drop anything
 // older than sinceYear (old trainee work in a former subfield dilutes the lab's current identity),
 // then run the SAME attribution gate as name-search (defensive — a pub page occasionally lists a
