@@ -276,7 +276,12 @@ const countAbstracts = (list: AuthorWork[]): number =>
 //   confirmed + ambiguous  → KEEP  (recall — an unprovable paper is not a wrong one; Roman 2026-08-11)
 //   contaminant            → DROP  (provably a different person — never chunked)
 //   no author list at all   → KEEP  (honest unknown; the gate never condemns on missing data)
-async function gatePapers(papers: AuthorWork[], piName: string): Promise<AuthorWork[]> {
+// lenient=true for PI-specific sources (pub page, ORCID, unique-surname name search): those papers
+// are the PI's OWN, so a non-San-Diego affiliation is NOT disqualifying (their former-institution
+// work is still theirs — this is what wrongly zeroed Rivera-Chávez/Guseman). In lenient mode a paper
+// is dropped only when the PI's surname is absent entirely (a gross mis-listing). Strict mode (name+
+// affiliation search) keeps the full contaminant exclusion to fight same-surname strangers.
+async function gatePapers(papers: AuthorWork[], piName: string, lenient = false): Promise<AuthorWork[]> {
   const pi = nameParts(piName)
   if (!pi.lastsAll.length) return papers // unusable PI name → cannot gate; don't silently drop everything
 
@@ -296,7 +301,10 @@ async function gatePapers(papers: AuthorWork[], piName: string): Promise<AuthorW
 
   return papers.filter((p) => {
     if (!p.authors?.length) return true // honest unknown — keep
-    return classifyPaperWithReason(p.authors, piId).verdict !== 'contaminant'
+    const { verdict, reason } = classifyPaperWithReason(p.authors, piId)
+    if (verdict !== 'contaminant') return true
+    if (lenient) return reason !== 'no_surname_on_paper' // keep off-SD own papers; drop only if PI's surname absent
+    return false
   })
 }
 
@@ -353,7 +361,7 @@ export async function gatherPapersFromNameUnfiltered(piName: string, sinceYear =
   const cited = await epmcSafe(`AUTH:"${who}"`, 'CITED desc')
   const works = dedup([...recent.works, ...cited.works])
   const recentOnly = sinceYear ? works.filter((w) => !w.year || w.year >= sinceYear) : works
-  return gatePapers(recentOnly, piName)
+  return gatePapers(recentOnly, piName, true) // lenient: distinctive surname, papers are the PI's
 }
 
 // Same as fetchWorksByDois but by PMID — many lab/profile pages (esp. UCSD) link papers to PubMed
@@ -390,7 +398,7 @@ export async function gatherPapersFromRefs(
 ): Promise<AuthorWork[]> {
   const works = dedup([...(await fetchWorksByDois(refs.dois ?? [])), ...(await fetchWorksByPmids(refs.pmids ?? []))])
   const recent = sinceYear ? works.filter((w) => !w.year || w.year >= sinceYear) : works
-  return gatePapers(recent, piName)
+  return gatePapers(recent, piName, true) // lenient: the PI's own pub-page list
 }
 
 // Back-compat shim (DOIs only).
