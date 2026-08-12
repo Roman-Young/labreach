@@ -300,6 +300,43 @@ async function gatePapers(papers: AuthorWork[], piName: string): Promise<AuthorW
   })
 }
 
+// ── Pub-page-first ingest ───────────────────────────────────────────────────
+// The highest-recall, highest-precision source is the PI's OWN publications page: it lists their
+// real papers (including multi-institution / collaborative work that AUTH+AFF search misses — a
+// PI's Stanford-era paper never matches AFF:"San Diego") and, being their own list, carries no
+// same-surname strangers. We take the DOIs off that page and fetch each one's metadata from EPMC.
+
+// Fetch full core metadata (title/abstract/authors/ids) for a set of DOIs, one query each (throttled
+// by withRetry's backoff). A DOI that won't resolve is skipped, never fatal.
+export async function fetchWorksByDois(dois: string[]): Promise<AuthorWork[]> {
+  const out: AuthorWork[] = []
+  for (const doi of dois) {
+    try {
+      const url = `${EPMC}?query=${encodeURIComponent(`DOI:"${doi}"`)}&format=json&resultType=core&pageSize=1`
+      const data = await withRetry(async () => {
+        const res = await fetch(url, { signal: AbortSignal.timeout(20000) })
+        if (!res.ok) throw new Error(`EuropePMC DOI ${res.status}`)
+        return (await res.json()) as { resultList?: { result?: Array<Record<string, unknown>> } }
+      })
+      const r = data.resultList?.result?.[0]
+      if (r) out.push(mapEpmc(r))
+    } catch {
+      /* a DOI EPMC can't resolve (book chapter, preprint server, dead) — skip it */
+    }
+  }
+  return dedup(out)
+}
+
+// Gather a PI's papers from an explicit DOI list (from their pub page): fetch metadata, drop anything
+// older than sinceYear (old trainee work in a former subfield dilutes the lab's current identity),
+// then run the SAME attribution gate as name-search (defensive — a pub page occasionally lists a
+// collaborator's paper the PI isn't actually an author on; the gate drops only provable non-authors).
+export async function gatherPapersFromDois(piName: string, dois: string[], sinceYear = 0): Promise<AuthorWork[]> {
+  const works = await fetchWorksByDois(dois)
+  const recent = sinceYear ? works.filter((w) => !w.year || w.year >= sinceYear) : works
+  return gatePapers(recent, piName)
+}
+
 export async function gatherPapers(piName: string): Promise<{ papers: AuthorWork[]; source: string }> {
   let acc: AuthorWork[] = []
   const used: string[] = []

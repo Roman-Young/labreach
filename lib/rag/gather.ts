@@ -1,5 +1,5 @@
 import { fetchEuropePMCFullText, type AuthorWork } from '@/lib/papers'
-import { gatherPapers, parseName } from './sources'
+import { gatherPapers, gatherPapersFromDois, parseName } from './sources'
 import { scrapePage } from '@/lib/scraper'
 
 // Deterministic gather: assemble a lab's full source bundle without an agentic loop.
@@ -128,19 +128,37 @@ export async function gatherLab(
   labUrl: string,
   piName: string | null,
   onProgress: (m: string) => void = () => {},
+  opts: { pubPageUrl?: string; sinceYear?: number } = {},
 ): Promise<GatheredLab> {
   const pages: Record<string, string> = {}
 
-  // 1. Papers via the multi-source cascade (free), then select recent + cited.
+  // 1. Papers. Default: the multi-source name+affiliation cascade. Preferred when a pub page is
+  //    known: take the DOIs off the PI's OWN publications page — higher recall (catches multi-
+  //    institution work) and zero same-surname contamination possible (they're the PI's own DOIs).
   let selected: AuthorWork[] = []
-  if (piName) {
+  if (opts.pubPageUrl && piName) {
+    onProgress('Reading publications page...')
+    let papers: AuthorWork[] = []
+    try {
+      const pub = await scrapePage(opts.pubPageUrl)
+      const dois = [...new Set(
+        (pub.match(/10\.\d{4,9}\/[^\s)\]"'<>]+/g) ?? [])
+          .map((d) => d.replace(/[.,;]+$/, '').replace(/v\d+\.full\.pdf$/i, '').replace(/\.pdf$/i, '').toLowerCase()),
+      )]
+      onProgress(`Found ${dois.length} DOIs on the pub page; fetching + gating...`)
+      papers = await gatherPapersFromDois(piName, dois, opts.sinceYear ?? 0)
+    } catch {
+      /* pub page unreadable — fall through with no papers rather than crash the ingest */
+    }
+    selected = selectPapers(papers)
+  } else if (piName) {
     onProgress('Finding papers (multi-source)...')
     const { papers } = await gatherPapers(piName)
     selected = selectPapers(papers)
-    for (const p of selected) {
-      pages[`paper:${keyOf(p)}`] =
-        `TITLE: ${p.title}\nYEAR: ${p.year ?? '?'}\nSOURCE_ID: ${sid(p) ?? '(none)'}\nCITED_BY: ${p.citedByCount}\n\nABSTRACT:\n${p.abstract ?? '(no abstract available)'}`
-    }
+  }
+  for (const p of selected) {
+    pages[`paper:${keyOf(p)}`] =
+      `TITLE: ${p.title}\nYEAR: ${p.year ?? '?'}\nSOURCE_ID: ${sid(p) ?? '(none)'}\nCITED_BY: ${p.citedByCount}\n\nABSTRACT:\n${p.abstract ?? '(no abstract available)'}`
   }
 
   // 2. Lab site — 2 hops. The seed URL is a department DIRECTORY PROFILE; the lab's

@@ -66,14 +66,18 @@ async function main() {
   const sql = requireSql()
   const labArg = process.argv.indexOf('--lab')
   const labFilter = labArg >= 0 ? process.argv[labArg + 1] : null
+  const urlArg = process.argv.indexOf('--urls')
+  const urlList = urlArg >= 0 ? (process.argv[urlArg + 1] ?? '').split(',').filter(Boolean) : null
   const limArg = process.argv.indexOf('--limit')
   const limit = limArg >= 0 ? parseInt(process.argv[limArg + 1], 10) : 0
 
   let labs = rows(await sql.query(
-    labFilter
-      ? `SELECT lab_url, pi_name FROM lab_profiles WHERE status='done' AND pi_name ILIKE $1 ORDER BY pi_name`
-      : `SELECT lab_url, pi_name FROM lab_profiles WHERE status='done' ORDER BY pi_name`,
-    labFilter ? [`%${labFilter}%`] : [],
+    urlList
+      ? `SELECT lab_url, pi_name FROM lab_profiles WHERE status='done' AND lab_url = ANY($1) ORDER BY pi_name`
+      : labFilter
+        ? `SELECT lab_url, pi_name FROM lab_profiles WHERE status='done' AND pi_name ILIKE $1 ORDER BY pi_name`
+        : `SELECT lab_url, pi_name FROM lab_profiles WHERE status='done' ORDER BY pi_name`,
+    urlList ? [urlList] : labFilter ? [`%${labFilter}%`] : [],
   ))
   if (limit > 0) labs = labs.slice(0, limit)
   console.log(`Same-name verification over ${labs.length} labs (kept papers only)...\n`)

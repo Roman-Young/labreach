@@ -13,8 +13,9 @@ export async function ingestLabV2(
   labUrl: string,
   onProgress: (m: string) => void = () => {},
   piName?: string | null,
+  opts: { pubPageUrl?: string; sinceYear?: number } = {},
 ): Promise<{ profile: LabProfile; chunkCount: number; paperCount: number }> {
-  const g = await gatherLab(labUrl, piName ?? null, onProgress)
+  const g = await gatherLab(labUrl, piName ?? null, onProgress, opts)
   const { profile, chunks } = await extractLabV2(g)
   await storeLabV2(profile, chunks)
   // paperCount lets the batch tell "genuinely nothing to find" (0 papers -> no_sources,
