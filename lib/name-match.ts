@@ -94,6 +94,7 @@ export const NICKNAMES: ReadonlyArray<readonly [string, string]> = [
   ['kate', 'katherine'], ['katie', 'katherine'], ['liz', 'elizabeth'], ['tom', 'thomas'], ['tim', 'timothy'],
   ['greg', 'gregory'], ['jeff', 'jeffrey'], ['ron', 'ronald'], ['steve', 'steven'], ['ken', 'kenneth'],
   ['pete', 'peter'], ['matt', 'matthew'], ['nick', 'nicholas'], ['andy', 'andrew'], ['ed', 'edward'],
+  ['gene', 'eugene'], ['nate', 'nathaniel'], ['gabe', 'gabriel'], ['josh', 'joshua'], ['dan', 'danielle'],
 ]
 export function isNickname(a: string, b: string): boolean {
   const x = a.trim().toLowerCase(), y = b.trim().toLowerCase()
