@@ -76,7 +76,7 @@ async function main() {
       temperature: 0,
       responseMimeType: 'application/json',
       responseSchema: SCHEMA,
-      maxOutputTokens: 700,
+      maxOutputTokens: 1400,
       thinkingConfig: { thinkingBudget: 0 },
     } as unknown as Record<string, unknown>,
   })
