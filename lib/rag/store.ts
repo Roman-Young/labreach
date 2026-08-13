@@ -111,7 +111,10 @@ export async function storeLab(profile: LabProfile, chunks: LabChunk[]): Promise
      ON CONFLICT (lab_url) DO UPDATE SET
        lab_name = EXCLUDED.lab_name,
        pi_name    = COALESCE(lab_profiles.pi_name, EXCLUDED.pi_name),
-       pi_email = EXCLUDED.pi_email,
+       -- pi_email: a re-scrape may FILL an empty email but must never ERASE or overwrite a
+       -- recovered/verified one (contact-hunt found ~42; a later scrape returning NULL was silently
+       -- clobbering them). Keep the existing non-empty value; only take the fresh one when empty.
+       pi_email   = COALESCE(NULLIF(lab_profiles.pi_email, ''), EXCLUDED.pi_email),
        school     = COALESCE(lab_profiles.school, EXCLUDED.school),
        department = COALESCE(lab_profiles.department, EXCLUDED.department),
        data_modality = EXCLUDED.data_modality, recruiting = EXCLUDED.recruiting,
@@ -157,7 +160,10 @@ export async function storeLabV2(profile: LabProfile, chunks: LabChunkV2[]): Pro
      ON CONFLICT (lab_url) DO UPDATE SET
        lab_name = EXCLUDED.lab_name,
        pi_name    = COALESCE(lab_profiles.pi_name, EXCLUDED.pi_name),
-       pi_email = EXCLUDED.pi_email,
+       -- pi_email: a re-scrape may FILL an empty email but must never ERASE or overwrite a
+       -- recovered/verified one (contact-hunt found ~42; a later scrape returning NULL was silently
+       -- clobbering them). Keep the existing non-empty value; only take the fresh one when empty.
+       pi_email   = COALESCE(NULLIF(lab_profiles.pi_email, ''), EXCLUDED.pi_email),
        school     = COALESCE(lab_profiles.school, EXCLUDED.school),
        department = COALESCE(lab_profiles.department, EXCLUDED.department),
        data_modality = EXCLUDED.data_modality, recruiting = EXCLUDED.recruiting,
@@ -181,6 +187,16 @@ export async function storeLabV2(profile: LabProfile, chunks: LabChunkV2[]): Pro
       [profile.labUrl, c.kind, c.title, c.year, c.content, c.anchorQuote, c.sourceLabel, c.sourceId, c.meta ? JSON.stringify(c.meta) : null],
     )
   }
+
+  // Re-apply the quarantine LEDGER: any (lab_url, source_id) we previously proved a contaminant
+  // stays hidden across this DELETE+re-INSERT. Without this a re-ingest resurrects known-wrong
+  // papers — especially the domain-caught field-outliers the attribution gate can't re-derive.
+  await sql.query(
+    `UPDATE lab_chunks lc SET quarantined = true, quarantine_reason = ql.reason
+       FROM quarantine_ledger ql
+      WHERE lc.lab_url = $1 AND lc.lab_url = ql.lab_url AND lc.source_id = ql.source_id`,
+    [profile.labUrl],
+  )
 
   // B1 crash-safety: flip to 'done' ONLY after every chunk is written. The Neon HTTP driver
   // has no cross-statement transaction, so a crash between the profile upsert and here must

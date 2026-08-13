@@ -84,6 +84,29 @@ const statements = [
      ADD COLUMN IF NOT EXISTS quarantined       boolean NOT NULL DEFAULT false,
      ADD COLUMN IF NOT EXISTS quarantine_reason text`,
   `CREATE INDEX IF NOT EXISTS idx_lab_chunks_quarantined ON lab_chunks(quarantined)`,
+
+  // ── v4: production hardening (2026-08-13) ──
+  // Provenance + health columns so a NULL/"unknown" is auditable ("we looked on date X"), not a
+  // shrug — and so a verified email/URL is never silently clobbered by a re-scrape.
+  `ALTER TABLE lab_profiles
+     ADD COLUMN IF NOT EXISTS pi_email_source        text,          -- 'scrape' | 'contact-hunt' | 'directory' | 'manual'
+     ADD COLUMN IF NOT EXISTS pi_email_verified_at   timestamptz,
+     ADD COLUMN IF NOT EXISTS recruiting_evidence    text,          -- verbatim quote backing the recruiting verdict
+     ADD COLUMN IF NOT EXISTS recruiting_checked_at  timestamptz,   -- when the join-signal was last looked for
+     ADD COLUMN IF NOT EXISTS url_status             text,          -- 'ok' | 'dead' | 'redirect'
+     ADD COLUMN IF NOT EXISTS url_checked_at         timestamptz`,
+
+  // Quarantine LEDGER — the durable record of which (lab_url, source_id) papers are known
+  // contaminants and WHY. storeLabV2 re-applies these after a re-ingest's DELETE+re-INSERT, so a
+  // re-ingest can never resurrect a paper we already proved wrong (esp. the domain-caught outliers
+  // the attribution gate cannot re-derive). Reversible: delete the ledger row to un-quarantine.
+  `CREATE TABLE IF NOT EXISTS quarantine_ledger (
+     lab_url    text NOT NULL,
+     source_id  text NOT NULL,
+     reason     text,
+     created_at timestamptz NOT NULL DEFAULT now(),
+     PRIMARY KEY (lab_url, source_id)
+  )`,
 ]
 
 for (const stmt of statements) {
