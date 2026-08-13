@@ -59,7 +59,7 @@ const normQ = (s: string) =>
   s.toLowerCase().replace(/[‘’ʼ´`]/g, "'").replace(/[“”]/g, '"').replace(/[‐–—]/g, '-').replace(/…/g, '...').replace(/\s+/g, ' ').trim()
 
 // A page that is really an error/placeholder, not an application process.
-const DEAD = /\b(4\d\d|5\d\d|page (was )?not found|couldn'?t find (the|that)? ?page|has been (moved|deleted)|error in the url|connection reset|site can'?t be reached|refused to connect|currently unavailable|not available|under construction|coming soon|no information)\b/i
+const DEAD = /\b(4\d\d|5\d\d|page (was )?not found|couldn'?t find (the|that)? ?page|has been (moved|deleted)|error in the url|connection reset|site can'?t be reached|refused to connect|currently unavailable|out of service|no longer (in service|active|maintained)|domain (has )?expired|this (site|website) (is|has been) (down|discontinued)|under construction|coming soon|no information)\b/i
 // A quote that is nothing but a contact handle (bare email / mailto / "Email: x@y") — the exact
 // class the first pass let through (Silva, Christman): no process, just the PI's address.
 const BARE_CONTACT = /^\s*(e-?\s*mail\s*:?\s*)?(mailto:)?[^\s@]+@[^\s@]+\s*$/i
