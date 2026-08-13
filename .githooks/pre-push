@@ -1,0 +1,8 @@
+#!/bin/sh
+# Pre-push gate: typecheck + tests must pass before any push. Enable once with:
+#   git config core.hooksPath .githooks
+echo "▶ pre-push: typecheck…"
+npm run --silent typecheck || { echo "✗ typecheck failed — push aborted"; exit 1; }
+echo "▶ pre-push: tests…"
+npm test --silent || { echo "✗ tests failed — push aborted"; exit 1; }
+echo "✓ pre-push checks passed"
