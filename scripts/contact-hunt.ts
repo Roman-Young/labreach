@@ -167,7 +167,12 @@ async function main() {
   for (const r of results.filter((x) => !x.email)) console.log(`  ${r.pi}   (${r.note})`)
 
   if (execute) {
-    for (const r of found) await sql.query(`UPDATE lab_profiles SET pi_email = $2 WHERE lab_url = $1 AND (pi_email IS NULL OR pi_email='')`, [r.url, r.email])
+    for (const r of found)
+      await sql.query(
+        `UPDATE lab_profiles SET pi_email = $2, pi_email_source = 'contact-hunt', pi_email_verified_at = now()
+         WHERE lab_url = $1 AND (pi_email IS NULL OR pi_email='')`,
+        [r.url, r.email],
+      )
     console.log(`\n✓ wrote ${found.length} emails.`)
   }
 }

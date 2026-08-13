@@ -79,7 +79,11 @@ async function main() {
 
   if (execute) {
     for (const w of write) {
-      await sql.query(`UPDATE lab_profiles SET pi_email = $2 WHERE lab_url = $1 AND (pi_email IS NULL OR pi_email='')`, [w.url, w.email])
+      await sql.query(
+        `UPDATE lab_profiles SET pi_email = $2, pi_email_source = 'scrape', pi_email_verified_at = now()
+         WHERE lab_url = $1 AND (pi_email IS NULL OR pi_email='')`,
+        [w.url, w.email],
+      )
     }
     console.log(`\n✓ wrote ${write.length} grounded, name-matched emails.`)
   }
