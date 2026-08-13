@@ -74,6 +74,9 @@ async function main() {
          UPDATE lab_chunks SET lab_url = $2 WHERE lab_url = $1`,
         [v.old, v.new],
       )
+      // The quarantine_ledger is keyed on lab_url too — repoint it in lockstep, or the
+      // ledger-covers-every-contaminant invariant breaks (the ledger would still point at the old URL).
+      await sql.query(`UPDATE quarantine_ledger SET lab_url = $2 WHERE lab_url = $1`, [v.old, v.new])
     }
     const fs = await import('fs')
     fs.writeFileSync(
