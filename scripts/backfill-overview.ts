@@ -41,6 +41,20 @@ const normQ = (s: string) =>
 const isGrounded = (haystack: string, quote: string) =>
   normQ(haystack).includes(normQ(quote)) || normQ(haystack).replace(/\s+/g, '').includes(normQ(quote).replace(/\s+/g, ''))
 
+// --loose fallback: an OVERVIEW is summary prose, so the model routinely lightly rewords its anchor
+// quote even though it's paraphrasing a REAL passage. Rather than reject that, check that the quote's
+// distinctive content-words (len≥5, so past the stop-word floor) overwhelmingly appear in the cache:
+// a lightly-reworded real sentence keeps ~all of them; a fabricated claim about research that isn't
+// there would introduce words the page never uses. Threshold 0.85 — high enough to stay anti-fabrication.
+const wordOverlap = (haystack: string, quote: string): number => {
+  const hay = new Set(normQ(haystack).split(/[^a-z0-9]+/).filter((w) => w.length >= 5))
+  const words = [...new Set(normQ(quote).split(/[^a-z0-9]+/).filter((w) => w.length >= 5))]
+  if (words.length < 3) return 0 // too few content words to judge — treat as ungrounded
+  return words.filter((w) => hay.has(w)).length / words.length
+}
+const isGroundedLoose = (haystack: string, quote: string, content: string): boolean =>
+  isGrounded(haystack, quote) || (wordOverlap(haystack, quote) >= 0.85 && wordOverlap(haystack, content) >= 0.7)
+
 const asRows = (r: unknown): Array<Record<string, unknown>> =>
   (Array.isArray(r) ? r : ((r as { rows?: unknown[] }).rows ?? [])) as Array<Record<string, unknown>>
 
@@ -52,6 +66,7 @@ async function main() {
   const flag = (n: string) => { const i = args.indexOf(`--${n}`); return i >= 0 ? Number(args[i + 1]) : undefined }
   const limit = flag('limit')
   const concurrency = flag('concurrency') ?? 3
+  const loose = args.includes('--loose') // accept a lightly-reworded-but-grounded overview quote
 
   const apiKey = process.env.GOOGLE_AI_API_KEY
   if (!apiKey) throw new Error('GOOGLE_AI_API_KEY is not set')
@@ -99,7 +114,8 @@ async function main() {
         const quote = (ov?.anchor_quote ?? '').trim()
         if (!content || !quote) { skipped++; console.log(`  · ${lab.pi_name} — model returned no overview`); continue }
         if (DEAD.test(content) || DEAD.test(quote)) { skipped++; console.log(`  · ${lab.pi_name} — dead-page text`); continue }
-        if (!isGrounded(siteBundle, quote)) { skipped++; console.log(`  · ${lab.pi_name} — ungrounded quote`); continue }
+        const grounded = loose ? isGroundedLoose(siteBundle, quote, content) : isGrounded(siteBundle, quote)
+        if (!grounded) { skipped++; console.log(`  · ${lab.pi_name} — ungrounded quote`); continue }
 
         await sql.query(
           `INSERT INTO lab_chunks (lab_url, type, content, source, title, year, anchor_quote, source_id, meta)
