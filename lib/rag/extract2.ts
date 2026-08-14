@@ -150,71 +150,24 @@ function salvageArray(raw: string, key: string): Record<string, unknown> | null 
   return objs.length ? { [key]: objs } : null
 }
 
-export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfile; chunks: LabChunkV2[] }> {
-  const apiKey = process.env.GOOGLE_AI_API_KEY
-  if (!apiKey) throw new Error('GOOGLE_AI_API_KEY is not set')
-
-  // Build the summarizer bundle from ABSTRACTS + SITE only. Full-text pages are still cached
-  // (raw_pages) for the retrieval layer (T87) but are deliberately NOT fed to the summarizer:
-  // feeding huge full papers makes the model run away (Benjamin Smarr = 65k-token output →
-  // 250s timeout → ~$0.16 wasted). Abstracts give bounded, cheap (~$0.008/lab), reliable
-  // summaries in ~10s; paper DEPTH belongs in the embedded full-text, not in these summaries.
+// Build the summarizer bundle from ABSTRACTS + SITE only (never fulltext: — see extractLabV2's
+// comment). Shared by every extraction backend (Gemini, Sonnet-agent) so they see IDENTICAL input.
+export function buildBundle(g: GatheredLab): string {
   let bundle = ''
   for (const [k, v] of Object.entries(g.pages)) {
     if (k.startsWith('fulltext:')) continue
     bundle += `\n\n===== ${k} =====\n${v}`
     if (bundle.length >= BUNDLE_CAP) break
   }
-  bundle = bundle.slice(0, BUNDLE_CAP)
+  return bundle.slice(0, BUNDLE_CAP)
+}
 
-  const genAI = new GoogleGenerativeAI(apiKey)
-  // One bounded structured call. maxOutputTokens caps each output so neither the papers list
-  // nor the facets can run away (runaway output was causing 65k-token / 250s / truncated-JSON
-  // fails). withRetry(attempts:2) also recovers a transient bad/empty body without outliving
-  // the batch's per-lab timeout. Logs the FULL token breakdown incl. `thoughts` — grep
-  // '[usage]' for real per-lab cost; thoughts>0 means thinkingBudget:0 didn't apply.
-  const runCall = async (schema: unknown, instruction: string, maxOutputTokens: number): Promise<Record<string, unknown>> => {
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
-      generationConfig: {
-        temperature: 0,
-        responseMimeType: 'application/json',
-        responseSchema: schema as Schema,
-        maxOutputTokens,
-        thinkingConfig: { thinkingBudget: 0 },
-      } as unknown as Record<string, unknown>,
-    })
-    return withRetry(async () => {
-      const res = await model.generateContent(`${instruction}${bundle}`)
-      const u = (res.response as { usageMetadata?: Record<string, number> }).usageMetadata
-      if (u) console.log(`[usage] in=${u.promptTokenCount ?? 0} out=${u.candidatesTokenCount ?? 0} thoughts=${u.thoughtsTokenCount ?? 0}`)
-      const text = res.response.text()
-      try {
-        return JSON.parse(text) as Record<string, unknown>
-      } catch (e) {
-        // A very paper-rich lab can truncate the papers JSON even at the 32k cap (Scott Biering).
-        // Rather than lose the whole ingest, salvage every COMPLETE paper object emitted before the
-        // cut. Only runs on an otherwise-fatal parse error, so the happy path is untouched.
-        const salvaged = salvageArray(text, 'papers')
-        if (salvaged) {
-          console.log(`[salvage] recovered ${(salvaged.papers as unknown[]).length} complete papers from a truncated response`)
-          return salvaged
-        }
-        throw e
-      }
-    }, { attempts: 2 })
-  }
-
-  // TWO bounded calls — papers (the larger output) then facets (small) — each within its own
-  // cap so neither runs away. Sequential to keep in-flight Gemini calls low. Merge into one
-  // object so the chunk-building + profile code below is unchanged.
-  // Papers cap is 32k (was 20k, was 12k): the most paper-rich labs truncated their JSON at the
-  // lower caps on both attempts and failed the whole ingest (Scott Biering: out=19989 hit the 20k
-  // ceiling exactly). 32k clears them while staying under the old ~65k runaway.
-  const pp = await runCall(PAPERS_SCHEMA, INSTRUCTION_PAPERS, 32000)
-  const pf = await runCall(FACETS_SCHEMA, INSTRUCTION_FACETS, 4000)
-  const p: Record<string, unknown> = { ...pf, papers: pp.papers }
-
+// Assemble the final LabProfile + grounded chunks from a GatheredLab, its bundle, and the raw
+// {papers, ...facets} JSON returned by WHATEVER extractor produced it (Gemini or a Sonnet agent —
+// this function is extractor-agnostic). This is the part that actually enforces the product's
+// core promise (verbatim grounding, source_id trust, dedup) — it must run identically regardless
+// of which model wrote the JSON, so a backend swap can never silently weaken the grounding guard.
+export function assembleLabV2(g: GatheredLab, bundle: string, p: Record<string, unknown>): { profile: LabProfile; chunks: LabChunkV2[] } {
   const str = (x: unknown): string | null => (typeof x === 'string' && x.trim() ? x.trim() : null)
   const strs = (x: unknown): string[] =>
     ((x as string[]) ?? []).filter((s) => typeof s === 'string' && s.trim()).map((s) => s.trim())
@@ -346,8 +299,8 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
   const profile: LabProfile = {
     labUrl: g.labUrl,
     labName: str(p.lab_name),
-    // The SEEDED name (from the UCSD directory enumerator) is authoritative for identity —
-    // the model's guess reads paper headers and returns co-authors ("Kolodner, Putnam") or
+    // The SEEDED name (from the directory enumerator) is authoritative for identity — the
+    // model's guess reads paper headers and returns co-authors ("Kolodner, Putnam") or
     // mis-formatted names, corrupting the outreach target. Only fall back to the model when
     // there is no seed name.
     piName: g.piName ?? str(p.pi_name),
@@ -381,4 +334,59 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
   }
 
   return { profile, chunks: grounded }
+}
+
+export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfile; chunks: LabChunkV2[] }> {
+  const apiKey = process.env.GOOGLE_AI_API_KEY
+  if (!apiKey) throw new Error('GOOGLE_AI_API_KEY is not set')
+
+  const bundle = buildBundle(g)
+  const genAI = new GoogleGenerativeAI(apiKey)
+  // One bounded structured call. maxOutputTokens caps each output so neither the papers list
+  // nor the facets can run away (runaway output was causing 65k-token / 250s / truncated-JSON
+  // fails). withRetry(attempts:2) also recovers a transient bad/empty body without outliving
+  // the batch's per-lab timeout. Logs the FULL token breakdown incl. `thoughts` — grep
+  // '[usage]' for real per-lab cost; thoughts>0 means thinkingBudget:0 didn't apply.
+  const runCall = async (schema: unknown, instruction: string, maxOutputTokens: number): Promise<Record<string, unknown>> => {
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      generationConfig: {
+        temperature: 0,
+        responseMimeType: 'application/json',
+        responseSchema: schema as Schema,
+        maxOutputTokens,
+        thinkingConfig: { thinkingBudget: 0 },
+      } as unknown as Record<string, unknown>,
+    })
+    return withRetry(async () => {
+      const res = await model.generateContent(`${instruction}${bundle}`)
+      const u = (res.response as { usageMetadata?: Record<string, number> }).usageMetadata
+      if (u) console.log(`[usage] in=${u.promptTokenCount ?? 0} out=${u.candidatesTokenCount ?? 0} thoughts=${u.thoughtsTokenCount ?? 0}`)
+      const text = res.response.text()
+      try {
+        return JSON.parse(text) as Record<string, unknown>
+      } catch (e) {
+        // A very paper-rich lab can truncate the papers JSON even at the 32k cap (Scott Biering).
+        // Rather than lose the whole ingest, salvage every COMPLETE paper object emitted before the
+        // cut. Only runs on an otherwise-fatal parse error, so the happy path is untouched.
+        const salvaged = salvageArray(text, 'papers')
+        if (salvaged) {
+          console.log(`[salvage] recovered ${(salvaged.papers as unknown[]).length} complete papers from a truncated response`)
+          return salvaged
+        }
+        throw e
+      }
+    }, { attempts: 2 })
+  }
+
+  // TWO bounded calls — papers (the larger output) then facets (small) — each within its own
+  // cap so neither runs away. Sequential to keep in-flight Gemini calls low. Merge into one
+  // object so the chunk-building + profile code below is unchanged.
+  // Papers cap is 32k (was 20k, was 12k): the most paper-rich labs truncated their JSON at the
+  // lower caps on both attempts and failed the whole ingest (Scott Biering: out=19989 hit the 20k
+  // ceiling exactly). 32k clears them while staying under the old ~65k runaway.
+  const pp = await runCall(PAPERS_SCHEMA, INSTRUCTION_PAPERS, 32000)
+  const pf = await runCall(FACETS_SCHEMA, INSTRUCTION_FACETS, 4000)
+  const p: Record<string, unknown> = { ...pf, papers: pp.papers }
+  return assembleLabV2(g, bundle, p)
 }
