@@ -17,6 +17,9 @@ import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs'
 const SKIP: Record<string, string> = {
   https_blum_salk_edu_: "10/12 gathered papers are a different 'Blum' (plastic surgery/craniofacial) — needs an ORCID or better identifier before ingest",
   https_reynolds_salk_edu_: "12/14 gathered papers are unrelated (lung transplant, esophagus, cardiac arrhythmia, etc.) — same-surname gather contamination, flagged by the extraction agent itself",
+  http_www_scripps_edu_ehlers_: "5/16 gathered papers are orthopedic surgery studies, unrelated to the lab's alcohol-dependence genetics focus — same-surname contamination",
+  https_www_dierckslab_com: "1/2 gathered papers is an unrelated MOF/materials-chemistry review — 50% contamination on a thin paper count",
+  http_www_scripps_edu_delatorre_: "~5/11 gathered papers (GIST cancer, PCOS, metformin/COVID, PLD3/PLD4) are unrelated to the lab's virology (Lassa/monkeypox/CCHF) focus — same-surname/search contamination",
 }
 
 async function main() {
