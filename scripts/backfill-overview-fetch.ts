@@ -14,15 +14,18 @@ import { promisify } from 'util'
 const execFileP = promisify(execFile)
 
 const STR = { type: SchemaType.STRING } as Schema
+// NOTE: no `source` field. Some scraped pages (Drupal: `#overlay-context=node/000000…`) contain a
+// pathological long string that the model echoes into a `source` URL, running away past the token
+// cap and truncating the whole response before anchor_quote — so every such lab silently failed.
+// The chunk's source is just the lab_url anyway (set at write time), so the model never needs to emit it.
 const SCHEMA: Schema = {
   type: SchemaType.OBJECT,
-  properties: { lab_overview: { type: SchemaType.OBJECT, properties: { content: STR, anchor_quote: STR, source: STR } } as Schema },
+  properties: { lab_overview: { type: SchemaType.OBJECT, properties: { content: STR, anchor_quote: STR } } as Schema },
 } as Schema
 
-const INSTRUCTION = `From this academic lab's own web pages, write a broad OVERVIEW of the lab — its general research focus and approach — grounded ONLY in the page text. Return JSON: { "lab_overview": { "content": ..., "anchor_quote": ..., "source": ... } }.
+const INSTRUCTION = `From this academic lab's own web pages, write a broad OVERVIEW of the lab — its general research focus and approach — grounded ONLY in the page text. Return JSON: { "lab_overview": { "content": ..., "anchor_quote": ... } }.
 - "content": 2-4 sentences a first-year could follow. Don't invent specifics the pages don't support.
 - "anchor_quote": ONE short verbatim quote (≤30 words) copied from the pages that backs the overview.
-- "source": the page URL the quote came from.
 If the pages have NO substantive lab-description text (only a nav bar, a bare contact line, an error), return empty "content".
 
 LAB PAGES:
@@ -70,6 +73,8 @@ function htmlToText(html: string): string {
     .replace(/<style[\s\S]*?<\/style>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
     .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/([0-9a-zA-Z])\1{14,}/g, '$1') // collapse pathological runs (Drupal node/000000… etc.) that make the model run away
+    .replace(/\S{200,}/g, ' ') // drop any absurdly long token (data URIs, tracking blobs)
     .replace(/\s+/g, ' ')
     .trim()
 }
@@ -91,7 +96,7 @@ async function fetchLabPages(labUrl: string): Promise<{ bundle: string; pages: R
   } catch {
     return { bundle: '', pages: {} }
   }
-  const candidates = [labUrl, `${origin}/research`, `${origin}/about`, `${origin}/research.html`, `${origin}/home`]
+  const candidates = [labUrl, `${origin}/research`, `${origin}/about`]
   const seen = new Set<string>()
   const pages: Record<string, string> = {}
   let bundle = ''
@@ -100,10 +105,10 @@ async function fetchLabPages(labUrl: string): Promise<{ bundle: string; pages: R
     seen.add(u)
     const t = await curlText(u)
     if (t.length > 150 && !DEAD.test(t.slice(0, 200))) {
-      pages[u] = t.slice(0, 20000)
+      pages[u] = t.slice(0, 15000)
       bundle += `\n\n===== ${u} =====\n${pages[u]}`
     }
-    if (bundle.length > 40000) break
+    if (bundle.length > 30000) break
   }
   return { bundle: bundle.slice(0, 40000), pages }
 }
@@ -112,6 +117,12 @@ async function main() {
   const args = process.argv.slice(2)
   const hostsArg = args.indexOf('--hosts') >= 0 ? args[args.indexOf('--hosts') + 1] : ''
   const missingOnly = args.includes('--missing-only')
+  // --refresh: re-fetch labs that ALREADY have an overview and REPLACE it with the real-site version
+  // (keeps the old one if the fresh fetch fails to produce a grounded overview — nothing is lost).
+  // --refresh-since N: only labs whose lab_url was (re)checked in the last N days — i.e. just-repointed.
+  const refresh = args.includes('--refresh')
+  const sinceIdx = args.indexOf('--refresh-since')
+  const sinceDays = sinceIdx >= 0 ? Number(args[sinceIdx + 1]) : 0
   const hosts = hostsArg ? hostsArg.split(',').map((h) => h.trim()) : []
   const { requireSql } = await import('../lib/db')
   const { withRetry } = await import('../lib/retry')
@@ -125,15 +136,26 @@ async function main() {
     generationConfig: { temperature: 0, responseMimeType: 'application/json', responseSchema: SCHEMA, maxOutputTokens: 2048, thinkingConfig: { thinkingBudget: 0 } } as unknown as Record<string, unknown>,
   })
 
-  let where = `lp.status='done' AND NOT EXISTS (SELECT 1 FROM lab_chunks lc WHERE lc.lab_url=lp.lab_url AND lc.type='overview')`
-  if (!missingOnly && hosts.length) where += ` AND (${hosts.map((_, i) => `lp.lab_url ILIKE '%'||$${i + 1}||'%'`).join(' OR ')})`
-  const labs = asRows(await sql.query(`SELECT lp.lab_url, lp.pi_name, lp.raw_pages FROM lab_profiles lp WHERE ${where} ORDER BY lp.pi_name`, hosts.length && !missingOnly ? hosts : []))
+  let where = `lp.status='done'`
+  if (!refresh) where += ` AND NOT EXISTS (SELECT 1 FROM lab_chunks lc WHERE lc.lab_url=lp.lab_url AND lc.type='overview')`
+  if (sinceDays > 0) where += ` AND lp.url_checked_at > now() - interval '${sinceDays} days'`
+  const params: string[] = []
+  if (!missingOnly && hosts.length) { where += ` AND (${hosts.map((_, i) => `lp.lab_url ILIKE '%'||$${i + 1}||'%'`).join(' OR ')})`; params.push(...hosts) }
+  const labs = asRows(await sql.query(`SELECT lp.lab_url, lp.pi_name, lp.raw_pages FROM lab_profiles lp WHERE ${where} ORDER BY lp.pi_name`, params))
   console.log(`fetch-backfilling overview for ${labs.length} labs...\n`)
 
   let written = 0, skipped = 0
   for (const lab of labs) {
     const { bundle, pages } = await fetchLabPages(lab.lab_url as string)
     if (!bundle.trim()) { skipped++; console.log(`  · ${lab.pi_name} — fetch empty`); continue }
+    // Persist fetched pages into raw_pages UNCONDITIONALLY (before the extraction attempt) — a
+    // successful fetch whose overview extraction later fails/is ungrounded must still update the
+    // cache, or a repointed lab's raw_pages stays stuck on its stale pre-repoint content forever
+    // (found 2026-08-14: Griffith/Ortony/Lal had real content fetched but raw_pages never updated
+    // because the old code only persisted on the overview-success path).
+    const rp = (typeof lab.raw_pages === 'string' ? JSON.parse(lab.raw_pages as string) : lab.raw_pages) || {}
+    Object.assign(rp, pages)
+    await sql.query(`UPDATE lab_profiles SET raw_pages=$2 WHERE lab_url=$1`, [lab.lab_url, JSON.stringify(rp)])
     try {
       const out = await withRetry(async () => {
         const res = await model.generateContent(`${INSTRUCTION}${bundle}`)
@@ -144,14 +166,13 @@ async function main() {
       const quote = (ov?.anchor_quote ?? '').trim()
       if (!content || !quote) { skipped++; console.log(`  · ${lab.pi_name} — no overview`); continue }
       if (DEAD.test(content) || DEAD.test(quote) || !isGrounded(bundle, quote, content)) { skipped++; console.log(`  · ${lab.pi_name} — ungrounded/dead`); continue }
-      // Persist fetched pages into raw_pages (additive) so recruiting/apply re-runs can use them too.
-      const rp = (typeof lab.raw_pages === 'string' ? JSON.parse(lab.raw_pages as string) : lab.raw_pages) || {}
-      Object.assign(rp, pages)
-      await sql.query(`UPDATE lab_profiles SET raw_pages=$2 WHERE lab_url=$1`, [lab.lab_url, JSON.stringify(rp)])
+      // In --refresh, replace any existing overview with the fresh real-site one (we only got here
+      // with a valid grounded result, so the old one is never dropped for nothing).
+      if (refresh) await sql.query(`DELETE FROM lab_chunks WHERE lab_url=$1 AND type='overview'`, [lab.lab_url])
       await sql.query(
         `INSERT INTO lab_chunks (lab_url, type, content, source, title, year, anchor_quote, source_id, meta)
          VALUES ($1,'overview',$2,$3,NULL,NULL,$4,NULL,NULL)`,
-        [lab.lab_url, content, (ov?.source ?? '').trim() || null, quote],
+        [lab.lab_url, content, lab.lab_url, quote],
       )
       written++
       console.log(`  ✓ ${lab.pi_name}`)

@@ -108,6 +108,48 @@ SOURCE BUNDLE:
 // (a 200k dense bundle was ~56s and intermittently returned truncated JSON).
 const BUNDLE_CAP = 130000
 
+// Salvage complete objects from a truncated `"<key>": [ {…}, {…}, <cut>` JSON response. Strips
+// control chars, finds the array, and brace-matches (string-aware) each top-level object, keeping
+// only the ones that fully closed before the truncation. Returns null if the array can't be located.
+// Used ONLY as a fallback when JSON.parse throws (a paper-rich lab truncating past the token cap).
+function salvageArray(raw: string, key: string): Record<string, unknown> | null {
+  const clean = raw.replace(/[\x00-\x1F]+/g, ' ')
+  const ki = clean.indexOf(`"${key}"`)
+  if (ki < 0) return null
+  const start = clean.indexOf('[', ki)
+  if (start < 0) return null
+  const objs: unknown[] = []
+  let depth = 0
+  let objStart = -1
+  let inStr = false
+  let esc = false
+  for (let i = start + 1; i < clean.length; i++) {
+    const ch = clean[i]
+    if (inStr) {
+      if (esc) esc = false
+      else if (ch === '\\') esc = true
+      else if (ch === '"') inStr = false
+      continue
+    }
+    if (ch === '"') inStr = true
+    else if (ch === '{') {
+      if (depth === 0) objStart = i
+      depth++
+    } else if (ch === '}') {
+      depth--
+      if (depth === 0 && objStart >= 0) {
+        try {
+          objs.push(JSON.parse(clean.slice(objStart, i + 1)))
+        } catch {
+          /* skip a malformed fragment */
+        }
+        objStart = -1
+      }
+    } else if (ch === ']' && depth === 0) break
+  }
+  return objs.length ? { [key]: objs } : null
+}
+
 export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfile; chunks: LabChunkV2[] }> {
   const apiKey = process.env.GOOGLE_AI_API_KEY
   if (!apiKey) throw new Error('GOOGLE_AI_API_KEY is not set')
@@ -146,16 +188,30 @@ export async function extractLabV2(g: GatheredLab): Promise<{ profile: LabProfil
       const res = await model.generateContent(`${instruction}${bundle}`)
       const u = (res.response as { usageMetadata?: Record<string, number> }).usageMetadata
       if (u) console.log(`[usage] in=${u.promptTokenCount ?? 0} out=${u.candidatesTokenCount ?? 0} thoughts=${u.thoughtsTokenCount ?? 0}`)
-      return JSON.parse(res.response.text()) as Record<string, unknown>
+      const text = res.response.text()
+      try {
+        return JSON.parse(text) as Record<string, unknown>
+      } catch (e) {
+        // A very paper-rich lab can truncate the papers JSON even at the 32k cap (Scott Biering).
+        // Rather than lose the whole ingest, salvage every COMPLETE paper object emitted before the
+        // cut. Only runs on an otherwise-fatal parse error, so the happy path is untouched.
+        const salvaged = salvageArray(text, 'papers')
+        if (salvaged) {
+          console.log(`[salvage] recovered ${(salvaged.papers as unknown[]).length} complete papers from a truncated response`)
+          return salvaged
+        }
+        throw e
+      }
     }, { attempts: 2 })
   }
 
   // TWO bounded calls — papers (the larger output) then facets (small) — each within its own
   // cap so neither runs away. Sequential to keep in-flight Gemini calls low. Merge into one
   // object so the chunk-building + profile code below is unchanged.
-  // Papers cap is 20k (was 12k): the most paper-rich labs truncated their JSON at 12k on both
-  // attempts and failed. 20k clears them while staying far under the old ~65k runaway.
-  const pp = await runCall(PAPERS_SCHEMA, INSTRUCTION_PAPERS, 20000)
+  // Papers cap is 32k (was 20k, was 12k): the most paper-rich labs truncated their JSON at the
+  // lower caps on both attempts and failed the whole ingest (Scott Biering: out=19989 hit the 20k
+  // ceiling exactly). 32k clears them while staying under the old ~65k runaway.
+  const pp = await runCall(PAPERS_SCHEMA, INSTRUCTION_PAPERS, 32000)
   const pf = await runCall(FACETS_SCHEMA, INSTRUCTION_FACETS, 4000)
   const p: Record<string, unknown> = { ...pf, papers: pp.papers }
 
