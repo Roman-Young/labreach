@@ -51,6 +51,21 @@ export const INSTITUTE_AFFIL: Record<string, RegExp> = {
   lji: /(la jolla institute|lji)/i,
 }
 
+// Same institutes, as an EuropePMC AFF: query term (a plain string, not a regex) — used to narrow
+// the SEARCH itself, not just the post-hoc gate. "San Diego" is a huge, common substring that
+// matches every institution in the metro area; the institute's own name is far more specific and
+// cuts same-surname contamination off before it's ever fetched. Tested 2026-08-14: Gage FH went
+// from 273 hits on AFF:"San Diego" to 499 on AFF:"Salk Institute" (institute name is actually
+// HIGHER recall here, not just higher precision, since EPMC affiliation strings usually spell out
+// the institute name verbatim rather than the city).
+export const INSTITUTE_SEARCH_AFF: Record<string, string> = {
+  ucsd: 'San Diego',
+  salk: 'Salk Institute',
+  scripps: 'Scripps Research',
+  sbp: 'Sanford Burnham',
+  lji: 'La Jolla Institute',
+}
+
 export type AttributionVerdict = 'confirmed' | 'contaminant' | 'ambiguous'
 
 // Machine-readable reason a paper landed on its verdict — for reporting/auditing, not logic.

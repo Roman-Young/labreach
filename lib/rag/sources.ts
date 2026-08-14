@@ -4,6 +4,7 @@ import { searchPubMedByAuthor } from '@/lib/pubmed'
 import { nameParts } from '@/lib/name-match'
 import {
   INSTITUTE_AFFIL,
+  INSTITUTE_SEARCH_AFF,
   classifyPaperWithReason,
   resolvePiOrcid,
   fetchPaperAuthors,
@@ -162,11 +163,16 @@ async function epmcSafe(query: string, sort: string): Promise<{ works: AuthorWor
 // attribution gate drops any stranger a broad segment query pulls in (e.g. the 'Rosen' segment of
 // 'Maho Niwa Rosen' surfaces the radiologist 'Mark A. Rosen' — the gate then removes him by ORCID/
 // affiliation/first-name before anything is chunked). Recall broad here; precision is the gate's job.
-async function epmcForSurname(surname: string, first: string, firstInitial: string): Promise<AuthorWork[]> {
+async function epmcForSurname(surname: string, first: string, firstInitial: string, institute?: string): Promise<AuthorWork[]> {
   const initialWho = firstInitial ? `${surname} ${firstInitial}` : surname
+  // Wave 2: the institute's own name (e.g. "Salk Institute") is a far more specific AFF term than
+  // the generic "San Diego", which matches every institution in the metro area and is the main
+  // driver of same-surname contamination at smaller institutes. Falls back to San Diego for UCSD
+  // (unchanged wave-1 behavior) or when no institute is known.
+  const aff = (institute && INSTITUTE_SEARCH_AFF[institute]) || 'San Diego'
 
   // Primary pass with surname+initial — high recall, and fine for a unique name.
-  const recent = await epmcSafe(`AUTH:"${initialWho}" AND AFF:"San Diego"`, 'P_PDATE_D desc')
+  const recent = await epmcSafe(`AUTH:"${initialWho}" AND AFF:"${aff}"`, 'P_PDATE_D desc')
 
   // COMMON-NAME GUARD: a surname+initial query that returns a huge hit count is matching
   // MANY different people (e.g. `Patel S` + San Diego = 753 hits spanning unrelated fields).
@@ -177,7 +183,7 @@ async function epmcForSurname(surname: string, first: string, firstInitial: stri
   let who = initialWho
   let recentWorks = recent.works
   if (recent.hitCount > 120 && first.length > 1) {
-    const precise = await epmcSafe(`AUTH:"${surname} ${first}" AND AFF:"San Diego"`, 'P_PDATE_D desc')
+    const precise = await epmcSafe(`AUTH:"${surname} ${first}" AND AFF:"${aff}"`, 'P_PDATE_D desc')
     if (precise.works.length > 0) {
       // Distinguish a genuinely COMMON name from a PROLIFIC UNIQUE one — both trip >120.
       // If the full-name query collapses the count hard (< half the broad), the broad set
@@ -194,16 +200,16 @@ async function epmcForSurname(surname: string, first: string, firstInitial: stri
     }
   }
 
-  const cited = await epmcSafe(`AUTH:"${who}" AND AFF:"San Diego"`, 'CITED desc')
+  const cited = await epmcSafe(`AUTH:"${who}" AND AFF:"${aff}"`, 'CITED desc')
   return dedup([...recentWorks, ...cited.works])
 }
 
-export async function searchEuropePMC(name: string): Promise<AuthorWork[]> {
+export async function searchEuropePMC(name: string, institute?: string): Promise<AuthorWork[]> {
   const { lasts, first, firstInitial } = parseName(name)
   if (!lasts.length) return []
   // One search per surname segment. Single-surname PIs (the common case) run exactly one — unchanged
   // behavior; only compound/married names fan out and get unioned.
-  const perSurname = await Promise.all(lasts.map((sn) => epmcForSurname(sn, first, firstInitial)))
+  const perSurname = await Promise.all(lasts.map((sn) => epmcForSurname(sn, first, firstInitial, institute)))
   return dedup(perSurname.flat())
 }
 
@@ -427,7 +433,7 @@ export async function gatherPapers(piName: string, institute?: string): Promise<
   let acc: AuthorWork[] = []
   const used: string[] = []
 
-  const epmc = await searchEuropePMC(piName)
+  const epmc = await searchEuropePMC(piName, institute)
   if (epmc.length) {
     acc = dedup([...acc, ...epmc])
     used.push('europepmc')
