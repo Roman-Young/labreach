@@ -33,13 +33,16 @@ d('DB invariants (live corpus)', () => {
   })
 
   it('no excluded/dropped lab leaks a live chunk', async () => {
+    // 'profile' is a LIVE status (contact + overview, papers pending) — its overview chunk is meant
+    // to be searchable. Only genuinely-removed statuses (excluded/merged/failed/...) must not leak.
     expect(await one(`SELECT count(*) n FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url=lc.lab_url
-      WHERE p.status<>'done' AND lc.quarantined=false`)).toBe(0)
+      WHERE p.status NOT IN ('done','profile') AND lc.quarantined=false`)).toBe(0)
   })
 
   it('no live chunk is unembedded', async () => {
+    // Both live statuses' visible chunks must be embedded, or they're invisible to semantic search.
     expect(await one(`SELECT count(*) n FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url=lc.lab_url
-      WHERE p.status='done' AND lc.quarantined=false AND lc.embedding IS NULL`)).toBe(0)
+      WHERE p.status IN ('done','profile') AND lc.quarantined=false AND lc.embedding IS NULL`)).toBe(0)
   })
 
   it('every quarantined chunk has a reason', async () => {
