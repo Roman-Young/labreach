@@ -16,6 +16,7 @@ import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs'
 // with wrong papers). Slug = the cache filename minus .json. Add a one-line reason per entry.
 const SKIP: Record<string, string> = {
   https_blum_salk_edu_: "10/12 gathered papers are a different 'Blum' (plastic surgery/craniofacial) — needs an ORCID or better identifier before ingest",
+  https_reynolds_salk_edu_: "12/14 gathered papers are unrelated (lung transplant, esophagus, cardiac arrhythmia, etc.) — same-surname gather contamination, flagged by the extraction agent itself",
 }
 
 async function main() {
