@@ -3,6 +3,7 @@ import type { AuthorWork } from '@/lib/papers'
 import { searchPubMedByAuthor } from '@/lib/pubmed'
 import { nameParts } from '@/lib/name-match'
 import {
+  INSTITUTE_AFFIL,
   classifyPaperWithReason,
   resolvePiOrcid,
   fetchPaperAuthors,
@@ -281,7 +282,7 @@ const countAbstracts = (list: AuthorWork[]): number =>
 // work is still theirs — this is what wrongly zeroed Rivera-Chávez/Guseman). In lenient mode a paper
 // is dropped only when the PI's surname is absent entirely (a gross mis-listing). Strict mode (name+
 // affiliation search) keeps the full contaminant exclusion to fight same-surname strangers.
-async function gatePapers(papers: AuthorWork[], piName: string, lenient = false): Promise<AuthorWork[]> {
+async function gatePapers(papers: AuthorWork[], piName: string, lenient = false, institute?: string): Promise<AuthorWork[]> {
   const pi = nameParts(piName)
   if (!pi.lastsAll.length) return papers // unusable PI name → cannot gate; don't silently drop everything
 
@@ -297,7 +298,9 @@ async function gatePapers(papers: AuthorWork[], piName: string, lenient = false)
 
   const withAuthors = papers.filter((p): p is AuthorWork & { authors: PaperAuthor[] } => !!p.authors?.length)
   const orcid = resolvePiOrcid(withAuthors.map((p) => p.authors), pi)
-  const piId = { ...pi, orcid }
+  // Wave 2: use the PI's OWN institute for the affiliation rescue (a Salk paper says "Salk
+  // Institute", which the UCSD default never matches). Unknown/absent institute keeps the default.
+  const piId = { ...pi, orcid, affil: institute ? INSTITUTE_AFFIL[institute] : undefined }
 
   return papers.filter((p) => {
     if (!p.authors?.length) return true // honest unknown — keep
@@ -420,7 +423,7 @@ export async function gatherPapersCombined(
   return dedup(parts)
 }
 
-export async function gatherPapers(piName: string): Promise<{ papers: AuthorWork[]; source: string }> {
+export async function gatherPapers(piName: string, institute?: string): Promise<{ papers: AuthorWork[]; source: string }> {
   let acc: AuthorWork[] = []
   const used: string[] = []
 
@@ -450,7 +453,7 @@ export async function gatherPapers(piName: string): Promise<{ papers: AuthorWork
 
   // IDENTITY GATE — drop provably-different-person papers before they can be chunked (Phase 3 of the
   // 2026-08-11 attribution cleanup). Without this, every fix downstream is just cleanup after the fact.
-  const gated = await gatePapers(acc, piName)
+  const gated = await gatePapers(acc, piName, false, institute)
   if (gated.length === 0) return { papers: [], source: 'none' }
   return { papers: gated.slice(0, RESULT_CAP), source: used.join('+') }
 }

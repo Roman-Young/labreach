@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { classifyPaperWithReason, type PaperAuthor, type PiIdentity } from '@/lib/attribution'
+import { classifyPaperWithReason, INSTITUTE_AFFIL, type PaperAuthor, type PiIdentity } from '@/lib/attribution'
 import { nameParts } from '@/lib/name-match'
 
 // Known-answer tests for the paper→PI identity gate, using the exact cases that drove the 2026-08-11
@@ -70,5 +70,26 @@ describe('classifyPaperWithReason — guards', () => {
   })
   it('an unusable PI name is ambiguous, never a false drop', () => {
     expect(classifyPaperWithReason([A('john', 'smith')], pi('')).verdict).toBe('ambiguous')
+  })
+})
+
+describe('wave-2: per-institute affiliation rescue', () => {
+  // A Salk PI's paper carries "Salk Institute", which the UCSD pattern never matches. Without an
+  // institute-specific affil the rescue silently fails and the PI's OWN papers go ambiguous.
+  const SALK_AFF = 'Molecular Neurobiology Laboratory, Salk Institute for Biological Studies, La Jolla, CA'
+  it('an initials-only Salk author is rescued when the PI carries the Salk pattern', () => {
+    const salkPi: PiIdentity = { ...nameParts('Nicola Allen'), orcid: null, affil: INSTITUTE_AFFIL.salk }
+    expect(classifyPaperWithReason([A('n', 'allen', { aff: SALK_AFF })], salkPi))
+      .toEqual({ verdict: 'confirmed', reason: 'affiliation_match' })
+  })
+  it('a Scripps affiliation does NOT rescue a Salk PI (patterns stay specific)', () => {
+    const salkPi: PiIdentity = { ...nameParts('Nicola Allen'), orcid: null, affil: INSTITUTE_AFFIL.salk }
+    // Scripps Research is in the SD region, so this is honestly ambiguous — never a false confirm.
+    expect(classifyPaperWithReason([A('n', 'allen', { aff: 'Scripps Research, La Jolla' })], salkPi).verdict)
+      .toBe('ambiguous')
+  })
+  it('omitting affil keeps the UCSD default (wave-1 corpus unaffected)', () => {
+    expect(classifyPaperWithReason([A('s', 'evans', { aff: UCSD })], pi('Sylvia Evans')))
+      .toEqual({ verdict: 'confirmed', reason: 'affiliation_match' })
   })
 })

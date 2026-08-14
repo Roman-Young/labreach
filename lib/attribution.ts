@@ -34,6 +34,21 @@ export interface PaperAuthor {
 
 export interface PiIdentity extends PiName {
   orcid?: string | null
+  // The PI's HOME-institution affiliation pattern, used for the positive "this author is our PI"
+  // rescue. Defaults to UCSD (wave-1). Wave 2 (Salk/Scripps/SBP/LJI) MUST pass its own institute:
+  // otherwise a Salk PI's own papers get no affiliation rescue and drop to 'ambiguous', because
+  // "Salk Institute" never matches the UCSD pattern. See INSTITUTE_AFFIL below.
+  affil?: RegExp
+}
+
+// Per-institute affiliation patterns for the positive rescue tier. Keep each SPECIFIC — a loose
+// pattern (bare "san diego") is what let wave-1's ingest contaminate in the first place.
+export const INSTITUTE_AFFIL: Record<string, RegExp> = {
+  ucsd: /(university of california[,. ]+san diego|uc san diego|ucsd|la jolla)/i,
+  salk: /(salk institute|the salk)/i,
+  scripps: /(scripps research|the scripps research institute|tsri)/i,
+  sbp: /(sanford burnham|sanford-burnham|burnham institute|sbp discovery|sanford burnham prebys)/i,
+  lji: /(la jolla institute|lji)/i,
 }
 
 export type AttributionVerdict = 'confirmed' | 'contaminant' | 'ambiguous'
@@ -83,8 +98,9 @@ function judgeAuthor(a: PaperAuthor, pi: PiIdentity): AuthorJudgment {
   if (aFirst.length === 1 && pi.first && aFirst !== pi.first[0]) return { status: 'not_pi', reason: 'initial_mismatch' }
 
   // AFFILIATION RESCUE — checked for every remaining case, including a full-name MISMATCH, not
-  // just initials-only (see the module comment for why this fix mattered).
-  if (UCSD_AFFIL.test(a.affiliation)) return { status: 'is_pi', reason: 'affiliation_match' }
+  // just initials-only (see the module comment for why this fix mattered). Uses the PI's OWN
+  // institute when supplied (wave 2); defaults to UCSD for the existing corpus.
+  if ((pi.affil ?? UCSD_AFFIL).test(a.affiliation)) return { status: 'is_pi', reason: 'affiliation_match' }
 
   // Explicitly placed at an institution OUTSIDE the San Diego region → someone else, REGARDLESS
   // of whether the name superficially confirmed-or-not (this is what makes de Silva's dermatology

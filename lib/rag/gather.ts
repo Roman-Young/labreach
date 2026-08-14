@@ -128,7 +128,7 @@ export async function gatherLab(
   labUrl: string,
   piName: string | null,
   onProgress: (m: string) => void = () => {},
-  opts: { pubPageUrl?: string; sinceYear?: number; orcid?: string; nameUnfiltered?: boolean } = {},
+  opts: { pubPageUrl?: string; sinceYear?: number; orcid?: string; nameUnfiltered?: boolean; institute?: string } = {},
 ): Promise<GatheredLab> {
   const pages: Record<string, string> = {}
 
@@ -169,7 +169,7 @@ export async function gatherLab(
     selected = selectPapers(papers)
   } else if (piName) {
     onProgress('Finding papers (multi-source)...')
-    const { papers } = await gatherPapers(piName)
+    const { papers } = await gatherPapers(piName, opts?.institute)
     selected = selectPapers(papers)
   }
   for (const p of selected) {
