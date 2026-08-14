@@ -70,4 +70,14 @@ d('DB invariants (live corpus)', () => {
         AND NOT EXISTS (SELECT 1 FROM quarantine_ledger ql
                         WHERE ql.lab_url=lc.lab_url AND ql.source_id=lc.source_id)`)).toBe(0)
   })
+
+  it('apply_info provenance is stamped (manual-data write guard)', async () => {
+    // Failure class 2026-08-14: an automated sweep NULLed hand-verified apply_info because its
+    // cache lacked the evidence. Guard: every apply_info carries a source, and no source='manual'
+    // row is ever left empty (a manual row losing its content means a sweep clobbered it).
+    expect(await one(`SELECT count(*) n FROM lab_profiles
+      WHERE status='done' AND apply_info IS NOT NULL AND apply_info_source IS NULL`)).toBe(0)
+    expect(await one(`SELECT count(*) n FROM lab_profiles
+      WHERE status='done' AND apply_info_source='manual' AND apply_info IS NULL`)).toBe(0)
+  })
 })

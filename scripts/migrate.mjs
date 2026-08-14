@@ -96,6 +96,13 @@ const statements = [
      ADD COLUMN IF NOT EXISTS url_status             text,          -- 'ok' | 'dead' | 'redirect'
      ADD COLUMN IF NOT EXISTS url_checked_at         timestamptz`,
 
+  // ── v5 (2026-08-14): manual-data write guard. An automated apply_info re-sweep NULLed 4
+  // hand-verified entries because its cache lacked the evidence — absence of evidence in a cache
+  // is not evidence of absence. Every automated pass must SKIP source='manual' rows.
+  `ALTER TABLE lab_profiles
+     ADD COLUMN IF NOT EXISTS apply_info_source      text           -- 'extract' | 'manual'
+  `,
+
   // Quarantine LEDGER — the durable record of which (lab_url, source_id) papers are known
   // contaminants and WHY. storeLabV2 re-applies these after a re-ingest's DELETE+re-INSERT, so a
   // re-ingest can never resurrect a paper we already proved wrong (esp. the domain-caught outliers

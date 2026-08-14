@@ -88,7 +88,10 @@ async function main() {
     } as unknown as Record<string, unknown>,
   })
 
-  const where = onlyCurrent ? `status='done' AND apply_info IS NOT NULL` : `status='done'`
+  // Manual-data guard (ingest doctrine Gate 5): NEVER process a lab whose apply_info was
+  // hand-verified — this sweep once NULLed 4 manual entries whose evidence pages weren't cached.
+  const manualGuard = `AND (apply_info_source IS NULL OR apply_info_source <> 'manual')`
+  const where = onlyCurrent ? `status='done' AND apply_info IS NOT NULL ${manualGuard}` : `status='done' ${manualGuard}`
   const labs = asRows(await sql.query(
     `SELECT lab_url, pi_name FROM lab_profiles WHERE ${where} ORDER BY lab_url ${limit ? `LIMIT ${limit}` : ''}`,
   ))
@@ -148,7 +151,7 @@ async function main() {
 }
 
 async function set(sql: { query: (q: string, p?: unknown[]) => Promise<unknown> }, url: unknown, apply: object | null) {
-  await sql.query(`UPDATE lab_profiles SET apply_info=$1 WHERE lab_url=$2`, [apply ? JSON.stringify(apply) : null, url])
+  await sql.query(`UPDATE lab_profiles SET apply_info=$1, apply_info_source=$2 WHERE lab_url=$3`, [apply ? JSON.stringify(apply) : null, apply ? 'extract' : null, url])
 }
 
 main().then(() => process.exit(0)).catch((e) => { console.error(e); process.exit(2) })
