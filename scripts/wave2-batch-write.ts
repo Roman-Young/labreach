@@ -20,6 +20,16 @@ const SKIP: Record<string, string> = {
   http_www_scripps_edu_ehlers_: "5/16 gathered papers are orthopedic surgery studies, unrelated to the lab's alcohol-dependence genetics focus — same-surname contamination",
   https_www_dierckslab_com: "1/2 gathered papers is an unrelated MOF/materials-chemistry review — 50% contamination on a thin paper count",
   http_www_scripps_edu_delatorre_: "~5/11 gathered papers (GIST cancer, PCOS, metformin/COVID, PLD3/PLD4) are unrelated to the lab's virology (Lassa/monkeypox/CCHF) focus — same-surname/search contamination",
+  http_law_scripps_edu_: "2/7 gathered papers (CT trauma dataset, Arabidopsis genetics) unrelated to antibody/virology focus — 29% contamination",
+  https_gage_salk_edu_: "COMPLETE gather failure: 3/3 papers unrelated (an obituary, a cardiotoxicity study, a 1919 German chemistry paper). Rusty Gage is a major, prolific Salk neuroscientist — needs a proper re-gather (ORCID) not just a hold, flag prominently to Roman",
+  https_grotjahnlab_github_io_: "~10/15 (67%) gathered papers are a different 'Grotjahn' — a chemist doing Ru/Ir catalysis, ML foundation models, vaccine nanoparticles — vs the lab's actual mitochondrial cryo-ET focus",
+  https_lee_salk_edu_: "~15/15 (100%) gathered papers unrelated (pharmacy education, psychiatry, oncology trials) — a different 'Lee', not the aging/Alzheimer's genomics PI",
+  https_mgl_scripps_edu: "9/16 (56%) gathered papers unrelated (ozanimod trials, Marfan's, military injury studies) — vs Arthur Olson's computational docking/AutoDock focus. NOTE: this was first mis-recorded under Gabriel Lander's slug (http_www_lander_lab_com) and briefly written to the live DB before the fix — see the day's log.",
+  https_sbpdiscovery_org_scientists_alessandra_sacco_phd_: "15/16 (94%) gathered papers are head-and-neck oncology trials — a different 'Sacco', not the muscle stem cell PI",
+  https_kendrick_salk_edu_: "2/7 (29%) gathered papers unrelated (Cu-catalysis chemistry, pandemic policy) — vs dynein/motor biology focus",
+  https_law_salk_edu: "5/13 (38%) gathered papers unrelated (human cancer ecDNA/oncogene amplification) — vs Arabidopsis epigenetics focus",
+  https_mueller_salk_edu_: "14/14 (100%) gathered papers unrelated (ant biomechanics, diabetes tech, fly neuroscience, substance-use epi) — vs plant-microbe symbiosis focus",
+  https_sbpdiscovery_org_scientists_ahmed_mahmoud_phd_: "all 3 fully-abstracted gathered papers are a different 'Mahmoud' (AFib ablation, PFO trial, cancer nanoparticles) — his OWN bio page lists correct on-topic titles (troponin, mTORC1, cardiomyocyte proliferation) but they lack abstracts to extract from; needs a targeted re-gather",
 }
 
 async function main() {
