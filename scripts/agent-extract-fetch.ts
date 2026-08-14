@@ -55,11 +55,18 @@ async function main() {
   console.log(`- pi_name, pi_email, lab_name, school, department: strings`)
   console.log(`\nReturn ONLY a JSON object with exactly those keys (omit/empty any you can't ground).`)
 
-  console.log(`\n===== BUNDLE (shared by both tasks) =====`)
+  console.log(`\n===== SUMMARY TASK (do this AFTER the papers task, using what you just extracted) =====`)
+  console.log(`Write a plain-language "plain_summary" (~100-150 words, aimed at a first-year undergrad with no background in the field) covering WHAT the lab studies, HOW (their methods/approach), and WHY it matters — grounded in the bundle text and the papers you just summarized, no invented specifics. Then write a "trajectory" (2-4 sentences) synthesizing where the lab's research is heading, based on their most recent papers and any future_directions you found.`)
+  console.log(`Return: {"plain_summary": "...", "trajectory": "..."}`)
+
+  console.log(`\n===== BUNDLE (shared by all three tasks) =====`)
   console.log(bundle)
   console.log(`\n===== END BUNDLE =====`)
-  console.log(`\nNEXT: have a Sonnet subagent answer BOTH tasks from the bundle above, save its JSON to`)
-  console.log(`  data/agent-extract/${slug}.papers.json  and  data/agent-extract/${slug}.facets.json`)
+  console.log(`\nNEXT: have a Sonnet subagent answer ALL THREE tasks from the bundle above, save its JSON to`)
+  console.log(`  these ABSOLUTE paths (a subagent's cwd is not guaranteed to be this repo):`)
+  console.log(`  ${process.cwd()}/data/agent-extract/${slug}.papers.json`)
+  console.log(`  ${process.cwd()}/data/agent-extract/${slug}.facets.json`)
+  console.log(`  ${process.cwd()}/data/agent-extract/${slug}.summary.json`)
   console.log(`then run: npx tsx scripts/agent-extract-write.ts ${cachePath} --execute`)
 }
 main().then(() => process.exit(0)).catch((e) => { console.error(e); process.exit(2) })

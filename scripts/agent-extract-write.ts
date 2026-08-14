@@ -9,7 +9,7 @@ export {} // module scope
 //   (expects sibling <slug>.papers.json and <slug>.facets.json next to the cache file)
 process.loadEnvFile('.env.local')
 
-import { readFileSync } from 'node:fs'
+import { readFileSync, existsSync, writeFileSync } from 'node:fs'
 
 async function main() {
   const args = process.argv.slice(2)
@@ -37,9 +37,21 @@ async function main() {
   const ov = chunks.find((c) => c.kind === 'overview')
   if (ov) console.log(`  overview: ${ov.content.slice(0, 160)}...`)
 
+  let summary: { plain_summary?: string; trajectory?: string } | null = null
+  if (existsSync(`${base}.summary.json`)) {
+    try { summary = JSON.parse(readFileSync(`${base}.summary.json`, 'utf8')) } catch { /* logged below */ }
+  }
+  console.log(`  plain_summary: ${summary?.plain_summary ? summary.plain_summary.slice(0, 120) + '...' : '(none found)'}`)
+
   if (execute) {
     const { storeLabV2 } = await import('../lib/rag/store')
     await storeLabV2(profile, chunks)
+    if (summary?.plain_summary && summary.plain_summary.trim().length >= 200) {
+      const { requireSql } = await import('../lib/db')
+      const sql = requireSql()
+      await sql.query(`UPDATE lab_profiles SET plain_summary=$2, trajectory=$3 WHERE lab_url=$1`, [profile.labUrl, summary.plain_summary.trim(), summary.trajectory?.trim() || null])
+    }
+    writeFileSync(`${base}.stored`, new Date().toISOString())
     console.log(`\n✓ stored ${profile.labUrl}`)
   } else {
     console.log(`\n(dry run — pass --execute to write to the DB)`)
