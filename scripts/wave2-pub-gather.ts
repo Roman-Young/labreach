@@ -70,6 +70,12 @@ async function main() {
 
   for (const [name, h] of Object.entries(harvest)) {
     const pi = nameParts(name)
+    // nameParts assumes "First Last" and returns EMPTY lastsAll for a single-word name — which for
+    // the surname-only LJI labs (Li/Rad/Reina/Schmiedel/Weiskopf) made Gate B reject every paper even
+    // though the PI IS an author. Fall back to the single token as the surname (Roman 2026-08-15).
+    const surnames = pi.lastsAll.length
+      ? pi.lastsAll
+      : name.trim().replace(/,.*$/, '').toLowerCase().split(/\s+/).filter(s => s.length >= 2)
     const slug = h.url.replace(/[^a-z0-9]+/gi, '_').slice(0, 60)
     const dois = (h.dois || []).slice(0, CAP)
     const pmids = (h.pmids || []).slice(0, CAP)
@@ -90,7 +96,7 @@ async function main() {
     // GATE B — PI surname must appear as an author token (surname-list handles compound names)
     const verified = uniq.filter(w => {
       const authors = (w.authors || []).map(a => (a.last || '').toLowerCase())
-      return pi.lastsAll.some(ln => authors.some(a => a === ln || a.split(/\s+/).includes(ln)))
+      return surnames.some(ln => authors.some(a => a === ln || a.split(/\s+/).includes(ln)))
     })
     // must carry an abstract to summarize from (no abstract → can't ground did/found/used/why)
     const withAbs = verified.filter(w => w.abstract && w.abstract.length > 60)
