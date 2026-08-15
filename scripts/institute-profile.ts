@@ -32,6 +32,12 @@ type Seed = { name: string; title: string; url: string | null; department: strin
 type Enriched = Seed & { pi_email: string | null; email_source: string | null; lab_url: string | null; bio: string | null; flags: string[] }
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+async function resolveRedirect(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url, { method: 'HEAD', redirect: 'follow', headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(15000) })
+    return res.url || null
+  } catch { return null }
+}
 async function get(url: string): Promise<string> {
   try {
     const { stdout } = await execFileP(
@@ -174,6 +180,19 @@ async function main() {
     if (!okEmail) flags.push('no-email')
     let lab = rules.lab(html)
     if (lab && !/^https?:\/\//i.test(lab)) { try { lab = new URL(lab, s.url!).href } catch { lab = null } }
+    // Scripps's "Laboratory Website" sidebar link is often a vanity/redirect stub
+    // (www.scripps.edu/<slug>) that 301s to the PI's REAL external lab site (e.g. cravattlab.com,
+    // englelab.com) — found 2026-08-15 (Roman: Mravic's real site never appeared until the redirect
+    // was followed). Resolve it now so we store the destination, not the stub. A redirect landing
+    // BACK on a scripps.edu /faculty/ page is a downgrade (Peter Wright), not a real lab site — flag
+    // instead of silently keeping it.
+    if (lab) {
+      const resolved = await resolveRedirect(lab)
+      if (resolved && resolved.replace(/\/$/, '') !== lab.replace(/\/$/, '')) {
+        if (/scripps\.edu\/faculty\//i.test(resolved)) flags.push(`lab-redirects-to-directory:${resolved}`)
+        else { flags.push(`lab-redirect-resolved:${lab}`); lab = resolved }
+      }
+    }
     if (!lab) flags.push('no-lab-site')
     const bio = rules.bio(html)
     if (!bio || bio.length < 200) flags.push('thin-bio')
