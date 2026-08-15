@@ -74,6 +74,16 @@ d('DB invariants (live corpus)', () => {
                         WHERE ql.lab_url=lc.lab_url AND ql.source_id=lc.source_id)`)).toBe(0)
   })
 
+  it('no two live rows are the same lab under different URL spellings', async () => {
+    // Failure class 2026-08-15: wave-2's writer inserted the manifest's raw http:// URL while the
+    // same lab already lived at https://…/ — lab_url is the PK, so http≠https quietly created
+    // duplicate rows (Busch, Ecker, McVicker). Uniqueness must hold on the NORMALIZED url.
+    expect(await one(`SELECT count(*) n FROM (
+      SELECT regexp_replace(lower(lab_url), '^https?://(www[.])?|/$', '', 'g') u
+      FROM lab_profiles WHERE status IN ('done','profile')
+      GROUP BY 1 HAVING count(*) > 1) dupes`)).toBe(0)
+  })
+
   it('apply_info provenance is stamped (manual-data write guard)', async () => {
     // Failure class 2026-08-14: an automated sweep NULLed hand-verified apply_info because its
     // cache lacked the evidence. Guard: every apply_info carries a source, and no source='manual'
