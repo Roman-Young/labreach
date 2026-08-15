@@ -13,9 +13,9 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 const arg = (f, d) => { const i = process.argv.indexOf(f); return i >= 0 ? process.argv[i + 1] : d }
 const START = Number(arg('--start', '0'))
 const COUNT = Number(arg('--count', '20'))
-const QUEUE = 'data/wave2-papers/_queue.json'
+const QUEUE = arg('--queue', 'data/wave2-papers/_queue.json')
 const OUT = 'data/wave2-papers/_harvest.json'
-const FAIL = 'data/wave2-papers/_harvest_failures.json'
+const FAIL = arg('--fail', 'data/wave2-papers/_harvest_failures.json')
 const PUB_RE = /publication|papers|pubs|research output|selected work/i
 
 const queue = JSON.parse(readFileSync(QUEUE, 'utf8'))
@@ -59,8 +59,27 @@ async function extractIds(page) {
     const pmids = [...new Set([...pmidText, ...pmidLinks])]
     const titles = [...new Set([...text.matchAll(/[""]([^""]{25,300})[""]/g)].map(m => m[1].trim().replace(/[",]\s*$/, '')))]
     const collections = [...new Set([...document.querySelectorAll('a')].map(a => a.href).filter(h => /pubmed\.ncbi\.nlm\.nih\.gov\/collections\//i.test(h)))]
-    return { dois, pmids, titles, collections, textLen: text.length }
+    // Author+affiliation PubMed SEARCH links (e.g. SBP pages embed "?term=Deshpande+AJ[Author]+AND+
+    // burnham[Affiliation]") — an authoritative, contamination-resistant recency source (the
+    // affiliation is baked into the query). Captured here, resolved via esearch in the main loop.
+    const pubSearches = [...new Set([...document.querySelectorAll('a')].map(a => a.href).filter(h => /pubmed\.ncbi\.nlm\.nih\.gov\/\?term=|ncbi\.nlm\.nih\.gov\/pubmed\/\?term=/i.test(h) && /%5BAuthor%5D|\[Author\]|%5BAffiliation%5D|\[Affiliation\]/i.test(h)))]
+    return { dois, pmids, titles, collections, pubSearches, textLen: text.length }
   })
+}
+
+// Resolve a PubMed author+affiliation search URL to its most-RECENT PMIDs via NCBI esearch (sorted
+// by date). This is what turns a stale "selected publications" institution page into the PI's real
+// current output. Affiliation-filtered => contamination-resistant; Gate B downstream is the backstop.
+async function esearchRecent(pubmedUrl) {
+  try {
+    const term = new URL(pubmedUrl).searchParams.get('term')
+    if (!term) return []
+    const api = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(term)}&sort=date&retmax=40&retmode=json`
+    const res = await fetch(api, { signal: AbortSignal.timeout(20000) })
+    if (!res.ok) return []
+    const j = await res.json()
+    return j?.esearchresult?.idlist ?? []
+  } catch { return [] }
 }
 
 // Registrable domain (eTLD+1), so a lab's pub page on a SUBDOMAIN (janda.scripps.edu) still counts
@@ -71,6 +90,7 @@ const host = u => { try { return new URL(u).host.replace(/^www\./, '').split('.'
 const mergeIds = (a, b) => ({
   dois: [...new Set([...a.dois, ...b.dois])], pmids: [...new Set([...a.pmids, ...b.pmids])],
   titles: [...new Set([...a.titles, ...b.titles])], collections: [...new Set([...a.collections, ...b.collections])],
+  pubSearches: [...new Set([...(a.pubSearches || []), ...(b.pubSearches || [])])],
 })
 
 for (let i = 0; i < slice.length; i++) {
@@ -99,6 +119,16 @@ for (let i = 0; i < slice.length; i++) {
       ids = mergeIds(ids, await extractIdsStable(p))
       r.method = 'pubmed-collection'; r.source_page = ids.collections[0]
     }
+    // Author+affiliation PubMed search → most-recent PMIDs (recovers stale institution "selected
+    // publications" pages, e.g. SBP). Only invoked when the page itself exposes such a link.
+    if ((ids.pubSearches || []).length && (ids.dois.length + ids.pmids.length) < 10) {
+      const recent = await esearchRecent(ids.pubSearches[0])
+      if (recent.length) {
+        ids.pmids = [...new Set([...ids.pmids, ...recent])]
+        r.method = r.method === 'homepage' || r.method === 'doi-page' ? 'pubmed-affil-search' : r.method + '+affil'
+        r.source_page = ids.pubSearches[0]
+      }
+    }
     Object.assign(r, { dois: ids.dois, pmids: ids.pmids, titles: ids.titles, collections: ids.collections })
     const total = r.dois.length + r.pmids.length + r.titles.length
     if (!total) {
@@ -113,6 +143,9 @@ for (let i = 0; i < slice.length; i++) {
     console.log(`  ✗ ${String(START + i).padStart(3)} ${name.padEnd(28)} FAIL ${String(e.message).slice(0, 50)}`)
   }
   await p.close()
+  // Persist after EACH lab so a long background run is crash-recoverable (resume from where it died).
+  writeFileSync(OUT, JSON.stringify(out, null, 1))
+  writeFileSync(FAIL, JSON.stringify(failures, null, 1))
 }
 await b.close()
 writeFileSync(OUT, JSON.stringify(out, null, 1))
