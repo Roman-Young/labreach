@@ -1,0 +1,186 @@
+########## PAPER SUMMARIES — Reuben Shaw, PhD ##########
+
+You are summarizing one academic lab's papers for a database undergraduates search to find labs to email.
+Work ONLY from the BUNDLE below (each paper's title + abstract, some with full text). For EACH paper:
+- did: the approach/experiment (1-2 sentences)
+- found: the key results, specific/quantitative where the text supports it (1-2 sentences)
+- used: methods / systems / data / techniques (1 sentence)
+- why: significance — what it means and what it is useful for (1 sentence)
+- anchor_quote: ONE verbatim quote COPIED EXACTLY from that paper's text in the bundle (character for character)
+
+HARD RULES: Do NOT store paper titles as findings. Do NOT paraphrase a quote — copy it verbatim. If the bundle
+lacks text to support a field, leave it empty rather than guessing. Summarize ONLY papers present in the bundle.
+
+Then write a SUMMARY for the lab as a whole, grounded in the papers you just summarized:
+- plain_summary: ~100-150 words, for a first-year undergrad with no background — WHAT the lab studies, HOW, and WHY it matters
+- trajectory: 2-4 sentences on where the research is heading, based on the most recent papers
+
+Write TWO JSON files to these EXACT ABSOLUTE paths:
+  /home/roman/agent/codebases/labreach/data/wave2-papers/https_shaw_salk_edu_.papers.json   -> {"papers":[{"title","year","did","found","used","why","anchor_quote"}, ...]}
+  /home/roman/agent/codebases/labreach/data/wave2-papers/https_shaw_salk_edu_.summary.json  -> {"plain_summary":"...", "trajectory":"..."}
+
+===== BUNDLE =====
+
+
+===== paper:doi:10.1016/j.tcb.2026.04.008 =====
+TITLE: AMPK: a master regulator of mitochondrial quality and quantity.
+YEAR: 2026
+SOURCE_ID: doi:10.1016/j.tcb.2026.04.008
+CITED_BY: 0
+
+ABSTRACT:
+The AMP-activated protein kinase (AMPK) may have arisen soon after the endosymbiosis event that generated eukaryotes, perhaps to allow the archaeal host to communicate its requirements for ATP to the bacterial endosymbionts that became mitochondria. Consistent with this, AMPK is now known to regulate most aspects of the mitochondrial life cycle. It drives fragmentation of the network by promoting fission and inhibiting fusion, increasing mitochondrial number while allowing isolation of dysfunctional fragments from the network. It promotes the biogenesis of new mitochondrial components while also regulating mitophagy, promoting the degradation of dysfunctional mitochondria and inhibiting the removal of functional mitochondria. We will discuss these new findings and propose that the regulation of mitochondria was an ancient function of AMPK originating in the early eukaryote.
+
+===== paper:doi:10.64898/2026.05.18.726071 =====
+TITLE: HDAC Inhibition Sensitizes Pancreatic Tumors to DNA Damage by Global Redistribution of the Transcriptional Machinery
+YEAR: 2026
+SOURCE_ID: doi:10.64898/2026.05.18.726071
+CITED_BY: 0
+
+ABSTRACT:
+ABSTRACT The DNA damage response (DDR) is critical for pancreatic ductal adenocarcinoma (PDAC) development and therapeutic responses, including to genotoxic agents. While epigenetic modulators have been shown to contribute to the DDR, how chromatin regulation dictates responses to DNA damage in PDAC remains incompletely understood. Here, we identify Class I histone deacetylases (HDACs) as critical regulators of the DDR. HDAC1/2 directs the genomic distribution of H3K27ac, ensuring sufficient BRD4 and RNA polymerase II (Pol II) occupancy at DDR gene promoters. HDAC inhibition by entinostat shifts the balance of H3K27 acetylation preferentially towards intergenic regions, diverting BRD4 and Pol II from promoters, thereby suppressing DDR gene expression. In line with this, HDAC inhibition heightens DNA damage and sensitizes PDAC to diverse DNA-damaging and DDR-targeting agents. Since the clinical development of HDAC inhibitors has been limited by systemic toxicity, we developed bottlebrush prodrug (BPD) nanoparticles for tumor-selective entinostat delivery. Entinostat-BPD achieved tumor-specific HDAC inhibition while displaying potent efficacy and reduced systemic toxicity. These findings reveal an HDAC-dependent DDR vulnerability and offer combinational and precision targeting strategies to facilitate clinical translation and improve PDAC patient outcomes. SIGNIFICANCE STATEMENT The ability of tumor cells to tolerate DNA damage limits the efficacy of many anticancer therapies. Our study reveals that pancreatic cancer cells enforce this resistance by sustaining expression of DNA damage response (DDR) genes through Class I histone deacetylases (HDACs). HDACs maintain genome-wide acetylation patterns required for efficient recruitment of the transcriptional machinery to DDR genes. Pharmacological HDAC inhibition disrupts this process and sensitizes pancreatic cancer cells to diverse DNA-damaging agents. To overcome systemic toxicity that limits translational potential, we further establish a bottlebrush prodrug nanoparticle platform that enables tumor-selective HDAC inhibition. Given the central role of the DDR in cancer, targeting HDAC-mediated DDR regulation through drug combinations and precision delivery may have broad therapeutic relevance across cancer types.
+
+===== paper:doi:10.1073/pnas.2536772123 =====
+TITLE: Med14 phosphorylation shapes genomic response to GLP-1 agonists.
+YEAR: 2026
+SOURCE_ID: doi:10.1073/pnas.2536772123
+CITED_BY: 0
+
+ABSTRACT:
+Binding of GLP-1 to its receptor in pancreatic beta cells triggers activation of the cAMP pathway and phosphorylation of CREB, leading to induction of cellular target genes containing CREB binding sites. By contrast with their acute effects on beta cell gene expression, chronic exposure of beta cells to stable GLP-1 analogs like Exendin-4 stimulates sustained expression of beta cell-specific genes, leading to increases in beta cell viability and insulin secretion. In a proteomic screen for transcriptional coregulators that contribute to the transcriptional effects of GLP-1, we identified Med14, the scaffolding subunit of the conserved 30 subunit Mediator complex. Exposure to Exendin-4 and other GLP-1 receptor agonists stimulates sustained phosphorylation of Med14 at Ser983, which corresponds to a conserved PKA recognition site. Mutation of Med14 at Ser983 blocked Exendin-4 effects on cellular gene expression by interfering with CREB-mediated activation of beta cell-specific enhancers. Med14 mutation results in higher alpha-to-beta cell ratios and blunted gene regulation in response to Exendin-4 in Ser983-mutant primary mouse islets. Our work reveals how phosphorylation of a general transcription factor in response to GLP-1 analogs triggers a broad genomic response with salutary effects on beta cell function.
+
+===== paper:doi:10.1021/acschembio.5c00711 =====
+TITLE: Synthesis and Characterization of ULK1/2 Kinase Inhibitors That Inhibit Autophagy and Upregulate Expression of Major Histocompatibility Complex I for the Treatment of Non-Small Cell Lung Cancer.
+YEAR: 2026
+SOURCE_ID: doi:10.1021/acschembio.5c00711
+CITED_BY: 0
+
+ABSTRACT:
+Autophagy inhibition represents a promising therapeutic approach for the management of various cancers including nonsmall cell lung cancer (NSCLC). We previously reported SBP-7455 , a dual inhibitor of unc-51-like kinase 1 (ULK1) and its homologue ULK2 and described its effects on triple-negative breast cancer (TNBC) cells. Herein we report the design, synthesis, and characterization of SBP-5147 and SBP-7501 , two new dual ULK1/2 inhibitors that are cytotoxic against NSCLC cells, inhibit autophagic flux in A549 cells, and present greater oral exposure than SBP-7455 at a lower dose. In addition, SBP-5147 effectively modulates autophagy and increases the expression of major histocompatibility complex (MHC) class I in NSCLC cells, which may support the rationale for ULK1/2 inhibition as a strategy to overcome resistance to immunotherapy. Together these data support the use of ULK inhibitors as part of a cancer treatment strategy, either as a single agent or in combination with current therapies.
+
+===== paper:doi:10.1016/j.cmet.2026.01.020 =====
+TITLE: Modeling lipid homeostasis using stable isotope tracing and flux analysis.
+YEAR: 2026
+SOURCE_ID: doi:10.1016/j.cmet.2026.01.020
+CITED_BY: 0
+
+ABSTRACT:
+Lipids enable compartmentation and coordinate membrane-localized signaling events in cells, and dysregulation of lipid metabolism is linked to many disease states. However, limited tools are available for quantifying metabolic fluxes across the lipidome. To measure fluxes encompassing lipid homeostasis in cells and tissue slices, we apply stable isotope tracing, liquid chromatography-high-resolution mass spectrometry, and network-based isotopologue modeling to non-small cell lung cancer (NSCLC) models. Lipid metabolic flux analysis (Lipid-MFA) enables quantitation of fatty acid synthesis, elongation, headgroup assembly, and salvage reactions within virtually any biological system. Using Lipid-MFA, we observed decreased fatty acid synthase and very long-chain fatty acid (VLCFA) elongation fluxes, along with increased sphingolipid recycling, in p53-deficient versus liver kinase B1 (LKB1)-deficient NSCLC tumors using precision-cut lung slice culture. We also apply Lipid-MFA to demonstrate the unique trafficking of ceramides with distinct n-acyl chain lengths, highlighting the utility of this approach in elucidating molecular mechanisms in lipid homeostasis.
+
+===== paper:doi:10.1146/annurev-cellbio-120420-094431 =====
+TITLE: The AMPK Pathway: Molecular Rejuvenation of Metabolism and Mitochondria.
+YEAR: 2025
+SOURCE_ID: doi:10.1146/annurev-cellbio-120420-094431
+CITED_BY: 25
+
+ABSTRACT:
+Cells must constantly adapt their metabolism to the availability of nutrients and signals from their environment. Under conditions of limited nutrients, cells need to reprogram their metabolism to rely on internal stores of glucose and lipid metabolites. From the emergence of eukaryotes to the mitochondria as the central source of ATP and other metabolites required for cellular homeostasis, survival, and proliferation, cells had to evolve sensors to detect even modest changes in mitochondrial function in order to safeguard cellular integrity and prevent energetic catastrophe. Homologs of AMP-activated protein kinase (AMPK) are found in all eukaryotic species and serve as an ancient sensor of conditions of low cellular energy. Here we explore advances in how AMPK modulates core processes underpinning the mitochondrial life cycle and how it serves to restore mitochondrial health in parallel with other beneficial metabolic adaptations.
+
+===== paper:doi:10.1101/2025.05.29.656904 =====
+TITLE: Leveraging autophagy and pyrimidine metabolism to target pancreatic cancer
+YEAR: 2025
+SOURCE_ID: doi:10.1101/2025.05.29.656904
+CITED_BY: 0
+
+ABSTRACT:
+SUMMARY Autophagy inhibitors are promising compounds to treat pancreatic ductal adenocarcinoma (PDA) but their efficacy in patients is unclear, highlighting a need to understand mechanisms of resistance. We used a novel approach to uncover metabolic adaptations that bypass autophagy inhibition. Utilizing PDA cells with acquired resistance to different autophagy inhibitors, we found that severe autophagy depletion induces metabolic rewiring to sustain TCA intermediates and nucleotides for biosynthesis. Long-term autophagy inhibition results in altered pyruvate metabolism likely regulated by lower pyrimidine pools. Cells adapting to loss of autophagy preferentially salvage pyrimidines to replenish these pools instead of synthesizing them de novo. Exploiting this metabolic vulnerability, we found that acquired resistance to autophagy inhibition promotes increased salvage and therefore sensitivity to pyrimidine analogues, including gemcitabine and trifluridine/tipiracil leading to combinatory effects with autophagy inhibitors and pyrimidine analogs. These studies provide mechanistic insight defining how autophagy inhibition can be leveraged to treat pancreatic cancer.
+
+===== paper:doi:10.1101/2025.06.17.660196 =====
+TITLE: Med14 phosphorylation shapes genomic response to GLP-1 Agonist
+YEAR: 2025
+SOURCE_ID: doi:10.1101/2025.06.17.660196
+CITED_BY: 0
+
+ABSTRACT:
+Under feeding conditions, release of glucagon-like peptide (GLP-1) from intestinal L cells promotes insulin secretion and pancreatic beta cell viability. Binding of GLP-1 to its cognate receptor on the beta cell surface results in induction of the cAMP signaling pathway, leading to the protein kinase A (PKA) mediated phosphorylation of CREB and induction of CREB target genes. By contrast with the acute effects of this pathway on immediate early CREB target genes, which attenuate the cAMP-CREB response, sustained exposure of beta cells to the stable GLP-1 receptor agonist Exendin-4 stimulates the expression of beta cell specific CREB target genes with delayed kinetics. In a proteomic screen for transcriptional co-regulators that mediate the long-term effects of GLP-1 analogs, we identified Med14, a backbone subunit of the Mediator complex. Exposure to Exendin-4 stimulates Med14 phosphorylation at Ser983, corresponding to a conserved PKA recognition site (RRXS) that is located within an intrinsically disordered region of Med14. Phosphorylation of Med14 by PKA is essential for maintenance of enhancers that drive induction of beta cell-specific and diabetes-linked genes. Mutation of Med14 at Ser983 to alanine decreased beta cell numbers and repressed Exendin-4 induced gene regulation in primary mouse beta cells. Our work reveals how phosphorylation of a general transcription factor in response to GLP-1 analogs triggers a broad genomic response with salutary effects on beta cell function.
+
+===== paper:doi:10.1083/jcb.202311082 =====
+TITLE: FAM43A coordinates mtDNA replication and mitochondrial biogenesis in response to mtDNA depletion.
+YEAR: 2025
+SOURCE_ID: doi:10.1083/jcb.202311082
+CITED_BY: 5
+
+ABSTRACT:
+Mitochondrial retrograde signaling (MRS) pathways relay the functional status of mitochondria to elicit homeostatic or adaptive changes in nuclear gene expression. Budding yeast have "intergenomic signaling" pathways that sense the amount of mitochondrial DNA (mtDNA) independently of oxidative phosphorylation (OXPHOS), the primary function of genes encoded by mtDNA. However, MRS pathways that sense the amount of mtDNA in mammalian cells remain poorly understood. We found that mtDNA-depleted IMR90 cells can sustain OXPHOS for a significant amount of time, providing a robust model system to interrogate human intergenomic signaling. We identified FAM43A, a largely uncharacterized protein, as a CHK2-dependent early responder to mtDNA depletion. Depletion of FAM43A activates a mitochondrial biogenesis program, resulting in an increase in mitochondrial mass and mtDNA copy number via CHK2-mediated upregulation of the p53R2 form of ribonucleotide reductase. We propose that FAM43A performs a checkpoint-like function to limit mitochondrial biogenesis and turnover under conditions of mtDNA depletion or replication stress.
+
+===== paper:doi:10.1073/pnas.2317694121 =====
+TITLE: Transcriptional repression by HDAC3 mediates T cell exclusion from i Kras /i mutant lung tumors.
+YEAR: 2024
+SOURCE_ID: doi:10.1073/pnas.2317694121
+CITED_BY: 13
+
+ABSTRACT:
+Histone Deacetylase 3 (HDAC3) function in vivo is nuanced and directed in a tissue-specific fashion. The importance of HDAC3 in Kras mutant lung tumors has recently been identified, but HDAC3 function in this context remains to be fully elucidated. Here, we identified HDAC3 as a lung tumor cell-intrinsic transcriptional regulator of the tumor immune microenvironment. In Kras mutant lung cancer cells, we found that HDAC3 is a direct transcriptional repressor of a cassette of secreted chemokines, including Cxcl10 . Genetic and pharmacological inhibition of HDAC3 robustly up-regulated this gene set in human and mouse Kras , LKB1 (KL) and Kras , p53 (KP) mutant lung cancer cells through an NF-κB/p65-dependent mechanism. Using genetically engineered mouse models, we found that HDAC3 inactivation in vivo induced expression of this gene set selectively in lung tumors and resulted in enhanced T cell recruitment at least in part via Cxcl10 . Furthermore, we found that inhibition of HDAC3 in the presence of Kras pathway inhibitors dissociated Cxcl10 expression from that of immunosuppressive chemokines and that combination treatment of entinostat with trametinib enhanced T cell recruitment into lung tumors in vivo. Finally, we showed that T cells contribute to in vivo tumor growth control in the presence of entinostat and trametinib combination treatment. Together, our findings reveal that HDAC3 is a druggable endogenous repressor of T cell recruitment into Kras mutant lung tumors.
+
+===== paper:doi:10.1101/2024.10.16.618599 =====
+TITLE: Modeling compound lipid homeostasis using stable isotope tracing
+YEAR: 2024
+SOURCE_ID: doi:10.1101/2024.10.16.618599
+CITED_BY: 0
+
+ABSTRACT:
+Summary Lipids represent the most diverse pool of metabolites found in cells, facilitating compartmentation, signaling, and other functions. Dysregulation of lipid metabolism is linked to disease states such as cancer and neurodegeneration. However, limited tools are available for quantifying metabolic fluxes across the lipidome. To directly measure reaction fluxes encompassing compound lipid homeostasis, we applied stable isotope tracing, liquid chromatography-high-resolution mass spectrometry, and network-based isotopologue modeling to non-small cell lung cancer (NSCLC) models. Compound lipid metabolic flux analysis (CL-MFA) enables the concurrent quantitation of fatty acid synthesis, elongation, headgroup assembly, and salvage reactions within virtually any biological system. Here, we resolve liver kinase B1 (LKB1)-mediated regulation of sphingolipid recycling in NSCLC cells and precision-cut lung slice cultures. We also demonstrate that widely used tissue culture conditions drive cells to upregulate fatty acid synthase flux to supraphysiological levels. Finally, we identify previously uncharacterized isozyme specificity of ceramide synthase inhibitors. These results highlight the ability of CL-MFA to quantify lipid cycling in biological systems to discover biological function and elucidate molecular mechanisms in membrane lipid metabolism.
+
+===== paper:doi:10.1158/2159-8290.cd-23-0434 =====
+TITLE: EGFR-driven lung adenocarcinomas coopt alveolar macrophage metabolism and function to support EGFR signaling and growth.
+YEAR: 2024
+SOURCE_ID: doi:10.1158/2159-8290.cd-23-0434
+CITED_BY: 10
+
+ABSTRACT:
+The limited efficacy of currently approved immunotherapies in EGFR-driven lung adenocarcinoma (LUAD) underscores the need to better understand alternative mechanisms governing local immunosuppression to fuel novel therapies. Elevated surfactant and GM-CSF secretion from the transformed epithelium induces tumor-associated alveolar macrophage (TA-AM) proliferation which supports tumor growth by rewiring inflammatory functions and lipid metabolism. TA-AM properties are driven by increased GM-CSF-PPARγ signaling and inhibition of airway GM-CSF or PPARγ in TA-AMs suppresses cholesterol efflux to tumor cells, which impairs EGFR phosphorylation and restrains LUAD progression. In the absence of TA-AM metabolic support, LUAD cells compensate by increasing cholesterol synthesis, and blocking PPARγ in TA-AMs simultaneous with statin therapy further suppresses tumor progression and increases proinflammatory immune responses. These results reveal new therapeutic combinations for immunotherapy resistant EGFR-mutant LUADs and demonstrate how cancer cells can metabolically co-opt TA-AMs through GM-CSF-PPARγ signaling to provide nutrients that promote oncogenic signaling and growth.
+
+===== paper:doi:10.1126/science.abn1725 =====
+TITLE: Metabolic orchestration of cell death by AMPK-mediated phosphorylation of RIPK1.
+YEAR: 2023
+SOURCE_ID: doi:10.1126/science.abn1725
+CITED_BY: 95
+
+ABSTRACT:
+Adenosine monophosphate-activated protein kinase (AMPK) activity is stimulated to promote metabolic adaptation upon energy stress. However, sustained metabolic stress may cause cell death. The mechanisms by which AMPK dictates cell death are not fully understood. We report that metabolic stress promoted receptor-interacting protein kinase 1 (RIPK1) activation mediated by TRAIL receptors, whereas AMPK inhibited RIPK1 by phosphorylation at Ser 415 to suppress energy stress-induced cell death. Inhibiting pS415-RIPK1 by Ampk deficiency or RIPK1 S415A mutation promoted RIPK1 activation. Furthermore, genetic inactivation of RIPK1 protected against ischemic injury in myeloid Ampkα1 -deficient mice. Our studies reveal that AMPK phosphorylation of RIPK1 represents a crucial metabolic checkpoint, which dictates cell fate response to metabolic stress, and highlight a previously unappreciated role for the AMPK-RIPK1 axis in integrating metabolism, cell death, and inflammation.
+
+===== paper:doi:10.1126/sciadv.adf0138 =====
+TITLE: Inter-organelle cross-talk supports acetyl-coenzyme A homeostasis and lipogenesis under metabolic stress.
+YEAR: 2023
+SOURCE_ID: doi:10.1126/sciadv.adf0138
+CITED_BY: 43
+
+ABSTRACT:
+Proliferating cells rely on acetyl-CoA to support membrane biogenesis and acetylation. Several organelle-specific pathways are available for provision of acetyl-CoA as nutrient availability fluctuates, so understanding how cells maintain acetyl-CoA homeostasis under such stresses is critically important. To this end, we applied 13 C isotope tracing cell lines deficient in these mitochondrial [ATP-citrate lyase (ACLY)]-, cytosolic [acetyl-CoA synthetase (ACSS2)]-, and peroxisomal [peroxisomal biogenesis factor 5 (PEX5)]-dependent pathways. ACLY knockout in multiple cell lines reduced fatty acid synthesis and increased reliance on extracellular lipids or acetate. Knockout of both ACLY and ACSS2 (DKO) severely stunted but did not entirely block proliferation, suggesting that alternate pathways can support acetyl-CoA homeostasis. Metabolic tracing and PEX5 knockout studies link peroxisomal oxidation of exogenous lipids as a major source of acetyl-CoA for lipogenesis and histone acetylation in cells lacking ACLY, highlighting a role for inter-organelle cross-talk in supporting cell survival in response to nutrient fluctuations.
+
+===== paper:doi:10.1126/science.abj5559 =====
+TITLE: Induction of lysosomal and mitochondrial biogenesis by AMPK phosphorylation of FNIP1.
+YEAR: 2023
+SOURCE_ID: doi:10.1126/science.abj5559
+CITED_BY: 162
+
+ABSTRACT:
+Cells respond to mitochondrial poisons with rapid activation of the adenosine monophosphate-activated protein kinase (AMPK), causing acute metabolic changes through phosphorylation and prolonged adaptation of metabolism through transcriptional effects. Transcription factor EB (TFEB) is a major effector of AMPK that increases expression of lysosome genes in response to energetic stress, but how AMPK activates TFEB remains unresolved. We demonstrate that AMPK directly phosphorylates five conserved serine residues in folliculin-interacting protein 1 (FNIP1), suppressing the function of the folliculin (FLCN)-FNIP1 complex. FNIP1 phosphorylation is required for AMPK to induce nuclear translocation of TFEB and TFEB-dependent increases of peroxisome proliferator-activated receptor gamma coactivator 1-alpha (PGC1α) and estrogen-related receptor alpha (ERRα) messenger RNAs. Thus, mitochondrial damage triggers AMPK-FNIP1-dependent nuclear translocation of TFEB, inducing sequential waves of lysosomal and mitochondrial biogenesis.
+
+===== paper:doi:10.1101/2023.04.15.536974 =====
+TITLE: EGFR + lung adenocarcinomas coopt alveolar macrophage metabolism and function to support EGFR signaling and growth
+YEAR: 2023
+SOURCE_ID: doi:10.1101/2023.04.15.536974
+CITED_BY: 0
+
+ABSTRACT:
+The limited efficacy of currently approved immunotherapies in EGFR-mutant lung adenocarcinoma (LUAD) underscores the need to better understand mechanisms governing local immunosuppression. Elevated surfactant and GM-CSF secretion from the transformed epithelium induces tumor-associated alveolar macrophages (TA-AM) to proliferate and support tumor growth by rewiring inflammatory functions and lipid metabolism. TA-AM properties are driven by increased GM-CSF—PPARγ signaling and inhibition of airway GM-CSF or PPARγ in TA-AMs suppresses cholesterol efflux to tumor cells, which impairs EGFR phosphorylation and restrains LUAD progression. In the absence of TA-AM metabolic support, LUAD cells compensate by increasing cholesterol synthesis, and blocking PPARγ in TA-AMs simultaneous with statin therapy further suppresses tumor progression and increases T cell effector functions. These results reveal new therapeutic combinations for immunotherapy resistant EGFR-mutant LUADs and demonstrate how such cancer cells can metabolically co-opt TA-AMs through GM-CSF—PPARγ signaling to provide nutrients that promote oncogenic signaling and growth.
+
+===== paper:doi:10.1126/sciadv.add3243 =====
+TITLE: HDAC3 is critical in tumor development and therapeutic resistance in Kras -mutant non-small cell lung cancer.
+YEAR: 2023
+SOURCE_ID: doi:10.1126/sciadv.add3243
+CITED_BY: 65
+
+ABSTRACT:
+HDAC3 is one of the main targets of histone deacetylase (HDAC) inhibitors in clinical development as cancer therapies, yet the in vivo role of HDAC3 in solid tumors is unknown. We identified a critical role for HDAC3 in Kras -mutant lung cancer. Using genetically engineered mouse models (GEMMs), we found that HDAC3 is required for lung tumor growth in vivo. HDAC3 was found to direct and enhance the transcription effects of the lung cancer lineage transcription factor NKX2-1 to mediate expression of a common set of target genes. We identified FGFR1 as a critical previously unidentified target of HDAC3. Leveraging this, we identified that an HDAC3-dependent transcriptional cassette becomes hyperactivated as Kras/LKB1 -mutant cells develop resistance to the MEK inhibitor trametinib, and this can be reversed by treatment with the HDAC1/HDAC3 inhibitor entinostat. We found that the combination of entinostat plus trametinib treatment elicits therapeutic benefit in the Kras/LKB1 GEMM.
+
+===== paper:doi:10.1158/2159-8290.cd-22-0805 =====
+TITLE: LKB1-Dependent Regulation of TPI1 Creates a Divergent Metabolic Liability between Human and Mouse Lung Adenocarcinoma.
+YEAR: 2023
+SOURCE_ID: doi:10.1158/2159-8290.cd-22-0805
+CITED_BY: 32
+
+ABSTRACT:
+KRAS is the most frequently mutated oncogene in human lung adenocarcinomas (hLUAD), and activating mutations frequently co-occur with loss-of-function mutations in TP53 or STK11/LKB1. However, mutation of all three genes is rarely observed in hLUAD, even though engineered comutation is highly aggressive in mouse lung adenocarcinoma (mLUAD). Here, we provide a mechanistic explanation for this difference by uncovering an evolutionary divergence in the regulation of triosephosphate isomerase (TPI1). In hLUAD, TPI1 activity is regulated via phosphorylation at Ser21 by the salt inducible kinases (SIK) in an LKB1-dependent manner, modulating flux between the completion of glycolysis and production of glycerol lipids. In mice, Ser21 of TPI1 is a Cys residue that can be oxidized to alter TPI1 activity without a need for SIKs or LKB1. Our findings suggest this metabolic flexibility is critical in rapidly growing cells with KRAS and TP53 mutations, explaining why the loss of LKB1 creates a liability in these tumors. Significance Utilizing phosphoproteomics and metabolomics in genetically engineered human cell lines and genetically engineered mouse models (GEMM), we uncover an evolutionary divergence in metabolic regulation within a clinically relevant genotype of human LUAD with therapeutic implications. Our data provide a cautionary example of the limits of GEMMs as tools to study human diseases such as cancers. This article is highlighted in the In This Issue feature, p. 799.
+===== END BUNDLE =====

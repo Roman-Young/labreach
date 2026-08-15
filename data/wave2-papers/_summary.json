@@ -1,0 +1,44 @@
+[
+ {
+  "name": "Benjamin Cravatt, PhD",
+  "method": "doi-page",
+  "verified": 39,
+  "selected": 18,
+  "slug": "https_www_cravattlab_com_"
+ },
+ {
+  "name": "Keary Engle, PhD",
+  "method": "doi-page",
+  "verified": 18,
+  "selected": 18,
+  "slug": "https_englelab_com_"
+ },
+ {
+  "name": "Reuben Shaw, PhD",
+  "method": "doi-page",
+  "verified": 40,
+  "selected": 18,
+  "slug": "https_shaw_salk_edu_"
+ },
+ {
+  "name": "Cosimo Commisso PhD",
+  "method": "pubmed-collection",
+  "verified": 13,
+  "selected": 13,
+  "slug": "https_www_commissolab_com_"
+ },
+ {
+  "name": "Ferhat Ay",
+  "method": "lji-filtered",
+  "verified": 10,
+  "selected": 9,
+  "slug": "https_www_lji_org_labs_ay_"
+ },
+ {
+  "name": "Marco Mravic, PhD",
+  "method": "doi-page",
+  "verified": 9,
+  "selected": 9,
+  "slug": "https_mmravic314_github_io_"
+ }
+]

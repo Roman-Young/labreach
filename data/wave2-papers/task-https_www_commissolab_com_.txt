@@ -1,0 +1,141 @@
+########## PAPER SUMMARIES — Cosimo Commisso PhD ##########
+
+You are summarizing one academic lab's papers for a database undergraduates search to find labs to email.
+Work ONLY from the BUNDLE below (each paper's title + abstract, some with full text). For EACH paper:
+- did: the approach/experiment (1-2 sentences)
+- found: the key results, specific/quantitative where the text supports it (1-2 sentences)
+- used: methods / systems / data / techniques (1 sentence)
+- why: significance — what it means and what it is useful for (1 sentence)
+- anchor_quote: ONE verbatim quote COPIED EXACTLY from that paper's text in the bundle (character for character)
+
+HARD RULES: Do NOT store paper titles as findings. Do NOT paraphrase a quote — copy it verbatim. If the bundle
+lacks text to support a field, leave it empty rather than guessing. Summarize ONLY papers present in the bundle.
+
+Then write a SUMMARY for the lab as a whole, grounded in the papers you just summarized:
+- plain_summary: ~100-150 words, for a first-year undergrad with no background — WHAT the lab studies, HOW, and WHY it matters
+- trajectory: 2-4 sentences on where the research is heading, based on the most recent papers
+
+Write TWO JSON files to these EXACT ABSOLUTE paths:
+  /home/roman/agent/codebases/labreach/data/wave2-papers/https_www_commissolab_com_.papers.json   -> {"papers":[{"title","year","did","found","used","why","anchor_quote"}, ...]}
+  /home/roman/agent/codebases/labreach/data/wave2-papers/https_www_commissolab_com_.summary.json  -> {"plain_summary":"...", "trajectory":"..."}
+
+===== BUNDLE =====
+
+
+===== paper:doi:10.1158/0008-5472.can-25-1904 =====
+TITLE: The Aging Microenvironment Is a Determinant of Immune Exclusion and Metastatic Fate in Pancreatic Cancer.
+YEAR: 2026
+SOURCE_ID: doi:10.1158/0008-5472.can-25-1904
+CITED_BY: 3
+
+ABSTRACT:
+Aging is a critical yet understudied determinant in pancreatic ductal adenocarcinoma (PDAC) risk and outcomes. Despite a strong epidemiologic association with age, conventional PDAC preclinical models fail to capture the histopathologic and stromal complexities that emerge in older organisms. Using an age-relevant syngeneic orthotopic model, we demonstrated that organismal aging accelerates PDAC progression and metastasis. Transcriptomic and secretome profiling identified a conserved extracellular matrix gene signature enriched in cancer-associated fibroblasts (CAF) from aged tumors, consistent with an augmented fibrotic landscape that supports immunosuppression, metastatic tropism, and poor prognosis. Direct testing of the functional impact of stromal aging in heterochronic co-implantation models revealed that revitalizing the aged tumor stroma with young CAFs restores immune infiltration and attenuates metastasis in older hosts. Conversely, aged CAFs, although immunosuppressive, failed to enhance metastasis in young hosts, suggesting that a youthful microenvironment exerts dominant regulatory control over disease progression. These findings demonstrate that stromal age is a critical modulator of both immune exclusion and metastatic behavior in PDAC. Importantly, this work establishes a conceptual framework for understanding how aging shapes the tumor microenvironment in PDAC and opens a fertile avenue of investigation into age-specific stromal regulation. Moreover, these findings raise compelling questions about the underlying molecular mechanisms and lay the foundation for future efforts to therapeutically target stromal aging in PDAC. Significance Age-dependent stromal changes drive progression of pancreatic cancer, linking aging, stromal remodeling, and tumor aggressiveness and suggesting that rejuvenating the aged microenvironment may improve outcomes in older patients.
+
+===== paper:doi:10.1016/j.trecan.2025.09.006 =====
+TITLE: Organellar pH as an emerging vulnerability to exploit in cancer.
+YEAR: 2026
+SOURCE_ID: doi:10.1016/j.trecan.2025.09.006
+CITED_BY: 3
+
+ABSTRACT:
+Cancer cells undergo metabolic reprogramming to sustain their energy demands, and favor glycolysis despite the presence of functional mitochondria. This metabolic shift leads to the rapid production of lactate and protons. If not managed, this accumulation of acidic byproducts would lower the intracellular pH (pH i ). To counteract this, cancer cells employ diverse mechanisms to extrude excess protons through membrane transporters, and also sequester them within acidic organelles. Consequently, an alkaline pH i provides cancer cells with a survival advantage by promoting their proliferation, migration, and resistance to cell death. Given the role of organellar acidification in sustaining this altered pH balance, targeting this process represents a potential therapeutic vulnerability in cancer. We explore the mechanisms by which cancer cells maintain pH homeostasis, with a particular focus on organellar pH and its impact on tumor progression. In addition, we assess inhibitors of the key transporters involved in organellar acidification and discuss their therapeutic potential in cancer.
+
+===== paper:doi:10.1016/j.celrep.2025.116199 =====
+TITLE: PI5P4Kα promotes glucose and iron acquisition to support metabolic fitness in pancreatic cancer.
+YEAR: 2025
+SOURCE_ID: doi:10.1016/j.celrep.2025.116199
+CITED_BY: 1
+
+ABSTRACT:
+Phosphoinositide kinases generate distinct phosphoinositides that regulate pathways to support tumorigenesis. Phosphatidylinositol 5-phosphate 4-kinases (PI5P4Ks) have garnered interest for their role in cancer metabolism; however, their function in pancreatic ductal adenocarcinoma (PDAC) remains unexplored. We identify PI5P4Kα as a critical dependency to support the unique metabolic demands of PDAC cells through its key role in the acquisition of essential metabolic substrates, including glucose and iron. Our data show that inhibition of PI5P4Kα creates a metabolic bottleneck that PDAC cells cannot overcome through adaptive shifts, leading to cancer-specific apoptotic cell death that is reversible by iron supplementation. Notably, we find that PI5P4Kα knockdown suppresses tumor growth in a xenograft mouse model of PDAC. These results not only illuminate the mechanistic underpinnings of PI5P4Kα function in PDAC but also position it as a promising therapeutic target for this disease.
+
+===== paper:doi:10.1016/j.ccell.2025.06.021 =====
+TITLE: Macropinocytosis maintains CAF subtype identity under metabolic stress in pancreatic cancer.
+YEAR: 2025
+SOURCE_ID: doi:10.1016/j.ccell.2025.06.021
+CITED_BY: 26
+
+ABSTRACT:
+Pancreatic ductal adenocarcinoma (PDAC) tumors are glutamine deficient, and both tumor cells and cancer-associated fibroblasts (CAFs) rely on this amino acid to maintain fitness and induce macropinocytosis as an adaptive response. CAFs play a critical role in sculpting the tumor microenvironment, yet how adaptations to metabolic stress impact the stromal architecture remains elusive. In this study, we find that macropinocytosis sustains the myCAF phenotype under glutamine limitation by preventing inflammatory reprogramming. Our data demonstrate that metabolic stress induces an intrinsic inflammatory CAF (iCAF) program through MEK-ERK signaling. We find that blocking macropinocytosis in vivo promotes myCAF-to-iCAF transitions, remodeling the tumor stroma. Importantly, stromal remodeling driven by macropinocytosis inhibition-including iCAF enrichment, collagen reduction, immune cell infiltration, and vascular expansion-sensitizes PDAC tumors to immunotherapy and chemotherapy. Our findings reveal that inhibiting macropinocytosis promotes an inflammatory, less fibrotic tumor microenvironment that can be leveraged to improve therapeutic responses in PDAC.
+
+===== paper:doi:10.1101/2025.05.22.655365 =====
+TITLE: Disabling PSGL-1 abrogates immune suppression and resistance to PD-1 blockade in pancreatic cancer.
+YEAR: 2025
+SOURCE_ID: doi:10.1101/2025.05.22.655365
+CITED_BY: 0
+
+ABSTRACT:
+Pancreatic ductal adenocarcinoma (PDAC) is a lethal cancer for which there is a critical need to identify novel therapeutic targets. Herein we define PSGL-1 as a checkpoint inhibitor using a syngeneic orthotopic model of PDAC. As with PDAC patients, CD8 + T cells within murine PDAC tumors expressed high levels of PSGL-1. PSGL-1 -/- mice displayed striking T cell-dependent control of primary tumors and lung metastases. Extensive spatial remodeling within PDAC tumors occurred in PSGL-1 -/- mice with a dramatic loss of proliferating tumor cells and an increase in CD8 + T cell engagement of antigen-presenting cells. The prominent CD8 + T cell infiltrates included subsets of pre-exhausted T cells retaining hallmarks of stemness and multifunctional effector capacity. These changes enabled a near complete response of PDAC to therapeutic PD-1 blockade. Our findings identify PSGL-1 as a key regulator of anti-tumor immunity in PDAC, highlighting its potential as a therapeutic target to limit CD8 + T cell exhaustion and enhance immunotherapy response. Summary Hope et al describe a pivotal function of PSGL-1 in CD8 + T cell responses to pancreatic ductal adenocarcinoma. Genetic deletion of PSGL-1 elicits tumor control by increasing T cell infiltration and maintaining functional subsets, thereby promoting sensitivity to PD-1 blockade.
+
+===== paper:doi:10.1101/2025.05.08.652966 =====
+TITLE: The Aging Microenvironment as a Determinant of Immune Exclusion and Metastatic Fate in Pancreatic Cancer.
+YEAR: 2025
+SOURCE_ID: doi:10.1101/2025.05.08.652966
+CITED_BY: 0
+
+ABSTRACT:
+Aging is a critical yet understudied determinant in pancreatic ductal adenocarcinoma (PDAC). Despite a strong epidemiological association with age, conventional PDAC preclinical models fail to capture the histopathological and stromal complexities that emerge in older organisms. Using an age-relevant syngeneic orthotopic model, we demonstrate that organismal aging accelerates PDAC progression and metastasis. Through transcriptomic profiling, we identify a conserved extracellular matrix gene signature enriched in cancer-associated fibroblasts (CAFs) from aged tumors, consistent with an augmented fibrotic landscape that supports immunosuppression, metastatic tropism, and poor prognosis. To directly test the functional impact of stromal aging, we employed heterochronic co-implantation models, revealing that revitalizing the aged tumor stroma with young CAFs restores immune infiltration and attenuates metastasis in older hosts. Conversely, aged CAFs, while immunosuppressive, fail to enhance metastasis in young hosts, suggesting that a youthful microenvironment exerts dominant regulatory control over disease progression. These findings demonstrate that stromal age is a critical modulator of both immune exclusion and metastatic behavior in PDAC. Importantly, our work establishes a new conceptual framework for understanding how aging shapes the tumor microenvironment in PDAC and opens a fertile avenue of investigation into age-specific stromal regulation. Moreover, this work raises compelling questions about the underlying molecular mechanisms-questions now accessible through our models-and lays the foundation for future efforts to therapeutically target stromal aging in PDAC.
+
+===== paper:doi:10.1158/0008-5472.can-24-0744 =====
+TITLE: MICAL2 Promotes Pancreatic Cancer Growth and Metastasis.
+YEAR: 2025
+SOURCE_ID: doi:10.1158/0008-5472.can-24-0744
+CITED_BY: 6
+
+ABSTRACT:
+Pancreatic ductal adenocarcinoma (PDAC) remains one of the deadliest solid cancers; thus, identifying more effective therapies is a major unmet need. In this study, we characterized the super-enhancer (SE) landscape of human PDAC to identify drivers of the disease that might be targetable. This analysis revealed MICAL2 as an SE-associated gene in human PDAC, which encodes the flavin monooxygenase enzyme that induces actin depolymerization and indirectly promotes serum response factor transcription by modulating the availability of serum response factor coactivators such as myocardin-related transcription factors (MRTF-A and MRTF-B). MICAL2 was overexpressed in PDAC, and high-MICAL2 expression correlated with poor patient prognosis. Transcriptional analysis revealed that MICAL2 upregulates KRAS and epithelial-mesenchymal transition signaling pathways, contributing to tumor growth and metastasis. In loss- and gain-of-function experiments in human and mouse PDAC cells, MICAL2 promoted both ERK1/2 and AKT activation. Consistent with its role in actin depolymerization and KRAS signaling, loss of MICAL2 also inhibited macropinocytosis. MICAL2, MRTF-A, and MRTF-B influenced PDAC cell proliferation and migration and promoted cell-cycle progression in vitro. Importantly, MICAL2 supported in vivo tumor growth and metastasis. Interestingly, MRTF-B, but not MRTF-A, phenocopied MICAL2-driven phenotypes in vivo. This study highlights the multiple ways in which MICAL2 affects PDAC biology and provides a foundation for future investigations into the potential of targeting MICAL2 for therapeutic intervention. Significance: Characterization of the epigenomic landscape of pancreatic cancer to identify early drivers of tumorigenesis uncovered MICAL2 as a super-enhancer-associated gene critical for tumor progression that represents a potential pharmacologic target.
+
+===== paper:doi:10.1016/j.trecan.2024.11.008 =====
+TITLE: A hormetic response model for glutamine stress in cancer.
+YEAR: 2025
+SOURCE_ID: doi:10.1016/j.trecan.2024.11.008
+CITED_BY: 1
+
+ABSTRACT:
+Glutamine metabolism supports the development and progression of many cancers and is considered a therapeutic target. Attempts to inhibit glutamine metabolism have resulted in limited success and have not translated into clinical benefit. The outcomes of these clinical studies, along with preclinical investigations, suggest that cellular stress responses to glutamine deprivation or targeting may be modeled as a biphasic hormetic response. By recognizing the multifaceted aspects of glutamine metabolism inhibition within a more comprehensive biological framework, the adoption of this model may guide future fundamental and translational studies. To achieve clinical efficacy, we posit that as a field we will need to anticipate the hormetic effects of glutamine stress and consider how best to co-target cancer cell adaptive mechanisms.
+
+===== paper:doi:10.1101/2024.11.29.625709 =====
+TITLE: Macropinocytosis controls metabolic stress-driven CAF subtype identity in pancreatic cancer.
+YEAR: 2024
+SOURCE_ID: doi:10.1101/2024.11.29.625709
+CITED_BY: 1
+
+ABSTRACT:
+Pancreatic ductal adenocarcinoma (PDAC) tumors are deficient in glutamine, an amino acid that tumor cells and CAFs use to sustain their fitness. In PDAC, both cell types stimulate macropinocytosis as an adaptive response to glutamine depletion. CAFs play a critical role in sculpting the tumor microenvironment, yet how adaptations to metabolic stress impact the stromal architecture remains elusive. In this study, we find that macropinocytosis functions to control CAF subtype identity when glutamine is limiting. Our data demonstrate that metabolic stress leads to an intrinsic inflammatory CAF (iCAF) program driven by MEK/ERK signaling. Utilizing in vivo models, we find that blocking macropinocytosis alters CAF subtypes and reorganizes the tumor stroma. Importantly, these changes in stromal architecture can be exploited to sensitize PDAC to immunotherapy and chemotherapy. Our findings demonstrate that metabolic stress plays a role in shaping the tumor microenvironment, and that this attribute can be harnessed for therapeutic impact.
+
+===== paper:doi:10.1038/s41467-024-54788-9 =====
+TITLE: Cell polarity proteins promote macropinocytosis in response to metabolic stress.
+YEAR: 2024
+SOURCE_ID: doi:10.1038/s41467-024-54788-9
+CITED_BY: 8
+
+ABSTRACT:
+Macropinocytosis has emerged as a scavenging pathway that cancer cells exploit to survive in a nutrient-deprived microenvironment. Tumor cells are especially reliant on glutamine for their survival, and in pancreatic ductal adenocarcinoma (PDAC) cells, glutamine deficiency can enhance the stimulation of macropinocytosis. Here, we identify the atypical protein kinase C (aPKC) enzymes, PKCζ and PKCι, as regulators of macropinocytosis. In normal epithelial cells, aPKCs associate with the scaffold proteins Par3 and Par6 to regulate cell polarity, affecting several targets, including the Par1 kinases and we find that each of these proteins is required for macropinocytosis. Mechanistically, aPKCs are regulated by EGFR signaling or by the transcription factor CREM to promote the Par3 relocation to microtubules, facilitating macropinocytosis in a dynein-dependent manner. Importantly, cell fitness impairment caused by aPKC depletion is rescued by the restoration of macropinocytosis and aPKCs support PDAC growth in vivo. Our findings enhance our understanding of the mechanistic underpinnings that control macropinocytic uptake in the context of metabolic stress.
+
+===== paper:doi:10.1007/978-3-030-94004-1_2 =====
+TITLE: Macropinocytosis and Cancer: From Tumor Stress to Signaling Pathways.
+YEAR: 2022
+SOURCE_ID: doi:10.1007/978-3-030-94004-1_2
+CITED_BY: 32
+
+ABSTRACT:
+Macropinocytosis is an evolutionarily conserved endocytic pathway that mediates the nonselective acquisition of extracellular material via large endocytic vesicles known as macropinosomes. In addition to other functions, this uptake pathway supports cancer cell metabolism through the uptake of nutrients. Cells harboring oncogene or tumor suppressor mutations are known to display heightened macropinocytosis, which confers to the cancer cells the ability to survive and proliferate despite the nutrient-scarce conditions of the tumor microenvironment. Thus, macropinocytosis is associated with cancer malignancy. Macropinocytic uptake can be induced in cancer cells by different stress stimuli, acting as an adaptive mechanism for the cells to resist stresses in the tumor milieu. Here, we review the cellular stresses that are known to promote macropinocytosis, as well as the underlying molecular mechanisms that drive this process.
+
+===== paper:doi:10.3791/62828 =====
+TITLE: Automated Imaging and Analysis for the Quantification of Fluorescently Labeled Macropinosomes.
+YEAR: 2021
+SOURCE_ID: doi:10.3791/62828
+CITED_BY: 9
+
+ABSTRACT:
+Macropinocytosis is a non-specific fluid-phase uptake pathway that allows cells to internalize large extracellular cargo, such as proteins, pathogens, and cell debris, through bulk endocytosis. This pathway plays an essential role in a variety of cellular processes, including the regulation of immune responses and cancer cell metabolism. Given this importance in biological function, examining cell culture conditions can provide valuable information by identifying regulators of this pathway and optimizing conditions to be employed in the discovery of novel therapeutic approaches. The study describes an automated imaging and analysis technique using standard laboratory equipment and a cell imaging multi-mode plate reader for the rapid quantification of the macropinocytic index in adherent cells. The automated method is based on the uptake of high molecular weight fluorescent dextran and can be applied to 96-well microplates to facilitate assessments of multiple conditions in one experiment or fixed samples mounted onto glass coverslips. This approach is aimed at maximizing reproducibility and reducing experimental variation while being both time-saving and cost-effective.
+
+===== paper:doi:10.1098/rstb.2018.0153 =====
+TITLE: The pervasiveness of macropinocytosis in oncological malignancies.
+YEAR: 2019
+SOURCE_ID: doi:10.1098/rstb.2018.0153
+CITED_BY: 45
+
+ABSTRACT:
+In tumour cells, macropinocytosis functions as an amino acid supply route and supports cancer cell survival and proliferation. Initially demonstrated in oncogenic KRAS-driven models of pancreatic cancer, macropinocytosis triggers the internalization of extracellular proteins via discrete endocytic vesicles called macropinosomes. The incoming protein cargo is targeted for lysosome-dependent degradation, causing the intracellular release of amino acids. These protein-derived amino acids support metabolic fitness by contributing to the intracellular amino acid pools, as well as to the biosynthesis of central carbon metabolites. In this way, macropinocytosis represents a novel amino acid supply route that tumour cells use to survive the nutrient-poor conditions of the tumour microenvironment. Macropinocytosis has also emerged as an entry mechanism for a variety of nanomedicines, suggesting that macropinocytosis regulation in the tumour setting can be harnessed for the delivery of anti-cancer therapeutics. A slew of recent studies point to the possibility that macropinocytosis is a pervasive feature of many different tumour types. In this review, we focus on the role of this important uptake mechanism in a variety of cancers and highlight the main molecular drivers of macropinocytosis in these malignancies. This article is part of the Theo Murphy meeting issue 'Macropinocytosis'.
+===== END BUNDLE =====

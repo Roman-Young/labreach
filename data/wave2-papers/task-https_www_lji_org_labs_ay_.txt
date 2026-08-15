@@ -1,0 +1,105 @@
+########## PAPER SUMMARIES — Ferhat Ay ##########
+
+You are summarizing one academic lab's papers for a database undergraduates search to find labs to email.
+Work ONLY from the BUNDLE below (each paper's title + abstract, some with full text). For EACH paper:
+- did: the approach/experiment (1-2 sentences)
+- found: the key results, specific/quantitative where the text supports it (1-2 sentences)
+- used: methods / systems / data / techniques (1 sentence)
+- why: significance — what it means and what it is useful for (1 sentence)
+- anchor_quote: ONE verbatim quote COPIED EXACTLY from that paper's text in the bundle (character for character)
+
+HARD RULES: Do NOT store paper titles as findings. Do NOT paraphrase a quote — copy it verbatim. If the bundle
+lacks text to support a field, leave it empty rather than guessing. Summarize ONLY papers present in the bundle.
+
+Then write a SUMMARY for the lab as a whole, grounded in the papers you just summarized:
+- plain_summary: ~100-150 words, for a first-year undergrad with no background — WHAT the lab studies, HOW, and WHY it matters
+- trajectory: 2-4 sentences on where the research is heading, based on the most recent papers
+
+Write TWO JSON files to these EXACT ABSOLUTE paths:
+  /home/roman/agent/codebases/labreach/data/wave2-papers/https_www_lji_org_labs_ay_.papers.json   -> {"papers":[{"title","year","did","found","used","why","anchor_quote"}, ...]}
+  /home/roman/agent/codebases/labreach/data/wave2-papers/https_www_lji_org_labs_ay_.summary.json  -> {"plain_summary":"...", "trajectory":"..."}
+
+===== BUNDLE =====
+
+
+===== paper:doi:10.1016/j.jaut.2024.103177 =====
+TITLE: LIGHT signaling through LTβR and HVEM in keratinocytes promotes psoriasis and atopic dermatitis-like skin inflammation.
+YEAR: 2024
+SOURCE_ID: doi:10.1016/j.jaut.2024.103177
+CITED_BY: 10
+
+ABSTRACT:
+Psoriasis (PS) and atopic dermatitis (AD) are common skin inflammatory diseases characterized by hyper-responsive keratinocytes. Although, some cytokines have been suggested to be specific for each disease, other cytokines might be central to both diseases. Here, we show that Tumor necrosis factor superfamily member 14 (TNFSF14), known as LIGHT, is required for experimental PS, similar to its requirement in experimental AD. Mice devoid of LIGHT, or deletion of either of its receptors, lymphotoxin β receptor (LTβR) and herpesvirus entry mediator (HVEM), in keratinocytes, were protected from developing imiquimod-induced psoriatic features, including epidermal thickening and hyperplasia, and expression of PS-related genes. Correspondingly, in single cell RNA-seq analysis of PS patient biopsies, LTβR transcripts were found strongly expressed with HVEM in keratinocytes, and LIGHT was upregulated in T cells. Similar transcript expression profiles were also seen in AD biopsies, and LTβR deletion in keratinocytes also protected mice from allergen-induced AD features. Moreover, in vitro, LIGHT upregulated a broad spectrum of genes in human keratinocytes that are clinical features of both PS and AD skin lesions. Our data suggest that agents blocking LIGHT activity might be useful for therapeutic intervention in PS as well as in AD.
+
+===== paper:doi:10.1101/2024.02.13.580059 =====
+TITLE: Chromatin structure and var2csa - a tango in regulation of var gene expression in the human malaria parasite, Plasmodium falciparum ?
+YEAR: 2024
+SOURCE_ID: doi:10.1101/2024.02.13.580059
+CITED_BY: 0
+
+ABSTRACT:
+Over the last few decades, novel methods have been developed to study how chromosome positioning within the nucleus may play a role in gene regulation. Adaptation of these methods in the human malaria parasite, Plasmodium falciparum , has recently led to the discovery that the three-dimensional structure of chromatin within the nucleus may be critical in controlling expression of virulence genes ( var genes). Recent work has implicated an unusual, highly conserved var gene called var2csa in contributing to coordinated transcriptional switching, however how this gene functions in this capacity is unknown. To further understand how var2csa influences var gene switching, targeted DNA double-strand breaks (DSBs) within the sub-telomeric region of chromosome 12 were used to delete the gene and the surrounding chromosomal region. To characterize the changes in chromatin architecture stemming from this deletion and how these changes could affect var gene expression, we used a combination of RNA-seq, Chip-seq and Hi-C to pinpoint epigenetic and chromatin structural modifications in regions of differential gene expression. We observed a net gain of interactions in sub-telomeric regions and internal var gene regions following var2csa knockout, indicating an increase of tightly controlled heterochromatin structures. Our results suggest that disruption of var2csa results not only in changes in var gene transcriptional regulation but also a significant tightening of heterochromatin clusters thereby disrupting coordinated activation of var genes throughout the genome. Altogether our result confirms a strong link between the var2csa locus, chromatin structure and var gene expression.
+
+===== paper:doi:10.1016/j.cell.2023.10.023 =====
+TITLE: Lineage-specific 3D genome organization is assembled at multiple scales by IKAROS.
+YEAR: 2023
+SOURCE_ID: doi:10.1016/j.cell.2023.10.023
+CITED_BY: 42
+
+ABSTRACT:
+A generic level of chromatin organization generated by the interplay between cohesin and CTCF suffices to limit promiscuous interactions between regulatory elements, but a lineage-specific chromatin assembly that supersedes these constraints is required to configure the genome to guide gene expression changes that drive faithful lineage progression. Loss-of-function approaches in B cell precursors show that IKAROS assembles interactions across megabase distances in preparation for lymphoid development. Interactions emanating from IKAROS-bound enhancers override CTCF-imposed boundaries to assemble lineage-specific regulatory units built on a backbone of smaller invariant topological domains. Gain of function in epithelial cells confirms IKAROS' ability to reconfigure chromatin architecture at multiple scales. Although the compaction of the Igκ locus required for genome editing represents a function of IKAROS unique to lymphocytes, the more general function to preconfigure the genome to support lineage-specific gene expression and suppress activation of extra-lineage genes provides a paradigm for lineage restriction.
+
+===== paper:doi:10.1016/j.isci.2023.108496 =====
+TITLE: Atypical B cells consist of subsets with distinct functional profiles.
+YEAR: 2023
+SOURCE_ID: doi:10.1016/j.isci.2023.108496
+CITED_BY: 26
+
+ABSTRACT:
+Atypical B cells are a population of activated B cells that are commonly enriched in individuals with chronic immune activation but are also part of a normal immune response to infection or vaccination. To better define the role of atypical B cells in the human adaptive immune response, we performed single-cell sequencing of transcriptomes, cell surface markers, and B cell receptors in individuals with chronic exposure to the malaria parasite Plasmodium falciparum , a condition known to lead to accumulation of circulating atypical B cells. We identified three previously uncharacterized populations of atypical B cells with distinct transcriptional and functional profiles and observed marked differences among these three subsets in their ability to produce immunoglobulin G upon T-cell-dependent activation. Our findings help explain the conflicting observations in prior studies regarding the function of atypical B cells and highlight their different roles in the adaptive immune response in chronic inflammatory conditions.
+
+===== paper:doi:10.1101/2023.11.17.567572 =====
+TITLE: Brd2 is dispensable for genome compartmentalization and replication timing.
+YEAR: 2023
+SOURCE_ID: doi:10.1101/2023.11.17.567572
+CITED_BY: 1
+
+ABSTRACT:
+Replication Timing (RT) refers to the temporal order in which the genome is replicated during S phase. Early replicating regions correlate with the transcriptionally active, accessible euchromatin (A) compartment, while late replicating regions correlate with the heterochromatin (B) compartment and repressive histone marks. Previously, widespread A/B genome compartmentalization changes were reported following Brd2 depletion. Since RT and A/B compartmentalization are two of the most highly correlated chromosome properties, we evaluated the effects of Brd2 depletion on RT. We performed E/L Repli-Seq following Brd2 depletion in the previously described Brd2 conditional degron cell line and found no significant alterations in RT after Brd2 KD. This finding prompted us to re-analyze the Micro-C data from the previous publication. We report that we were unable to detect any compartmentalization changes in Brd2 depleted cells compared to DMSO control using the same data. Taken together, our findings demonstrate that Brd2 depletion alone does not affect A/B compartmentalization or RT in mouse embryonic stem cells.
+
+===== paper:doi:10.1093/bioinformatics/btad592 =====
+TITLE: MuDCoD: multi-subject community detection in personalized dynamic gene networks from single-cell RNA sequencing.
+YEAR: 2023
+SOURCE_ID: doi:10.1093/bioinformatics/btad592
+CITED_BY: 1
+
+ABSTRACT:
+Motivation With the wide availability of single-cell RNA-seq (scRNA-seq) technology, population-scale scRNA-seq datasets across multiple individuals and time points are emerging. While the initial investigations of these datasets tend to focus on standard analysis of clustering and differential expression, leveraging the power of scRNA-seq data at the personalized dynamic gene co-expression network level has the potential to unlock subject and/or time-specific network-level variation, which is critical for understanding phenotypic differences. Community detection from co-expression networks of multiple time points or conditions has been well-studied; however, none of the existing settings included networks from multiple subjects and multiple time points simultaneously. To address this, we develop Multi-subject Dynamic Community Detection (MuDCoD) for multi-subject community detection in personalized dynamic gene networks from scRNA-seq. MuDCoD builds on the spectral clustering framework and promotes information sharing among the networks of the subjects as well as networks at different time points. It clusters genes in the personalized dynamic gene networks and reveals gene communities that are variable or shared not only across time but also among subjects. Results Evaluation and benchmarking of MuDCoD against existing approaches reveal that MuDCoD effectively leverages apparent shared signals among networks of the subjects at individual time points, and performs robustly when there is no or little information sharing among the networks. Applications to population-scale scRNA-seq datasets of human-induced pluripotent stem cells during dopaminergic neuron differentiation and CD4+ T cell activation indicate that MuDCoD enables robust inference for identifying time-varying personalized gene modules. Our results illustrate how personalized dynamic community detection can aid in the exploration of subject-specific biological processes that vary across time. Availability and implementation MuDCoD is publicly available at https://github.com/bo1929/MuDCoD as a Python package. Implementation includes simulation and real-data experiments together with extensive documentation.
+
+===== paper:doi:10.1038/s41467-023-38044-0 =====
+TITLE: 3D genome mapping identifies subgroup-specific chromosome conformations and tumor-dependency genes in ependymoma.
+YEAR: 2023
+SOURCE_ID: doi:10.1038/s41467-023-38044-0
+CITED_BY: 24
+
+ABSTRACT:
+Ependymoma is a tumor of the brain or spinal cord. The two most common and aggressive molecular groups of ependymoma are the supratentorial ZFTA-fusion associated and the posterior fossa ependymoma group A. In both groups, tumors occur mainly in young children and frequently recur after treatment. Although molecular mechanisms underlying these diseases have recently been uncovered, they remain difficult to target and innovative therapeutic approaches are urgently needed. Here, we use genome-wide chromosome conformation capture (Hi-C), complemented with CTCF and H3K27ac ChIP-seq, as well as gene expression and DNA methylation analysis in primary and relapsed ependymoma tumors, to identify chromosomal conformations and regulatory mechanisms associated with aberrant gene expression. In particular, we observe the formation of new topologically associating domains ('neo-TADs') caused by structural variants, group-specific 3D chromatin loops, and the replacement of CTCF insulators by DNA hyper-methylation. Through inhibition experiments, we validate that genes implicated by these 3D genome conformations are essential for the survival of patient-derived ependymoma models in a group-specific manner. Thus, this study extends our ability to reveal tumor-dependency genes by 3D genome conformations even in tumors that lack targetable genetic alterations.
+
+===== paper:doi:10.1038/s41598-023-32568-7 =====
+TITLE: Rewiring of the 3D genome during acquisition of carboplatin resistance in a triple-negative breast cancer patient-derived xenograft.
+YEAR: 2023
+SOURCE_ID: doi:10.1038/s41598-023-32568-7
+CITED_BY: 11
+
+ABSTRACT:
+Changes in the three-dimensional (3D) structure of the genome are an emerging hallmark of cancer. Cancer-associated copy number variants and single nucleotide polymorphisms promote rewiring of chromatin loops, disruption of topologically associating domains (TADs), active/inactive chromatin state switching, leading to oncogene expression and silencing of tumor suppressors. However, little is known about 3D changes during cancer progression to a chemotherapy-resistant state. We integrated chromatin conformation capture (Hi-C), RNA-seq, and whole-genome sequencing obtained from triple-negative breast cancer patient-derived xenograft primary tumors (UCD52) and carboplatin-resistant samples and found increased short-range (< 2 Mb) interactions, chromatin looping, formation of TAD, chromatin state switching into a more active state, and amplification of ATP-binding cassette transporters. Transcriptome changes suggested the role of long-noncoding RNAs in carboplatin resistance. Rewiring of the 3D genome was associated with TP53, TP63, BATF, FOS-JUN family of transcription factors and led to activation of aggressiveness-, metastasis- and other cancer-related pathways. Integrative analysis highlighted increased ribosome biogenesis and oxidative phosphorylation, suggesting the role of mitochondrial energy metabolism. Our results suggest that 3D genome remodeling may be a key mechanism underlying carboplatin resistance.
+
+===== paper:doi:10.1038/s41586-022-04685-2 =====
+TITLE: Intermittent PI3Kδ inhibition sustains anti-tumour immunity and curbs irAEs.
+YEAR: 2022
+SOURCE_ID: doi:10.1038/s41586-022-04685-2
+CITED_BY: 78
+
+ABSTRACT:
+Phosphoinositide 3-kinase δ (PI3Kδ) has a key role in lymphocytes, and inhibitors that target this PI3K have been approved for treatment of B cell malignancies 1-3 . Although studies in mouse models of solid tumours have demonstrated that PI3Kδ inhibitors (PI3Kδi) can induce anti-tumour immunity 4,5 , its effect on solid tumours in humans remains unclear. Here we assessed the effects of the PI3Kδi AMG319 in human patients with head and neck cancer in a neoadjuvant, double-blind, placebo-controlled randomized phase II trial (EudraCT no. 2014-004388-20). PI3Kδ inhibition decreased the number of tumour-infiltrating regulatory T (T reg ) cells and enhanced the cytotoxic potential of tumour-infiltrating T cells. At the tested doses of AMG319, immune-related adverse events (irAEs) required treatment to be discontinued in 12 out of 21 of patients treated with AMG319, suggestive of systemic effects on T reg cells. Accordingly, in mouse models, PI3Kδi decreased the number of T reg cells systemically and caused colitis. Single-cell RNA-sequencing analysis revealed a PI3Kδi-driven loss of tissue-resident colonic ST2 T reg cells, accompanied by expansion of pathogenic T helper 17 (T H 17) and type 17 CD8 + T (T C 17) cells, which probably contributed to toxicity; this points towards a specific mode of action for the emergence of irAEs. A modified treatment regimen with intermittent dosing of PI3Kδi in mouse models led to a significant decrease in tumour growth without inducing pathogenic T cells in colonic tissue, indicating that alternative dosing regimens might limit toxicity.
+===== END BUNDLE =====

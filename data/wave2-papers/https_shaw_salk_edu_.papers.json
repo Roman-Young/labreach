@@ -1,0 +1,166 @@
+{
+  "papers": [
+    {
+      "title": "AMPK: a master regulator of mitochondrial quality and quantity.",
+      "year": 2026,
+      "did": "Reviews how AMPK, an ancient energy-sensing kinase, controls mitochondrial fission, fusion, biogenesis, and mitophagy.",
+      "found": "AMPK drives fragmentation of the mitochondrial network by promoting fission and inhibiting fusion, increasing mitochondrial number while allowing isolation of dysfunctional fragments.",
+      "used": "Literature synthesis on AMPK signaling and mitochondrial biology.",
+      "why": "Proposes that mitochondrial quality control was an ancient, conserved function of AMPK, relevant to metabolic disease and aging.",
+      "anchor_quote": "It drives fragmentation of the network by promoting fission and inhibiting fusion, increasing mitochondrial number while allowing isolation of dysfunctional fragments from the network."
+    },
+    {
+      "title": "HDAC Inhibition Sensitizes Pancreatic Tumors to DNA Damage by Global Redistribution of the Transcriptional Machinery",
+      "year": 2026,
+      "did": "Investigated how Class I HDACs regulate the DNA damage response in pancreatic cancer and developed a tumor-selective nanoparticle for HDAC inhibitor delivery.",
+      "found": "HDAC inhibition heightens DNA damage and sensitizes PDAC to diverse DNA-damaging agents; entinostat-loaded bottlebrush prodrug nanoparticles achieved tumor-selective HDAC inhibition with reduced systemic toxicity.",
+      "used": "Entinostat (HDAC1/2 inhibitor), bottlebrush prodrug nanoparticles, ChIP for H3K27ac/BRD4/Pol II occupancy at DDR genes.",
+      "why": "Offers a precision drug-delivery strategy to overcome the systemic toxicity that has limited clinical use of HDAC inhibitors in pancreatic cancer.",
+      "anchor_quote": "HDAC inhibition by entinostat shifts the balance of H3K27 acetylation preferentially towards intergenic regions, diverting BRD4 and Pol II from promoters, thereby suppressing DDR gene expression."
+    },
+    {
+      "title": "Med14 phosphorylation shapes genomic response to GLP-1 agonists.",
+      "year": 2026,
+      "did": "Used a proteomic screen to identify Med14, a Mediator complex subunit, as a mediator of chronic GLP-1 receptor agonist effects on pancreatic beta cells.",
+      "found": "Exendin-4 stimulates sustained Med14 phosphorylation at Ser983; mutating this site blocked Exendin-4's gene-regulatory effects and produced higher alpha-to-beta cell ratios.",
+      "used": "Proteomic screening, Ser983-mutant primary mouse islets, GLP-1 receptor agonists (Exendin-4).",
+      "why": "Reveals a molecular mechanism by which GLP-1 drugs reshape beta cell gene expression, relevant to diabetes treatment.",
+      "anchor_quote": "Exposure to Exendin-4 and other GLP-1 receptor agonists stimulates sustained phosphorylation of Med14 at Ser983, which corresponds to a conserved PKA recognition site."
+    },
+    {
+      "title": "Synthesis and Characterization of ULK1/2 Kinase Inhibitors That Inhibit Autophagy and Upregulate Expression of Major Histocompatibility Complex I for the Treatment of Non-Small Cell Lung Cancer.",
+      "year": 2026,
+      "did": "Designed, synthesized, and characterized two new dual ULK1/2 kinase inhibitors for non-small cell lung cancer.",
+      "found": "Both compounds are cytotoxic against NSCLC cells and inhibit autophagic flux; one increases MHC class I expression, which may help overcome immunotherapy resistance.",
+      "used": "Medicinal chemistry synthesis, autophagic flux assays in A549 cells, MHC class I expression analysis.",
+      "why": "Supports ULK1/2 inhibitors as a cancer treatment strategy, alone or combined with immunotherapy.",
+      "anchor_quote": "SBP-5147 effectively modulates autophagy and increases the expression of major histocompatibility complex (MHC) class I in NSCLC cells, which may support the rationale for ULK1/2 inhibition as a strategy to overcome resistance to immunotherapy."
+    },
+    {
+      "title": "Modeling lipid homeostasis using stable isotope tracing and flux analysis.",
+      "year": 2026,
+      "did": "Applied stable isotope tracing, mass spectrometry, and isotopologue modeling (Lipid-MFA) to measure lipid metabolic fluxes in lung cancer models.",
+      "found": "Found decreased fatty acid synthase and VLCFA elongation fluxes with increased sphingolipid recycling in p53-deficient versus LKB1-deficient NSCLC tumors.",
+      "used": "Stable isotope tracing, liquid chromatography-high-resolution mass spectrometry, precision-cut lung slice culture.",
+      "why": "Provides a quantitative tool for studying lipid metabolism dysregulation across disease states.",
+      "anchor_quote": "Using Lipid-MFA, we observed decreased fatty acid synthase and very long-chain fatty acid (VLCFA) elongation fluxes, along with increased sphingolipid recycling, in p53-deficient versus liver kinase B1 (LKB1)-deficient NSCLC tumors using precision-cut lung slice culture."
+    },
+    {
+      "title": "The AMPK Pathway: Molecular Rejuvenation of Metabolism and Mitochondria.",
+      "year": 2025,
+      "did": "Reviews advances in how AMPK modulates core mitochondrial life-cycle processes and restores mitochondrial health.",
+      "found": "AMPK homologs are found across all eukaryotic species and act as an ancient sensor of low cellular energy.",
+      "used": "Literature review of AMPK signaling across eukaryotic species.",
+      "why": "Frames AMPK as a central, evolutionarily conserved regulator linking energy stress sensing to mitochondrial rejuvenation.",
+      "anchor_quote": "Homologs of AMP-activated protein kinase (AMPK) are found in all eukaryotic species and serve as an ancient sensor of conditions of low cellular energy."
+    },
+    {
+      "title": "Leveraging autophagy and pyrimidine metabolism to target pancreatic cancer",
+      "year": 2025,
+      "did": "Studied pancreatic cancer cells with acquired resistance to autophagy inhibitors to uncover the metabolic adaptations that bypass autophagy inhibition.",
+      "found": "Resistant cells preferentially salvage pyrimidines instead of synthesizing them de novo, increasing sensitivity to pyrimidine analogues like gemcitabine.",
+      "used": "PDA cell lines with acquired resistance to autophagy inhibitors, metabolic profiling of TCA intermediates and nucleotide pools.",
+      "why": "Identifies a metabolic vulnerability that can be exploited with combination therapy for pancreatic cancer.",
+      "anchor_quote": "Cells adapting to loss of autophagy preferentially salvage pyrimidines to replenish these pools instead of synthesizing them de novo."
+    },
+    {
+      "title": "Med14 phosphorylation shapes genomic response to GLP-1 Agonist",
+      "year": 2025,
+      "did": "Performed a proteomic screen to identify Med14 as a Mediator complex subunit mediating long-term GLP-1 analog effects on pancreatic beta cells.",
+      "found": "PKA-mediated phosphorylation of Med14 at Ser983 is essential for maintaining enhancers that drive beta cell-specific gene induction; mutating this site decreased beta cell numbers.",
+      "used": "Proteomic screening, primary mouse beta cells, Exendin-4 treatment.",
+      "why": "Explains the molecular basis for the long-term beneficial effects of GLP-1 receptor agonists on beta cell function, relevant to diabetes therapy.",
+      "anchor_quote": "Phosphorylation of Med14 by PKA is essential for maintenance of enhancers that drive induction of beta cell-specific and diabetes-linked genes."
+    },
+    {
+      "title": "FAM43A coordinates mtDNA replication and mitochondrial biogenesis in response to mtDNA depletion.",
+      "year": 2025,
+      "did": "Used mtDNA-depleted IMR90 cells as a model system to identify FAM43A as an early responder to mitochondrial DNA depletion.",
+      "found": "Depletion of FAM43A activates a mitochondrial biogenesis program, increasing mitochondrial mass and mtDNA copy number via CHK2-mediated upregulation of p53R2.",
+      "used": "mtDNA-depleted IMR90 cell model, CHK2-dependent signaling analysis.",
+      "why": "Reveals a checkpoint-like mechanism limiting mitochondrial biogenesis, relevant to human intergenomic signaling and mitochondrial disease.",
+      "anchor_quote": "We identified FAM43A, a largely uncharacterized protein, as a CHK2-dependent early responder to mtDNA depletion."
+    },
+    {
+      "title": "Transcriptional repression by HDAC3 mediates T cell exclusion from Kras mutant lung tumors.",
+      "year": 2024,
+      "did": "Used genetic and pharmacological HDAC3 inhibition and mouse models to study HDAC3's role in the immune microenvironment of Kras-mutant lung tumors.",
+      "found": "HDAC3 inhibition combined with trametinib enhanced T cell recruitment into lung tumors, and T cells were shown to contribute to tumor growth control under this combination treatment.",
+      "used": "Genetically engineered mouse models (GEMMs), genetic/pharmacological HDAC3 inhibition, entinostat plus trametinib combination treatment.",
+      "why": "Identifies HDAC3 as a druggable target to overcome T cell exclusion and improve immunotherapy response in Kras-mutant lung cancer.",
+      "anchor_quote": "Finally, we showed that T cells contribute to in vivo tumor growth control in the presence of entinostat and trametinib combination treatment."
+    },
+    {
+      "title": "Modeling compound lipid homeostasis using stable isotope tracing",
+      "year": 2024,
+      "did": "Applied stable isotope tracing, mass spectrometry, and isotopologue modeling (CL-MFA) to quantify compound lipid metabolic fluxes in lung cancer models.",
+      "found": "Resolved LKB1-mediated regulation of sphingolipid recycling and identified previously uncharacterized isozyme specificity of ceramide synthase inhibitors.",
+      "used": "Stable isotope tracing, liquid chromatography-high-resolution mass spectrometry, precision-cut lung slice cultures.",
+      "why": "Provides a tool (CL-MFA) to discover biological function and mechanisms in membrane lipid metabolism relevant to cancer.",
+      "anchor_quote": "Here, we resolve liver kinase B1 (LKB1)-mediated regulation of sphingolipid recycling in NSCLC cells and precision-cut lung slice cultures."
+    },
+    {
+      "title": "EGFR-driven lung adenocarcinomas coopt alveolar macrophage metabolism and function to support EGFR signaling and growth.",
+      "year": 2024,
+      "did": "Investigated how EGFR-driven lung adenocarcinoma cells reprogram tumor-associated alveolar macrophages via GM-CSF-PPARγ signaling.",
+      "found": "Blocking PPARγ in tumor-associated alveolar macrophages combined with statin therapy further suppressed tumor progression and increased proinflammatory immune responses.",
+      "used": "Mouse models of EGFR-mutant lung adenocarcinoma, GM-CSF-PPARγ signaling analysis, statin combination therapy.",
+      "why": "Reveals new therapeutic combinations for immunotherapy-resistant EGFR-mutant lung adenocarcinoma.",
+      "anchor_quote": "In the absence of TA-AM metabolic support, LUAD cells compensate by increasing cholesterol synthesis, and blocking PPARγ in TA-AMs simultaneous with statin therapy further suppresses tumor progression and increases proinflammatory immune responses."
+    },
+    {
+      "title": "Metabolic orchestration of cell death by AMPK-mediated phosphorylation of RIPK1.",
+      "year": 2023,
+      "did": "Investigated how AMPK regulates RIPK1-mediated cell death under metabolic stress using genetic mouse models.",
+      "found": "AMPK inhibits RIPK1 by phosphorylation at Ser415 to suppress energy stress-induced cell death; RIPK1 inactivation protected against ischemic injury in AMPK-deficient mice.",
+      "used": "TRAIL receptor signaling analysis, Ampk-deficient and RIPK1 S415A mutant mice, ischemic injury model.",
+      "why": "Reveals a crucial metabolic checkpoint integrating metabolism, cell death, and inflammation, with implications for treating ischemic injury.",
+      "anchor_quote": "AMPK inhibited RIPK1 by phosphorylation at Ser 415 to suppress energy stress-induced cell death."
+    },
+    {
+      "title": "Inter-organelle cross-talk supports acetyl-coenzyme A homeostasis and lipogenesis under metabolic stress.",
+      "year": 2023,
+      "did": "Used 13C isotope tracing in cell lines deficient in mitochondrial (ACLY), cytosolic (ACSS2), and peroxisomal (PEX5) acetyl-CoA pathways to study acetyl-CoA homeostasis.",
+      "found": "Peroxisomal oxidation of exogenous lipids is a major source of acetyl-CoA for lipogenesis and histone acetylation in cells lacking ACLY.",
+      "used": "13C isotope tracing, ACLY/ACSS2/PEX5 knockout cell lines, metabolic tracing.",
+      "why": "Highlights inter-organelle metabolic cross-talk as a mechanism supporting cell survival under nutrient fluctuation, relevant to cancer metabolism.",
+      "anchor_quote": "Metabolic tracing and PEX5 knockout studies link peroxisomal oxidation of exogenous lipids as a major source of acetyl-CoA for lipogenesis and histone acetylation in cells lacking ACLY, highlighting a role for inter-organelle cross-talk in supporting cell survival in response to nutrient fluctuations."
+    },
+    {
+      "title": "Induction of lysosomal and mitochondrial biogenesis by AMPK phosphorylation of FNIP1.",
+      "year": 2023,
+      "did": "Demonstrated that AMPK directly phosphorylates five conserved serine residues in FNIP1 in response to mitochondrial damage.",
+      "found": "FNIP1 phosphorylation is required for AMPK to induce nuclear translocation of TFEB and TFEB-dependent increases of PGC1α and ERRα mRNAs.",
+      "used": "AMPK phosphorylation assays, FNIP1-FLCN complex analysis, TFEB nuclear translocation studies.",
+      "why": "Reveals how mitochondrial damage triggers sequential waves of lysosomal and mitochondrial biogenesis via the AMPK-FNIP1-TFEB axis.",
+      "anchor_quote": "We demonstrate that AMPK directly phosphorylates five conserved serine residues in folliculin-interacting protein 1 (FNIP1), suppressing the function of the folliculin (FLCN)-FNIP1 complex."
+    },
+    {
+      "title": "EGFR+ lung adenocarcinomas coopt alveolar macrophage metabolism and function to support EGFR signaling and growth",
+      "year": 2023,
+      "did": "Investigated mechanisms by which EGFR-mutant lung adenocarcinoma cells reprogram tumor-associated alveolar macrophages via GM-CSF-PPARγ signaling.",
+      "found": "Increased GM-CSF-PPARγ signaling drives tumor-associated alveolar macrophage properties, and blocking this axis suppresses cholesterol efflux to tumor cells and impairs EGFR phosphorylation.",
+      "used": "Mouse models of EGFR-mutant lung adenocarcinoma, GM-CSF-PPARγ signaling analysis, statin combination therapy.",
+      "why": "Identifies GM-CSF-PPARγ signaling as a therapeutic target to restore immunotherapy sensitivity in EGFR-mutant lung adenocarcinoma.",
+      "anchor_quote": "TA-AM properties are driven by increased GM-CSF—PPARγ signaling and inhibition of airway GM-CSF or PPARγ in TA-AMs suppresses cholesterol efflux to tumor cells, which impairs EGFR phosphorylation and restrains LUAD progression."
+    },
+    {
+      "title": "HDAC3 is critical in tumor development and therapeutic resistance in Kras-mutant non-small cell lung cancer.",
+      "year": 2023,
+      "did": "Used genetically engineered mouse models to determine the in vivo role of HDAC3 in Kras-mutant lung cancer and its interaction with a MEK inhibitor.",
+      "found": "HDAC3 is required for lung tumor growth, directs FGFR1 expression via NKX2-1, and combining the HDAC1/3 inhibitor entinostat with trametinib produced therapeutic benefit in Kras/LKB1-mutant tumors.",
+      "used": "Genetically engineered mouse models (GEMMs), transcriptomics, entinostat/trametinib combination treatment.",
+      "why": "Establishes HDAC3 as a therapeutic target and identifies a combination therapy that overcomes trametinib resistance in Kras-mutant lung cancer.",
+      "anchor_quote": "We found that the combination of entinostat plus trametinib treatment elicits therapeutic benefit in the Kras/LKB1 GEMM."
+    },
+    {
+      "title": "LKB1-Dependent Regulation of TPI1 Creates a Divergent Metabolic Liability between Human and Mouse Lung Adenocarcinoma.",
+      "year": 2023,
+      "did": "Used phosphoproteomics and metabolomics in human and mouse engineered cell lines and mouse models to compare TPI1 regulation between species.",
+      "found": "In human LUAD, TPI1 activity is regulated by SIK-mediated phosphorylation at Ser21 in an LKB1-dependent manner, while in mice this residue is instead regulated by oxidation, independent of LKB1.",
+      "used": "Phosphoproteomics, metabolomics, genetically engineered human cell lines and mouse models (GEMM).",
+      "why": "Explains a species-specific metabolic liability from LKB1 loss, cautioning about the limits of mouse models for studying human lung cancer.",
+      "anchor_quote": "In hLUAD, TPI1 activity is regulated via phosphorylation at Ser21 by the salt inducible kinases (SIK) in an LKB1-dependent manner, modulating flux between the completion of glycolysis and production of glycerol lipids."
+    }
+  ]
+}
