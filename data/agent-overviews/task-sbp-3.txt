@@ -1,0 +1,236 @@
+########## DISTILL OVERVIEWS — sbp batch 4/5 (12 labs) ##########
+
+For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad
+with no field background could read to decide if they want to email the lab. Say WHAT the lab studies,
+HOW (methods/approach), and WHY it matters. Ground it ONLY in that lab's provided text — do NOT invent
+specifics, numbers, or techniques not present. If a lab's text is too thin/administrative to describe
+its research, set that lab's value to "" (empty) rather than padding — an honest gap beats a fake overview.
+
+Write your answer as a JSON object {"<exact lab name>": "<overview or ''>", ...} to this ABSOLUTE path:
+  /home/roman/agent/codebases/labreach/data/agent-overviews/sbp-batch3.json
+
+===== LAB: Evan Snyder MD, PhD =====
+Evan Y. Snyder earned his MD and PhD (in neuroscience) from the University of Pennsylvania in 1980 as a member of NIH's Medical Scientist Training Program (MSTP). He had also studied psychology and linguistics at the University of Oxford. After moving to Boston in 1980, he completed residencies in pediatrics and neurology as well as a clinical fellowship in Neonatal-Perinatal Medicine at Children's Hospital-Boston, Harvard Medical School. He also served as Chief Resident in Medicine (1984-1985) and Chief Resident in Neurology (1987) at Children's Hospital-Boston. In 1989, he became an attending physician in the Department of Pediatrics (Division of Newborn Medicine) and Department of Neurology at Children's Hospital-Boston, Harvard Medical School. From 1985-1991, concurrent with his clinical activities, he conducted postdoctoral research as a fellow in the Department of Genetics, Harvard Medical School. In 1992, Dr. Snyder was appointed an instructor in neurology (neonatology) at Harvard Medical School and was promoted to assistant professor in 1996. He maintained lab spaces in both Children's Hospital-Boston and at Harvard Institutes of Medicine/Beth-Israel Deaconess Medical Center. In 2003, Dr. Snyder was recruited to Sanford Burnham Prebys as Professor and Director of the Program in Stem Cell and Regenerative Biology. He then inaugurated the Stem Cell Research Center (serving as its founding director) and initiated the Southern California Stem Cell Consortium. Dr. Snyder is a Fellow of the American Academy of Pediatrics (FAAP). He also received training in Philosophy and Linguistics at Oxford University.
+
+Related Disease Alzheimer's Disease, Amyotrophic Lateral Sclerosis (Lou Gehrig's Disease), Arthritis, Brain Cancer, Brain Injury, Breast Cancer, Cancer, Childhood Diseases, Congenital Disorders of Glycosylation, HIV-Associated Dementia, Huntington's Disease, Multiple Sclerosis, Muscular Dystrophy, Neurodegenerative and Neuromuscular Diseases, Neurological and Psychiatric Disorders, Parkinson's Disease, Peripheral Vascular Disease, Skin Cancer and Melanoma, Spinal Cord Injury, Stroke, Traumatic Injury
+
+The Snyder Lab studies stem cell biology, with the goal of understanding normal development, tissue homeostasis, and recovery from injury and disease. A major focus is neural stem cells (NSCs), which can self-renew and differentiate into neurons, astrocytes, and oligodendrocytes. These properties make NSCs ideal for repair of damage due to injury or disease, but they also make them susceptible to transformation into malignant cancers.
+
+We believe the study of stem cell biology will provide insights into many areas: developmental biology, homeostasis in the normal adult, and recovery from injury. Indeed, past and current research has already produced data in these areas that would have been difficult or impossible via any other vehicle. We have engaged in a multidisciplinary approach, simultaneously exploring the basic biology of stem cells, their role throughout the lifetime of an individual, as well as their therapeutic potential. Taken together, these bodies of knowledge will glean the greatest benefit for scientists and, most importantly, for patients. All of our research to date has been preformed in animal models with the ultimate goal of bringing them to clinical trials as soon as possible. Stem cells offer an intriguing mix of controversy, discovery, and hope. Politicians are charged with dealing with the controversial facets of stem cells, as we prefer to focus our energy on their potential for discovery and hope.
+
+===== LAB: Charles Spruck PhD =====
+Dr. Spruck’s laboratory is focused on developing new, effective, and non-toxic treatments for patients with advanced cancers. The lab focuses on defining the molecular networks that regulate cancer cell division and drive metastasis progression. Recent studies have focused on viral mimicry as a therapeutic approach in cancer, which involves the activation of dormant endogenous retroviruses and retrotransposons in cancer cells to enhance immunogenicity and the effectiveness of immune checkpoint blockade immunotherapy and DNA damaging therapies. The laboratory utilizes various biochemical and molecular approaches, CRISPR gene editing, and animal models of cancer. An emphasis is on studies of breast, lung, prostate, and brain tumors.
+
+Targeting metastatic tumors: Metastasis is a major cause of mortality in cancer. Through genomic screens and biochemical studies, we are identifying novel molecular pathways that drive cancer cell motility, invasion, and metastasis. Recently, we identified a novel molecular axis, FBXO7/EYA2-SCF(FBXW7), that promotes cancer cell motility and cancer stem cell self-renewal and suppresses cancer cell immunogenicity. Targeting this axis prevented metastasis progression, reduced the cancer stem cell population, and stimulated anti-tumor immune responses in preclinical mouse breast cancer models.
+
+Phenomena or Processes Cancer Biology, Cancer Epigenetics, Cell Biology, Cell Cycle Progression, Cell Signaling, Genomic Instability, Innate Immunity, Metastasis, Posttranslational Modification, Proteolytic Pathways
+
+Developing viral mimicry therapeutic approaches for cancer: Approximately 45% of the human genome is composed of repetitive elements (REs), including endogenous retroviruses and retrotransposons, that are normally transcriptionally silenced in somatic cells. Recent studies suggest that the transcriptional awakening of ERVs/retrotransposons beyond a threshold level of tolerance in cancer cells induces antiviral responses that can enhance the efficacy of certain therapies, including immunotherapy. We recently discovered a novel epigenetic regulatory pathway, FBXO44/SUV39H1, that is essential for ERV/retrotransposon silencing in cancer cells. Preclinical studies showed that FBXO44/SUV39H1 inactivation induces viral mimicry in cancer cells, leading to increased immunogenicity, decreased tumorigenicity, and enhanced the efficacy of immune checkpoint blockade therapy. We are currently exploring therapeutic approaches to target this pathway, and others like it, to prevent tumor growth and enhance immunotherapy response. We are also exploring the role of reactivated REs in human diseases.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Charles Spruck earned his BS in Biology at UCLA and PhD in Molecular Biology at the University of Southern California. He worked as a postdoctoral fellow at The Scripps Research Institute in La Jolla and was recruited to the Sidney Kimmel Cancer Center in San Diego as an Assistant Professor in 2003. He joined Sanford Burnham Prebys in 2010.
+
+&#8220;Despite recent advances in treatment, patients with advanced metastatic cancers have few treatment options. Our lab is focused on developing new effective and non-toxic treatments for these patients.&#8221;
+
+===== LAB: Xueqin (Sherine) Sun PhD =====
+Phenomena or Processes Adapter Proteins, Adult/Multipotent Stem Cells, Aging, Angiogenesis, Apoptosis and Cell Death, Bcl-2 Family, Cancer Biology, Cancer Epigenetics, Cell Adhesion and Migration, Cell Biology, Cell Cycle Progression, Cell Differentiation, Cell Motility, Cell Proliferation, Cell Signaling, Cell Surface Receptors, Cellular Senescence, Chromosome Dynamics, Combinatorial Therapies, Cytokines, Development and Differentiation, Disease Therapies, DNA Damage Checkpoint Function, Embryonic/Pluripotent Stem Cells, Epigenetics, Gene Regulation, Genomic Instability, Growth Factors, Hematopoiesis, Host Defense, Host-Pathogen Interactions, Inflammation, Innate Immunity, Kinase Inhibitors, Metastasis, Neurogenesis, Oncogenes, Phosphorylation, Posttranslational Modification, Receptor Tyrosine Kinases, Serine/Threonine Kinases, Signal Transduction, TNF-Family, Transcription Factors, Transcriptional Regulation, Tumor Microenvironment, Tumorigenesis, Tyrosine Kinases, Ubiquitin, Ubiquitin Protease System and Ubiquitin-like Proteins
+
+Techniques and Technologies 3D Image Analysis, 3D Reconstructions, Biochemistry, Bioinformatics, Cell Biology, Cellular and Molecular Imaging, Chemical Biology, Computational Biology, Confocal Microscopy, Correlative Light and Electron Microscopy, Drug Delivery, Drug Discovery, Drug Efficacy, Electron Microscopy, Fluorescence Microscopy, Fragment-Based Drug Design, Gene Expression, Gene Knockout (Complete and Conditional), Gene Silencing, Genetics, Genomics, High Content Imaging, High-Throughput/Robotic Screening, In vivo Modeling, Live Cell Imaging, Live Imaging, Mass Spectrometry, Microscopy and Imaging, Molecular Biology, Molecular Genetics, Nucleic Acid Synthesis, Protein-Protein Interactions, Protein-Small Molecule Interactions, Proteomics, Rational Drug Design, RNA Interference (RNAi), Scanning Cytometry, Small Molecule Compounds, Transgenic Organisms, Transplantation
+
+Precise gene expression (the interpretation of DNA) is essential for almost all biological processes, and understanding gene regulation is one of the most pivotal frontiers in biological research under both health and disease circumstances. Gene expression is mainly regulated at genetic (with changes of DNA sequence) and epigenetic (without changing DNA sequence) levels. And gene dysregulation can lead to various health conditions and diseases, including developmental disorders, aging, and cancer. The overarching goal of Sun Lab is to uncover driving genetic and epigenetic alterations involved in cancer, to understand how developmental pathways and aging process impact cancer progression, and to identify mechanisms of action for developing more effective therapeutic strategies.
+
+Research Models Bacteria, Cultured Cell Lines, Human Adult/Somatic Stem Cells, Human Cell Lines, Mouse, Mouse Cell Lines, Mouse Embryonic Stem Cells, Mouse Somatic Stem Cells, Primary Cells, Primary Human Cells
+
+“My lab is interested in studying how DNA or the machinery that interprets it leads to the transformation of normal cells into cancerous cells and concurrently, their specific vulnerabilities. Identifying these intrinsic vulnerabilities and targeting them properly is profoundly important to developing effective cancer therapies.”
+
+Related Disease Aging-Related Diseases, Brain Cancer, Cancer, Childhood Diseases, Immune Disorders, Inflammatory/Autoimmune Disease, Leukemia/Lymphoma
+
+Anatomical Systems and Sites Brain, General Cell Biology, Hematopoietic System, Immune System and Inflammation, Nervous System
+
+===== LAB: Kevin Tharp PhD =====
+Phenomena or Processes Actin Cytoskeleton, Adipocyte Differentiation, Aging, Apoptosis and Cell Death, Cancer Biology, Cancer Metabolism, Cancer-Associated Glycans, Cell Adhesion and Migration, Cell Differentiation, Cell Signaling, Combinatorial Therapies, Damage-Associated Molecular Patterns, Extracellular Matrix, Glycosylation, Inflammation, Innate Immunity, Integrins, Metabolic Networks, Mitochondrial Biology, Organic/Synthetic/Medicinal Chemistry, Tumor Microenvironment, Tumorigenesis
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Kevin Tharp studies the interplay between mitochondrial metabolism and the physical properties of the tumor microenvironment, using genetically engineered mouse models and bioengineered human tumor models to define the mitochondrial programming unique to cancer cells in the tumor microenvironment.
+
+His goal is to develop new therapies that block the metabolic adaptations that cancer cells use to metastasize, a major cause of cancer-associated mortality.
+
+“I study how cells make decisions about their metabolic programming, which I expect will enable us to develop new therapeutics against metastatic tumor cells.”
+
+He has received meritorious funding awards from the Sandler Foundation and the National Institutes of Health/National Cancer Institute for his postdoctoral research.
+
+Anatomical Systems and Sites Adipose Tissue, General Cell Biology, Immune System and Inflammation, Mammary Gland, Vasculature
+
+Study from the Tharp lab finds nearby conditions and nutrients govern how cancer cells avoid immune cells, and how to&#8230;
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+Tharp previously worked as a postdoctoral scholar in the Center for Bioengineering & Tissue Regeneration at UCSF Health.
+
+He completed his PhD in metabolic biology at UC Berkeley and his Bachelor of Science degree in biochemistry and molecular biology at UC Santa Cruz, where he graduated with honors and the Dean’s Award in Chemistry.
+
+Neuroinflammation is the body's response to injury, infection, toxins, or autoimmune dysfunction in the brain and spinal cord. Institute researchers&#8230;
+
+Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
+
+===== LAB: Xiao Tian PhD =====
+The Tian lab studies the fundamental mechanisms of aging and their roles in the onset of age-related diseases. Our recent research in epigenetic reprogramming and aging clocks indicates that the progressive loss of epigenetic information over time is a key driver of aging. The current research of the lab focuses on understanding how the epigenetic landscape is set up and maintained and investigating why the maintenance system fails which leads to aging and related diseases including cancer and neurodegeneration. Building on this, our ultimate goal is to develop safe and effective rejuvenation strategies to counteract aging.
+
+Dr. Xiao Tian participates in the Degenerative Diseases Program and the Cancer Genome and Epigenetics Program at Sanford Burnham Prebys. He started his lab in 2024 to understand the fundamental biology of aging and its contribution to age-related diseases. He joined the Institute after his postdoctoral research in Dr. David Sinclair’s lab at Harvard Medical School where he co-wrote the Information Theory of Aging. He obtained his BS from Shandong University and his PhD from the University of Rochester where he worked with Dr. Vera Gorbunova.
+
+Uncovering the first anti-cancer and longevity mechanism of the naked mole rat We identified high-molecular-mass hyaluronan (HMM HA) as a critical mechanism for the cancer resistance of the naked mole-rat cells . Furthermore, we found that this anti-cancer and longevity mechanism from naked mole rats can be integrated into other species , highlighting the significant implications of identifying new mechanisms from long-lived species. Our goal is to decipher how long-lived organisms control the pace of aging and deter age-related diseases.
+
+Techniques and Technologies Bioinformatics, Epigenomics, Gene Expression, Gene Knockout (Complete and Conditional), High-Throughput/Robotic Screening, Mouse Behavioral Analysis
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Epigenetic reprogramming as a strategy to counteract aging and age-related diseases We illustrated that epigenetic information loss as a result of DNA damage repair is a key driver of aging . One interventional strategy is to recover the lost epigenetic information, such as through reprogramming. We revealed that epigenetic reprogramming is an effective strategy to counteract aging and even potentially modify the trajectory of age-related diseases including glaucoma . We are currently testing other disease settings.
+
+New and rapidly developing technologies, such as cryo-electron (cryo-EM) and artificial intelligence, are providing the tools to revolutionize biomedical research,&#8230;
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+The Institute recently welcomed members of the community for an engaging afternoon focused on the intersection of aging and cancer&#8230;.
+
+===== LAB: Alessandro Vasciaveo PhD =====
+Vasciaveo’s laboratory focuses on leveraging massive datasets, including from single-cell biology, and advanced machine learning to uncover critical insights into how cells communicate and function in healthy and diseased states, and to identify key players of disease programs that can serve as precise therapeutic targets. This approach will allow for more precise treatments tailored to each patient’s unique biology, pushing the boundaries of traditional medicine. These efforts have the potential to significantly accelerate the process of identifying new therapies for challenging diseases.
+
+Dr. Vasciaveo joined Sanford Burnham Prebys as an assistant professor in computational biology and artificial intelligence in fall 2024. Prior to joining the institute, he was an associate research scientist at Columbia University in New York City, in the laboratory of Andrea Califano — a pioneer in the field of systems biology and in the reverse engineering and interrogation of gene regulatory networks.
+
+Dr. Vasciaveo's overarching research interests revolve around two highly interdependent fields, including the identification and characterization of cancer biomarkers and data/computation-driven drug discovery. He is particularly intrigued by the complex cellular mechanisms underpinning therapy resistance, a critical challenge in the field of oncology. To address this, he specializes in developing Machine Learning (ML) models tailored to the model-based analysis of single-cell ‘omics data, especially using regulatory and signaling networks. These models have enabled us to unravel cellular aberrations and responses to therapy with unprecedented precision.
+
+Vasciaveo earned his undergraduate and master’s degrees in Computer Engineering at the Polytechnic University of Turin in Italy. He completed his doctoral degree in Systems and Control Engineering at the Polytechnic University of Turin while conducting research as a visiting scientist at the German Cancer Research Center and Columbia University.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+Dr. Vasciaveo's ultimate aim is to translate these insights into actionable solutions that drive clinically-relevant advancements in cancer therapy. For instance, he has been privileged to collaborate on several transformative projects, ranging from the computational identification of actionable targets and compounds capable of disrupting the regulatory programs driving lethal cancers to employing computational techniques to pinpoint chemical compounds and elucidate their mechanisms of action. These discoveries hold significant promise as potential therapies for combatting aggressive tumors, including those driven by the MYC proto-oncogene.
+
+New Sanford Burnham Prebys scientist Alessandro Vasciaveo uses computational expertise to deepen understanding of diseases.
+
+===== LAB: Kristiina Vuori MD, PhD =====
+Dr. Vuori's research is aimed at unraveling the cell mechanisms of the most life-threatening aspect of cancer, which is cancer metastasis. Metastasis is responsible for nearly all deaths in cancer patients, and understanding of the mechanisms that turn a cancer from a locally growing tumor into highly metastatic cancer cells will provide clues how to prevent this step in cancer progression. All cells in our body stick to one another and to the packaging material, or extracellular matrix, around them. This adhesion is essential for cell survival; if cells become detached from their microenvironment, they will die through a process known as apoptosis. This phenomenon, which is called adhesion dependency of survival, is one of the safeguards that maintain the integrity and normal function of tissues, and prevent cells from becoming cancerous. Normal cells cannot detach from their tissue and establish themselves somewhere else, because they will die on the way. Yet cancer cells somehow get around this requirement; they trespass aggressively into other tissues and metastasize to distant sites in the body without dying. Dr. Vuori’s work is aimed at identifying the molecular mechanisms that in normal cells makes them adhesion-dependent; false action of the very same mechanisms is likely to be the key step in allowing cancer cells to metastasize.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Recent Vuori Lab News Feb 1, 2024 New genome mapping tool may uncover secrets for treating blood cancers The outlook for patients with acute myeloid leukemia (AML), a deadly set of blood cancers that is difficult to treat,&#8230;
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+Friends and supporters of Sanford Burnham Prebys Medical Discovery Institute (SBP) gathered under the stars on Harbor Island in downtown&#8230;
+
+During a special end-of-the-year gathering, Reena Horowitz was honored for her hard work and dedication to Sanford Burnham Prebys Medical&#8230;
+
+SBP has been chosen as a dedicated center for the Experimental Therapeutics (NExT) Program Chemical Biology Consortium (CBC), centered at&#8230;
+
+On Friday, August 28, the Mayor of San Diego, Kevin Faulconer, visited SBP to learn more about how our Institute is&#8230;
+
+Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
+
+SBP’s Cancer Center Open House on November 9, 2017 enlightened visitors from the community on the topic of “The Science&#8230;
+
+===== LAB: Eric Wang PhD =====
+Dysregulation of transcriptional circuits is a common hallmark of disease, and in particular is found in both tumor and host immune cells in cancer. Eric’s lab is focusing on developing and using chemical tools to modulate the activity of key transcriptional regulators of both tumor cells and host immune cells, with a long-term goal of identifying new therapeutic approaches.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Eric has a broad background in chemical biology, with specific training and expertise in kinase inhibitors and targeted protein degradation, an emerging modality in which small molecules recruit E3 ligase complexes to target proteins to induce their ubiquitination and subsequent proteasomal degradation. He also has experience in pharmacological modulation of immune cells to improve anti-tumor immunity. He received his PhD from the University of California San Francisco and postdoctoral training at the Dana-Farber Cancer Institute.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+Sanford Burnham Prebys is pleased to congratulate Assistant Professor Eric Wang, PhD, on being named Educator of the Year at&#8230;
+
+Ten scientists at Sanford Burnham Prebys Medical Discovery Institute were awarded eight grants yesterday from Curebound, a San Diego-based philanthropic organization
+
+Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
+
+2021: Postdoctoral Fellow, Dana-Farber Cancer Institute / Harvard Medical School 2015: PhD, University of California San Francisco 2009: BS, Duke University
+
+===== LAB: Yu Xin (Will) Wang PhD =====
+The lab's research is translationally oriented and utilizes interdisciplinary molecular, genetic, computational (machine learning and neural networks), and bioengineering approaches to view biology and disease from new perspectives. We combine multi-omics sequencing and imaging methods to resolve how different cell types work together after injury to repair tissues and restore function. We use a data-driven approach to identify targetable disease mechanisms and, through collaborations with other researchers and clinicians, develop therapies that promote regeneration. Visit our lab website to learn more.
+
+The Wang lab is interested in elucidating critical cell-cell interactions that mediate the function of tissue-specific stem cells during regeneration and disease, with a focus on how a coordinated immune response can promote regeneration and how autoimmunity impacts tissue function and hinder repair.
+
+Dr. Yu Xin (Will) Wang received his PhD at the University of Ottawa where he identified cellular asymmetry and polarity mechanisms regulating muscle stem cell self-renewal and skeletal muscle regeneration. He then carried out postdoctoral training at Stanford University School of Medicine developing single cell multi-omic approaches to characterize the regenerative process and what goes awry with disease and aging.
+
+Related Disease Aging-Related Diseases, Amyotrophic Lateral Sclerosis (Lou Gehrig's Disease), Arthritis, Cachexia, Inflammatory/Autoimmune Disease, Multiple Sclerosis, Muscular Dystrophy, Myopathy, Neurodegenerative and Neuromuscular Diseases, Sarcopenia/Aging-Related Muscle Atrophy, Spinal Muscular Atrophy
+
+Techniques and Technologies 3D Image Analysis, Bioinformatics, Cellular and Molecular Imaging, Gene Knockout (Complete and Conditional), Genomics, High Content Imaging, High-Throughput/Robotic Screening, Live Cell Imaging, Machine Learning, Microscopy and Imaging, Proteomics, Transplantation
+
+Specifically, the Wang lab aims to identify cellular and molecular crosstalk between muscle, nerve, and immune systems to develop targeted therapies that overcome autoimmune neuromuscular disorders and autoimmune aspects of “inflammaging.”
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+&#8220; I've always had a passion for science and became fascinated with how the body repairs and heals itself when I was introduced to the potential of stem cells in regenerative medicine. I was struck by the ability of a small pool of muscle stem cells that can rebuild and restore the function of muscle. My lab at Sanford Burnham Prebys aims to better understanding the repair process and harness our body's ability to heal in order to combat chronic diseases and even counteract aging. &#8220;
+
+Phenomena or Processes Adult/Multipotent Stem Cells, Aging, Cell Signaling, Development and Differentiation, Epigenetics, Exercise, Extracellular Matrix, Neurogenesis, Organogenesis, Regenerative Biology, Transcriptional Regulation
+
+New research has demonstrated a way to accelerate recovery from peripheral nerve injury by targeting an enzyme that was thought&#8230;
+
+Scientists are investigating the inner workings of our bodies and the cells within them at an unprecedented level of detail.
+
+===== LAB: Yu Yamaguchi MD, PhD =====
+The goal of research in the Yamaguchi laboratory is to understand the role of proteoglycans and glycosaminoglycans in the context of development and human disorders. The general strategy is to define the role of proteoglycans and glycosaminoglycans by characterizing the phenotype of mutant mice lacking the synthesis of individual glycosaminoglycans. Specifically, mutant mice lacking the Ext1 and Has genes have been created to study heparan sulfate and hyaluronan, respectively. Recent progress in genetic studies in humans and mice has begun to reveal that deficiencies in glycosaminoglycans can be the causes and/or confounding factors of human childhood disorders. The Yamaguchi lab is now working to clarify the molecular mechanisms of two such disorders (multiple hereditary exostoses and autism) in order to develop new medical treatments.
+
+Recent progress in genetic studies in humans and mice has begun to reveal that deficiencies in glycosaminoglycans can be the causes and/or confounding factors of human childhood disorders. The research focus of our lab is to elucidate the molecular mechanisms of such disorders and to develop new medical treatments. We are currently studying two such disorders.
+
+Instead of knocking out the Ext1 gene in the whole mouse, we targeted the gene in only a small fraction of bone cells ( Ext1 -SKO mice). This minimalistic approach led to a mouse with all the physical manifestations of MHE, such as bony protrusions, short stature, and other skeletal deformities (Fig. 3) (13) . The new mouse model answered some long-standing questions about MHE. Scientists had gone back and forth on whether osteochondromas observed in MHE are true tumors or just malformations of the bone. In this study, the tumors were made up of two cell types. A minority were mutant cells lacking Ext1 , but, amazingly, most were normal bone cells. Hence, osteochondroma in MHE is not considered a true neoplasm in its strictest sense.
+
+HEPARAN SULFATE – The Ext1 gene encodes an enzyme essential for the elongation of nascent heparan sulfate chains. As a result of genetic ablation of Ext1 using a ‘conditional knockout’ approach, heparan sulfate is eliminated from specific tissues and cell types. Our previous studies using brain-specific Ext1 conditional knockout have demonstrated critical roles of heparan sulfate in brain patterning, neurogenesis in the cerebral cortex, and pathfinding of various axon tracts (1) (2) (3) (4) . More recently, conditional Ext1 knockout in developing limb bones revealed critical roles of heparan sulfate in the growth and patterning of bones and joint formation (5) .
+
+Our lab is currently working to elucidate the molecular and cellular mechanisms of MHE. One of the major thrusts has been to create a mouse model that mimics the manifestations of human MHE. A long-term issue of MHE research has been the lack of mouse models that faithfully recapitulate the manifestation of human MHE; when Ext genes were inactivated in mice just as they are in human MHE patients, the mice failed to develop the symptoms of MHE.
+
+Our lab has been using this and additional mouse models to further dissect the pathogenic mechanism of MHE. Moreover, this mouse model provides new opportunities to test potential drugs to prevent osteochondroma formation and other clinical symptoms of MHE.
+
+Related Disease Alzheimer's Disease, Arthritis, Autism Spectrum Disorders, Bone Mineralization Disorders, Epilepsy, Multiple Hereditary Exostoses
+
+Researchers have shown that a protein they identified plays a major role in the breakdown of hyaluronic acid, a compound&#8230;
+
+===== LAB: Yuk-Lap (Kevin) Yip PhD =====
+The Yip lab studies gene regulatory mechanisms by means of computational modeling. To facilitate their data-centric approach, they develop novel methods for analyzing large amounts of biological data, including those produced by cutting-edge high-throughput experiments. Their computational models provide a systematic way to investigate the functional effects of different types of perturbations to regulatory mechanisms, which creates testable hypotheses for studying human diseases and facilitates translational research.
+
+For almost 20 years, Dr. Yip’s research has focused on three primary interests: development of computational methods for analyzing data produced by emerging experimental technologies, such as single-cell and spatial transcriptomics; studying fundamental gene regulatory mechanisms using machine learning and data science methods; and identifying, annotating and interpreting genomic, transcriptomic and epigenomic changes in human diseases, such as cancers, diabetes, and neurodegenerative diseases.
+
+Related Disease Biliary Atresia, Cancer, Diabetes &#8211; General, Hirschsprung Disease, Liver Cancer, Nasopharyngeal Carcinoma, Type 2 Diabetes
+
+Techniques and Technologies Bioinformatics, Comparative Genomics, Genomics, Machine Learning, Protein-Protein Interactions, Systems Biology
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Under his leadership, the mission of the Center for Data Science and Artificial Intelligence is to effectively tap the almost unlimited potential of rapidly evolving large-scale data sets and computational tools in biomedical research, with an emphasis on interdisciplinary collaborations that leverage the expertise of many disciplines to reveal new actionable knowledge.
+
+Phenomena or Processes Cancer Epigenetics, Gene Regulation, Oncogenes, Posttranslational Modification, Transcriptional Regulation, Tumor Microenvironment
+
+At Sanford Burnham Prebys Graduate School of Biomedical Sciences, students embrace computational methods to enhance their research careers
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+Members of the next generation of biomedical researchers and health care professionals trained at Sanford Burnham Prebys.
+
+The $5 million gift will endow the Andrew and Erna Viterbi Distinguished Chair in the Center for Data Science and&#8230;
+
+In the Conrad Prebys Center for Chemical Genomics, simulation-based techniques help scientists find new potential treatments.
+
+Sanford Burnham Prebys scientists say that understanding the potential pitfalls of using artificial intelligence and computational biology techniques in biomedical&#8230;
+
+Next Watch | Bioinformatics micro-modules Kevin Yip's Channel for Learning Bioinformatics Concepts, Algorithms and Data Structures Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
+
+===== LAB: Su-Chun Zhang MD, PhD =====
+The Zhang laboratory has discovered that appropriately specified neurons project to correct brain regions and connect to the right targets in the adult rodent brain, suggesting a surprisingly regenerative capacity of human stem cell-produced neurons, very much like those born during embryonic development. They have also found that the transplanted human neurons receive appropriate inputs, a process largely dependent on the cell identity. They are currently evaluating the therapeutic potential of human stem cell-generated neural subtypes in animal (including non-human primate) models of Parkinson’s disease, stroke, and spinal cord injury. In particular, they have shown that cell therapy for Parkinson’s disease is safe and effective in a nonhuman primate model. They are now preparing for clinical trial of cell therapy for Parkinson’s disease.
+
+Dr. Zhang received his MD and MS in China and PhD in Canada. He is a pioneer in stem cells and regenerative medicine. He has developed technology to guide human stem cells to functionally specialized nerve cell types that are impaired in many neurological and psychiatric conditions with 25 awarded patents and several pending applications. He established the Stem Cell & Genome Editing Core at the UW-Madison and Duke-NUS, serving investigators on campus and beyond. He has also developed stem cell-based platforms for studying neural degeneration and testing drugs for neurological diseases. In parallel, he is developing cell therapy for neurological diseases like Parkinson’s disease, spinal cord injury and stroke. Dr. Zhang was a founding member of the WiCell Institute and co-founder of BrainXell, Inc and BrainXell Therapeutics, Inc.
+
+The Zhang laboratory focuses on addressing how functionally diversified neuronal and glial subtypes are born in the building and rebuilding of our human brain. Over the past decades, they have developed models of neural differentiation from mouse, monkey, and human pluripotent stem cells, including embryonic stem cells (ESCs) and induced pluripotent stem cells (iPSCs). Building upon the success in establishing transgenic and patient stem cells as well as directed neural differentiation to regionally and functionally specialized neuronal and glial subtypes, they are dissecting the cellular and molecular processes underlying brain aging and degeneration, focusing on motor neuron diseases (ALS, SMA), Alexander disease, Down syndrome, Parkinson’s disease and Alzheimer’s disease as well as some rare undiagnosed disorders. They are also transforming these cellular models to templates for drug discovery.
+
+Related Disease Alzheimer's Disease, Amyotrophic Lateral Sclerosis (Lou Gehrig's Disease), Down Syndrome, Parkinson's Disease, Spinal Cord Injury, Spinal Muscular Atrophy, Stroke
+
+Techniques and Technologies 3D Bioprinting, Bioinformatics, Electrophysiology, Live Cell Imaging, Neural Circuit Tracing, Neural Transplantation, Rodent Behavioral Analysis, Stem Cell Differentiation and Engineering
+
+Study from Zhang lab implicates a surprising gene, shows how its mutation affects cells and identifies a potential treatment.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+===== END batch 4/5 =====

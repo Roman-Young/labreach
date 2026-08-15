@@ -1,4 +1,4 @@
-########## DISTILL OVERVIEWS — sbp batch 1/4 (15 labs) ##########
+########## DISTILL OVERVIEWS — sbp batch 1/5 (12 labs) ##########
 
 For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad
 with no field background could read to decide if they want to email the lab. Say WHAT the lab studies,
@@ -12,55 +12,49 @@ Write your answer as a JSON object {"<exact lab name>": "<overview or ''>", ...}
 ===== LAB: David A. Brenner MD =====
 Dr. Brenner was named president and chief executive officer of Sanford Burnham Prebys in September 2022 after serving as vice chancellor for health sciences at UC San Diego and dean of its school of medicine for an unprecedented 15 years, during which he oversaw the launch and expansion of numerous multidisciplinary efforts, including the Institute for Engineering in Medicine, the Institute for Genomic Medicine, the Sanford Consortium for Regenerative Medicine, the UC San Diego Sanford Clinical Stem Cell Program, and the C3 Cancer Center Consortium (comprising UC San Diego, the Salk Institute for Biological Studies and Sanford Burnham Prebys).
 
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
-
 About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-Previously, he served as chair of the Department of Medicine and Physician-in-Chief of New York Presbyterian Hospital/Columbia University and, before that, as Chief of Gastroenterology and Hepatology at University of North Carolina at Chapel Hill.
 
 As a distinguished physician-scientist, Brenner is a recognized leader in the field of gastroenterology research, with more than 200 peer-reviewed publications, two patents and ranking among Highly Cited Researchers by Web of Science and Clarivate Analytics.
 
-He is an elected member of the National Academy of Medicine; past president of the Association of American Physicians and former editor of the journal Gastroenterology (2001 to 2006).
-
-1988: Fellowship, Gastroenterology, UC San Diego 1986: Fellowship, Genetics & Biochemistry, National Institute of Diabetes and Digestive and Kidney Diseases, Bethesda, MD 1985: Intern & Residency, Internal Medicine, Yale University 1979: MD, Medicine, Yale University 1975: BS, Biology, Yale University
-
 Alcoholic Beverage Medical Research Foundation American Society for Clinical Investigation Association of American Physicians American College of Physicians American Gastroenterological Association American Clinical and Climatological Association
 
-Alpha-1 Antitrypsin Deficiency Adult Liver Study Start Date: Dec 2013 Estimated Completion Date: Sep 2023 Recruitment Status: Recruiting Condition(s): Alpha-1 Antitrypsin Deficiency
+Metabolic dysfunction–associated steatohepatitis, or MASH, is an inflammatory, liver-scarring disease that has reached epidemic proportions, with an estimated 1.5% to&#8230;
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+Previously, he served as chair of the Department of Medicine and Physician-in-Chief of New York Presbyterian Hospital/Columbia University and, before that, as Chief of Gastroenterology and Hepatology at University of North Carolina at Chapel Hill.
 
 The white blood cells’ typical role is to promote inflammation and stimulate the immune response, but researchers say some actually&#8230;
-
-Metabolic dysfunction–associated steatohepatitis, or MASH, is an inflammatory, liver-scarring disease that has reached epidemic proportions, with an estimated 1.5% to&#8230;
 
 The Board of Directors of Sanford Burnham Prebys is pleased to announce the appointment of David Brenner, MD, as the&#8230;
 
 Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
 
+He is an elected member of the National Academy of Medicine; past president of the Association of American Physicians and former editor of the journal Gastroenterology (2001 to 2006).
+
+1988: Fellowship, Gastroenterology, UC San Diego 1986: Fellowship, Genetics & Biochemistry, National Institute of Diabetes and Digestive and Kidney Diseases, Bethesda, MD 1985: Intern & Residency, Internal Medicine, Yale University 1979: MD, Medicine, Yale University 1975: BS, Biology, Yale University
+
+Alpha-1 Antitrypsin Deficiency Adult Liver Study Start Date: Dec 2013 Estimated Completion Date: Sep 2023 Recruitment Status: Recruiting Condition(s): Alpha-1 Antitrypsin Deficiency
+
 ===== LAB: Peter D. Adams PhD =====
+We have mapped the epigenetic landscape of senescent cells, and are defining the causes and consequences of this altered landscape. Cellular senescence is an irreversible proliferation arrest and pro-inflammatory phenotype triggered in primary cells by activated oncogenes and other molecular stresses. As a profound change in cell phenotype, the initiation and maintenance of senescence depends on reprogramming of chromatin, the epigenome and gene expression. Cellular senescence is a potent tumor suppressor mechanism. However, the accumulation of senescent cells with age also causes tissue aging, by blocking cell and tissue renewal and driving chronic inflammation. Indeed, in contrast to its acute tumor suppressive effects, chronic accumulation of inflammatory senescent cells is tumor promoting. In collaboration with Dr. Shelley Berger, we have mapped the distribution of several critical epigenetic regulators in proliferating and senescent cells, including DNA methylation, several histone modifications, histone variants and nuclear lamins. These collaborative studies have yielded critical insights into gene regulation in senescent cells (Cruickshanks et al., 2013; Rai et al., 2014; Shah et al., 2013), and the tumor suppressive and pro-aging effects of senescent cells (Cruickshanks et al., 2013; Nelson et al., 2016).
+
 We first characterized Cytoplasmic Chromatin Fragments (CCF) in senescent cells and in collaboration defined a role for CCF as drivers of inflammation via the cGAS/STING cytoplasmic DNA sensing anti- viral pathway. Cellular senescence is a potent tumor suppressor mechanism by virtue of proliferation arrest and the senescence associated secretory phenotype (SASP) which promotes clearance of pre-malignant cells by the immune system. However, the mechanism responsible for initiation of SASP has been unknown. In 2013, our lab first characterized and named CCF as fragments of chromatin expelled from the nucleus of senescent cells into the cytoplasm (Ivanov et al., 2013). Then, in 2015, in collaboration with Shelley Berger’s laboratory, we showed that formation of CCF depends on interaction of lamin B1 and autophagy adaptor LC3 in the nucleus, and that lamin B1 is a nuclear substrate of autophagy (Dou et al., 2015). Most recently, again with Shelley Berger’s lab, we have shown that CCF are sensed by the cytoplasmic DNA sensing anti-viral apparatus, cGAS and STING, and this leads to activation of NFkB and SASP in senescent cells (Dou et al., 2017). The role of CCF as triggers of SASP, via cGAS and STING, has been confirmed by several other labs. Most recently, we showed that formation of CCF is triggered by a retrograde mitochondria-to-nucleus signalling pathway that constututes a target for candidate anti-SASP healthy aging interventions (Vizioli et al., 2020).
-
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
-
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-Dr. Adams most recently led the Epigenetics Unit at the Beatson Institute for Cancer Research and the University of Glasgow, Institute of Cancer Sciences, in Scotland. He has also held positions at Wistar Institute (University of Pennsylvania), Drexel University and Fox Chase Cancer Center in Philadelphia.
 
 Peter D. Adams obtained his BA in biochemistry at the University of Oxford, England and his PhD at Imperial Cancer Research Fund (now CR-UK). He did postdoctoral work with Dr. William G. Kaelin, Jr. at Dana-Farber Cancer Institute. Peter D. Adams is co-Editor-in-Chief of the journal Aging Cell.
 
-1993: PhD, Signal Transduction, Imperial Cancer Research Fund (CRUK), London, UK (Dr. Peter Parker, advisor) 1989: BA, Biochemistry, Oxford University, England
-
-2003-2008: Leukemia and Lymphoma Society Scholar 1999-2001: W.W. Smith Charitable Trust Fellowship 1999-2001: V Foundation Scholar 1995-1996: Cancer Research Foundation of America Fellowship 1993-1995: SERC/NATO Fellowship 1989: B.A. with Honors in Biochemistry, Oxford University, UK 1986: Awarded a Distinction in Oxford University Preliminary Examinations 1984-1989: 1984-1989: Exhibition holder for Academic Achievement at Oxford University, UK 1983: Lane Scholarship for Academic Achievement at King Henry VIII School, UK
+Dr. Adams’ lab investigates the impact of chromatin and epigenetics on cellular senescence, aging and cancer. In particular, the lab hypothesizes that age-associated changes in chromatin and epigenetic programming contribute to the dramatic age-associated increase in incidence of cancer. While age is the biggest single risk factor for most cancers, the reason for this is current poorly understood.
 
 ===== LAB: Anindya Bagchi PhD =====
-The Bagchi lab studies the genetic mutations that drive cancer. I am a geneticist by training, and I am passionate about finding the hidden drivers of cancer. In the research community, there has been tremendous progress in the last few decades in understanding the nature of the beast, but now is the time to translate those knowledge to actionable interventions. A riveting idea that has excited them for sometime is to illuminate the genetic mutations which act as life line to many cancers. This would expose their Achilles heel that we can exploit in near future to develop new forms of treatment. That is what the lab’s work is focused on. They have identified and characterized several key mutations that we have shown as proof of concept can be targeted in as much as 30% of all cancers. The focus of the lab is now to carry out experiments that will allow us to develop this work beyond the proof of concept, ideally to successful clinical trials.
+Dr. Bagchi comes to Sanford Burnham Prebys from the University of Minnesota, where he has been since 2008, having earlier held positions as assistant professor of Cell Biology & Development (Genetic Mechanism of Cancer) and Co-Director of Mouse Genetics Laboratory at University of Minnesota. Dr. Bagchi brings his lab with him and an established research program in genetic mechanisms of cancer. He completed his PhD degree at Jawaharlal Nehru University in New Delhi, India and then worked as a postdoctoral fellow at the Cold Spring Harbor Laboratory in New York. He has been an American Cancer Society Research Scholar since 2014 and Masonic Scholar since 2010.
 
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+The Bagchi lab studies the genetic mutations that drive cancer. I am a geneticist by training, and I am passionate about finding the hidden drivers of cancer. In the research community, there has been tremendous progress in the last few decades in understanding the nature of the beast, but now is the time to translate those knowledge to actionable interventions. A riveting idea that has excited them for sometime is to illuminate the genetic mutations which act as life line to many cancers. This would expose their Achilles heel that we can exploit in near future to develop new forms of treatment. That is what the lab’s work is focused on. They have identified and characterized several key mutations that we have shown as proof of concept can be targeted in as much as 30% of all cancers. The focus of the lab is now to carry out experiments that will allow us to develop this work beyond the proof of concept, ideally to successful clinical trials.
 
 About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
 
-Dr. Bagchi comes to Sanford Burnham Prebys from the University of Minnesota, where he has been since 2008, having earlier held positions as assistant professor of Cell Biology & Development (Genetic Mechanism of Cancer) and Co-Director of Mouse Genetics Laboratory at University of Minnesota. Dr. Bagchi brings his lab with him and an established research program in genetic mechanisms of cancer. He completed his PhD degree at Jawaharlal Nehru University in New Delhi, India and then worked as a postdoctoral fellow at the Cold Spring Harbor Laboratory in New York. He has been an American Cancer Society Research Scholar since 2014 and Masonic Scholar since 2010.
-
 Researchers convened at Sanford Burnham Prebys from September 12-15 to discuss research advances and new collaborations.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
 
 Each year, Sanford Burnham Prebys joins Padres Pedal the Cause, an annual fundraising event that raises money for Curebound which&#8230;
 
@@ -71,59 +65,61 @@ Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the 
 ===== LAB: Anne Bang PhD =====
 Dr. Anne Bang is an experienced cell biologist and stem cell expert who leads efforts at the Prebys Center to develop patient cell specific and human induced pluripotent stem cell (hiPSC)-based disease models for drug screening and target identification. Her research program is primarily focused on neurological and neuromuscular disease, with the aim of designing human cell based models and assays that reflect higher order cellular functions and recapitulate disease phenotypes, yet have the throughput and reproducibility required for drug discovery. Towards this goal, her group has worked to develop a suite of foundational high throughput assays to monitor neuronal morphology, mitochondrial function and electrophysiology, using high content screening and multi-electrode array formats. They have conducted high-throughput drug screens on muscular dystrophy patient cells, hiPSC-derived cardiomyocytes and hiPSC-derived neurons, including from Alzheimer's patient specific hiPSC. Bang is a principal investigator for the National Institute of Mental Health (NIMH) National Cooperative Reprogrammed Cell Research Groups consortium, and also receives research support from rare disease foundations and pharma sponsored collaborations.
 
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
-
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-Anne Bang, PhD, focuses her research on bridging stem cell technology and drug discovery to enable the development of therapeutics. She was trained in developmental neurobiology and used both invertebrate and vertebrate models to study mechanisms that underlie spatial patterning of the nervous system in the developing embryo.
-
 Bang’s experience with human pluripotent stem cells (hPSC) began in 2005 when she joined ViaCyte, Inc., as Director of Stem Cell Research, she led an interdisciplinary group developing hPSC-derived pancreatic cells to treat diabetes. Her efforts focused on optimizing differentiation processes and advancing Viacyte’s cell product into scaled manufacturing and studies enabling Investigational New Drug (IND) applications for the FDA. This work led to co-inventorship on multiple ViaCyte patents.
 
-In 2010, Bang joined Sanford Burnham Prebys to lead hPSC-based disease modeling at the Conrad Prebys Center for Chemical Genomics (Prebys Center), a state-of-the-art drug discovery center. Her program leverages hPSC technology to generate disease-relevant models across different genetic backgrounds and differentiated lineages, enabling interrogation of cellular vulnerabilities and pathogenic phenotypes in human cells.
+A central premise of Bang’s work is that these models are impactful when paired with quantitative, scalable phenotyping and systematic perturbation with small molecules, genetic modulation or other stressors to identify pathway-level control points and therapeutic hypotheses. Accordingly, her laboratory develops stem-cell-based assays that capture higher-order cellular and network functions while maintaining throughput compatible with discovery. Her team developed and ran an image-based, high-content screening platform in iPSC-derived neurons to identify chemical modulators of neurite outgrowth (Sherman and Bang, 2018), as well as a phenotypic screen in Alzheimer’s disease (AD) patient iPSC neurons that uncovered a druggable CYP46A1–cholesteryl ester–tau axis linking neuronal cholesterol metabolism to core AD pathologies (van der Kant et al., 2019).
 
 Related Disease Aging-Related Diseases, Alzheimer's Disease, Amyotrophic Lateral Sclerosis (Lou Gehrig's Disease), Congenital Disorders of Glycosylation, Glycosylation-Related Disorders, Multiple Sclerosis, Muscular Dystrophy, Neurodegenerative and Neuromuscular Diseases
 
+Anne Bang, PhD, focuses her research on bridging stem cell technology and drug discovery to enable the development of therapeutics. She was trained in developmental neurobiology and used both invertebrate and vertebrate models to study mechanisms that underlie spatial patterning of the nervous system in the developing embryo.
+
+A method for studying human neurons could help researchers develop approaches for treating Alzheimer’s, schizophrenia and other neurological diseases.
+
+We caught up with cell biologist Anne Bang, who recently teamed up with her husband to study how SARS-CoV-2 affects&#8230;
+
+Sanford Burnham Prebys scientist and an international team are funded by the California Institute for Regenerative Medicine.
+
 ===== LAB: Rolf Bodmer PhD =====
 The Bodmer lab is interested in the molecular mechanisms of organ formation, how patterns are generated and how cells and tissue types assume their correct fates and functions. The Bodmer lab is pursuing this interest by studying the genetic functions and interactions that specify heart development and maintain heart performance in the Drosophila model, in the hope of elucidating basic principles in organogenesis and functionality. Mesoderm ↓ Cardiac Mesoderm ↓ Cardiac Cell Types ↓ Morphogenesis ↓ Heart Function ↓ Aging Heart They study the HIF and Notch pathways in various organismal responses to hypoxia. Both of these pathways as well as mechanisms and responses to hypoxia are of high relevance to cancer research.
-
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
-
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-Rolf Bodmer earned his PhD in Biochemistry and Neurobiology from the University of Basel, Switzerland, in 1983. Dr. Bodmer trained as a postdoctoral fellow in Neurobiology at the Albert Einstein College of Medicine in New York, and also studied Molecular Genetics at the University of California, San Francisco. He was appointed Assistant Professor of Biology in 1990 at the University of Michigan. There, he was promoted to Associate Professor of Biology in 1996, and then appointed to Associate Professor of Molecular, Cellular and Developmental Biology in 2001. Dr. Bodmer joined Sanford Burnham Prebys in 2003, where he is Professor and Director of the Center for Cardiovascular and Muscular Diseases.
 
 Related Disease Cancer, Cardiovascular Diseases, Heart Disease, Inherited Disorders, Metabolic Diseases, Metabolic Syndrome, Muscular Dystrophy, Neurodegenerative and Neuromuscular Diseases, Obesity, Parkinson's Disease
 
 They are also studying master regulatory networks in how they control metabolism and obesity. These fundamental studies on obesity pathways will also be highly relevant to cancer metabolism.
 
-Recent Bodmer Lab News Jul 17, 2023 New genes implicated in deadly heart defect By identifying genes in patients and testing their effects in fruit flies, Institute researchers have found new genes that contribute&#8230;
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
 
-This year required dedication, patience and perseverance as we all adjusted to a new normal—and we’re proud that our scientists
+Recent Bodmer Lab News Jul 17, 2023 New genes implicated in deadly heart defect By identifying genes in patients and testing their effects in fruit flies, Institute researchers have found new genes that contribute&#8230;
 
 The study opens new research avenues for the condition. Scientists at Sanford Burnham Prebys Medical Discovery Institute and Radboud University Medical Center
 
 At Sanford Burnham Prebys, we uncover the origins of disease and launch bold new strategies that lay the foundation for&#8230;
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+Rolf Bodmer earned his PhD in Biochemistry and Neurobiology from the University of Basel, Switzerland, in 1983. Dr. Bodmer trained as a postdoctoral fellow in Neurobiology at the Albert Einstein College of Medicine in New York, and also studied Molecular Genetics at the University of California, San Francisco. He was appointed Assistant Professor of Biology in 1990 at the University of Michigan. There, he was promoted to Associate Professor of Biology in 1996, and then appointed to Associate Professor of Molecular, Cellular and Developmental Biology in 2001. Dr. Bodmer joined Sanford Burnham Prebys in 2003, where he is Professor and Director of the Center for Cardiovascular and Muscular Diseases.
+
+This year required dedication, patience and perseverance as we all adjusted to a new normal—and we’re proud that our scientists
 
 Scientists are learning that epigenetic changes, or molecular tags that modify our DNA, can cause your children to inherit the&#8230;
 
 Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
 
 ===== LAB: Paul Boutros PhD, MBA =====
-This often involves identifying generating very large new datasets by analyzing the DNA and protein content of cancers, and then creating new algorithms and AI/ML methods to analyze these data. For example, in recent work his team created a method to analyze the “dark proteome” – proteins that have been undetectable to standard analysis methods. They are now applying that method in phase 1 and phase 2 clinical trials of exercise, studying how targeted exercise therapy impacts the progression of cancer, and seeking to understand how and why exercise can be so beneficial.
-
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
-
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+Dr. Boutros’ research focuses on understanding the features that lead cancer to develop in different ways, using computational techniques to mine unexpected insights from very large datasets. By understanding the development of cancer, his team identifies new ways to prevent, diagnose early and effectively treat the disease.
 
 Dr. Boutros was trained in Chemistry at the University of Waterloo (BSc, 2004) and Medical Biophysics at the University of Toronto (PhD, 2008). He then began his independent research career at the newly-formed Ontario Institute for Cancer Research, where he remained until 2018. That year, he relocated to UCLA, where he served as the inaugural Director of Cancer Data Science, Interim Vice-Dean for Research, and was appointed as a full professor in the departments of Human Genetics & Urology.
 
 Dr. Boutros is renowned for his work on integrating computational and data science into cancer research. He has worked extensively with artificial intelligence and machine learning to identify new cancer biology, new drug targets and new biomarkers. Linked to these discoveries have been major new datasets and software that serve as resources to accelerate global research in oncology, and beyond.
 
+This often involves identifying generating very large new datasets by analyzing the DNA and protein content of cancers, and then creating new algorithms and AI/ML methods to analyze these data. For example, in recent work his team created a method to analyze the “dark proteome” – proteins that have been undetectable to standard analysis methods. They are now applying that method in phase 1 and phase 2 clinical trials of exercise, studying how targeted exercise therapy impacts the progression of cancer, and seeking to understand how and why exercise can be so beneficial.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
 Dr. Boutros has published over 400 peer-reviewed research papers, and has received awards for his mentorship at the undergraduate, graduate and post-graduate levels. In 2018 he was recognized with the prestigious Dorval Prize by the Canadian Cancer Society.
 
-2016: MBA, Rotman School of Management, University of Toronto 2008: PhD, Medical Biophysics, University of Toronto 2004: BSc, Chemistry, University of Waterloo
+Researchers identify epigenetic mechanism that explains why some tumors grow slowly and remain localized but others become aggressive and metastasize.
 
-2023: Excellence in Postdoctoral Mentoring Award, UCLA 2023: Outstanding BIG Research Mentorship Award, UCL 2018: Bernard and Francine Dorval Prize, Canadian Cancer Society 2016: Excellence in Graduate Mentorship Award, University of Toronto
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
 
 Out of every five Americans, two will be diagnosed with cancer during their lifetimes. Over two million people receive a new cancer diagnosis each and every year. These millions of cancers all share many common features, like changes in their DNA and an ability to rapidly grow. But each and every cancer is also different because it develops in a unique human being, with their own distinct genetics, lifestyle and behaviour.
 
@@ -132,34 +128,30 @@ Study shows lung adenocarcinoma has strong sex-based proteome differences, while
 ===== LAB: Linda Bradley PhD =====
 Dr. Bradley received her doctorate from the University of California Berkeley, in 1981 in studies of CD4 T cell subsets that regulate humoral immune responses. Her work on the regulation of CD4 T cells continued during her postdoctoral training at The Oregon Primate Research Center and at the University of California, San Diego where she was appointed Assistant Research Professor in 1991. It was at this time she developed NIH sponsored her research program on CD4 T cells and discovered the key associations between migration and function. She joined The Scripps Research institute as an Assistant Professor in 1996 where she expanded her work on CD4 T cells into the arena of autoimmunity and discovered the essential role of the cytokine, interleukin-7, in the regulation of CD4 cell homeostasis.
 
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
-
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-She joined the Sidney Kimmel Cancer Center in 2001 as an Associate Professor, and was promoted to Professor in 2005. She joined Sanford Burnham Prebys as a Professor in the Infectious and Inflammatory Diseases Center in 2009. Dr. Bradley is recognized as a key contributor in the field of CD4 T cell biology, is an invited speaker at many national and international meetings, and serves on several study sections for the NIH as well as the Welcome Trust, Medical Research Council, and the JDRF.
-
-The research program in the Bradley lab is focused on understanding the regulation of T lymphocytes in virus infections where the immune response results in viral clearance and the development of immunologic memory, and in chronic virus infections where the ongoing immune response leads to viral persistence and immune dysregulation. They are guided by these studies to interrogate cellular mechanisms that can be modulated to promote better responses not only to virus infections, but also to relieve immune inhibition in the setting of cancer where T cells progressively lose function. Understanding adhesion mechanisms underlie the ability of T cells to become localized in tissues to eradicate infections and tumors is a key underpinning of their work.
+Their ongoing studies of these immune checkpoint regulators using in vivo models indicate that they are promising therapeutic targets to enhance T cell responses to infections and cancer as well as to inhibit T cell responses in autoimmunity. They are therefore pursuing translational studies with the UCSD Moores Cancer center to analyze their regulation in human T cells in an effort to enhance patient responses to their tumors using in vivo modeling. In addition working to develop biologics for treatment of patients with autoimmunity and cancer.
 
 The Bradley lab's current focus is on two molecules that can function on T cells to initiate the processes that lead to their migration from the blood into tissue, CD44 and PSGL-1 (P-selectin glycoprotein-1). They have found that both of these receptors have key regulatory functions that are independent of their roles in migration. These proteins regulate the magnitude of T cell responses, as well as the survival and memory formation by T cells by different mechanisms, affecting processes in the T cell and stromal cell compartments.
 
-Topics at the event included work/life balance, caregiving and family obligations, and gender disparities in academic rank at research and&#8230;
+The research program in the Bradley lab is focused on understanding the regulation of T lymphocytes in virus infections where the immune response results in viral clearance and the development of immunologic memory, and in chronic virus infections where the ongoing immune response leads to viral persistence and immune dysregulation. They are guided by these studies to interrogate cellular mechanisms that can be modulated to promote better responses not only to virus infections, but also to relieve immune inhibition in the setting of cancer where T cells progressively lose function. Understanding adhesion mechanisms underlie the ability of T cells to become localized in tissues to eradicate infections and tumors is a key underpinning of their work.
 
-===== LAB: Lukas Chavez PhD =====
-Lukas Chavez is an Associate Professor at the Sanford Burnham Prebys. He is also the Director of the Clayes Research Center for Neuro-Oncology at the Institute for Genomic Medicine at the Rady Children’s Hospital, San Diego. In this role, he works with a team of physicians and scientists to capture genomic, transcriptomic, epigenetic and functional data from pediatric brain tumor patients, and uses this information to improve diagnosis and treatment. His research interests focus on structural variants as well as circular extrachromosomal DNA (ecDNA) in childhood cancers. These extrachromosomal DNA circles are frequently found in highly aggressive solid tumors and represent a new target for improved therapeutic approaches.
-
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+She joined the Sidney Kimmel Cancer Center in 2001 as an Associate Professor, and was promoted to Professor in 2005. She joined Sanford Burnham Prebys as a Professor in the Infectious and Inflammatory Diseases Center in 2009. Dr. Bradley is recognized as a key contributor in the field of CD4 T cell biology, is an invited speaker at many national and international meetings, and serves on several study sections for the NIH as well as the Welcome Trust, Medical Research Council, and the JDRF.
 
 About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
 
-2020: St. Baldrick's Scholar Award, St. Baldrick's Foundation 2019: Award of Excellence in Pediatric Neuro-Oncology, Society of Neuro-Oncology 2012–2015: Feodor-Lynen Fellowship for Postdoctoral Researchers, Alexander-von-Humboldt Foundation
-
-Phenomena or Processes Cancer Biology, Cancer Epigenetics, Chromosome Dynamics, Combinatorial Therapies, Gene Regulation, Genomic Instability, Oncogenes, Transcriptional Regulation
-
+===== LAB: Lukas Chavez PhD =====
 Research Models Clinical and Transitional Research, Computational Modeling, Cultured Cell Lines, Human, Human Cell Lines, Mouse
+
+Lukas Chavez is an Associate Professor at the Sanford Burnham Prebys. He is also the Director of the Clayes Research Center for Neuro-Oncology at the Institute for Genomic Medicine at the Rady Children’s Hospital, San Diego. In this role, he works with a team of physicians and scientists to capture genomic, transcriptomic, epigenetic and functional data from pediatric brain tumor patients, and uses this information to improve diagnosis and treatment. His research interests focus on structural variants as well as circular extrachromosomal DNA (ecDNA) in childhood cancers. These extrachromosomal DNA circles are frequently found in highly aggressive solid tumors and represent a new target for improved therapeutic approaches.
 
 Techniques and Technologies Bioinformatics, Cell Biology, Computational Biology, Computational Modeling, Gene Expression, Gene Silencing, Genomics, Single Nucleotide Polymorphisms (SNPs)
 
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Phenomena or Processes Cancer Biology, Cancer Epigenetics, Chromosome Dynamics, Combinatorial Therapies, Gene Regulation, Genomic Instability, Oncogenes, Transcriptional Regulation
+
 Study from the Chavez lab shows significant similarities between human tumor samples and mouse cancer models created from said samples.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
 
 Ten scientists at Sanford Burnham Prebys Medical Discovery Institute were awarded eight grants yesterday from Curebound, a San Diego-based philanthropic organization
 
@@ -169,37 +161,37 @@ Rapidly evolving computational tools may unlock vast archives of untapped clinic
 
 Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
 
+2020: St. Baldrick's Scholar Award, St. Baldrick's Foundation 2019: Award of Excellence in Pediatric Neuro-Oncology, Society of Neuro-Oncology 2012–2015: Feodor-Lynen Fellowship for Postdoctoral Researchers, Alexander-von-Humboldt Foundation
+
 ===== LAB: Jerold Chun MD, PhD =====
-2016: Alzheimer’s San Diego Courage and Hope Award 2014: Thomson Reuters World’s Most Influential Scientific Minds list of highly cited researchers 2011: Killam Lecturer, Montreal Neurological Institute 2010: Journal of Lipid Research Lecturer, Keystone Symposium on Bioactive Lipids: Biochemistry and Diseases, Kyoto, Japan 2007: Chancellor’s Award for Excellence in Neuroscience, LSU Medical School 1999-2006: Independent Scientist Award, NIMH 1994-1999: First Award, NIMH 1993-1995: Basil O'Connor Scholar (March of Dimes Birth Defects Foundation), UCSD 1992-1995: Klingenstein Fellow in the Neurosciences, UCSD 1992-1994: Alfred P. Sloan Research Fellow, UCSD 1988-1991: Helen Hay Whitney Fellow, Whitehead Institute for Biomedical Research 1981-1988: Trainee, Medical Scientist Training Program (MSTP), Stanford University School of Medicine
-
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
-
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-&#8220; I love doing science, and a chance to do some good for the world. Sanford Burnham Prebys is a great place to pursue science. &#8220;
-
-1988-1991: Postdoctoral Fellow, Whitehead Institute/MIT, laboratories of Drs. Rudolf Jaenisch and David Baltimore, Developmental and Molecular Biology 1988: MD, PhD, Stanford University School of Medicine, Neuroscience 1981: B.A., University of Hawaii at Manoa, English and Biology
-
-Phenomena or Processes Aneuploidy, Development and Differentiation, Development of Neuronal Circuits, G-Protein Coupled Receptors, Genome, Lipids, LPA, Mosaicism, S1P, Single Cell
+Neuroscience Drug Discovery From these and other research areas, new therapeutics for diseases of the brain are being pursued, which include identifying new targets, novel biomarkers, and mechanism-of-action studies. This approach successfully aided in the development of the first oral treatment for multiple sclerosis, fingolimod, and related lysophospholipid receptor compounds. Drug discovery efforts include not only small molecules, but also other forms of molecular therapeutics.
 
 Genomic Mosaicism in the Brain Genomic mosaicism (GM) is a surprising phenomenon whereby cells from the same brain actually have distinct genomes (different DNA sequences). We continue to define forms of GM, involved cell types, and GM’s impact on normal brain function and disease. Diseases of particular interest include Alzheimer’s disease, Down syndrome, Parkinson’s, and other neurodegenerative diseases as well as neuropsychiatric disorders and substance abuse.
 
 Lysophospholipid Receptor Signaling Lysophospholipids, such as lysophosphatidic acid (LPA) and sphingosine 1-phosphate (S1P) are small fat molecules that act through G protein-coupled receptors (GPCRs) on the surface of cells. We continue to study fundamental aspects of their signaling properties, and their disease roles in hydrocephalus (water on the brain), neuropsychiatric disorders (schizophrenia, autism), and neurodegenerative disorders (multiple sclerosis, Alzheimer’s disease).
 
+Phenomena or Processes Aneuploidy, Development and Differentiation, Development of Neuronal Circuits, G-Protein Coupled Receptors, Genome, Lipids, LPA, Mosaicism, S1P, Single Cell
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+&#8220; I love doing science, and a chance to do some good for the world. Sanford Burnham Prebys is a great place to pursue science. &#8220;
+
 Jerold Chun colleagues at the Institute and elsewhere have recently reported real-world links in medical records associating common HIV drugs&#8230;
 
 Scientists at Sanford Burnham Prebys demonstrated that vesicles traveling between cells in the brain carry more complete instructions for altering&#8230;
 
+Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
+
+1988-1991: Postdoctoral Fellow, Whitehead Institute/MIT, laboratories of Drs. Rudolf Jaenisch and David Baltimore, Developmental and Molecular Biology 1988: MD, PhD, Stanford University School of Medicine, Neuroscience 1981: B.A., University of Hawaii at Manoa, English and Biology
+
 ===== LAB: Alexandre Colas PhD =====
 Our laboratory focuses on the identification and reconstruction of novel regulatory pathways controlling the determination and the acquisition of cardiovascular cell fates in humans. To that end, our team has developed a unique set of cell-based assays suitable for high-throughput functional screening, which enables the implementation of unbiased and systematic experimental approaches with unprecedented exploratory power. Our goal is to leverage generated knowledge to produce better cardiomyocytes to model cardiac diseases in-a-dish as well as to devise innovative cardiac regenerative strategies. In parallel, our lab is also dedicated to identify and develop new drugs promoting cardiac regeneration and/or helping preserving heart function after injury.
 
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+Phenomena or Processes Cardiovascular Biology, Cell Biology, Development and Differentiation, Embryogenesis, Embryonic/Pluripotent Stem Cells, Regenerative Biology, RNA-Based Gene Regulation, Transcription Factors
 
 About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-2011-2013: American Heart Association Post-Doctoral Fellowship 2011: Best Talk Award (Development & Aging Post-Doctoral Retreat, Sanford Burnham Prebys) 2010-2011: California Institute for Regenerative Medicine Post-Doctoral Fellowship 2006-2007: French Myopathy Association PhD Fellowship 2003-2006: Ministry of French Research PhD Fellowship 2000-2001: Erasmus Undergraduate Fellowship
-
-Phenomena or Processes Cardiovascular Biology, Cell Biology, Development and Differentiation, Embryogenesis, Embryonic/Pluripotent Stem Cells, Regenerative Biology, RNA-Based Gene Regulation, Transcription Factors
 
 Study from the Colas lab details a new way heart cells resist being reprogrammed by regenerative therapies, and a potential&#8230;
 
@@ -207,99 +199,42 @@ A collaborative study led by Institute researchers is paving the way to identify
 
 Institute researchers have identified a group of proteins that could be the secret to cellular reprogramming, an emerging approach in&#8230;
 
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
 Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
+
+2011-2013: American Heart Association Post-Doctoral Fellowship 2011: Best Talk Award (Development & Aging Post-Doctoral Retreat, Sanford Burnham Prebys) 2010-2011: California Institute for Regenerative Medicine Post-Doctoral Fellowship 2006-2007: French Myopathy Association PhD Fellowship 2003-2006: Ministry of French Research PhD Fellowship 2000-2001: Erasmus Undergraduate Fellowship
 
 ===== LAB: Cosimo Commisso PhD =====
 Macropinocytosis is an endocytic mechanism of fluid-phase uptake that produces large intracellular vesicles known as macropinosomes. Macropinosomes are heterogeneous in size and shape and serve to internalize large volumes of extracellular fluid along with the associated membrane. In transformed cells, macropinocytosis is stimulated by oncogenes, such as Ras. Ras proteins are small, membrane-localized GTPases that are activated in response to growth factors and they regulate a variety of outputs, including cell proliferation, survival and invasion. Gain-of-function mutations in Ras-encoding genes cause Ras proteins to be trapped in their active state, leading to the constitutive activation of downstream pathways. The functional consequences of macropinocytosis stimulation in mutant Ras-expressing cells were unknown prior to our work. We have linked macropinocytic uptake in Ras-transformed cells to nutrient delivery and amino acid supply (Commisso et al., 2013). We demonstrated that the inhibition of this nutrient delivery pathway selectively compromises growth of Ras-driven tumors. With the long-term goal of specifically targeting such tumors, we have recently developed stream-lined methodology to detect and grade macropinocytosis in tumor tissue (Commisso et al., 2014). Our work was important for two main reasons. First, cancer cells are dependent on amino acids, such as glutamine, for their growth and survival. Therefore, the targeting of these amino acid supply pathways, such as macropinocytosis, represents a promising strategy in developing anti-cancer therapeutics. Second, macropinocytosis is emerging as a mechanism of entry for a variety of therapeutic agents, such as nanoparticles. Hence, identifying that this uptake pathway is active in Ras-driven tumors may have an impact on how these tumors are treated. The complete understanding of the functional significance of Ras-induced macropinocytosis to carcinogenesis and treatment ultimately depends on having a firm grasp of how this process is regulated and on the ability to specifically control it. To this end, a major research focus of the lab is to advance our understanding of the molecular pathways that drive macropinocytosis, which could lead to the identification of new molecular targets whose inhibition would restrain tumor growth and enhancers that could be manipulated to dial-up the uptake process in drug delivery strategies. Additional research interests in the lab include nutrient sensing pathways that are active in the context of macropinocytic uptake and macropinosome maturation, the process that leads to active protein catabolism within the tumor cell.
 
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+Dr. Commisso obtained his PhD at the University of Toronto in the Department of Molecular Genetics and completed his postdoctoral training at New York University School of Medicine. Dr. Commisso made the seminal discovery that Ras-mutant cancer cells use macropinocytosis as an amino acid supply pathway. His laboratory’s research interests are centered on elucidating the underlying mechanisms of how metabolic stress influences the tumor ecosystem in pancreatic cancer. The lab is particularly interested in identifying metabolic adaptations and dependencies that contribute to tumor progression and can be targeted to develop novel therapeutic modalities for this disease.
 
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-The fourth annual SoCal Metabolism Symposium brought together hundreds of experts and trainees to share the latest advances.
+Recent Commisso Lab News Jun 3, 2026 Sanford Burnham Prebys recognizes 10 doctoral degree recipients The Institute’s Graduate School of Biomedical Sciences held its third Commencement ceremony to celebrate new alumni.
 
 ===== LAB: Nicholas Cosford PhD =====
 We are interested in investigating the interactions of small molecule compounds with therapeutically important proteins and cellular signaling pathways. One aspect of our research emphasizes the use of medicinal chemistry and chemical biology approaches to probe intracellular pathways that regulate cell survival and cell growth. Another area of active research is the development of synthetic chemistry methodology using microfluidic technology for the rapid synthesis of biologically active small molecules. Therapeutically, we are primarily focused on the discovery and optimization of compounds that have the potential to treat cancer, CNS diseases and infectious diseases.
 
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+Prior to joining Sanford Burnham Prebys in 2005, Cosford worked in both the biotechnology and pharmaceutical industries. At Sibia Neurosciences and at Merck Research Laboratories, he directed multidisciplinary research teams focused on small-molecule hit-to-lead optimization and was responsible for moving several lead compounds through to the clinical phase, including a nicotinic agonist (Altinicline) from research to Phase II clinical trials for treating Parkinson’s disease.
 
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-Nicholas Cosford, PhD has served on the Sanford Burnham Prebys Board of Trustees since 2023. He is the first faculty member to do so.
+Related Disease Alzheimer's Disease, Amyotrophic Lateral Sclerosis (Lou Gehrig's Disease), Bone Mineralization Disorders, Breast Cancer, Cancer, Neurodegenerative and Neuromuscular Diseases, Neurological and Psychiatric Disorders, Ovarian Cancer, Pancreatic Cancer, Prostate Cancer
 
 Cosford joined the Sanford Burnham Prebys faculty in 2008 as an associate professor. In 2013, he became a full professor. His lab investigates the interactions of small molecule compounds with therapeutically important proteins and cellular signaling pathways. With a specific focus on the discovery and optimization of compounds that might treat cancer, central nervous system diseases and infectious diseases.
 
-Prior to joining Sanford Burnham Prebys in 2005, Cosford worked in both the biotechnology and pharmaceutical industries. At Sibia Neurosciences and at Merck Research Laboratories, he directed multidisciplinary research teams focused on small-molecule hit-to-lead optimization and was responsible for moving several lead compounds through to the clinical phase, including a nicotinic agonist (Altinicline) from research to Phase II clinical trials for treating Parkinson’s disease.
-
-He is an author of more than 90 peer-reviewed, published scientific papers, and has been issued more than 40 issued patents, with an additional 40 patent applications pending.
-
-Cosford has a Bachelor of Science degree in chemistry from the University of Bath in England and Doctor of Philosophy degree in organic chemistry from Emory University in Atlanta, GA.
-
-Related Disease Alzheimer's Disease, Amyotrophic Lateral Sclerosis (Lou Gehrig's Disease), Bone Mineralization Disorders, Breast Cancer, Cancer, Neurodegenerative and Neuromuscular Diseases, Neurological and Psychiatric Disorders, Ovarian Cancer, Pancreatic Cancer, Prostate Cancer
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
 
 Scientists and clinicians from three local research institutions converged July 31 to discuss new ways to treat multiple addictions at&#8230;
 
 Scientists and clinicians from three local research institutions converge July 31 to discuss new ways to treat multiple addictions at&#8230;
 
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+He is an author of more than 90 peer-reviewed, published scientific papers, and has been issued more than 40 issued patents, with an additional 40 patent applications pending.
+
+Cosford has a Bachelor of Science degree in chemistry from the University of Bath in England and Doctor of Philosophy degree in organic chemistry from Emory University in Atlanta, GA.
+
 Team Sanford Burnham Prebys hit the pavement this weekend for Padres Pedal the Cause, an annual fundraising event that invites&#8230;
 
-===== LAB: Maximiliano D'Angelo PhD =====
-Dr. D’Angelo earned his BS and MS degrees in chemistry at the University of Cordoba, Argentina, and his PhD in biochemistry and molecular biology from University of Buenos Aires. He then trained as a postdoctoral fellow in cell biology at The Salk and the Scripps Research Institute in San Diego. In 2011, Dr. D’Angelo was appointed as an Assistant Professor of the Biochemistry and Biophysics department and a Principal Investigator of the Cardiovascular Research Institute at the University of California San Francisco. In 2012, he was named Scholar of the Pew Charitable Trust. Dr. D’Angelo was recruited to Sanford Burnham Prebys in October 2014.
+Each year, Sanford Burnham Prebys joins Padres Pedal the Cause, an annual fundraising event that raises money for Curebound which&#8230;
 
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
-
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-Nuclear pore complexes (NPCs) are multiprotein channels that penetrate the nuclear envelope and act as the gatekeepers of the genome. NPCs work together with nuclear transport receptors to ferry molecules in and out of the nucleus. They also regulate multiple cellular processes such as gene expression, chromatin organization, and RNA processing in a transport independent manner. In recent years, our lab and others identified that cells can change the configuration of nuclear pore complexes to modulate specific cellular processes, such as T cell homeostasis and activation, muscle differentiation, tumor development and metastasis.
-
-Because of the essential function of nuclear pore complexes in cell survival, proliferation and differentiation, it is not surprising that changes in the nuclear transport machinery have long been observed in cancer cells. Yet, how most of these alterations contribute to cell transformation and tumor development is poorly understood.
-
-Ten scientists at Sanford Burnham Prebys Medical Discovery Institute were awarded eight grants yesterday from Curebound, a San Diego-based philanthropic organization
-
-Nuclear pore complexes (NPCs) are channels composed of multiple proteins that ferry molecules in and out of the nucleus, regulating&#8230;
-
-Proof-of-concept study shows that stopping the construction of nuclear pore complexes selectively kills cancer cells. Scientists at Sanford Burnham Prebys&#8230;
-
-Nuclear pore complexes are large multiprotein channels that act as the sole gateway between the nucleus and cytoplasm. For many&#8230;
-
-Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
-
-===== LAB: Ani Deshpande PhD =====
-2014: American Society of Hematology Scholar Award (ASH Junior Faculty Scholar Award) 2013: Alex’s Lemonade Stand Foundation Travel Award for the FASEB Hematological Malignancies Meeting in Vermont, VA 2013: Abstract Achievement Award, American Society of Hematology Annual Meeting, New Orleans 2012: Abstract Achievement Award, American Society of Hematology Annual Meeting, Atlanta 2008: ASH Travel Award: 50th Annual Meeting, American Society of Hematology (ASH) San Diego 2008: The New York Stem Cell Foundation (NYSCF) Travel Grant, International Society of Stem Cell Research (ISSCR), Philadelphia 2007: The George Brecher New Investigator Award (postdoctoral) of the International Society of Experimental Hematology, Hamburg, Germany 2007: Doctoral prize of the German Society of Hematology and Oncology (Annual prize for the best doctoral thesis in hematology-oncology in Germany) 2007: The Doctoral Prize of the Helmholtz Centre, Munich for the Best Doctoral Thesis 2006, Munich, Germany 2007: Best Poster Award (2nd Prize): 36th Annual Scientific Meeting, International Society for Experimental Hematology (ISEH) Hamburg 2007: Travel Award: 36th Annual Scientific Meeting, International Society for Experimental Hematology (ISEH) Hamburg 2006: Summa Cum Laude Ludwigs Maximililans University, Munich, Germany 2005: ISEH Travel Grant: 34th Annual Scientific Meeting, International Society for Experimental Hematology (ISEH) Glasgow 2004: ISEH Travel Grant: 33rd Annual Scientific Meeting, International Society for Experimental Hematology (ISEH) New Orleans 2003: ASH Travel Award: 45th Annual Meeting, American Society of Hematology (ASH) San Diego
-
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
-
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-Dr. Ani Deshpande's most recent position was as an Instructor with Dr. Scott Armstrong at the Memorial Sloan Kettering Cancer Center and the Children's Hospital Boston/Harvard Medical School. He completed his PhD in Human Biology from the Ludwig Maximillians University in Munich. Dr. Deshpande's research revolves around studying difficult-to-cure leukemias through the use of mouse models, genomic and epigenomic studies.
-
-Ongoing Research Support R00 phase (number in process) Deshpande (PI) 10/0/14-present NIH/NCI – K99/R00 Howard Temin Pathway to Independence Award Role: PI (75% effort) Completed Research Support K99 CA154880 Deshpande (PI) 07/15/11-09/30/14 NIH/NCI – K99/R00 Howard Temin Pathway to Independence Award Role: Post-doctoral fellow/PI
-
-We are seeking exceptional candidates with broad interests/expertise in cancer epigenetics and stem cell biology at the level of postdoctoral fellows, graduate students and undergraduates.
-
-Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
-
-===== LAB: Debanjan Dhar PhD =====
-He focuses on how lifestyle factors, such as high-calorie diets, excessive alcohol consumption and minimal exercise — along with genetic predispositions — can lead to problematic changes in the liver, heart and kidneys. Specifically in the liver, how growing deposits of fat in the tissue can lead over time to chronic inflammation and the accumulation of thickened scar tissue, a condition known as metabolic-associated steatohepatitis (MASH).
-
-Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
-
-About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
-
-Previous to coming to Sanford Burnham Prebys, Dhar was an assistant professor in the Department of Medicine, Division of Gastroenterology at UC San Diego. He continues to be an adjunct faculty member.
-
-He received his PhD in cancer gene therapy from Saint Louis University School of Medicine and his Master of Science degree in microbiology/biochemistry/molecular biology at the University of Calcutta.
-
-“The liver is not an isolated organ, as it is constantly communicating with all these different tissues. “For example, there might be certain signals from the liver going into the bloodstream that may be affecting the cardiovascular system, and we just don’t have the full picture yet.”
-
-By studying the conversation among the liver, the immune system, heart and kidneys, Dhar hopes to discover signals that could be used to detect MASH and liver cancer much earlier, when they’re easier to treat.
-
-A team led by Debanjan Dhar, PhD, developed a translational model that begins to explain why people with metabolic liver&#8230;
-
-Understanding the crucial ingredient in bile may unlock the potential of treatments that boost patients’ immune systems.
-
-The white blood cells’ typical role is to promote inflammation and stimulate the immune response, but researchers say some actually&#8230;
-
-New Sanford Burnham Prebys scientist listens to the constant communication among these organs to find treatments that benefit all three
-
-===== END batch 1/4 =====
+===== END batch 1/5 =====

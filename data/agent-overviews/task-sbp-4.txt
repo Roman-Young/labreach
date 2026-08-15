@@ -1,0 +1,23 @@
+########## DISTILL OVERVIEWS — sbp batch 5/5 (1 labs) ##########
+
+For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad
+with no field background could read to decide if they want to email the lab. Say WHAT the lab studies,
+HOW (methods/approach), and WHY it matters. Ground it ONLY in that lab's provided text — do NOT invent
+specifics, numbers, or techniques not present. If a lab's text is too thin/administrative to describe
+its research, set that lab's value to "" (empty) rather than padding — an honest gap beats a fake overview.
+
+Write your answer as a JSON object {"<exact lab name>": "<overview or ''>", ...} to this ABSOLUTE path:
+  /home/roman/agent/codebases/labreach/data/agent-overviews/sbp-batch4.json
+
+===== LAB: Jianhua Zhao PhD =====
+Dr. Zhao joins us from University of California San Francisco, where he recently completed his Postdoctoral Training. His lab will focus on understanding how proteins function under different physiological and disease states from a structural biology perspective. Specifically, Dr. Zhao brings significant expertise in visualizing proteins at high resolution using cryogenic electron microscopy (cryo-EM).
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Dr. Zhao received his Bachelor’s and PhD in Medical Biophysics from the University of Toronto, Canada, where he completed 5 years of graduate training investigating rotary ATPases. He then went on and completed 5 years of postdoctoral training at UCSF studying Transient Receptor Potential ion channels.
+
+Sanford Burnham Prebys scientists have learned more about the cell’s recycling process for obsolete and misshapen proteins.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+===== END batch 5/5 =====

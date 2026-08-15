@@ -1,0 +1,170 @@
+########## DISTILL OVERVIEWS — scripps batch 9/9 (10 labs) ##########
+
+For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad
+with no field background could read to decide if they want to email the lab. Say WHAT the lab studies,
+HOW (methods/approach), and WHY it matters. Ground it ONLY in that lab's provided text — do NOT invent
+specifics, numbers, or techniques not present. If a lab's text is too thin/administrative to describe
+its research, set that lab's value to "" (empty) rather than padding — an honest gap beats a fake overview.
+
+Write your answer as a JSON object {"<exact lab name>": "<overview or ''>", ...} to this ABSOLUTE path:
+  /home/roman/agent/codebases/labreach/data/agent-overviews/scripps-batch8.json
+
+===== LAB: Kurt Wuthrich, PhD =====
+For 50 years, Wuthrich groups at the ETH Zurich, Zurich, Switzerland, at Scripps Research, La Jolla, CA, USA and at the iHuman Institute of ShanghaiTech University, Shanghai, China have worked on nuclear magnetic resonance spectroscopy (NMR) with biological macromolecules. Contributions include the method for macromolecular structure determination with NMR in solution and the use of the principles of transverse relaxation-optimized spectroscopy (TROSY) for NMR experiments with large supramolecular assemblies. Applications over the years were focused on differentiation in higher organisms, immune suppression and neuropathology. As of April 2019, research using NMR techniques is continued at ShanghaiTech University, with a focus on trans-membrane signal transfer by G protein-coupled receptors (GPCRs). At Scripps Research and the ETH Zurich, projects on the general theme 'healthcare in the ageing human societies of the 21st century' are pursued, mainly considering the impact of sarcopenia on the human healthspan.
+
+Wuthrich, Kurt NMR studies of structure and function of biological macromolecules (Nobel lecture). Angewandte Chemie-International Edition 2003 , 42, 3340-3363.
+
+Wüthrich is known for pioneering nuclear magnetic resonance (NMR) methods for studying proteins and other large biological molecules.
+
+Lizentiat, in chemistry, physics and mathematics, University of Bern, Switzerland Ph.D., Chemistry (Prof. S. Fallab); Eidgenössisches Turn- und Sportlehrerdiplom, University of Basel, Switzerland Postdoctoral Training, (Prof. S. Fallab), University of Basel, Switzerland Postdoctoral Training, (Prof. R.E. Connick), University of California, Berkeley, CA, USA
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2001–04, The Scripps Research Institute, La Jolla, CA, USA: Cecil H. and Ida M. Green Visiting Professor of Structural Biology
+
+2004–present, The Scripps Research Institute, La Jolla, CA, USA: Cecil H. and Ida M. Green Professor of Structural Biology
+
+Wuthrich, Kurt Brownian motion, spin diffusion and protein structure determination in solution.. Journal of magnetic resonance (San Diego, Calif. : 1997) 2021 , 107031.
+
+1967–69, Bell Telephone Laboratories, Murray Hill, N.J., USA: Member Technical Staff, Biophysics Department (Dr. R.G. Shulman)
+
+1969–present, ETH Zurich, Zurich, Switzerland: Privatdozent (70), Assistant Professor (72), Associate Professor (76), Professor of Biophysics (80); Chairman Biology Department (95–2000)
+
+2014–2024, Adjunct Distinguished Professor, Daegu Gyeongbuk Institute of Science and Technology (DGIST), Daegu, Korea. Links
+
+===== LAB: Richard Wyatt, PhD =====
+Scripps Research scientists discover that a higher ratio of antibodies to viral protein helps engage two specific types of immune cells.
+
+The prestigious list identifies scientists who’ve disproportionately influenced their fields of research over the past decade.
+
+In a first for the field, all non-human primates given a new series of vaccines generated antibodies capable of fighting multiple strains of HIV.
+
+Select Publications Guenaga, J.; Garces, F.; de Val, N.; Stanfield, Robyn L.; Dubrovskaya, V.; Higgins, Brett W.; Carrette, B.; Ward, Andrew B.; Wilson, Ian A.; Wyatt, Richard T. Glycine substitution at helix-to-coil transitions facilitates the structural determination of a stabilized subtype C HIV envelope glycoprotein. Immunity 2017 , 46, 792-+.
+
+In a first for the field, all non-human primates given a new series of vaccines generated antibodies capable of fighting multiple strains of HIV.
+
+Researchers have moved one step closer to developing an effective HIV vaccine, a major goal of medical science ever since the virus was identified in 1983.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Xiang-Lei Yang, PhD =====
+An unexpected finding from Scripps Research has illuminated a promising strategy for treating the inherited neurological disease Charcot-Marie-Tooth, for which there is no approved medicine today.
+
+Scripps Research scientists make a key discovery into the underpinnings of a complex disease that damages patients' peripheral nervous system.
+
+Donna Blackmond, Marisa Roberto and Xiang-Lei Yang have been honored with endowed chairs in recognition of their scientific leadership and impactful discoveries.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: John Yates, PhD =====
+Genomic and EST sequencing projects are providing a sequence infrastructure that is changing how protein biochemistry is practiced. These data along with mass spectrometry provide the cornerstone technologies fueling the proteomics revolution. Our group is focused on developing tools and strategies in proteomics to answer basic biological questions. By coupling the additional amino acid sequence information that can be obtained using peptide tandem mass spectrometry to "back-end" database searching and "front-end" separative techniques, we are able to directly analyze extremely complex protein mixtures. The applications for these technologies vary from analyzing purified protein complexes to studying host-pathogen interactions in diseases such as malaria or anthrax. We are further extending these applications to find post-translational modifications to the proteins within these same complex mixtures.
+
+Scripps Research scientists discovered that a chemically modified protein puts the brain’s immune cells in a state of damaging, chronic overactivation—and that blocking it protects brain cell connections.
+
+Scripps Research scientists discovered that a chemically modified protein puts the brain’s immune cells in a state of damaging, chronic overactivation—and that blocking it protects brain cell connections.
+
+New findings from Scripps Research show that changes in protein shape—rather than quantity of proteins—offer a potential new way to detect and track Alzheimer’s disease.
+
+Select Publications Boddy, M N.; Gaillard, Pierre-Henri L; McDonald, W H.; Shanahan, P; Yates, J R.; Russell, P Mus81-Eme1 are essential components of a Holliday junction resolvase. Cell 2001 , 107, 537-48.
+
+Study reveals how sugar-protein interactions are critical for the placenta during early pregnancy, shedding light on complications like preeclampsia and restricted fetal growth.
+
+Contact John Yates, PhD Email (858) 784-8862 Joint Appointments Department of Neuroscience Graduate Program Member of the Graduate Program faculty.
+
+The recognized researchers encompass various areas including chemistry, microbiology, immunology, biochemistry and more.
+
+Featured scientists represent a wide range of fields including chemistry, microbiology, immunology, neuroscience and more
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+Ph.D. (Chemistry), University of Virginia, 1987 M.S. (Chemistry), University of Maine, 1983 B.A. (Zoology), University of Maine, 1980
+
+2026 Canada Gairdner International Award, Gairdner Foundation 2026 2026 ABRF Annual Award for Outstanding Contributions to Biomolecular Technologies, Association of Biomolecular Resource Facilities 2024 Pittsburgh Analytical Chemistry Award, The Society for Analytical Chemists of Pittsburgh 2021 ACS Award in Analytical Chemistry, Battelle Memorial Institute 2019 Laureate of the KIA, Iranian Organization for Science & Technology 2019 John B. Fenn Award, ASMS Award for Distinguished Contribution 2019 Discovery in Proteomic Sciences Award, Human Proteome Organization (HUPO) 2018 Thomson Medal, International Mass Spectrometry Society 2015 Ralph N. Adams Award in Bioanalytical Chemistry, Pittcon 2015 Highly Cited Researchers, Thomson Reuters 2013 #1 on List of Most Influential in Analytical Chemistry, The Analytical Scientist 2013 List of Most Highly Influential Biomedical Researchers, EuroJ.Clinical Invest
+
+===== LAB: Li Ye, PhD =====
+The brain plays a pivotal role in integrating homeostatic signals and regulating whole-body metabolism. But the high energy demand of neurons also makes the CNS highly sensitive to systemic metabolic stress. We are interested in how the brain adapts to both acute and chronic metabolic changes and how such adaptation, in turn, affects the control of organismal physiology by the CNS, at the biochemical, cellular, and circuit levels. Our long-term goal is to harness the molecular and circuit mechanisms underlying these adaptations to target metabolic disorders including obesity and type 2 diabetes as well as certain neurodegenerative diseases. We employ and design novel systems tools optimized for brain-wide structural mapping (whole-brain labeling, tissue clearing ('CLARITY/HYBRiD') and large-volume light-sheet imaging), in vivo multi-region Ca2+ imaging, and activity/connectivity-defined optogenetics. Based in TSRI, we also develop and apply high throughput screens (small molecules/CATCH, genomic, proteomic, etc.) in conjunction with circuit-based tools to unleash the power of large scale unbiased screens in intact mammalian brains.
+
+Scripps Research scientists developed a technique that maps drug binding in individual cells throughout the body, potentially explaining side effects and guiding safer drug development.
+
+Li Ye, the N. Paul Whittier Chair in Chemistry and Chemical Biology at the Scripps Research and Howard Hughes Medical Institute Investigator, has been honored with the Tianqiao and Chrissy Chen Young Investigator Award from the Society for Neuroscience (SfN).
+
+In the Media Humans' hidden &#8220;sixth sense&#8221; to be mapped following $14.2 million prize &#8211; What is interoception?
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2017 NIDDK Mentored Career Development Award (K01), NIH/NIDDK 2018 Baxter Foundation Young Faculty Award 2018 Dana Foundation David Mahoney Neuroimaging Program 2019 Whitehall Foundation Research Award 2020 NIH Director's New Innovator Award, NIH/NIDDK 2022 Abide Vividion Endowed Chair, Scripps Research / Abide Vividion 2022 American Journal of Physiology-Young Investigator Award 2023 Chan Zuckerberg Initiative, Ben Barres Early Career Acceleration Award 2024 HHMI Investigator
+
+2013-2017 Postdoctoral Fellow, Stanford University/HHMI, Stanford, CA 2007-2008 Chemical Biology Visiting Student, MIT/Broad Institute, Cambridge, MA
+
+===== LAB: Jin-Quan Yu, PhD =====
+Rational-design and unexpected discovery of new reactions through C-H activation. Our program centers around the discovery of catalytic carbon-carbon and carbon-heteroatom bond forming reactions based on C-H activation. Target transformations are selected to enable 1) the use of simple and abundant starting materials such as aliphatic acids, amines and alcohols, and 2) disconnections that drastically shorten the synthesis of drug molecules or a major class of biologically active compounds. Ultimately, we hope to develop catalytic reactions to parallel enzymatic transformations in terms of reactivity and selectivity. To achieve this goal, our research activities are directed towards the following main aspects: C-H activation, sustainable catalysis, asymmetric catalysis and synthetic applications. Major components of training for students are organometallic chemistry, asymmetric catalysis (synthesis and characterization of organometallic complexes as catalysts or intermediates; ligand design for chiral control or acceleration) and organic synthesis (in the context of drug discovery and natural product synthesis). We collaborate extensively with computational groups via NSF center (Professor Jamal Musaev, Emory University, Professor Ken Houk, UCLA), as well as pharmaceutical and agrochemical industry (BMS and Syngenta) and Aldrich. We have research projects on the following topics: C-H activation (how to cleave C-H bonds without using forceful conditions?); Catalysis (how to close catalytic cycles under practical conditions?); and Synthetic applications (how to shorten synthetic routes for natural products and drug molecules?).
+
+Jin-Quan Yu, the Bristol Myers Squibb Endowed Chair in Chemistry and the Frank and Bertha Hupp Professor in Chemistry at Scripps Research, has been selected as the recipient of the 5th Akira Suzuki Award.
+
+News Scripps Research chemists unlock the potential of ketone and ester molecules, paving the way for greener and more efficient drug development
+
+Select Publications Chan, Hau Sun Sam; Yang, Ji-Min; Yu, Jin-Quan Catalyst-controlled site-selective methylene C–H lactonization of dicarboxylic acids. Science 2022 , 376, 1481-1487.
+
+Wang, Donghui; Yu, Jin-Quan Highly convergent total synthesis of (+)-lithospermic acid via a late-stage intermolecular C-H olefination. Journal of the American Chemical Society 2011 , 133, 5767-5769.
+
+A new method uses a novel catalyst and inexpensive fluoride salts to modify the most common chemical bonds—opening doors to new medicines and improved medical imaging.
+
+The recognized researchers encompass various areas including chemistry, microbiology, immunology, biochemistry and more.
+
+New findings reveal a technique to transform essential chemical building blocks for drug discovery and beyond—representing the “final step” in applying this method to all key classes of organic molecules.
+
+Featured scientists represent a wide range of fields including chemistry, microbiology, immunology, neuroscience and more
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2010 Professor of Chemistry, The Scripps Research Institute 2007 Associate Professor of Chemistry, The Scripps Research Institute 2004 Assistant Professor of Chemistry, Brandeis University 2003 Royal Society Research Fellow, University of Cambridge, UK
+
+Ph.D. (Chemistry), University of Cambridge, 1999 B.S. (Chemistry), East China Normal University, 1987 M.S. (Organic Chemistry), Guangzhou Institute, 1990
+
+===== LAB: Meng Zhang, PhD =====
+The Zhang lab studies how cells organize, interact, and maintain homeostasis within their native environments, and how these dynamics are altered in aging and diseases using a combination of cutting-edge imaging technologies and sophisticated computational tools. We develop and apply spatial multi-omics tools for high-resolution, genomic-scale cell profiling in situ, charting cellular states and interactions across space and time. Our long-term goal is to leverage these insights to advance molecular understanding in biology, driving progress in precision medicine, disease intervention, and cell-based therapies.
+
+BRAIN Initiative Cell Census Network (BICCN). A multimodal cell census and atlas of the mammalian primary motor cortex. . Nature 2021 , 598, 86–102.
+
+Chen Ran and Meng Zhang receive awards from the Donald E. and Delia B. Baxter Foundation to uncover insights on brain function.
+
+The newly appointed faculty are making transformative discoveries in areas ranging across drug discovery, neuroscience, chemistry, immunity and more.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2025 - Present - Assistant Professor, Department of Molecular and Cellular Biology, The Scripps Research Institute, La Jolla, CA 2018 - 2024 - Postdoctoral Fellow, Howard Hughes Medical Institute, Department of Chemistry and Chemical Biology, Harvard University, Cambridge, MA 2016 - 2017 - Postdoctoral Fellow, Department of Chemistry, The Ohio State University, Columbus, OH
+
+===== LAB: Qinghai Zhang, PhD =====
+We are a multidisciplinary group working on chemical and structural biology of membrane proteins. Membrane proteins account for about one third of human genes and comprise more than 50% of human drug targets. Our laboratory develops novel methodologies and chemical tools enabling their structural and functional characterizations. A major interest is to study the interactions between membrane proteins and lipids that govern the protein stability and function. We are also interested in the development and discovery of small molecule therapeutics targeting membrane proteins of great biological and biomedical significance including transporters, GPCRs and channels. Towards this end, we have devoted efforts to solve membrane protein structures for drug binding and mechanistic studies. Developing synthetic methodologies to make biologically relevant molecules is another component of our laboratory.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2001-2004 Assistant Professor, Molecular Biology, Scripps Research 2004-2010 Associate Professor, Molecular Biology, Scripps Research 2011-Present Associate Professor, Integrative Structural and Computational Biology, Scripps Research
+
+===== LAB: Jiang Zhu, PhD =====
+We combine computational and experimental approaches to address critical questions in biomedical research. The hypotheses generated through reasoning and modeling are validated experimentally in our laboratory and through collaborations. The goal of our research is provide innovative solutions to disease prevention and therapeutics. Antibody discovery and vaccine design. We develop next-generation sequencing (NGS) technologies and computational tools to facilitate antibody discovery, B-cell repertoire analysis, and vaccine evaluation. By combining scFv phage library and 900bp long-read NGS, we identify functional antibodies for diverse viral targets such as HIV-1, RSV, and ZIKA. Using unbiased repertoire analysis, we investigate the developmental pathways of broadly neutralizing antibodies (bNAbs) during natural infection and monitor the vaccine-induced B-cell response in animal and human trials. Structural modeling and nanoparticle engineering are employed to design novel immunogens for vaccine development. Optical control of neural circuits . We develop novel strategies and engineer protein devices for the optical control of signaling pathways and neural circuits implicated in neurodegenerative diseases. We are particularly interested in genetically-encoded optical control of ion channels such as glutamate receptors and calcium channels, which play critical roles in our nervous system and other body functions. We engineer and optimize photo-active proteins such as LOV2, PYP, and PHR-CIBN to facilitate the light control of these complex molecular machines. Structure-function study of molecular complexes. We develop and apply computational tools to study macromolecular assemblies such as viruses, enzyme complexes, transporters, and ion channels. One of our major focuses is to develop a computational platform for building and refining atomic structures of these complexes using cryo-electron microscopy (cryo-EM) density map and other structural measurements (e.g. smFRET) as experimental constraints. For interested postdoctoral candidates , please send your application package to Dr. Zhu by email. Prior experience in structural biology, immunology, vaccine research, and oncology will be a big plus.
+
+Braz Gomes, Keegan; Zhang, Yi-Nan; Lee, Yi-Zong; Eldad, Mor; Lim, Alexander; Ward, Garrett; Auclair, Sarah; He, Linling; Zhu, Jiang Single-Component Multilayered Self-Assembling Protein Nanoparticles Displaying Extracellular Domains of Matrix Protein 2 as a Pan-influenza A Vaccine. ACS Nano 2023 , 17, 23545-23567.
+
+Scripps Research scientists reengineer critical proteins on the surface of HCV, paving the way for a new vaccine design.
+
+Scripps Research scientists reengineer critical proteins on the surface of HCV, paving the way for a new vaccine design.
+
+Scripps Research scientists turn nanoparticles into virus “showcases” to help the immune system recognize deadly threats.
+
+Scripps Research scientists improved existing vaccines by analyzing the molecular structure and stability of viral proteins.
+
+Scripps Research-designed vaccine could provide broad, enduring protection against influenza A strains, including pandemic strains
+
+Select Publications Lee, Yi-Zong; Han, Jerome; Zhang, Yi-Nan; Ward, Garrett; Braz Gomes, Keegan; Stanfield, Robyn L.; Auclair, Sarah; He, Linling; Wilson, Ian; Zhu, Jiang Rational design of uncleaved prefusion-closed trimer vaccines for human respiratory syncytial virus and metapneumovirus. Nature Communications 2024 , 15, 9939.
+
+===== LAB: Eric Zorrilla, PhD =====
+A Scripps Research team showed how drugs can reduce alcohol preference in animal models of post-traumatic stress disorder.
+
+Serafine, Katherine M.; O'Dell, Laura E.; Zorrilla, Eric P. Converging vulnerability factors for compulsive food and drug use. 2021 , 196, 108556.
+
+In rodent experiments modeled to mimic real-life circumstances, scientists revealed brain mechanisms that could lead to targeted treatments.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== END batch 9/9 =====

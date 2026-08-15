@@ -1,0 +1,192 @@
+########## DISTILL OVERVIEWS — scripps batch 8/9 (12 labs) ##########
+
+For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad
+with no field background could read to decide if they want to email the lab. Say WHAT the lab studies,
+HOW (methods/approach), and WHY it matters. Ground it ONLY in that lab's provided text — do NOT invent
+specifics, numbers, or techniques not present. If a lab's text is too thin/administrative to describe
+its research, set that lab's value to "" (empty) rather than padding — an honest gap beats a fake overview.
+
+Write your answer as a JSON object {"<exact lab name>": "<overview or ''>", ...} to this ABSOLUTE path:
+  /home/roman/agent/codebases/labreach/data/agent-overviews/scripps-batch7.json
+
+===== LAB: Renan V.H. de Carvalho, PhD =====
+The Laboratory of Immune Longevity (LIL) focuses on uncovering the drivers of long-lived immune responses. Our research spans a range of interests, but our top priority is understanding plasma cell longevity and the determinants of durable humoral immunity. Using transgenic mouse models alongside infection and immunization strategies, we aim to identify the mechanisms that lead to successful, long-lived immunity - and why such outcomes often fail to be accomplished.
+
+de Carvalho, Renan V H; Ersching, Jonatan; Barbulescu, Alexandru; Hobbs, Alvaro; Castro, Tiago B R; Mesin, Luka; Jacobsen, Johanne T.; Phillips, Brooke K.; Hoffmann, Hans-Heinric H.; Parsa, Roham; Canesso, Maria Cecilia C; Nowosad, Carla R.; Feng, Allan; Leist, Sarah R.; Baric, Ralph S.; Yang, Emily; Utz, P J.; Victora, Gabriel D. Clonal replacement sustains long-lived germinal centers primed by respiratory viruses. Cell 2023 , 186, 131-146.e13.
+
+de Carvalho, Renan V H; Andrade, Warrison A.; Lima-Junior, Djalma S.; Dilucca, Marisa; de Oliveira, Caroline V.; Wang, Kun; Nogueira, Paula M.; Rugani, Jeronimo N.; Soares, Rodrigo P.; Beverley, Stephen M.; Shao, Feng; Zamboni, Dario S. Leishmania Lipophosphoglycan Triggers Caspase-11 and the Non-canonical Activation of the NLRP3 Inflammasome. Cell Reports 2019 , 26, 429-437.e5.
+
+The funding will support a multidisciplinary collaboration of four Scripps Research scientists to identify more effective vaccines to treat HIV.
+
+de Carvalho, Renan V H; Lima-Junior, Djalma S.; da Silva, Marcus Vinícius G; Dilucca, Marisa; Rodrigues, Tamara S.; Horta, Catarina V.; Silva, Alexandre L N; da Silva, Patrick F.; Frantz, Fabiani G.; Lorenzon, Lucas B.; Souza, Marcos Miche M.; Almeida, Fausto; Cantanhêde, Lilian M.; Ferreira, Ricardo de Godoi M; Cruz, Angela K.; Zamboni, Dario S. Leishmania RNA virus exacerbates Leishmaniasis by subverting innate immunity via TLR3-mediated NLRP3 inflammasome inhibition. Nature Communications 2019 , 10, 5273.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2025-Current Tenure-track Assistant Professor, Head of the Laboratory of Immune Longevity, Department of Microbiology & Immunology, The Scripps Research Institute, La Jolla, CA, USA. 2020-2025 Postdoctoral Fellow, The Rockefeller University, New York, NY, USA. 2019-2020 Postdoctoral Fellow, University of São Paulo, São Paulo. Brazil.
+
+2023 Cancer Research Institute (CRI), Irvington Postdoctoral Fellowship 2020 Human Frontier Science Program (HFSP), Long-term Postdoctoral Fellowship 2020 The Great CAPES Thesis Award, “Carlos Ribeiro Justiniano Chagas Award,” in Life Sciences 2019 Walter Colli Award, Brazilian Society of Protozoology 2018 Society of Leukocyte Biology Award, Brazilian Society of Immunology 2017 Thereza Kipnis Award, Brazilian Society of Immunology 2017- Ziegman Brenner Award, Brazilian Society of Protozoology
+
+2014-2019 Ph.D. (Sciences, focused on Basic and Applied Immunology), University of São Paulo, Brazil 2008-2014 B.S. (Pharmacy/Biochemistry), Federal University of Juiz de Fora (UFJF), Brazil
+
+===== LAB: Julia Moore Vogel, PhD =====
+Our group addresses complex illnesses by conducting participant-centric health research and clinical trials to learn about and address these conditions. We focus on decentralized studies that use digital technologies, sensors, and at-home biospecimen collection to accommodate individuals across the country and around the world.
+
+Long COVID affects millions of people worldwide, yet many questions about the condition remain unanswered. In this episode of Science Changing Life, Julia Moore Vogel, PhD, shares what it’s like to study—and live with—long COVID. As the senior director of the All of Us Research Program, Julia discusses how her experience has fueled innovative research to improve symptom management and health equity for patients with the condition. Listen in to learn how Julia transforms personal challenges into professional breakthroughs.
+
+News Scripps Research scientists launch new digital clinical trial to test repurposed drug for long COVID symptom relief
+
+Study will investigate whether a GIP/GLP-1 dual receptor agonist, currently approved for type 2 diabetes, obesity and obstructive sleep apnea, can reduce symptoms of long COVID.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Andrew Ward, PhD =====
+Investigating membrane proteins and viruses using integrative structural biology techniques. Membrane protein transporters mediate the passage of a wide variety of molecules into and out of the cell. The molecular details underlying the function of most transporters are still unknown. Thus, my group is interested in studying novel membrane proteins using x-ray crystallography, electron microscopy, and other biophysical techniques. Membrane proteins expressed on the surface of enveloped viruses mediate viral entry into the cell by recognizing cell surface receptors and initiating endocytosis or membrane fusion. Recently, broadly neutralizing antibodies targeting these surface spikes have been shown to provide protection against viruses such as HIV and influenza. We are trying to better understand how these antibodies bind to and neutralize viruses. Using single particle electron microscopy and electron tomography we are able to visualize these complexes and whole viruses, providing information about the mechanism of inhibition and aiding in the design of better immunogens for eliciting a broadly neutralizing antibody response in humans.
+
+Funding will expand methods for studying viral proteins and immune responses in more realistic settings for HIV and other severe pathogens.
+
+The funding will support a multidisciplinary collaboration of four Scripps Research scientists to identify more effective vaccines to treat HIV.
+
+In a first for the field, all non-human primates given a new series of vaccines generated antibodies capable of fighting multiple strains of HIV.
+
+The recognized researchers encompass various areas including chemistry, microbiology, immunology, biochemistry and more.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2017 Young Investigator in Virology Award, Viruses 2014 Anne Palmenberg Junior Investigator Award, American Society for Virology 2013 Ray Thomas Edwards Foundation Fellowship 2006 Norton B. Gilula Graduate Fellowship, The Scripps Research Institute 2003 National Science Foundation EAPSI Fellowship, The Scripps Research Institute 2001 Howard Hughes Undergraduate Research Fellowship, Duke University, Durham, North Carolina
+
+===== LAB: Friedbert Weiss, PhD =====
+Study by Scripps Research scientists shows how the brain learns to seek alcohol for relief, not just pleasurable effects, in an animal model.
+
+Neurobiology of Drug and Alcohol Addiction. Work in our laboratory is concerned with the neurobiological basis of abnormal behavioral and brain functions relevant to human psychopathology with emphasis on the neural control of motivation and reinforcement. The majority of this work is directed at the understanding of the neuropharmcological, neurocircuitry, and molecular basis of drug and alcohol addiction including mechanisms that lead to the development of dependence and withdrawal states, drug craving, relapse as well as impairment in memory and cognitive function.
+
+Contact Friedbert Weiss, PhD Email (858) 784-7068 Research Interests Alcoholism Drug Abuse and Addiction Immunohistochemistry Mass Spectrometry Neuropharmacology Neuroscience News, Events & Media Explore In the Media Scientists identify brain region behind compulsive alcohol use
+
+Rather than continue to dig for clues on what drives relapse among those who struggle with compulsive drug use, a Scripps Research team explored how the brain responds to environmental cues that suppress cravings.
+
+Friedbert Weiss, PhD, a professor of neuroscience at Scripps Research, has been named a fellow of the American Association for the Advancement of Science (AAAS). Election as an AAAS Fellow is an honor bestowed upon its members by their peers.
+
+The research, published recently in the journal eLife, is the first to demonstrate that the same brain region can both motivate a learned behavior and suppress that same behavior.
+
+Ciccocioppo, R.; Martin-Fardon, Remi; Weiss, Friedbert Stimuli associated with a single cocaine experience elicit longlasting cocaine-seeking. Nature Neuroscience 2004 , 7, 495-496.
+
+Weiss, Friedbert; Porrino, L. J. Behavioral neurobiology of alcohol addiction: Recent advances and challenges. Journal of Neuroscience 2002 , 22, 3332-3337.
+
+Findings in animal study could eventually lead to improved treatments to minimize cravings in people with alcohol use disorder.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+1986 - 1989 Postdoctoral Fellow , Research Institute of Scripps Clinic, Division of Preclinical Neuroscience and Endocrinology, La Jolla, CA.1988 / 1989 Visiting Scientist, Department of Pharmacology, Karolinska Institute, Stockholm, Sweden. 1989 - 1993 Assistant Member , Department of Neuropharmacology, The Scripps Research Institute (TSRI), La Jolla, CA. 1994 - 1997 Associate Member , Department of Neuropharmacology, TSRI, La Jolla, CA. 1996 - 2002 Associate Adjunct Professor , Department of Psychiatry, University of California, San Diego (UCSD), School of Medicine. 1997 - present, Faculty Member ,Neurosciences Graduate Program, University of California, san Diego (UCSD). 1997 - 1999 Associate Professor , Department of Neuropharmacology, TSRI, La Jolla, CA. 1999 - 2005 Associate Professor with Tenure , Department of Neuropharmacology, TSRI, La Jolla, CA. 2004 - present Associate Director , The Pearson Center for Alcoholism and Addiction Research, TSRI, La Jolla, CA. 2005 - present Professor , Molecular and Integrative Neurosciences Department, TSRI, La Jolla, CA.
+
+Ph.D. (Biological Psychology), University of California, Santa Barbara, 1986 B.A. (Psychology), University of San Francisco, 1980 M.A. (Psychology), University of California, Santa Barbara, 1983
+
+===== LAB: James Williamson, PhD =====
+RNA Structure and RNP-Assembly. The goal of my research program is to understand the structural role of RNA in mediating its many biological functions. We are interested in the 3-dimensional architecture of RNA, recognition of RNA by proteins, and the process by which RNAs fold into their complex structures. Experimentally, we apply a wide range of biochemical and biophysical methods to characterize specific model systems to obtain insights into how RNA structure contributes to RNA function. Ribosome Assembly . We are using a multidisciplinary approach to study the dynamics of ribosome assembly, both in vitro and in cells. In order to measure the kinetics of ribosomal protein binding in vitro, we developed an isotope pulse-chase method using quantitative mass spectrometry. This approach allows us to measure the rate of ribosomal protein binding under a variety of conditions to interrogate the mechanism of assembly. In addition, we are using single molecule fluoresence methods, in collaboration with David Millar's laboratory, to measure cooperativity in ribosome protein binding using Fluorescence Correlation Spectrocopy. We are collaboratting with Clint Potter, Bridget Carragher and Ron Milligan's laboratory to determine the structure of ribosome assembly intermediates using time-resolved electron microscopy. Finally, we are using isotope pulse experiments in conjunction with quantitative proteomic mass spectrometry to monitor the dynamics of ribosome assembly in cells. RNPs regulating C. elegans germline development. We are using a biochemical and structural biology approach to determine the structure of RNA-protein complexes that regulate stem cell differentiation in the model organism C. elegans. RNA binding proteins regulate many essential genes in this process by binding to 3'untranslated regions of the mRNA. We are using X-ray crystallography to determine the structures of these multicomponent ribonucleoprotein complexes to learn how they regulate gene expression. Regulation of T-cell activation by RNA binding proteins. We are collaborating with Dan Salomon's laboratory to study how RNA binding proteins regulation the activation of T-cells. We are using a structural genomics approach to determine the structure of RNA binding proteins, protein-protein complexes, and RNA-protein complexes that are implicated in regulating T-cell activation. Helicases involved in HIV Replication. We are studying a set of helicases that are implicated in the function of the HIV Rev protein, which is important for transport of unspliced viral mRNAs from the nucleus to the cytoplasm. Helicases are ATP-dependent RNA binding motors that are implicated in strand displacement and protein displacement reactions in many cellular processes, however, their specific role in HIV replication is not known. We are taking a biochemical and X-ray crystallographic approach to understand how these helicases participate in key steps of the life cycle of HIV.
+
+Nature Index has ranked Scripps Research second in the world and first in the United States among stand-alone scientific institutes for biomedical research.
+
+Researchers will investigate how a common dietary nutrient may control a hidden layer of gene regulation in cancer cells.
+
+Researchers will investigate how a common dietary nutrient may control a hidden layer of gene regulation in cancer cells.
+
+“Pytheas” app created by a team at Scripps Research allows scientists to identify and quantify modified RNA molecules more easily than ever.
+
+===== LAB: Ian Wilson, PhD =====
+Structural Studies of the Immune System, Viral Pathogens, and Vaccine Design Immunologic recognition of microbial pathogens is fundamental for fighting infectious disease. Our major goal is to understand the interaction and neutralization of foreign antigens by the immune system through high-resolution x-ray structural studies of antibodies, Variable Lymphocyte Rectors (VLRs) and antigens in the humoral system, T-cell receptor complexes with MHC class I and class II in the cellular system, and through pattern recognition receptors, such as TLRs, in the innate immune system. Over 250 crystal structures of monoclonal Fab fragments and complexes with a variety of antigens, such as peptides, steroids, cocaine, and proteins, including HIV-1, gp120 and gp41, have led to significant insights into antibody-antigen recognition, virus neutralization, and vaccine design for HIV-1. In addition, catalytic or fluorescent antibodies, many of which carry out disfavored reactions or for which no natural enzymes exist, or have interesting physico-chemical properties have given us insight into a myriad of uses as artificial catalysts or as biosensors. The T-cell receptor in complex with pMHC has revealed how peptide antigens can be recognized in the context of the MHC molecule. Many other key molecules in cellular immunology are being studied, such as non-classical or MHC homologues: for example, CD1 binds lipid, glycolipid, and lipopeptide antigens from the cell walls of microbial pathogens and the NK family of receptors recognizes classical as well as distant MHC homologues. Studies on other pattern recognition receptors, include peptidoglycan recognition protein (PGRP), TREM-1, Toll-like receptors (TLR) have revealed how unique pathogen-associated molecules are recognized by the immune system. Much of our recent work is focused on HIV-1 and influenza viruses. The 1918 flu, which killed 20-40 million people worldwide, is being investigated through structural and binding studies of the 1918 viral proteins, such as the hemagglutinin (HA) and neuraminidase, as well as other the viral proteins. The avian H5N1 and swine H1N1 influenza virus HA structures have been determined as well as mutations that enhance binding to human receptors that may allow the virus to cross the species barrier into humans and be transmissible. We have also determined structures of almost all of the rare, broadly neutralizing antibodies against the HIV-1 envelope proteins, gp120 and gp41, in order to elucidate the sites of vulnerability that can be used for HIV-1 vaccine design. A very exciting project on broadly neutralizing antibodies with influenza virus has revealed novel epitopes that are of great value for structure-assisted vaccine development. We have defined a broadly neutralizing epitope in all group 1 influenza subtypes and are working on other antibodies that recognize group 2 as well as those that cross all subtypes. Other flu projects are associated with the nucleoproteins, polymerases and neuraminidases in order to understand how influenza replicates. I also directed the Joint Center for Structural Genomics (2000-2016) that pioneers new high throughput methodologies and te
+
+Scripps Research scientists used computer modeling to illustrate how antibodies use fatty molecules known as lipids to recognize the HIV virus.
+
+News Scripps Research scientists identify mutation that could facilitate H5N1 “bird flu” virus infection and potential transmission in humans
+
+===== LAB: R. Luke Wiseman, PhD =====
+The human body is constantly challenged with a wide array of genetic, environmental, or aging-related insults (or stress). To confront these challenges, the body utilizes a network of stress-responsive signaling pathways that protect cells from various types of insult. These pathways similar mechanisms involving the sensing of a defined stress and subsequent activation of signaling cascades that promote protective remodeling of the cellular proteome. As such, these pathways are continuously responding to environmental changes to mitigate damage associated with the invariability of the cellular environment and ensure effective cellular and tissue function. Considering the importance of stress-signaling pathways in maintaining cellular and organismal function, it is not surprising that genetic or aging-associated changes in the activity of these pathways is implicated in the onset and pathogenesis of many different diseases. Our interests primarily focus on defining the pathologic implications of stress-responsive signaling pathways in human disease with the explicit goal of identifying potential aspects of these pathways that can be therapeutically targeted to improve outcomes across many disorders. In other words, we are looking to identify ways to ‘hijack’ the body’s own defense mechanisms to prevent pathological imbalances in cellular physiology associated with diverse diseases. Our primary focus is studying stress-responsive signaling pathways involved in regulating cellular protein homeostasis (or proteostasis) such as the unfolded protein response (UPR), integrated stress response (ISR), and heat shock response (HSR). These pathways function to maintain the integrity of the cellular proteome and prevent the potentially toxic accumulation of proteins that can disrupt cellular physiology. Imbalances in proteostasis are implicated in many different types of disease including neurodegenerative diseases, protein misfolding diseases, metabolic disorders, cardiovascular diseases, and inflammatory diseases. As we focus on defining the specific mechanisms by which these stress-responsive pathways protect cells against disease-relevant insults, we are identifying new opportunities to mitigate pathologies associated with many different types of human diseases. Through these efforts, we are working to develop unique strategies that can potentially be applied widely to treat human diseases in a ‘one-drug:multiple disease’ therapeutic paradigm.
+
+As it turns out, our metabolisms have been misunderstood for decades. These Scripps Research scientists are changing the way we think about metabolic disorders, weight control and eating habits—paving the way for new drugs to treat some of the most serious health conditions our world faces today.
+
+“Why would you ever want to stop learning?” Luke Wiseman, PhD, associate professor in the Department of Molecular Medicine and winner of the 2019 Outstanding Mentor Award, reflects on what his colleagues and lab members have taught him during his 11 years as a faculty advisor.
+
+Researchers have discovered a pathway in cells that promotes mitochondrial function during times of stress, a response that can guard against disease as we age.
+
+Puchades Garcia, Cristina; Rampello, A. J.; Shin, Mia; Giuliano, C. J.; Wiseman, Rockland L.; Glynn, S. E.; Lander, Gabriel C. Structure of the mitochondrial inner membrane AAA+ protease YME1 gives insight into substrate processing. Science 2017 , 358.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Chi-Huey Wong, PhD =====
+Research in the Wong lab encompasses a broad spectrum of bioorganic and synthetic chemistry. Our current interests are centered on developing new methods to understand the role of glycosylation in protein structure and function, as well as in cancer progression, bacterial and viral infections, neurodegenerative disorders, and immune responses. Programmable one-pot and chemo-enzymatic methods for the synthesis of oligosaccharides and glycoproteins, glycan microarrays, glycosylation probes, and glycoengineered proteins like antibodies are being developed to study glycosylation in biology, disease progression, and drug discovery. Our goal is to identify novel targets associated with carbohydrate recognition to develop next-generation medicines. This includes low-sugar vaccines against cancer and microbial infections, glycoengineered antibodies with improved efficacy and control of glyco-immune checkpoints, and inhibitors of key enzymes involved in the biosynthesis of disease-associated glycans. Overall, by decoding complex glycosylation and building comprehensive wet-lab datasets, we are developing AI-driven, next-generation medicines.
+
+Scripps Research leadership, philanthropists and scientists celebrated the recent dedication of the new Chi-Huey Wong Laboratories for Biomedical Research on October 23, 2024, with a special ribbon-cutting ceremony and reception. Philanthropic support from several donors made this exciting addition to Scripps Research’s award-winning Hazen campus possible. Notably, Samuel Yin, Taiwanese businessman, prominent philanthropist and creator of the Tang Prize, provided generous seed funding to construct the new facility. His son, Chung-Yao Yin, attended the event and delivered remarks on his father’s behalf. Professor Chi-Huey Wong, the building’s namesake, also attended, as well as Scripps Research supporter Jim Zolin, who named the building’s first-floor conference room. The state-of-the-art Chi-Huey Wong Laboratories is one of the largest facilities built by the institute and marks a significant milestone in Scripps Research’s efforts to enable interdisciplinary collaborations across chemical and life sciences.
+
+Lo, Jennifer M.; Wong, Chi-Huey Decoding Protein Glycosylation for Better Vaccine and Antibody Development. Accounts of Chemical Research 2026 , 59, 501-517.
+
+Huang, Han-Wen; Wong, Chi-Huey Cell-based glycoengineering for production of homogeneous and specific glycoform-enriched antibodies with improved effector functions. Proceeding of the National Academy of Sciences 2025 , 122:e2423853122.
+
+Wang, S.- W.; Lin, K.- Y.; Wong, Chi-Huey Mechanism of antigen presentation and specificity of antibody cross-reactivity elicited by an oligosaccharide-conjugate cancer vaccine . Journal of the American Chemical Society 2023 , 145, 9840-9849 .
+
+Wong is being honored for his pioneering work in glycoscience, the study of chains of sugars and their role in health and disease.
+
+Li, R; Krasnova, L.; Wong, C.- H. Expedient Assembly of Multi-antennary N-glycans from Common N-Glycan Cores with Orthogonal Protection for the Profiling of Glycan-binding Proteins . Journal of the American Chemical Society 2025 , 147, 12937-12948 .
+
+Lin, Chih-Wei; Chen, Ming-Wei; Wong, Chi-Huey Homogeneous antibody and CAR-T cells with improved effector functions targeting SSEA-4 glycan on pancreatic cancer. Proceedings of the National Academy of Sciences 2021 , 118 (50):e2114774118.
+
+This award is considered one of the highest honors of FACS, highlighting Wong’s foundational contributions to the field.
+
+===== LAB: Peter Wright, PhD =====
+Structure, Dynamics and Interactions of Proteins. My laboratory utilizes high-resolution nuclear magnetic resonance (NMR) spectroscopy and other biophysical and biochemical methods to investigate the structure, dynamics, and folding mechanisms of proteins and to map their functional interactions. NMR is unique as a method for determining three-dimensional structures of proteins and protein complexes in solution and also providing novel information about the time-dependent structural fluctuations that are essential for protein function. Intrinsically disordered proteins and cellular signaling . Intrinsically disordered proteins are highly abundant in eukaryotes and play a central role in cellular regulatory processes and signaling pathways. We are using a multidisciplinary approach, including a broad range of biochemical and biophysical methods, NMR, and single molecule fluorescence (in collaboration with Ashok Deniz), to elucidate the structure of the general transcriptional coactivators CBP and p300 and the tumor suppressor p53 and characterize their functional interactions with key cellular and viral targets. We are implementing novel NMR methods, intein labeling technologies, and single molecule FRET methods to characterize the structure and dynamics of disordered proteins and their complexes and to elucidate the mechanism by which disordered proteins fold upon binding to their targets. Mechanisms of protein folding and misfolding. NMR is uniquely suited for studies of protein folding and misfolding pathways, providing detailed insights into the structure and dynamics of unfolded states and partially folded intermediates. We are applying NMR relaxation methods and real-time 19F NMR to elucidate the molecular mechanism by which the protein transthyretin spontaneously unfolds and aggregates, leading to amyloid disease. Protein dynamics and "invisible" excited states . We are applying NMR relaxation dispersion methods to characterize the intrinsic dynamics of multivalent intrinsically disordered proteins when bound to their targets. Our goal is to characterize weakly populated excited states that modulate molecular interactions and play a functional role in biological switches..
+
+Sugase, K.; Dyson, H. J.; Wright, Peter E. Mechanism of coupled folding and binding of an intrinsically disordered protein. Nature 2007 , 447, 1021-1025.
+
+Berlow, R. B.; Dyson, H. J.; Wright, Peter E. Hypersensitive termination of the hypoxic response by a disordered protein switch. Nature 2017 , 543, 447-451.
+
+Scientists have uncovered a potential new approach for treating eye diseases that affect millions of people around the world.
+
+Sun, Xun; Dyson, H. Jane; Wright, Peter E. Kinetic analysis of the multistep aggregation pathway of human transthyretin. Proceedings of the National Academy of Sciences 2018 , 115, 10040-10045.
+
+Krois, Alexander S.; Dyson, H. J.; Wright, Peter E. Long-range regulation of p53 DNA binding by its intrinsically disordered N-terminal transactivation domain. Proceedings of the National Academy of Sciences of the United States of America 2018 , 115, E11302-E11310.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+M.S. (Chemistry), University of Auckland, 1969 B.S. (Chemistry), University of Auckland, 1968 Ph.D. (Chemistry), University of Auckland, 1972
+
+2013-Present Professor, TSRI 1987-2012 Chair, TSRI 1984-1986 Professor, TSRI 1976-1984 Lecturer/Senior Lecturer, University of Sydney 1972-1976 Postdoctoral Fellow, University of Oxford
+
+===== LAB: Chunlei Wu, PhD =====
+Wu, Chunlei; Macleod, Ian; Su, Andrew I. BioGPS and MyGene.info: Organizing online, gene-centric information. Nucleic Acids Research 2013 , 41, D561-D565.
+
+To drive global research efforts, the Center for Viral Systems Biology at Scripps Research is tracking the prevalence of new variants of SARS-CoV-2 and making this information publicly available.
+
+Developed collaboratively by several Scripps Research teams, Outbreak.info seeks to bring together research information on a single site and improve data visualization.
+
+Scripps Research scientists highlight the need for continued monitoring of SARS-CoV-2 and potential variants of concern.
+
+Data ecosystem to be built for National Institute of Allergy and Infectious Diseases will give researchers a secure way to collaborate on research and medical advances.
+
+The rich data stored in electronic medical records may offer clues to better care for those diagnosed with coronavirus disease.
+
+The grant from the National Center for Advancing Translational Sciences (NCATS) supports the ongoing development of the Biomedical Data Translator—an open-source resource to accelerate human health insights.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Peng Wu, PhD =====
+The research in the Wu laboratory integrates synthetic chemistry with glycobiology to explore the cellular and molecular mechanisms that control immune responses toward cancer and human pathogens. Cell-cell interactions play critical roles during immune responses against cancer and human pathogens, in which the productive interaction of antigen-presenting cells and T cells is required for the successful priming of "adaptive" T-cell responses. On the other hand, chronic antigen stimulation leads to T-cell dysfunction. Bystander T cells that recognize irrelevant antigens are also enlisted in such pathological processes. However, we know little about the precise contributions of endogenous antigen-specific and bystander T cells during the course of a natural pathogen infection and cancer progression. Due to their heterogeneous compositions, it is challenging to elucidate their properties. The focus of my lab is to develop new chemical approaches to probe cell-cell interactions in these processes. We are interested in detecting endogenous antigen-specific T cells and separating them from bystander T cells with the goal of understanding the specific roles and functional differences of these two T-cell subsets in an immune response, how T cells' reactivity is linked to their functional state, and how to improve persistence and replication potential of antigen-specific T cells for treating infection and cancer. Molecules presented on the cell surface determine how cells interact with their partners and their environment. In the cancer-immunity cycle, a process initiated by the release of cancer cell antigens and ended with the destruction of cancer cells, the interaction of Siglecs (Sialic-acid-binding immunoglobulin-type lectins) with sialylated glycan ligands modulates immune cell-tumor cell interactions, triggering signaling cascades to inhibit anti-tumor immune responses. We are developing unnatural Siglec ligands using sulfur (VI) fluoride exchange (SuFEx) click chemistry to explore if ligands with sufficiently high affinity and specificity can be identified to block the endogenous Siglec-ligand binding at the immunological synapse formed between immune cells and target cells and if such ligands can be employed to engineer immune cells with desired properties for therapeutic applications.
+
+Scripps Research scientists and collaborators use an innovative set of machine-learning models to discover a record-breaking material for film capacitors, key components in many energy technologies.
+
+A team headed by scientists at Scripps Research has devised an immune cell-boosting technique that may enable potent new cancer treatments.
+
+Scripps Research scientists help T cells more effectively kill solid tumors cells in vitro and in mice by tweaking an existing cancer immunotherapy.
+
+New findings reveal how specialized cells shield the pancreas from autoimmune attack, providing new therapeutic strategies for type 1 diabetes.
+
+Flexible compounds made with Nobel-winning click chemistry can be used in energy-storing capacitors at high temperatures and electric fields.
+
+With applications in drug discovery and materials science, a new library of polymers can be generated in in an environmentally safe way.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+Ph.D. (Chemistry), The Scripps Research Institute, La Jolla, CA, 2005 M.S. (Chemistry), Indiana University, Bloomington, IN, 2001 B.S. (Chemistry), Peking University, Beijing, 1999
+
+===== LAB: Xiaohua Wu, PhD =====
+New findings from Scripps Research reveal how certain tumors survive DNA damage—and point to a strategy for targeting them.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== END batch 8/9 =====

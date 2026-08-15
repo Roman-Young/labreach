@@ -1,4 +1,4 @@
-########## DISTILL OVERVIEWS — scripps batch 6/8 (15 labs) ##########
+########## DISTILL OVERVIEWS — scripps batch 6/9 (12 labs) ##########
 
 For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad
 with no field background could read to decide if they want to email the lab. Say WHAT the lab studies,
@@ -9,223 +9,236 @@ its research, set that lab's value to "" (empty) rather than padding — an hone
 Write your answer as a JSON object {"<exact lab name>": "<overview or ''>", ...} to this ABSOLUTE path:
   /home/roman/agent/codebases/labreach/data/agent-overviews/scripps-batch5.json
 
-===== LAB: Ryan Shenvi, PhD =====
-Recently, our work in complex molecules like cellular metabolites (aka natural products) have stimulated interest in how actionable predictions can be made with computational assistance. Techniques like machine learning (ML) typically rely on very large data sets to build statistical models that lead to predictions outside the original training set. However, these data are typically not available for complex, under- or unexplored molecules. Therefore, we have turned to high-level theory like density functional theory (DFT) or equivalent neural network potentials (NNPs) to simulate training sets. To avoid "garbage-in-garbage-out" predictions, we rigorously benchmark theory against competitive elementary steps that lead to a quantifiable ratio of products. This workflow can turn ca. 5 experiments into ca. 30 transition state models, which then fuel parametrization and statistical modeling to reach hundreds of predicted outcomes. If done correctly, this strategy can save hours of wet lab time by simulating reactions before they are ever run.
+===== LAB: Christopher Parker, PhD =====
+Broadly speaking, the Parker Lab seeks to develop chemistry-enabled strategies to investigate human biology and disease pathology. Our research integrates organic synthesis with chemical proteomics and cell/molecular biology to (1) to study how small molecules might regulate, or be designed to regulate, complex biological processes such as immune responses and, (2) illuminate molecular mechanisms that contribute to disease. Our primary objectives are not only to better understand protein function and corresponding disease roles, but also to create chemical tools and technologies that might facilitate the development of new therapeutics. Check out our lab website for additional information on our research.
 
-Chemical synthesis is the transformation of matter, converting one material with one set of properties into new materials with new properties. Fundamental advances in synthesis support material, agricultural and pharmaceutical sciences. The scientific community has been restricted, however, in the exploration of relatively simple molecules with simple structures due to the insufficiency of chemical tools to handle high complexity molecules.
+Scripps Research scientists develop a new, high-resolution technique for finding potential therapeutic targets on proteins in living cells. The findings could lead to more targeted therapeutics for nearly any human disease.
 
-Molecular complexity (e.g. information content and information density) relates to selectivity of binding within a complex environment, like a cell, tissue or organism: simple keys will fit many locks; the more complex the key, the greater the specificity. Of all the varied molecules that might exist—a theoretical set referred to as ‘chemical space’—few are easily accessible and the most complex molecules are the least explored.
+Scripps Research professor Christopher Parker has been named the recipient of the 2026 American Chemical Society’s (ACS) Chemical Biology Early Career Award, which recognizes early-career investigators making an outsized impact on the field of chemical biology. It is jointly administered by the editor-in-chief of the ACS Chemical Biology and the ACS’s Division of Biochemistry and Chemical Biology and is reserved for researchers who have started their independent research positions within the last 10 years.
 
-The limited amount of data associated with complex molecules and their reactions affects our ability to predict their behavior and properties. Therefore, our group has developed tools—experimental and computational—to better access, explore and predict the behavior of complex molecules. We then apply these chemical tools and complex molecules towards biomedical goals.
+Christopher Parker and Giordano Lippi are unraveling the metabolic and protein mechanisms, respectively, that go awry in aging and disease—including Alzheimer’s.
 
-Among our biomedical applications, we are best known for our work on kappa-opioid receptor ligands like salvinorin A and GB18. This latter molecule was discovered as a CNS-active component of the traditional medicine and rituals of the Gimi people of Papua New Guinea and assigned by our lab as a potent opioid receptor antagonist. Our work transformed this compound into a series of potent, selective and G protein-biased agonists (via collaboration with Professor Laura Bohn). We also have active programs in 14-3-3 protein-client molecular glues, GABAa receptor antagonists and species-selective SDH inhibitors.
+Scripps Research scientists developed a compound that can block a protein previously considered challenging to drug and is implicated in autoimmune diseases, including lupus.
 
-Scripps Research chemists solve a longstanding problem in the construction of branched molecular frameworks, unlocking a faster path to the complex structures found in drugs and materials.
+News Collaboration awards enable scientists to design new medicines, more precisely edit DNA and fight drug-resistant bacteria
 
-Select Publications Gan, Xu- C.; Kotesova, Simona; Castanedo, Alberto; Green, S A.; Møller, Søren Lau Borcher; Shenvi, Ry A. Iron-Catalyzed Hydrobenzylation: Stereoselective Synthesis of (-)-Eugenial C. 2023 , 145, 15714-15720.
-
-Scripps Research chemists solve a longstanding problem in the construction of branched molecular frameworks, unlocking a faster path to the complex structures found in drugs and materials.
-
-===== LAB: Supriya Srinivasan, PhD =====
-Dr. Srinivasan has led an NIH-funded independent research laboratory at Scripps Research for fifteen years, publishing over 60 peer-reviewed papers with more than 2,000 citations and training a cadre of postdoctoral fellows, graduate students, and post-baccalaureate researchers who have gone on to careers in academia, medicine, and industry. Her awards and professional activities span research recognition, national service, and international scientific leadership. She is a recipient of the K99-R00 Fellow-to-Faculty Transition Award, the American Federation for Aging Research Senior Fellowship, the American Heart Association Fellowship, and the Baxter Foundation Junior Faculty Recognition Award. She has served on more than a dozen NIH study sections including panels on aging, obesity, interoception, lipid metabolism, and career development and has reviewed grants for the European Research Commission, Israel Science Foundation, Belgian Science Foundation, Harvard Medical School, and the Novo Nordisk and Lundbeck Foundations, where she currently chairs the review panel for the international Brain-Body Communication initiative. She has conducted tenure reviews at NIH and other elite academic institutions, and serves as a reviewer for leading journals including Nature, Nature Aging, Cell Metabolism, and others. Dr. Srinivasan has organized international conferences and NIH workshops on metabolism, aging, and model organisms, served as a Key Opinion Leader for the Novo Nordisk and Lundbeck Foundations’ Brain-Body Workshop, and holds consulting and external advisory roles in the biotechnology and venture capital sectors. She has delivered invited lectures at Keystone, Gordon Research, and EMBO conferences, at major research institutes across the United States, Europe, Asia, and Australia, and has given Scripps Research Front Row lectures to lay and philanthropic audiences. Her work has been covered by NPR, KPBS, Scientific American and WebMD, among others.
-
-Dr. Srinivasan’s research program investigates the gut-brain axis as a fundamental organizer of metabolic physiology, with a particular emphasis on the neuroendocrine and enteroendocrine signaling systems through which the intestine and nervous system communicate to regulate energy homeostasis, feeding behavior, fat metabolism, and longevity. Her laboratory employs C. elegans as a genetically tractable model system to identify conserved molecular mechanisms underlying these processes, leveraging the organism’s well-defined neural circuitry and amenability to large-scale genetic and small-molecule screens. Central to this work is the question of how animals sense and integrate information about internal physiological state and translate these inputs into coordinated systemic responses via GPCRs, neuropeptides, and insulin-like signaling cascades. Her program has increasingly extended into mammalian intestinal biology, examining how enteroendocrine cell-derived signals govern lipid mobilization, mucosal immunity, and inflammation. Spanning invertebrate genetics and mammalian physiology, her research addresses fundamental questions with direct relevance to obesity, type 2 diabetes, inflammatory bowel disease, and the biology of healthy aging.
-
-Ph.D. (Genetics), University of Missouri-Columbia, 2000 B.Sc Hons (Biology), Macquarie University, Sydney, Australia, 1996
-
-2010-2018: Assistant Professor, Department of Chemical Physiology and Dorris Neurosciene Center, Scripps Research Institute, La Jolla, CA
-
-===== LAB: Raymond Stevens, PhD =====
-You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
-
-===== LAB: Lisa Stowers Anderson, PhD =====
-Papes, F.; Logan, D. W.; Stowers, Lisa The vomeronasal organ mediates interspecies defensive behaviors through detection of protein pheromone homologs. Cell 2010 , 141, 692-703.
-
-Logan, D. W.; Marton, T. F.; Stowers, Lisa Species specificity in major urinary proteins by parallel evolution. PLoS One 2008 , 3, e3280.
-
-Flanagan, Kelly A.; Webb, W.; Stowers, Lisa Analysis of male pheromones that accelerate female reproductive organ development. PLoS One 2011 , 6, e16660.
-
-Neuroscientists rapidly decode interoception, the long-overlooked links between our brain and the heart, stomach and other organs.
-
-Investigating the neural mechanisms underlying the brain’s recognition and interpretation of odors with Scripps Research neuroscientist Lisa Stowers, PhD
-
-The funding will support research in the Stowers lab to describe a complete neural circuit in a mammalian brain—a first for science.
+A new tool enables scientists to tackle difficult molecular recognition problems to aid drug discovery for incurable diseases.
 
 You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
 
-===== LAB: Andrew Su, PhD =====
-First, we build computational tools and infrastructure to organize and connect biomedical knowledge at scale. We develop and maintain widely used resources, including the BioThings suite ( MyGene.info , MyVariant.info , MyChem.info ) of biomedical APIs that collectively serve over 30 million requests per month. More recently this work has grown into large-scale biomedical knowledge graphs, including our contributions to the NCATS Biomedical Data Translator and the NIAID Data Ecosystem . These projects integrate data across hundreds of sources so they can be queried and reasoned over computationally.
+2013-2018 American Cancer Society Postdoctoral Research Fellow, The Scripps Research Institute 2018-2022 Assistant Professor, Department of Chemistry, The Scripps Research Institute
 
-Our lab is interested in biomedical discovery using quantitative methods. We apply the tools of computer science, statistics, and increasingly artificial intelligence to a range of problems spanning drug discovery, biomedical knowledge representation, gene and variant annotation, and single-cell biology. Across all of our work, we are committed to the principles of open source, open data, and open science.
+2021 - Present Founder, Belharra Therapeutics 2022-2024 Associate Professor, Department of Chemistry, The Scripps Research Institute 2024-present Professor, Department of Chemistry, The Scripps Research Institute
 
-Second, we directly engage in biomedical discovery by mining and integrating these large, heterogeneous data sets. We use knowledge graphs and statistical methods to generate and prioritize mechanistic hypotheses. For example, we are developing tools and approaches for identifying drug-repurposing opportunities and mapping the mechanisms by which drugs act (as in our DrugMechDB resource). Our emphasis is on translating massive data sets into a small number of testable, evidence-supported predictions.
+Chemoproteomic Development of SLC15A4 Inhibitors with Anti-Inflammatory Activity. Nature Chemical Biology 2024 , 20, 1000-1011.
 
-Third, we actively seek out new collaborations with experimental scientists to explore novel data sets and technology platforms. The rate of biological data generation continues to accelerate, and bioinformatics plays a critical role in the warehousing, analysis, and visualization of these data. We collaborate with research groups both locally and globally, spanning areas such as single-cell transcriptomics, circadian biology, and infectious disease. The focus of this work is on efficiently translating large data sets into testable hypotheses.
+===== LAB: Ardem Patapoutian, PhD =====
+Mechanotransduction is perhaps the last sensory modality not understood at the molecular level. Proteins/ion channels that sense mechanical force are postulated to play critical roles in sensing touch/pain (somatosensation), sound (hearing), shear stress (cardiovascular tone), etc.; however, the identity of ion channels involved in sensing mechanical force has remained elusive. The Patapoutian lab identified PIEZO1 and PIEZO2, mechanically-activated cation channels that are expressed in many mechanosensitive cell types. Genetic studies established that PIEZO2 is the principal mechanical transducer for touch, proprioception, and baroreception, and that PIEZO1 mediates blood-flow sensing, which impacts blood pressure regulation and vascular development. Patapoutian lab has since isolated other mechanosensors including GPR68 and OSCA/TMEM63 family members. The lab continues to analyze the physiological relevance of these ion channels and receptors in mechanosensation, and search for novel mechanically activated sensors.
 
-Fourth and most recently, we are actively exploring the use of Agentic AI tools for science. A growing thread of our work explores how AI agents and large language models can accelerate biomedical research -- augmenting how scientists generate ideas, synthesize the literature, and collaborate. We are developing and evaluating agentic tools and platforms that bring these capabilities to working researchers, with an emphasis on transparency, reliability, and open infrastructure.
+Scripps Research scientists identify the protein that helps kidney cells regulate renin, providing foundational insight into how kidneys function.
 
-Ph.D. (Chemistry), The Scripps Research Institute, 2002 B.A. (Chemistry, Computing and Information Systems, Integrated Science), Northwestern University, 1998
-
-Joy, Janet; Su, Andrew I. Federated knowledge retrieval elevates large language model performance on biomedical benchmarks. 2026 , 15.
-
-Contact Andrew Su, PhD Email Joint Appointments Department of Translational Medicine Graduate Program Member of the Graduate Program faculty.
-
-From the genetic code that underpins diseases to the chemical data driving drug discovery, scientists produce a tremendous number of large datasets, How do we best organize all this data so that we can accelerate scientific discoveries? That is the question that Scripps Research bioinformatician Andrew Su and his lab are tackling.
-
-The grant from the National Center for Advancing Translational Sciences (NCATS) supports the ongoing development of the Biomedical Data Translator—an open-source resource to accelerate human health insights.
-
-===== LAB: John Teijaro, PhD =====
-My focus is on studying persistent viral infection using the LCMV system and acute viral pathogenesis utilizing the influenza virus in a mouse model. I have been trained in the growing and titrating LCMV as well as infecting mice with various LCMV clones. I have experience quantifying and analyzing functionality of virus specific T cells. I am currently investigating the role type 1 interferon plays in the initiation and maintenance of persistent virus infection and how type 1 interferon signaling promotes cytokine amplification and immune pathology during influenza virus infection. I have experience working at the interface of virology and immunology. During my graduate studies I set up an influenza virus infection system to investigate memory CD4 T cells responses to influenza virus infection in mice with Donna Farber. With Donna I identified that memory CD4 T cells contribute to both protection and immune pathology following influenza virus challenge. We demonstrated that memory CD4 T cells could provide protection independently of CD8 T cells or B cells by a mechanism requiring IFN-?. Moreover, we were the first lab to demonstrate the existence of tissue resident memory CD4 T cells in the lung and that these resident memory T cells provided optimal protection to influenza virus re-challenge. I continued my training in viral immunology by gaining expertise in both the LCMV and Influenza virus systems with Michael Oldstone. During my time in Michael’s laboratory, I shifted my focus in two directions, 1) towards innate immune responses and understanding how innate cytokine amplification during influenza virus infection contributes to disease pathogenesis and 2) studying how the immune system controls persistent LCMV (clone-13) infection. My work on cytokine amplification during influenza virus infection resulted in the surprising finding that endothelial (not epithelial) cells were central regulators of cytokine amplification during influenza virus. Moreover, blunting this cytokine amplification during human pathogenic influenza virus infection resulted in improved survival, demonstrating for the first time that innate immune pathology is causal in influenza virus pathogenesis. The future directions focus on understanding the pulmonary cellular players that initiate and amplify cytokines/chemokines following influenza virus challenge. Further, we recently demonstrated that blockade of type 1 interferon signaling during persistent LCMV infection resulted in hastened clearance of persistent LCMV from mouse hosts. We demonstrate that blockade of type 1 interferon (IFN-I) signaling using a type 1 interferon receptor neutralizing antibody reduced immune system activation, decreased expression of negative immune regulatory molecules, and restored lymphoid architecture in mice persistently infected with lymphocytic choriomeningitis virus (LCMV). IFN-I blockade both prior to and following establishment of persistent virus infection resulted in a CD4-T cell dependent enhanced virus clearance. We demonstrate a direct causal link between IFN-I signaling, immune activation, negative immune regulator expression, lymphoid tissue disorganization and virus 
-
-B.S. (Molecular & Cell Biology), Millersville University of Pennsylvania, 2004 Ph.D. (Microbiology & Immunology), University of Maryland, 2009
-
-Zak, Jaroslav; Teijaro, John R. Beyond suppression: the paradox of JAK inhibitors as amplifiers of cancer immunotherapy. 2026 , 26, 472-480.
-
-===== LAB: Luc Teyton, MD, PhD =====
-In the face of antibiotic resistance and the dwindling number of new antibiotics, we have taken on the challenge of producing therapeutic anti-microbial antibodies. For this purpose, we targeted the common structures that constitute the external wall and capsule of bacteria and fungi: the glycans. We circumvented the T cell independence of glycans by developing a new generation of synthetic conjugate immunogens that drive the emergence of very high affinity antibodies. In proof-of-concept studies and pre-clinical models, the efficacy of the approach has been shown for pathogenic strains of Streptococcus pneumoniae and antibiotic-resistant Staphylococcus aureus. Optimization of the design of procedures is guided by structural studies, new synthetic chemistry, and in-depth analysis of B and T cell responses. The ultimate goal is prevention and intervention human clinical trials.
-
-For over 25 years, we have examined the mechanisms leading to the destruction of the b cells of the islets of Langerhans and type 1 diabetes. Our focus is twofold, understand the normal relationship of the endocrine pancreas with the immune system, and the disruption of this homeostasis leading to the initiation of disease. We posit that multiple pathways that control normal physiology are ideal targets for therapeutic intervention and the prevention of progression. These studies are performed in both mice and humans using the most sophisticated techniques of modern genetics and immunology. Collaborations allow us to span the entire field of research from islet organoids derived from stem cells, to in depth analysis of immune cells by single cell techniques, to clinical sampling of patients and at-risk populations.
-
-1980 Lauréat of the Medical School, Caen Medical School, France 1984 Fellowship, Fondation pour La Recherche Médicale 1985 Top Honor for Medical Residency, Gold Medal, Public Health System, France 1986 Fellowship, Fondation pour La Recherche Médicale 1987 Special Honors from the Ph.D Jury, Paris VI University, France 1987 Fellowship, Association pour la Recherche contre le Cancer (Paris) 1987 Fellowship Lavoisier, Foreign Affairs Ministry 1987 Fellowship, Philippe Foundation 1987 Special Honors from the Medical School Jury and National Prize of Thesis, Paris VI University, France 1991 John Satterfield Investigator Award, American College of Rheumatology 2020 Elected Member, The Henry Kunkel Society
-
-For Scripps Research scientist Josh Boyer, type 1 diabetes isn’t just a research focus—it’s personal. Diagnosed at age five, he’s spent his life navigating the daily demands of managing the condition while channeling his experience into a career. As a nurse, diabetes educator and researcher in Professor Luc Teyton’s lab, Boyer splits his time between patient care and cutting-edge immunology research aimed at deepening scientists’ understanding of type 1 diabetes.
-
-Support from the National Institute of Diabetes and Digestive and Kidney Diseases will help reveal how a newly discovered rare cell impacts the autoimmune disease.
-
-New findings reveal how specialized cells shield the pancreas from autoimmune attack, providing new therapeutic strategies for type 1 diabetes.
-
-The program grant will support the development of high-affinity antibodies that can target skin and lung infections, as well as sexually transmitted diseases.
-
-Scripps Research study shows that analyzing T cells in blood samples could be used to select at-risk patients for type 1 diabetes preventive therapy.
-
-===== LAB: Eric Topol, MD =====
-Eric Topol is the Executive Vice-President of Scripps Research, the largest non-profit biomedical research in the United States, where he is founder and director of the Scripps Research Translational Institute in 2007. Clinically active as a cardiologist, he previously led Cleveland Clinic cardiology to become the leading heart center in the US. He was the founder of a new medical school at Cleveland Clinic (Lerner College of Medicine), was commissioned by the UK government to lead a review of their National Health Service. Topol is a principal investigator of two large NIH grants for innovations to promote human health. He has published over 1,300 peer-reviewed articles, with more than 400,000 citations, elected to the National Academy of Medicine, and is one of the top 10 most cited researchers in medicine. In 2024, Topol was featured in the inaugural TIME100 Health list of most influential people in health in the world. In 2025, he was voted as one of the 25 Best Leaders in the United States (US News).
-
-He has authored four bestseller books on the future of medicine: The Creative Destruction of Medicine, The Patient Will See You Now, and Deep Medicine: How Artificial Intelligence Can Make Healthcare Human Again and his new book, Super Agers: An Evidence-Based Approach to Longevity. At Substack, he publishes Ground Truths, a weekly newsletter and podcast on cutting edge biomedical advances .
-
-M.D. (Medicine), University of Rochester, School of Medicine and Dentistry, 1979 B.A. (Biomedicine), University of Virginia, 1975
-
-2007-2017 Professor of Genomics, Molecular and Experimental Medicine (MEM), Scripps Research 2003-2006 Professor of Genetics, Case Western Reserve University 1991-2006 Chairman, Department of Cardiovascular Medicine, Cleveland Clinic 2002-2005 Founder and Provost, Cleveland Clinic Lerner College of Medicine of Case Western University 2000-2005 Chief Academic Officer, Cleveland Clinic 1985-1991 Professor with Tenure, Department of Internal Medicine, University of Michigan 1982-1985 Cardiology Fellow, Johns Hopkins University 1979-1982 Internal Medicine Resident, University of California, San Francisco
-
-Elected to Institute of Medicine, National Academy of Sciences Simon Dack Award, American College of Cardiology Andreas Gruntzig Award, European Society of Cardiology Johns Hopkins Society of Scholars American Association of Physicians American Society of Clinical Investigation American Heart Association, Top 10 Research Advances (2001, 2004) Top 10 Most Cited Researchers in Medicine, Doctor of the Decade, Institute for Scientific Information, Thomson Reuters
-
-News Scripps Research scientists launch new digital clinical trial to test repurposed drug for long COVID symptom relief
-
-Study will investigate whether a GIP/GLP-1 dual receptor agonist, currently approved for type 2 diabetes, obesity and obstructive sleep apnea, can reduce symptoms of long COVID.
-
-Select Publications Topol, Eric J. High-performance medicine: the convergence of human and artificial intelligence. Nature Medicine 2019 , 25, 44-56.
-
-Krishnan, Rayan; Rajpurkar, Pranav; Topol, Eric J. Self-supervised learning in medicine and healthcare. 2022 , 6, 1346-1352.
-
-Contact Eric Topol, MD (858) 784-2024 Joint Appointments Scripps Research Translational Institute Graduate Program Member of the Graduate Program faculty.
-
-News Scripps Research scientists launch new digital clinical trial to test repurposed drug for long COVID symptom relief
-
-You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
-
-===== LAB: Ali Torkamani, PhD =====
-Dr. Torkamani is Professor at The Scripps Research Institute and Director of Genomics and Genome Informatics at the Scripps Research Translational Institute. Dr. Torkamani’s research centers on the use of genomic and informatic technologies to identify the genetic etiology and underlying mechanisms of human disease in order to define health risks and individualized interventions. Major focus areas include human genome interpretation, genomic discovery of novel rare diseases, comprehensive, genetically-informed machine- and deep-learning prediction of risk for common diseases, and digital communication genetically-informed disease risk. He has authored over 100 peer-reviewed publications as well as numerous book chapters and Medscape references, and his research has been highlighted in the popular press. Dr. Torkamani’s overall vision is to decipher that code in order to understand and predict interventions that restore diseased individuals to their personal health baseline.
-
-Stanford University , B.S. Chemistry, 1999-2003 University of California, San Diego, Ph.D. Biomedical Sciences, 2005-2008 Scripps Translational Science Insistute , Research Scientist, 2008-2009 Scripps Translational Science Insistute, Assistant Faculty , 2009-2014 Scripps Research Institute , Assistant Professor of Molecular and Experimental Medicine, 2009-2014 Scripps Research Institute , Assistant Professor of Integrative Structural and Computational Biology, 2014-2017 Scripps Translational Science Insistute, Associate Faculty , 2014-2017 Scripps Translational Science Insistute, Director of Genome Informatics , 2012-Present Scripps Research Institute , Associate Professor of Integrative Structural and Computational Biology, 2017-2021 Scripps Research Institute , Professor of Integrative Structural and Computational Biology, 2021-Present
-
-Scripps Research scientists reveal how wearable sensors and artificial intelligence could transform the way we detect and manage pre-diabetes.
-
-Scripps Research scientists developed a model that more accurately identifies patients at risk of coronary artery disease and can inform tailored treatment.
-
-Heart disease is the leading cause of death in the United States, yet our ability to predict and lower our own risk has been limited. In this Front Row lecture, Scripps Research professor Ali Torkamani shared how his team is developing app-based digital tools that can analyze genetic markers and predict someone’s future cardiovascular disease risk. Torkamani’s research is being integrated into remote clinical trials that can provide personalized behavioral and therapeutic interventions to improve long-term health outcomes.
-
-Your DNA contains an incredible amount of information about every aspect of your being, including your risk of developing certain diseases. But up until recently, it was nearly impossible for doctors to analyze that information for individual patients. Now, with the help of affordable genomic sequencing, artificial intelligence and machine learning, scientists are working towards personalizing medical care. At the Scripps Research Translational Institute, Professor Ali Torkamani is developing ways to predict a person’s risk for rare and common diseases.
-
-Major grants from the National Institutes of Health and California Institute for Regenerative Medicine will support the development of state-of-the-art genomic tools.
-
-You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
-
-===== LAB: Renan V.H. de Carvalho, PhD =====
-de Carvalho, Renan V H; Lima-Junior, Djalma S.; da Silva, Marcus Vinícius G; Dilucca, Marisa; Rodrigues, Tamara S.; Horta, Catarina V.; Silva, Alexandre L N; da Silva, Patrick F.; Frantz, Fabiani G.; Lorenzon, Lucas B.; Souza, Marcos Miche M.; Almeida, Fausto; Cantanhêde, Lilian M.; Ferreira, Ricardo de Godoi M; Cruz, Angela K.; Zamboni, Dario S. Leishmania RNA virus exacerbates Leishmaniasis by subverting innate immunity via TLR3-mediated NLRP3 inflammasome inhibition. Nature Communications 2019 , 10, 5273.
-
-The Laboratory of Immune Longevity (LIL) focuses on uncovering the drivers of long-lived immune responses. Our research spans a range of interests, but our top priority is understanding plasma cell longevity and the determinants of durable humoral immunity. Using transgenic mouse models alongside infection and immunization strategies, we aim to identify the mechanisms that lead to successful, long-lived immunity - and why such outcomes often fail to be accomplished.
-
-2014-2019 Ph.D. (Sciences, focused on Basic and Applied Immunology), University of São Paulo, Brazil 2008-2014 B.S. (Pharmacy/Biochemistry), Federal University of Juiz de Fora (UFJF), Brazil
-
-2025-Current Tenure-track Assistant Professor, Head of the Laboratory of Immune Longevity, Department of Microbiology & Immunology, The Scripps Research Institute, La Jolla, CA, USA. 2020-2025 Postdoctoral Fellow, The Rockefeller University, New York, NY, USA. 2019-2020 Postdoctoral Fellow, University of São Paulo, São Paulo. Brazil.
-
-2023 Cancer Research Institute (CRI), Irvington Postdoctoral Fellowship 2020 Human Frontier Science Program (HFSP), Long-term Postdoctoral Fellowship 2020 The Great CAPES Thesis Award, “Carlos Ribeiro Justiniano Chagas Award,” in Life Sciences 2019 Walter Colli Award, Brazilian Society of Protozoology 2018 Society of Leukocyte Biology Award, Brazilian Society of Immunology 2017 Thereza Kipnis Award, Brazilian Society of Immunology 2017- Ziegman Brenner Award, Brazilian Society of Protozoology
-
-de Carvalho, Renan V H; Ersching, Jonatan; Barbulescu, Alexandru; Hobbs, Alvaro; Castro, Tiago B R; Mesin, Luka; Jacobsen, Johanne T.; Phillips, Brooke K.; Hoffmann, Hans-Heinric H.; Parsa, Roham; Canesso, Maria Cecilia C; Nowosad, Carla R.; Feng, Allan; Leist, Sarah R.; Baric, Ralph S.; Yang, Emily; Utz, P J.; Victora, Gabriel D. Clonal replacement sustains long-lived germinal centers primed by respiratory viruses. Cell 2023 , 186, 131-146.e13.
-
-de Carvalho, Renan V H; Andrade, Warrison A.; Lima-Junior, Djalma S.; Dilucca, Marisa; de Oliveira, Caroline V.; Wang, Kun; Nogueira, Paula M.; Rugani, Jeronimo N.; Soares, Rodrigo P.; Beverley, Stephen M.; Shao, Feng; Zamboni, Dario S. Leishmania Lipophosphoglycan Triggers Caspase-11 and the Non-canonical Activation of the NLRP3 Inflammasome. Cell Reports 2019 , 26, 429-437.e5.
-
-The funding will support a multidisciplinary collaboration of four Scripps Research scientists to identify more effective vaccines to treat HIV.
-
-You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
-
-===== LAB: Julia Moore Vogel, PhD =====
-Long COVID affects millions of people worldwide, yet many questions about the condition remain unanswered. In this episode of Science Changing Life, Julia Moore Vogel, PhD, shares what it’s like to study—and live with—long COVID. As the senior director of the All of Us Research Program, Julia discusses how her experience has fueled innovative research to improve symptom management and health equity for patients with the condition. Listen in to learn how Julia transforms personal challenges into professional breakthroughs.
-
-Our group addresses complex illnesses by conducting participant-centric health research and clinical trials to learn about and address these conditions. We focus on decentralized studies that use digital technologies, sensors, and at-home biospecimen collection to accommodate individuals across the country and around the world.
-
-News Scripps Research scientists launch new digital clinical trial to test repurposed drug for long COVID symptom relief
-
-Study will investigate whether a GIP/GLP-1 dual receptor agonist, currently approved for type 2 diabetes, obesity and obstructive sleep apnea, can reduce symptoms of long COVID.
-
-You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
-
-===== LAB: Andrew Ward, PhD =====
-Investigating membrane proteins and viruses using integrative structural biology techniques. Membrane protein transporters mediate the passage of a wide variety of molecules into and out of the cell. The molecular details underlying the function of most transporters are still unknown. Thus, my group is interested in studying novel membrane proteins using x-ray crystallography, electron microscopy, and other biophysical techniques. Membrane proteins expressed on the surface of enveloped viruses mediate viral entry into the cell by recognizing cell surface receptors and initiating endocytosis or membrane fusion. Recently, broadly neutralizing antibodies targeting these surface spikes have been shown to provide protection against viruses such as HIV and influenza. We are trying to better understand how these antibodies bind to and neutralize viruses. Using single particle electron microscopy and electron tomography we are able to visualize these complexes and whole viruses, providing information about the mechanism of inhibition and aiding in the design of better immunogens for eliciting a broadly neutralizing antibody response in humans.
-
-2017 Young Investigator in Virology Award, Viruses 2014 Anne Palmenberg Junior Investigator Award, American Society for Virology 2013 Ray Thomas Edwards Foundation Fellowship 2006 Norton B. Gilula Graduate Fellowship, The Scripps Research Institute 2003 National Science Foundation EAPSI Fellowship, The Scripps Research Institute 2001 Howard Hughes Undergraduate Research Fellowship, Duke University, Durham, North Carolina
-
-In a first for the field, all non-human primates given a new series of vaccines generated antibodies capable of fighting multiple strains of HIV.
-
-Funding will expand methods for studying viral proteins and immune responses in more realistic settings for HIV and other severe pathogens.
+Scripps Research scientists offer new insight into how the body detects light touch and how disruptions in that process may contribute to sensory disorders.
 
 The recognized researchers encompass various areas including chemistry, microbiology, immunology, biochemistry and more.
 
-The funding will support a multidisciplinary collaboration of four Scripps Research scientists to identify more effective vaccines to treat HIV.
+In the Media Humans' hidden &#8220;sixth sense&#8221; to be mapped following $14.2 million prize &#8211; What is interoception?
 
 You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
 
-===== LAB: Friedbert Weiss, PhD =====
-1986 - 1989 Postdoctoral Fellow , Research Institute of Scripps Clinic, Division of Preclinical Neuroscience and Endocrinology, La Jolla, CA.1988 / 1989 Visiting Scientist, Department of Pharmacology, Karolinska Institute, Stockholm, Sweden. 1989 - 1993 Assistant Member , Department of Neuropharmacology, The Scripps Research Institute (TSRI), La Jolla, CA. 1994 - 1997 Associate Member , Department of Neuropharmacology, TSRI, La Jolla, CA. 1996 - 2002 Associate Adjunct Professor , Department of Psychiatry, University of California, San Diego (UCSD), School of Medicine. 1997 - present, Faculty Member ,Neurosciences Graduate Program, University of California, san Diego (UCSD). 1997 - 1999 Associate Professor , Department of Neuropharmacology, TSRI, La Jolla, CA. 1999 - 2005 Associate Professor with Tenure , Department of Neuropharmacology, TSRI, La Jolla, CA. 2004 - present Associate Director , The Pearson Center for Alcoholism and Addiction Research, TSRI, La Jolla, CA. 2005 - present Professor , Molecular and Integrative Neurosciences Department, TSRI, La Jolla, CA.
+Genomics Institute of the Novartis Research Foundation, San Diego, CA, 2000-2014. Director of Discovery Research, 2006-2014; Head of Neuroscience, 2002-2005; Staff Scientist, 2000-2003
 
-Neurobiology of Drug and Alcohol Addiction. Work in our laboratory is concerned with the neurobiological basis of abnormal behavioral and brain functions relevant to human psychopathology with emphasis on the neural control of motivation and reinforcement. The majority of this work is directed at the understanding of the neuropharmcological, neurocircuitry, and molecular basis of drug and alcohol addiction including mechanisms that lead to the development of dependence and withdrawal states, drug craving, relapse as well as impairment in memory and cognitive function.
+Department of Neuroscience, Dorris Neuroscience Center, The Scripps Research Institute, La Jolla, CA, 2000-present. Presidential Endowed Chair in Neurobiology, 2020-present; Professor, 2008-present; Associate Professor, 2005-2008; Assistant Professor, 2000-2005
 
-Ph.D. (Biological Psychology), University of California, Santa Barbara, 1986 B.A. (Psychology), University of San Francisco, 1980 M.A. (Psychology), University of California, Santa Barbara, 1983
+Ph.D. (Biology), California Institute of Technology, 1996 B.S. (Cellular & Development Biology), University of California, Los Angeles, 1990
 
-1989 National Institute on Drug Abuse MERIT Award, NIH/NIDA 2004 National Institute on Alcohol Abuse and Alcoholism FIRST Award, NIH/NIDA
+===== LAB: Michael Petrascheck, PhD =====
+Old age is accompanied by a deterioration of tissues and organs, increased susceptibility to disease, and an exponential increase in mortality. The last years have seen great progress in unraveling the mechanisms underlying aging. It has become clear that aging is regulated by various genetic pathways which when properly manipulated lead to increases in lifespan. These findings raise the exciting possibility that age related diseases could be treated by targeting aging pathways instead of the disease itself. To investigate this possibility we have screened for small molecules that extend lifespan in C.elegans and mice. The power of the small molecule approach lies in its enormous flexibility. Small molecules can be tested in cell lines, various model organisms, different models of age related disease, in combination with each other, or in combination with mutations known to affect aging and lifespan. Using life-extending small molecules as probes we can now start to investigate the molecular connection between aging and age-related diseases.
 
-Ciccocioppo, R.; Martin-Fardon, Remi; Weiss, Friedbert Stimuli associated with a single cocaine experience elicit longlasting cocaine-seeking. Nature Neuroscience 2004 , 7, 495-496.
+Scientists at Scripps Research have found that minocycline can increase the lifespan of roundworms by preventing the buildup of proteins during aging, according to a study in the open-access journal eLife reports.
 
-Weiss, Friedbert Neurobiology of craving, conditioned reward and relapse. Current Opinion in Pharmacology 2005 , 5, 9-19.
+Petrascheck, Michael; Ye, X.; Buck, L. B. A High-Throughput Screen for Chemicals that Increase the Lifespan of Caenorhabditis elegans. Annals of the New York Academy of Sciences 2009 , 1170, 698-701.
 
-Weiss, Friedbert; Porrino, L. J. Behavioral neurobiology of alcohol addiction: Recent advances and challenges. Journal of Neuroscience 2002 , 22, 3332-3337.
+Petrascheck, Michael; Ye, X. L.; Buck, L. B. An antidepressant that extends lifespan in adult caenorhabditis elegans. Nature 2007 , 450, 553-556.
 
-Contact Friedbert Weiss, PhD Email (858) 784-7068 Research Interests Alcoholism Drug Abuse and Addiction Immunohistochemistry Mass Spectrometry Neuropharmacology Neuroscience News, Events & Media Explore In the Media Scientists identify brain region behind compulsive alcohol use
+Skaggs Graduate School of Chemical and Biological Sciences recognizes 50+ graduate students, the largest class in the school’s history, on May 17.
 
-Study by Scripps Research scientists shows how the brain learns to seek alcohol for relief, not just pleasurable effects, in an animal model.
-
-Findings in animal study could eventually lead to improved treatments to minimize cravings in people with alcohol use disorder.
-
-Rather than continue to dig for clues on what drives relapse among those who struggle with compulsive drug use, a Scripps Research team explored how the brain responds to environmental cues that suppress cravings.
-
-Friedbert Weiss, PhD, a professor of neuroscience at Scripps Research, has been named a fellow of the American Association for the Advancement of Science (AAAS). Election as an AAAS Fellow is an honor bestowed upon its members by their peers.
+Recent study finds that the brain regulates normal eating and antipsychotic-induced overeating through distinct mechanisms. Scientists found that an FDA-approved medication called minocycline has the potential to counteract this overeating.
 
 You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
 
-===== LAB: James Williamson, PhD =====
-RNA Structure and RNP-Assembly. The goal of my research program is to understand the structural role of RNA in mediating its many biological functions. We are interested in the 3-dimensional architecture of RNA, recognition of RNA by proteins, and the process by which RNAs fold into their complex structures. Experimentally, we apply a wide range of biochemical and biophysical methods to characterize specific model systems to obtain insights into how RNA structure contributes to RNA function. Ribosome Assembly . We are using a multidisciplinary approach to study the dynamics of ribosome assembly, both in vitro and in cells. In order to measure the kinetics of ribosomal protein binding in vitro, we developed an isotope pulse-chase method using quantitative mass spectrometry. This approach allows us to measure the rate of ribosomal protein binding under a variety of conditions to interrogate the mechanism of assembly. In addition, we are using single molecule fluoresence methods, in collaboration with David Millar's laboratory, to measure cooperativity in ribosome protein binding using Fluorescence Correlation Spectrocopy. We are collaboratting with Clint Potter, Bridget Carragher and Ron Milligan's laboratory to determine the structure of ribosome assembly intermediates using time-resolved electron microscopy. Finally, we are using isotope pulse experiments in conjunction with quantitative proteomic mass spectrometry to monitor the dynamics of ribosome assembly in cells. RNPs regulating C. elegans germline development. We are using a biochemical and structural biology approach to determine the structure of RNA-protein complexes that regulate stem cell differentiation in the model organism C. elegans. RNA binding proteins regulate many essential genes in this process by binding to 3'untranslated regions of the mRNA. We are using X-ray crystallography to determine the structures of these multicomponent ribonucleoprotein complexes to learn how they regulate gene expression. Regulation of T-cell activation by RNA binding proteins. We are collaborating with Dan Salomon's laboratory to study how RNA binding proteins regulation the activation of T-cells. We are using a structural genomics approach to determine the structure of RNA binding proteins, protein-protein complexes, and RNA-protein complexes that are implicated in regulating T-cell activation. Helicases involved in HIV Replication. We are studying a set of helicases that are implicated in the function of the HIV Rev protein, which is important for transport of unspliced viral mRNAs from the nucleus to the cytoplasm. Helicases are ATP-dependent RNA binding motors that are implicated in strand displacement and protein displacement reactions in many cellular processes, however, their specific role in HIV replication is not known. We are taking a biochemical and X-ray crystallographic approach to understand how these helicases participate in key steps of the life cycle of HIV.
+2011 NIH Director's New Innovator Award 2012 Ellison Medical Foundation: New Scholar in Aging Award 2015 Glenn Award for Biological Mechanisms of Aging 2018 NIDDK R01 DK117872-01, NIH 2018 NINDS R21 NS107951-01, NIH 2019 NIDDK R01 DK117872-01, NIH 2020 NIA R21 AG065710, NIH 2020 Brown Foundation: Healthy Ageing Competition, Joe W. & Dorothy Dorsett Brown Foundation 2020 NIA R01 AG067331, NIH 2020 NIA R01 AG069206, NIH
 
-Researchers will investigate how a common dietary nutrient may control a hidden layer of gene regulation in cancer cells.
+===== LAB: Lisa Racki, PhD =====
+In most environments, including the human body in the context of chronic infections, bacteria spend much of their time in a starved state, limited for one or more nutrients. Bacterial starvation is important for human health because most conventional antibiotics target activities that are important for bacteria during growth such as DNA synthesis and cell wall biosynthesis, but less important to non-proliferating cells. The Racki Lab aims to understand how bacteria organize and remodel their subcellular architecture to survive during starvation. Ultimately a mechanistic understanding may point the way to targeting slow-growing pathogens.
 
-Select Publications Mulder, Anke M.; Yoshioka, Craig K.; Beck, A. H.; Bunner, Anne E.; Milligan, Ronald A.; Potter, Clinton S.; Carragher, Bridget O.; Williamson, James R. Visualizing ribosome biogenesis: parallel assembly pathways for the 30S subunit. Science 2010 , 330, 673-677.
+News Scripps Research scientists discover a “Goldilocks” zone for DNA organization, opening new doors for drug development
 
-Talkington, Megan W.; Siuzdak, Gary; Williamson, James R. An assembly landscape for the 30S ribosomal subunit. 2005 , 438, 628-32.
+Every day, scientists at Scripps Research are discovering and developing new treatments to combat today’s infectious disease threats—and tomorrow’s. Many of these researchers played a significant role in the COVID-19 pandemic, including identifying new antibody treatments and uncovering the virus’s structure. Meanwhile, they're also applying these key learnings to better prepare the global population for whichever microbial threat emerges next.
 
-===== LAB: Ian Wilson, PhD =====
-Structural Studies of the Immune System, Viral Pathogens, and Vaccine Design Immunologic recognition of microbial pathogens is fundamental for fighting infectious disease. Our major goal is to understand the interaction and neutralization of foreign antigens by the immune system through high-resolution x-ray structural studies of antibodies, Variable Lymphocyte Rectors (VLRs) and antigens in the humoral system, T-cell receptor complexes with MHC class I and class II in the cellular system, and through pattern recognition receptors, such as TLRs, in the innate immune system. Over 250 crystal structures of monoclonal Fab fragments and complexes with a variety of antigens, such as peptides, steroids, cocaine, and proteins, including HIV-1, gp120 and gp41, have led to significant insights into antibody-antigen recognition, virus neutralization, and vaccine design for HIV-1. In addition, catalytic or fluorescent antibodies, many of which carry out disfavored reactions or for which no natural enzymes exist, or have interesting physico-chemical properties have given us insight into a myriad of uses as artificial catalysts or as biosensors. The T-cell receptor in complex with pMHC has revealed how peptide antigens can be recognized in the context of the MHC molecule. Many other key molecules in cellular immunology are being studied, such as non-classical or MHC homologues: for example, CD1 binds lipid, glycolipid, and lipopeptide antigens from the cell walls of microbial pathogens and the NK family of receptors recognizes classical as well as distant MHC homologues. Studies on other pattern recognition receptors, include peptidoglycan recognition protein (PGRP), TREM-1, Toll-like receptors (TLR) have revealed how unique pathogen-associated molecules are recognized by the immune system. Much of our recent work is focused on HIV-1 and influenza viruses. The 1918 flu, which killed 20-40 million people worldwide, is being investigated through structural and binding studies of the 1918 viral proteins, such as the hemagglutinin (HA) and neuraminidase, as well as other the viral proteins. The avian H5N1 and swine H1N1 influenza virus HA structures have been determined as well as mutations that enhance binding to human receptors that may allow the virus to cross the species barrier into humans and be transmissible. We have also determined structures of almost all of the rare, broadly neutralizing antibodies against the HIV-1 envelope proteins, gp120 and gp41, in order to elucidate the sites of vulnerability that can be used for HIV-1 vaccine design. A very exciting project on broadly neutralizing antibodies with influenza virus has revealed novel epitopes that are of great value for structure-assisted vaccine development. We have defined a broadly neutralizing epitope in all group 1 influenza subtypes and are working on other antibodies that recognize group 2 as well as those that cross all subtypes. Other flu projects are associated with the nucleoproteins, polymerases and neuraminidases in order to understand how influenza replicates. I also directed the Joint Center for Structural Genomics (2000-2016) that pioneers new high throughput methodologies and te
+Scripps Research scientists have discovered how long chains of molecules called polyphosphates (polyP) are needed for bacteria to slow down movements within cells and let them enter a resting state. This “resting state” helps the pathogen evade antibiotics and contributes to severe chronic infections in the lungs and blood, within wounds, and on the surfaces of medical devices. These findings, published in Proceedings of the National Academy of Sciences on April 02, 2024, could eventually lead to new ways of treating chronic infections in which typical antibiotics aren’t effective.
 
-B.Sc., Biochemistry, University of Edinburgh, Scotland D.Phil., Molecular Biophysics, Oxford University, England D.Sc., Biological Sciences, Oxford University, England
+Assistant Professors Huan Bao, Lisa Racki and Li Ye have been awarded grants through an NIH program that seeks to catalyze scientific discovery by supporting research with transformative potential.
 
-2013 - Present Chair and Professor, Department of Integrative Structural and Computational Biology, The Scripps Research Institute
+A new study uncovers how DNA, magnesium and polyphosphate form a balance that’s just right—which could lead to innovations in medicine and biotechnology.
 
-===== END batch 6/8 =====
+Blocking long phosphate molecules could eventually help treat chronic infections in which slow-growing bacteria evade typical antibiotics.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2003 Thomas T. Hoopes Prize, Estate of Thomas T. Hoopes 2011 Harold M. Weintraub Graduate Student Award, Basic Sciences Division of Fred Hutchinson Cancer Research Center 2019 Baxter Young Investigator Award
+
+B.A. (Biochemical Sciences), Harvard University, 2003 Ph.D. (Biochemistry), University of California, San Francisco, 2011
+
+===== LAB: Chen Ran, PhD =====
+Our senses of sight, smell, taste, touch, and hearing allow us to perceive the external physical world. The internal sensory systems, by contrast, enable the brain to receive signals from within the body to generate our internal senses, such as hunger, satiety, thirst, nausea, hypoxia, and visceral pain. How does the brain differentiate hunger pangs from the feeling of fullness? Or the sense of nausea when toxins are ingested? Why does stomach stretch lead to satiety while bladder stretch produces the urge to urinate? To understand these questions, we developed a novel in vivo two-photon mouse brainstem calcium imaging platform. This system allowed us, for the first time, to record the activities of thousands of neurons, with single-cell resolution, in the brain’s gateway to the internal organs. We could deliver different types of stimuli in the animal's internal organs, mimicking the stretch of the stomach, ingestion of nutrients, pain in the organs, and many others, and watch how different populations of neurons respond to these stimuli. Our previous work revealed that internal organs are topographically represented in the brainstem, forming a “visceral homunculus”. Combining in vivo functional imaging, electrophysiological recordings, and mouse genetics, neuronal activity manipulation (optogenetics, chemogenetics), animal behavior, neural circuit tracing, and others, we will unravel how the nervous system detects mechanical, chemical, and thermal stimuli from the periphery to synthesize our internal sensations, such as satiety, hunger, nausea, hypoxia, and visceral pain. Discoveries from our research will reveal basic principles of how the brain encodes and processes information and shed light on the development of novel therapeutics for treating hypertension, obesity, diabetes, indigestion, eating disorders, pulmonary diseases, nausea, visceral pain, infection-induced sickness behaviors, and many others.
+
+In recognition of his research’s potential to have a lasting impact on neuroscience, Chen Ran, PhD, an assistant professor in the Department of Neuroscience at Scripps Research, has been selected to the Searle Scholars Program’s 2025 class of new members.
+
+In recognition of his research’s potential to have a lasting impact on neuroscience, Chen Ran, PhD, an assistant professor in the Department of Neuroscience at Scripps Research, has been selected to the Searle Scholars Program’s 2025 class of new members.
+
+Huang, Tianxiao X.; Wang, Shiqi; Ran, Chen Interoceptive processing in the nucleus of the solitary tract . Current Opinion in Neurobiology 2025 .
+
+Ran, Chen; Kamalani, Gabrielle N A; Chen, Xiaoke Modality-Specific Modulation of Temperature Representations in the Spinal Cord after Injury. The Journal of neuroscience 2021 , 41, 8210-8219.
+
+Chen Ran and Meng Zhang receive awards from the Donald E. and Delia B. Baxter Foundation to uncover insights on brain function.
+
+Immunology assistant professor Joseph Jardine and assistant neuroscience professor Chen Ran join the faculty, while RNA-targeting expert Megan Ken becomes the newest fellow
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+Ran, Chen; Chen, Xiaoke Probing the coding logic of thermosensation using spinal cord calcium imaging. 2019 , 318, 42-49.
+
+Ran, Chen; Hoon, M A.; Chen, Xiaoke The coding of cutaneous temperature in the spinal cord. Nature Neuroscience 2016 , 19, 1201-9.
+
+===== LAB: Marisa Roberto, PhD =====
+Alcohol Use Disorder (AUD) is a chronic relapsing illness that accounts for major disability worldwide and available treatments are insufficient. Current and future studies in my laboratory aim to understand the specific neuronal mechanisms that underlie synaptic and/or molecular changes to influence the development of dependence to alcohol and other drugs of abuse (nicotine, cocaine etc.). Tolerance occurs through adaptations at the cellular level, as the brain attempts to overcome the acute effects of drugs of abuse. With prolonged drug use, these adaptations often lead to significant changes in the structure and function of neurons. The synapse is the primary point for information transfer between neurons, and a central hypothesis is that synapses are the most sensitive sites of action for drugs of abuse. We primarily study the synapses of the central nucleus of the amygdala (CeA), a brain region that plays a central role in the behavioral effects of acute and chronic drug consumption, and in the physiological responses to fearful stimuli and stressful stimuli. The aim of my group is to understand the effects of drugs of abuse on neuronal function and synaptic transmission using electrophysiological, pharmacological, and molecular methods. We have characterized several neuroadaptative changes that provide seminal insights into synaptic transmission and that will be useful towards developing new therapeutic agents to alleviate drug dependence, and particularly alcohol dependence. In parallel, our studies identified key functional roles for neuropeptide neurotransmitters in the neurocircuits that mediate motivated behavior. Our early studies significantly advanced the field of alcohol research by elucidating critical synaptic and molecular mechanisms regarding the unique sensitivity of the G-aminobutyric acid (GABA) and glutamatergic systems in CeA to acute and chronic ethanol. We found that an anti-epileptic drug gabapentin (a structural analogue of GABA) reverses several behavioral aspects of ethanol dependence. These behavioral and cellular findings with gabapentin suggest the potential for use as a possible medication for the treatment of alcoholism. A fundamental dichotomy exists between systems that mediate positively reinforced alcohol consumption ('reward drinking') versus negatively reinforced intake ('relief drinking'). Over time, chronic elevated alcohol consumption results in neuroadaptations that involve the recruitment and pathological activity of extrahypothalamic stress systems, providing an incentive for negatively reinforced alcohol intake. We have characterized synaptic action of the neuropeptide corticotropin-releasing factor (CRF) in CeA and the involvement of this system and other stress-related neurotransmitters/neuroregulators (e.g.; nociceptin, oxytocin, and neuropeptide Y) in alcohol dependence and withdrawal. We are also examining the actions of other neuromessenger systems, such as those for endocannabinoids, opioids, immune-related factors on CeA synaptic transmission, and how these systems are affected by alcohol dependence and stress. The characterization of the amygdala neurocircuitry and connections with othe
+
+Scripps Research scientists discovered how a chemical modification of a key brain protein—potentially triggered by climate change-induced air pollution, pesticides, wildfires and processed meats—disrupts normal brain cell function.
+
+2021 Distinguished Faculty Lecture "The dark side of addiction and the light side of science", The Scripps Research Institute, Graduate Student Symposium
+
+===== LAB: Edward Roberts, PhD =====
+Contact Edward Roberts, PhD Email (858) 242-1006 News, Events & Media Explore News Multiple sclerosis drug invented at Scripps Research slows long-term devastating disease progression
+
+The novel drug created at Scripps Research has achieved a second FDA approval, this time for ulcerative colitis, as clinical trials continue for Crohn’s disease.
+
+The drug, developed at Scripps Research, recently gained U.S. and European regulatory approval for the treatment of multiple sclerosis. It is also being studied for Crohn’s disease.
+
+Navacaprant, a monotherapy discovered at Scripps Research, showed clinically meaningful improvements for people with moderate-to-severe MDD in a recently completed Phase 2 study.
+
+News Ozanimod, a drug created at Scripps Research, gains European Commission approval for treatment of multiple sclerosis
+
+The news comes less than two months after the therapy gained approval from the U.S. Food and Drug Administration. Ozanimod is also in advanced clinical development for moderate-to-severe ulcerative colitis and Crohn’s disease.
+
+Genetic and Pharmacologic Manipulation of TLR4 Has Minimal Impact on Ethanol Consumption in Rodents. The Journal of neuroscience : the official journal of the Society for Neuroscience 2017 , 37, 1139-1155.
+
+Late-breaking data reinforces the effectiveness and safety of ozanimod, invented in the labs of professors Hugh Rosen and Edward Roberts.
+
+The priority review is based on results from a placebo-controlled Phase 3 trial evaluating ozanimod as a therapy for moderately to severely active ulcerative colitis.
+
+Shenvi and Roberts are recognized for their contributions in organic synthesis and the development of medicinally useful substances.
+
+News In pivotal phase 3 trial, ozanimod demonstrates a clear benefit among patients with moderate-to-severe ulcerative colitis
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+Guerrero, M.; Urbano, M.; Roberts, Edward Sphingosine 1-phosphate receptor 1 agonists: a patent review (2013-2015). Expert Opinion on Therapeutic Patents 2016 , 26, 455-470.
+
+===== LAB: Hugh Rosen, MD, PhD =====
+Calibr, a nonprofit research institute founded by Scripps Research President and CEO Pete Schultz, joined Scripps Research in 2018 as its drug discovery division. As a world-class nonprofit “bench to bedside” drug discovery engine, Calibr delivers groundbreaking solutions to unmet medical needs by uniting the creativity of fundamental discovery with highly focused R&D capabilities and expertise.
+
+First-in-class molecules block a specific protein interaction in immune cells, offering a potential targeted approach to autoimmune diseases like lupus and rheumatoid arthritis.
+
+More than 90% of drugs fail to make it from the lab bench to approval. How, then, has a physician-scientist like Hugh Rosen found so much success in developing medicines? Rosen, who’s the chair of the Molecular and Cellular Biology Department and the Pearson Family Chair at Scripps Research, co-invented the drugs ozanimod (approved for multiple sclerosis and ulcerative colitis) and navacaprant (in Phase 3 trials for major depressive disorder). In this episode of Science Changing Life, listen in as Rosen unveils the success stories behind these groundbreaking treatments—shedding light on the challenges and triumphs shaping modern medicine.
+
+Mental disorders like depression and schizophrenia affect the lives of millions of people around the world, and yet, available treatment options have remained the same for decades. In this Front Row lecture, Scripps Research professor Hugh Rosen shared how his pioneering research has led to the development of the drug navacaprant, which precisely targets one of the brain’s behavioral circuits and is currently in clinical testing for major depressive disorder. Harnessing his expertise as a physician-scientist, Rosen has discovered and developed multiple other medicines, including ozanimod—a breakthrough treatment approved for multiple sclerosis and ulcerative colitis.
+
+Navacaprant, a monotherapy discovered at Scripps Research, showed clinically meaningful improvements for people with moderate-to-severe MDD in a recently completed Phase 2 study.
+
+Event Molecular &#038; Cellular Biology Community Event Explore News Study shows new drug compounds dial down inflammation without compromising immunity
+
+Late-breaking data reinforces the effectiveness and safety of ozanimod, invented in the labs of professors Hugh Rosen and Edward Roberts.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+1990 , Wellcome Senior Research Fellow in the Basic Biomedical Sciences, University of Oxford 1986 , Junior Research Fellow in Medicine and Biological Sciences, Jesus College, Oxford 1983 , Royal Commission for the Exhibition of 1851 Science Research Scholarship 1995 , Fellow, Infectious Diseases Society of America 2013 , Member, Henry Kunkel Society 2011 , Fellow, American Academy of Microbiology 2008 , Member, American Association of Physicians 2006-14: Associate Editor of Molecular Pharmacology (ASPET) 2007-12: Editorial Board of J. Biol. Chem. (ASBMB) 1990-2000: Editorial Board, The Biochemical Journal 2005-2007: Chair, N.I.H. Molecular Libraries Screening Center Network Steering Committee
+
+===== LAB: Enrique Saez, PhD =====
+Our lab is interested in two broad themes related to the regulation of energy balance in mammals: Nuclear receptors as nutrient sensors - Nuclear receptors are ligand-activated transcription factors that sense dietary components such as lipids, vitamins and cholesterol derivatives. We are interested in identifying novel nutrient signaling pathways that involve nuclear receptors. Using high-throughput cell based and biochemical screens as well as a variety of animal models we hope to discover diet-derived physiological signaling pathways. Genetic regulation of energy storage - Excess energy is stored in adipose tissue. We are using genomic and chemical approaches to identify novel genetic regulators of adipose tissue formation and to examine their role in metabolic disease. By enhancing our understanding of how diet influences gene expression and the genetic regulation of energy balance, we aim to uncover novel therapeutic targets for the treatment of metabolic diseases such as obesity and diabetes.
+
+As it turns out, our metabolisms have been misunderstood for decades. These Scripps Research scientists are changing the way we think about metabolic disorders, weight control and eating habits—paving the way for new drugs to treat some of the most serious health conditions our world faces today.
+
+A discovery from Scripps Research shows that blocking the kappa opioid receptor while on a restricted-calorie diet could help shed pounds faster.
+
+The recently discovered protein is normally abundant in fat. Without it, the body struggles to manage glucose and insulin, the scientists found.
+
+Scientists discovered a way to enhance the activity of an enzyme long suspected of playing a role in metabolism. In a study involving mice, the compound reversed signs of diabetes.
+
+A molecule in hoppy beers, like IPAs, appears to fuel weight loss and have benefits for type 2 diabetes in mice. But how?
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2004-2005 Principal Investigator II, Genomics Institute of the Novartis Research Foundation, Lead Discovery-Metabolic and Cardiovascular Disease, San Diego, CA
+
+2002-2004 Principal Investigator, Genomics Institute of the Novartis Research Foundation, Lead Discovery-Metabolic and Cardiovascular Disease, San Diego, CA
+
+2010-2020 Associate Professor, The Scripps Research Institute, Department of Molecular Medicine (previously the Department of Chemical Physiology), La Jolla, CA
+
+1989 American Chemical Society: Princeton University Dept of Chemistry Award, Princeton University 1989 The Allen Williamson Talley Memorial Scholarship, Princeton University 1989 Thesis selected for presentation during Class Day ceremonies, Princeton University 1990 Richard B. Carter Trust Fellowship, Harvard University 1996 American Diabetes Association Postdoctoral Fellowship 2000 Susan G. Komen Breast Cancer Foundation Postdoc Fellowship 2002 CapCURE Research Award, CapCURE 2013 American Diabetes Association Career Development Award, American Diabetes Association
+
+===== LAB: Pietro Paolo Sanna, MD =====
+By examining RNA in hundreds of thousands of individual brain cells, Scripps Research scientists further support that alcohol use disorder could accelerate Alzheimer’s disease progression, paving the way for future targeted treatments.
+
+The discovery by scientists from Scripps Research and Cardiff University paves the way for clinical trials that use patients’ own cells to treat Parkinson’s disease.
+
+Scripps Research and University of Bologna scientists showed how excessive alcohol consumption in animals can hasten cognitive decline in those genetically predisposed to Alzheimer’s disease.
+
+Contact Pietro Paolo Sanna, MD Email Research Interests Drug Abuse and Addiction Genomics HIV/AIDS Neurobiology Viral Diseases News, Events & Media Explore In the Media Study links heavy drinking to faster Alzheimer's onset and progression
+
+Scientists at The Scripps Research Institute have devised what they call a “neuronal cookbook” for turning skin cells into different types of neurons.
+
+A new study led by scientists at Scripps Research is giving researchers a first look at the early stages of brain development in patients with Fragile X syndrome.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: William Schief, PhD =====
+Contact William Schief, PhD Email (858) 784-7725 Research Interests adaptive immunity germline-targeting vaccine design HIV/AIDS infectious disease molecular affinity and avidity mRNA vaccines and therapeutics Nanoparticles Protein Design protein structure Vaccine Design News, Events & Media Explore News New research offers fresh insights for how to make better vaccines
+
+The search for universal HIV vaccines. Scientists at Scripps Research are working to develop universal vaccines capable of neutralizing many variants of a given virus. In recent years, they have made significant progress toward creating universal vaccines for influenza, HIV and coronavirus. (January 19, 2023)
+
+Scripps Research scientists and colleagues develop a nanodisc platform that offers a clearer view of how key viral proteins interact with antibodies.
+
+Scripps Research scientists train the immune system to make antibodies against numerous HIV strains. Preclinical findings mark progress toward a long-sought vaccine capable of broad protection against HIV. (July 6, 2026)
+
+Two HIV vaccine trials show proof of concept for pathway to broadly neutralizing antibodies. North American and African clinical trials led by Scripps Research, IAVI and additional collaborators across the U.S. and Africa mark progress toward an effective HIV vaccine. (May 15, 2025)
+
+Funding will expand methods for studying viral proteins and immune responses in more realistic settings for HIV and other severe pathogens.
+
+North American and African clinical trials led by Scripps Research, IAVI and additional collaborators across the U.S. and Africa mark progress toward an effective HIV vaccine.
+
+Scripps Research scientists used computer modeling to illustrate how antibodies use fatty molecules known as lipids to recognize the HIV virus.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+Scientists reveal encouraging findings in first-in-human clinical trial evaluating HIV vaccine approach. (December 2, 2022)
+
+B.S. (Applied Mathematics), Yale University, 1989 Ph.D. (Physics), University of Washington, 1999 Sr. Fellow (Physiology & Biophysics), University of Washington, 2001 Sr. Fellow (Biochemistry), University of Washington, 2006
+
+1989 Cum Laude honors for B.S. degree, Yale University 1995 NIH Training Grant Fellowship in Molecular Biotechnology 1996 NIH Training Grant Fellowship in Molecular Biophysics 1999 Dahlstrom Prize for an outstanding experimental physics graduate student, Department of Physics, University of Washington 2002 NIH National Reserach Service Award Post-doctoral Fellowship
+
+===== LAB: Paul Schimmel, PhD =====
+Scripps Research and aTyr Pharma scientists have revealed how the protein HARSWHEP calms inflammation associated with sarcoidosis.
+
+Lerner made major scientific contributions and built Scripps Research into a world-renowned hub of innovative science and medicine.
+
+Prestigious appointment will support his innovative imaging techniques and investigations into the relationship between metabolism and neurons.
+
+Donna Blackmond, Marisa Roberto and Xiang-Lei Yang have been honored with endowed chairs in recognition of their scientific leadership and impactful discoveries.
+
+Molecules needed for energy production in cells apparently underwent a radical change during early animal evolution so they could continue to function despite a relatively high mutation rate.
+
+Schimmel will receive the 2020 Kathryn C. Hach Award for Entrepreneurial Success, which honors those who have used the transforming power of chemistry to improve lives.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== END batch 6/9 =====
