@@ -65,6 +65,16 @@ d('DB invariants (live corpus)', () => {
       AND pi_email !~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[.][A-Za-z]{2,}$'`)).toBe(0)
   })
 
+  it('no PI email is an institutional front-desk mailbox', async () => {
+    // Roman 2026-08-15: "no one should have a general communications@salk.edu or contact@lji.org
+    // email — that would be bad." A role mailbox emails the front desk, not the PI, so it's worse
+    // than a blank. Block the generic local-parts on BOTH live statuses. Lab-GROUP addresses
+    // (hastie-lab@, pandurangan-lab@ — which Roman supplied on purpose) are allowed: they reach the
+    // actual lab, matching the "email a senior lab member" fallback.
+    expect(await one(`SELECT count(*) n FROM lab_profiles WHERE status IN ('done','profile')
+      AND pi_email ~* '^(communications|contact|info|press|media|webmaster|admin|support|hr|careers|events|giving|philanthropy|webrequest|noreply|no-reply|general|hello|office|reception)@'`)).toBe(0)
+  })
+
   it('the quarantine ledger covers every live contaminant paper', async () => {
     // any per-paper contaminant still quarantined must be recorded, so a re-ingest re-applies it
     expect(await one(`SELECT count(*) n FROM lab_chunks lc
