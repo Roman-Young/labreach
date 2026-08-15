@@ -1,0 +1,301 @@
+########## DISTILL OVERVIEWS — scripps batch 5/8 (15 labs) ##########
+
+For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad
+with no field background could read to decide if they want to email the lab. Say WHAT the lab studies,
+HOW (methods/approach), and WHY it matters. Ground it ONLY in that lab's provided text — do NOT invent
+specifics, numbers, or techniques not present. If a lab's text is too thin/administrative to describe
+its research, set that lab's value to "" (empty) rather than padding — an honest gap beats a fake overview.
+
+Write your answer as a JSON object {"<exact lab name>": "<overview or ''>", ...} to this ABSOLUTE path:
+  /home/roman/agent/codebases/labreach/data/agent-overviews/scripps-batch4.json
+
+===== LAB: Christopher Parker, PhD =====
+Broadly speaking, the Parker Lab seeks to develop chemistry-enabled strategies to investigate human biology and disease pathology. Our research integrates organic synthesis with chemical proteomics and cell/molecular biology to (1) to study how small molecules might regulate, or be designed to regulate, complex biological processes such as immune responses and, (2) illuminate molecular mechanisms that contribute to disease. Our primary objectives are not only to better understand protein function and corresponding disease roles, but also to create chemical tools and technologies that might facilitate the development of new therapeutics. Check out our lab website for additional information on our research.
+
+2013-2018 American Cancer Society Postdoctoral Research Fellow, The Scripps Research Institute 2018-2022 Assistant Professor, Department of Chemistry, The Scripps Research Institute
+
+2021 - Present Founder, Belharra Therapeutics 2022-2024 Associate Professor, Department of Chemistry, The Scripps Research Institute 2024-present Professor, Department of Chemistry, The Scripps Research Institute
+
+Chemoproteomic Development of SLC15A4 Inhibitors with Anti-Inflammatory Activity. Nature Chemical Biology 2024 , 20, 1000-1011.
+
+Scripps Research professor Christopher Parker has been named the recipient of the 2026 American Chemical Society’s (ACS) Chemical Biology Early Career Award, which recognizes early-career investigators making an outsized impact on the field of chemical biology. It is jointly administered by the editor-in-chief of the ACS Chemical Biology and the ACS’s Division of Biochemistry and Chemical Biology and is reserved for researchers who have started their independent research positions within the last 10 years.
+
+News Collaboration awards enable scientists to design new medicines, more precisely edit DNA and fight drug-resistant bacteria
+
+Christopher Parker and Giordano Lippi are unraveling the metabolic and protein mechanisms, respectively, that go awry in aging and disease—including Alzheimer’s.
+
+Scripps Research scientists developed a compound that can block a protein previously considered challenging to drug and is implicated in autoimmune diseases, including lupus.
+
+Scripps Research scientists develop a new, high-resolution technique for finding potential therapeutic targets on proteins in living cells. The findings could lead to more targeted therapeutics for nearly any human disease.
+
+A new tool enables scientists to tackle difficult molecular recognition problems to aid drug discovery for incurable diseases.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Ardem Patapoutian, PhD =====
+Mechanotransduction is perhaps the last sensory modality not understood at the molecular level. Proteins/ion channels that sense mechanical force are postulated to play critical roles in sensing touch/pain (somatosensation), sound (hearing), shear stress (cardiovascular tone), etc.; however, the identity of ion channels involved in sensing mechanical force has remained elusive. The Patapoutian lab identified PIEZO1 and PIEZO2, mechanically-activated cation channels that are expressed in many mechanosensitive cell types. Genetic studies established that PIEZO2 is the principal mechanical transducer for touch, proprioception, and baroreception, and that PIEZO1 mediates blood-flow sensing, which impacts blood pressure regulation and vascular development. Patapoutian lab has since isolated other mechanosensors including GPR68 and OSCA/TMEM63 family members. The lab continues to analyze the physiological relevance of these ion channels and receptors in mechanosensation, and search for novel mechanically activated sensors.
+
+Ph.D. (Biology), California Institute of Technology, 1996 B.S. (Cellular & Development Biology), University of California, Los Angeles, 1990
+
+Department of Neuroscience, Dorris Neuroscience Center, The Scripps Research Institute, La Jolla, CA, 2000-present. Presidential Endowed Chair in Neurobiology, 2020-present; Professor, 2008-present; Associate Professor, 2005-2008; Assistant Professor, 2000-2005
+
+Genomics Institute of the Novartis Research Foundation, San Diego, CA, 2000-2014. Director of Discovery Research, 2006-2014; Head of Neuroscience, 2002-2005; Staff Scientist, 2000-2003
+
+Scripps Research scientists offer new insight into how the body detects light touch and how disruptions in that process may contribute to sensory disorders.
+
+Scripps Research scientists identify the protein that helps kidney cells regulate renin, providing foundational insight into how kidneys function.
+
+The recognized researchers encompass various areas including chemistry, microbiology, immunology, biochemistry and more.
+
+In the Media Humans' hidden &#8220;sixth sense&#8221; to be mapped following $14.2 million prize &#8211; What is interoception?
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Michael Petrascheck, PhD =====
+Old age is accompanied by a deterioration of tissues and organs, increased susceptibility to disease, and an exponential increase in mortality. The last years have seen great progress in unraveling the mechanisms underlying aging. It has become clear that aging is regulated by various genetic pathways which when properly manipulated lead to increases in lifespan. These findings raise the exciting possibility that age related diseases could be treated by targeting aging pathways instead of the disease itself. To investigate this possibility we have screened for small molecules that extend lifespan in C.elegans and mice. The power of the small molecule approach lies in its enormous flexibility. Small molecules can be tested in cell lines, various model organisms, different models of age related disease, in combination with each other, or in combination with mutations known to affect aging and lifespan. Using life-extending small molecules as probes we can now start to investigate the molecular connection between aging and age-related diseases.
+
+2011 NIH Director's New Innovator Award 2012 Ellison Medical Foundation: New Scholar in Aging Award 2015 Glenn Award for Biological Mechanisms of Aging 2018 NIDDK R01 DK117872-01, NIH 2018 NINDS R21 NS107951-01, NIH 2019 NIDDK R01 DK117872-01, NIH 2020 NIA R21 AG065710, NIH 2020 Brown Foundation: Healthy Ageing Competition, Joe W. & Dorothy Dorsett Brown Foundation 2020 NIA R01 AG067331, NIH 2020 NIA R01 AG069206, NIH
+
+Petrascheck, Michael; Ye, X.; Buck, L. B. A High-Throughput Screen for Chemicals that Increase the Lifespan of Caenorhabditis elegans. Annals of the New York Academy of Sciences 2009 , 1170, 698-701.
+
+Petrascheck, Michael; Ye, X. L.; Buck, L. B. An antidepressant that extends lifespan in adult caenorhabditis elegans. Nature 2007 , 450, 553-556.
+
+Skaggs Graduate School of Chemical and Biological Sciences recognizes 50+ graduate students, the largest class in the school’s history, on May 17.
+
+Recent study finds that the brain regulates normal eating and antipsychotic-induced overeating through distinct mechanisms. Scientists found that an FDA-approved medication called minocycline has the potential to counteract this overeating.
+
+Scientists at Scripps Research have found that minocycline can increase the lifespan of roundworms by preventing the buildup of proteins during aging, according to a study in the open-access journal eLife reports.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Lisa Racki, PhD =====
+In most environments, including the human body in the context of chronic infections, bacteria spend much of their time in a starved state, limited for one or more nutrients. Bacterial starvation is important for human health because most conventional antibiotics target activities that are important for bacteria during growth such as DNA synthesis and cell wall biosynthesis, but less important to non-proliferating cells. The Racki Lab aims to understand how bacteria organize and remodel their subcellular architecture to survive during starvation. Ultimately a mechanistic understanding may point the way to targeting slow-growing pathogens.
+
+B.A. (Biochemical Sciences), Harvard University, 2003 Ph.D. (Biochemistry), University of California, San Francisco, 2011
+
+2003 Thomas T. Hoopes Prize, Estate of Thomas T. Hoopes 2011 Harold M. Weintraub Graduate Student Award, Basic Sciences Division of Fred Hutchinson Cancer Research Center 2019 Baxter Young Investigator Award
+
+News Scripps Research scientists discover a “Goldilocks” zone for DNA organization, opening new doors for drug development
+
+A new study uncovers how DNA, magnesium and polyphosphate form a balance that’s just right—which could lead to innovations in medicine and biotechnology.
+
+Blocking long phosphate molecules could eventually help treat chronic infections in which slow-growing bacteria evade typical antibiotics.
+
+Scripps Research scientists have discovered how long chains of molecules called polyphosphates (polyP) are needed for bacteria to slow down movements within cells and let them enter a resting state. This “resting state” helps the pathogen evade antibiotics and contributes to severe chronic infections in the lungs and blood, within wounds, and on the surfaces of medical devices. These findings, published in Proceedings of the National Academy of Sciences on April 02, 2024, could eventually lead to new ways of treating chronic infections in which typical antibiotics aren’t effective.
+
+Every day, scientists at Scripps Research are discovering and developing new treatments to combat today’s infectious disease threats—and tomorrow’s. Many of these researchers played a significant role in the COVID-19 pandemic, including identifying new antibody treatments and uncovering the virus’s structure. Meanwhile, they're also applying these key learnings to better prepare the global population for whichever microbial threat emerges next.
+
+Assistant Professors Huan Bao, Lisa Racki and Li Ye have been awarded grants through an NIH program that seeks to catalyze scientific discovery by supporting research with transformative potential.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Chen Ran, PhD =====
+Our senses of sight, smell, taste, touch, and hearing allow us to perceive the external physical world. The internal sensory systems, by contrast, enable the brain to receive signals from within the body to generate our internal senses, such as hunger, satiety, thirst, nausea, hypoxia, and visceral pain. How does the brain differentiate hunger pangs from the feeling of fullness? Or the sense of nausea when toxins are ingested? Why does stomach stretch lead to satiety while bladder stretch produces the urge to urinate? To understand these questions, we developed a novel in vivo two-photon mouse brainstem calcium imaging platform. This system allowed us, for the first time, to record the activities of thousands of neurons, with single-cell resolution, in the brain’s gateway to the internal organs. We could deliver different types of stimuli in the animal's internal organs, mimicking the stretch of the stomach, ingestion of nutrients, pain in the organs, and many others, and watch how different populations of neurons respond to these stimuli. Our previous work revealed that internal organs are topographically represented in the brainstem, forming a “visceral homunculus”. Combining in vivo functional imaging, electrophysiological recordings, and mouse genetics, neuronal activity manipulation (optogenetics, chemogenetics), animal behavior, neural circuit tracing, and others, we will unravel how the nervous system detects mechanical, chemical, and thermal stimuli from the periphery to synthesize our internal sensations, such as satiety, hunger, nausea, hypoxia, and visceral pain. Discoveries from our research will reveal basic principles of how the brain encodes and processes information and shed light on the development of novel therapeutics for treating hypertension, obesity, diabetes, indigestion, eating disorders, pulmonary diseases, nausea, visceral pain, infection-induced sickness behaviors, and many others.
+
+Huang, Tianxiao X.; Wang, Shiqi; Ran, Chen Interoceptive processing in the nucleus of the solitary tract . Current Opinion in Neurobiology 2025 .
+
+Ran, Chen; Kamalani, Gabrielle N A; Chen, Xiaoke Modality-Specific Modulation of Temperature Representations in the Spinal Cord after Injury. The Journal of neuroscience 2021 , 41, 8210-8219.
+
+Ran, Chen; Chen, Xiaoke Probing the coding logic of thermosensation using spinal cord calcium imaging. 2019 , 318, 42-49.
+
+Ran, Chen; Hoon, M A.; Chen, Xiaoke The coding of cutaneous temperature in the spinal cord. Nature Neuroscience 2016 , 19, 1201-9.
+
+Chen Ran and Meng Zhang receive awards from the Donald E. and Delia B. Baxter Foundation to uncover insights on brain function.
+
+In recognition of his research’s potential to have a lasting impact on neuroscience, Chen Ran, PhD, an assistant professor in the Department of Neuroscience at Scripps Research, has been selected to the Searle Scholars Program’s 2025 class of new members.
+
+In recognition of his research’s potential to have a lasting impact on neuroscience, Chen Ran, PhD, an assistant professor in the Department of Neuroscience at Scripps Research, has been selected to the Searle Scholars Program’s 2025 class of new members.
+
+Immunology assistant professor Joseph Jardine and assistant neuroscience professor Chen Ran join the faculty, while RNA-targeting expert Megan Ken becomes the newest fellow
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Marisa Roberto, PhD =====
+Alcohol Use Disorder (AUD) is a chronic relapsing illness that accounts for major disability worldwide and available treatments are insufficient. Current and future studies in my laboratory aim to understand the specific neuronal mechanisms that underlie synaptic and/or molecular changes to influence the development of dependence to alcohol and other drugs of abuse (nicotine, cocaine etc.). Tolerance occurs through adaptations at the cellular level, as the brain attempts to overcome the acute effects of drugs of abuse. With prolonged drug use, these adaptations often lead to significant changes in the structure and function of neurons. The synapse is the primary point for information transfer between neurons, and a central hypothesis is that synapses are the most sensitive sites of action for drugs of abuse. We primarily study the synapses of the central nucleus of the amygdala (CeA), a brain region that plays a central role in the behavioral effects of acute and chronic drug consumption, and in the physiological responses to fearful stimuli and stressful stimuli. The aim of my group is to understand the effects of drugs of abuse on neuronal function and synaptic transmission using electrophysiological, pharmacological, and molecular methods. We have characterized several neuroadaptative changes that provide seminal insights into synaptic transmission and that will be useful towards developing new therapeutic agents to alleviate drug dependence, and particularly alcohol dependence. In parallel, our studies identified key functional roles for neuropeptide neurotransmitters in the neurocircuits that mediate motivated behavior. Our early studies significantly advanced the field of alcohol research by elucidating critical synaptic and molecular mechanisms regarding the unique sensitivity of the G-aminobutyric acid (GABA) and glutamatergic systems in CeA to acute and chronic ethanol. We found that an anti-epileptic drug gabapentin (a structural analogue of GABA) reverses several behavioral aspects of ethanol dependence. These behavioral and cellular findings with gabapentin suggest the potential for use as a possible medication for the treatment of alcoholism. A fundamental dichotomy exists between systems that mediate positively reinforced alcohol consumption ('reward drinking') versus negatively reinforced intake ('relief drinking'). Over time, chronic elevated alcohol consumption results in neuroadaptations that involve the recruitment and pathological activity of extrahypothalamic stress systems, providing an incentive for negatively reinforced alcohol intake. We have characterized synaptic action of the neuropeptide corticotropin-releasing factor (CRF) in CeA and the involvement of this system and other stress-related neurotransmitters/neuroregulators (e.g.; nociceptin, oxytocin, and neuropeptide Y) in alcohol dependence and withdrawal. We are also examining the actions of other neuromessenger systems, such as those for endocannabinoids, opioids, immune-related factors on CeA synaptic transmission, and how these systems are affected by alcohol dependence and stress. The characterization of the amygdala neurocircuitry and connections with othe
+
+2020 Latin American Society of Biomedical Research on Alcoholism " The drunker amygdala synapse: Neuroimmune signaling", Institute of Biomedical Sciences, Universida de São Paulo, Brazil
+
+2021 Distinguished Faculty Lecture "The dark side of addiction and the light side of science", The Scripps Research Institute, Graduate Student Symposium
+
+===== LAB: Edward Roberts, PhD =====
+The news comes less than two months after the therapy gained approval from the U.S. Food and Drug Administration. Ozanimod is also in advanced clinical development for moderate-to-severe ulcerative colitis and Crohn’s disease.
+
+Genetic and Pharmacologic Manipulation of TLR4 Has Minimal Impact on Ethanol Consumption in Rodents. The Journal of neuroscience : the official journal of the Society for Neuroscience 2017 , 37, 1139-1155.
+
+Guerrero, M.; Urbano, M.; Roberts, Edward Sphingosine 1-phosphate receptor 1 agonists: a patent review (2013-2015). Expert Opinion on Therapeutic Patents 2016 , 26, 455-470.
+
+Contact Edward Roberts, PhD Email (858) 242-1006 News, Events & Media Explore News Multiple sclerosis drug invented at Scripps Research slows long-term devastating disease progression
+
+Late-breaking data reinforces the effectiveness and safety of ozanimod, invented in the labs of professors Hugh Rosen and Edward Roberts.
+
+Navacaprant, a monotherapy discovered at Scripps Research, showed clinically meaningful improvements for people with moderate-to-severe MDD in a recently completed Phase 2 study.
+
+The novel drug created at Scripps Research has achieved a second FDA approval, this time for ulcerative colitis, as clinical trials continue for Crohn’s disease.
+
+The priority review is based on results from a placebo-controlled Phase 3 trial evaluating ozanimod as a therapy for moderately to severely active ulcerative colitis.
+
+Shenvi and Roberts are recognized for their contributions in organic synthesis and the development of medicinally useful substances.
+
+News In pivotal phase 3 trial, ozanimod demonstrates a clear benefit among patients with moderate-to-severe ulcerative colitis
+
+The drug, developed at Scripps Research, recently gained U.S. and European regulatory approval for the treatment of multiple sclerosis. It is also being studied for Crohn’s disease.
+
+News Ozanimod, a drug created at Scripps Research, gains European Commission approval for treatment of multiple sclerosis
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Hugh Rosen, MD, PhD =====
+1990 , Wellcome Senior Research Fellow in the Basic Biomedical Sciences, University of Oxford 1986 , Junior Research Fellow in Medicine and Biological Sciences, Jesus College, Oxford 1983 , Royal Commission for the Exhibition of 1851 Science Research Scholarship 1995 , Fellow, Infectious Diseases Society of America 2013 , Member, Henry Kunkel Society 2011 , Fellow, American Academy of Microbiology 2008 , Member, American Association of Physicians 2006-14: Associate Editor of Molecular Pharmacology (ASPET) 2007-12: Editorial Board of J. Biol. Chem. (ASBMB) 1990-2000: Editorial Board, The Biochemical Journal 2005-2007: Chair, N.I.H. Molecular Libraries Screening Center Network Steering Committee
+
+Event Molecular &#038; Cellular Biology Community Event Explore News Study shows new drug compounds dial down inflammation without compromising immunity
+
+First-in-class molecules block a specific protein interaction in immune cells, offering a potential targeted approach to autoimmune diseases like lupus and rheumatoid arthritis.
+
+More than 90% of drugs fail to make it from the lab bench to approval. How, then, has a physician-scientist like Hugh Rosen found so much success in developing medicines? Rosen, who’s the chair of the Molecular and Cellular Biology Department and the Pearson Family Chair at Scripps Research, co-invented the drugs ozanimod (approved for multiple sclerosis and ulcerative colitis) and navacaprant (in Phase 3 trials for major depressive disorder). In this episode of Science Changing Life, listen in as Rosen unveils the success stories behind these groundbreaking treatments—shedding light on the challenges and triumphs shaping modern medicine.
+
+Mental disorders like depression and schizophrenia affect the lives of millions of people around the world, and yet, available treatment options have remained the same for decades. In this Front Row lecture, Scripps Research professor Hugh Rosen shared how his pioneering research has led to the development of the drug navacaprant, which precisely targets one of the brain’s behavioral circuits and is currently in clinical testing for major depressive disorder. Harnessing his expertise as a physician-scientist, Rosen has discovered and developed multiple other medicines, including ozanimod—a breakthrough treatment approved for multiple sclerosis and ulcerative colitis.
+
+Calibr, a nonprofit research institute founded by Scripps Research President and CEO Pete Schultz, joined Scripps Research in 2018 as its drug discovery division. As a world-class nonprofit “bench to bedside” drug discovery engine, Calibr delivers groundbreaking solutions to unmet medical needs by uniting the creativity of fundamental discovery with highly focused R&D capabilities and expertise.
+
+Late-breaking data reinforces the effectiveness and safety of ozanimod, invented in the labs of professors Hugh Rosen and Edward Roberts.
+
+Navacaprant, a monotherapy discovered at Scripps Research, showed clinically meaningful improvements for people with moderate-to-severe MDD in a recently completed Phase 2 study.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Enrique Saez, PhD =====
+Our lab is interested in two broad themes related to the regulation of energy balance in mammals: Nuclear receptors as nutrient sensors - Nuclear receptors are ligand-activated transcription factors that sense dietary components such as lipids, vitamins and cholesterol derivatives. We are interested in identifying novel nutrient signaling pathways that involve nuclear receptors. Using high-throughput cell based and biochemical screens as well as a variety of animal models we hope to discover diet-derived physiological signaling pathways. Genetic regulation of energy storage - Excess energy is stored in adipose tissue. We are using genomic and chemical approaches to identify novel genetic regulators of adipose tissue formation and to examine their role in metabolic disease. By enhancing our understanding of how diet influences gene expression and the genetic regulation of energy balance, we aim to uncover novel therapeutic targets for the treatment of metabolic diseases such as obesity and diabetes.
+
+2010-2020 Associate Professor, The Scripps Research Institute, Department of Molecular Medicine (previously the Department of Chemical Physiology), La Jolla, CA
+
+2004-2005 Principal Investigator II, Genomics Institute of the Novartis Research Foundation, Lead Discovery-Metabolic and Cardiovascular Disease, San Diego, CA
+
+2002-2004 Principal Investigator, Genomics Institute of the Novartis Research Foundation, Lead Discovery-Metabolic and Cardiovascular Disease, San Diego, CA
+
+1989 American Chemical Society: Princeton University Dept of Chemistry Award, Princeton University 1989 The Allen Williamson Talley Memorial Scholarship, Princeton University 1989 Thesis selected for presentation during Class Day ceremonies, Princeton University 1990 Richard B. Carter Trust Fellowship, Harvard University 1996 American Diabetes Association Postdoctoral Fellowship 2000 Susan G. Komen Breast Cancer Foundation Postdoc Fellowship 2002 CapCURE Research Award, CapCURE 2013 American Diabetes Association Career Development Award, American Diabetes Association
+
+As it turns out, our metabolisms have been misunderstood for decades. These Scripps Research scientists are changing the way we think about metabolic disorders, weight control and eating habits—paving the way for new drugs to treat some of the most serious health conditions our world faces today.
+
+Scientists discovered a way to enhance the activity of an enzyme long suspected of playing a role in metabolism. In a study involving mice, the compound reversed signs of diabetes.
+
+A discovery from Scripps Research shows that blocking the kappa opioid receptor while on a restricted-calorie diet could help shed pounds faster.
+
+The recently discovered protein is normally abundant in fat. Without it, the body struggles to manage glucose and insulin, the scientists found.
+
+A molecule in hoppy beers, like IPAs, appears to fuel weight loss and have benefits for type 2 diabetes in mice. But how?
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Pietro Paolo Sanna, MD =====
+Contact Pietro Paolo Sanna, MD Email Research Interests Drug Abuse and Addiction Genomics HIV/AIDS Neurobiology Viral Diseases News, Events & Media Explore In the Media Study links heavy drinking to faster Alzheimer's onset and progression
+
+By examining RNA in hundreds of thousands of individual brain cells, Scripps Research scientists further support that alcohol use disorder could accelerate Alzheimer’s disease progression, paving the way for future targeted treatments.
+
+The discovery by scientists from Scripps Research and Cardiff University paves the way for clinical trials that use patients’ own cells to treat Parkinson’s disease.
+
+Scripps Research and University of Bologna scientists showed how excessive alcohol consumption in animals can hasten cognitive decline in those genetically predisposed to Alzheimer’s disease.
+
+Scientists at The Scripps Research Institute have devised what they call a “neuronal cookbook” for turning skin cells into different types of neurons.
+
+A new study led by scientists at Scripps Research is giving researchers a first look at the early stages of brain development in patients with Fragile X syndrome.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: William Schief, PhD =====
+Contact William Schief, PhD Email (858) 784-7725 Research Interests adaptive immunity germline-targeting vaccine design HIV/AIDS infectious disease molecular affinity and avidity mRNA vaccines and therapeutics Nanoparticles Protein Design protein structure Vaccine Design News, Events & Media Explore News New research offers fresh insights for how to make better vaccines
+
+Scripps Research scientists train the immune system to make antibodies against numerous HIV strains. Preclinical findings mark progress toward a long-sought vaccine capable of broad protection against HIV. (July 6, 2026)
+
+Two HIV vaccine trials show proof of concept for pathway to broadly neutralizing antibodies. North American and African clinical trials led by Scripps Research, IAVI and additional collaborators across the U.S. and Africa mark progress toward an effective HIV vaccine. (May 15, 2025)
+
+The search for universal HIV vaccines. Scientists at Scripps Research are working to develop universal vaccines capable of neutralizing many variants of a given virus. In recent years, they have made significant progress toward creating universal vaccines for influenza, HIV and coronavirus. (January 19, 2023)
+
+Scientists reveal encouraging findings in first-in-human clinical trial evaluating HIV vaccine approach. (December 2, 2022)
+
+B.S. (Applied Mathematics), Yale University, 1989 Ph.D. (Physics), University of Washington, 1999 Sr. Fellow (Physiology & Biophysics), University of Washington, 2001 Sr. Fellow (Biochemistry), University of Washington, 2006
+
+1989 Cum Laude honors for B.S. degree, Yale University 1995 NIH Training Grant Fellowship in Molecular Biotechnology 1996 NIH Training Grant Fellowship in Molecular Biophysics 1999 Dahlstrom Prize for an outstanding experimental physics graduate student, Department of Physics, University of Washington 2002 NIH National Reserach Service Award Post-doctoral Fellowship
+
+Funding will expand methods for studying viral proteins and immune responses in more realistic settings for HIV and other severe pathogens.
+
+Scripps Research scientists and colleagues develop a nanodisc platform that offers a clearer view of how key viral proteins interact with antibodies.
+
+North American and African clinical trials led by Scripps Research, IAVI and additional collaborators across the U.S. and Africa mark progress toward an effective HIV vaccine.
+
+Scripps Research scientists used computer modeling to illustrate how antibodies use fatty molecules known as lipids to recognize the HIV virus.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Paul Schimmel, PhD =====
+Molecules needed for energy production in cells apparently underwent a radical change during early animal evolution so they could continue to function despite a relatively high mutation rate.
+
+Scripps Research and aTyr Pharma scientists have revealed how the protein HARSWHEP calms inflammation associated with sarcoidosis.
+
+Prestigious appointment will support his innovative imaging techniques and investigations into the relationship between metabolism and neurons.
+
+Lerner made major scientific contributions and built Scripps Research into a world-renowned hub of innovative science and medicine.
+
+Donna Blackmond, Marisa Roberto and Xiang-Lei Yang have been honored with endowed chairs in recognition of their scientific leadership and impactful discoveries.
+
+Schimmel will receive the 2020 Kathryn C. Hach Award for Entrepreneurial Success, which honors those who have used the transforming power of chemistry to improve lives.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Peter Schultz, PhD =====
+In his Front Row lecture, President and CEO Pete Schultz highlighted the progress Scripps Research has made in pioneering a new model for non-profit biomedical research. He described how integrating basic science and translational research under one roof is accelerating next-generation medicines—from new immunotherapies for cancer and innovative medicines for infectious disease to regenerative treatments for heart, lung and intestinal tissues. At a time of uncertainty in federal science funding, this model isn't only advancing human health but also helping to generate sustainable support for innovative scientific research and for training the next generation of scientific leaders.
+
+A new platform developed at Scripps Research enables fast, scalable protein evolution—opening the door to new therapies and diagnostics, and to predicting resistance mutations across many disease areas.
+
+Select Publications Lemke, E. A.; Summerer, D.; Geierstanger, B. H.; Brittain, S. M.; Schultz, Peter G. Control of protein phosphorylation with a genetically encoded photocaged amino acid. Nature Chemical Biology 2007 , 3, 769-772.
+
+Schultz, Peter G.; Schultz, Peter G. Synthesis at the Interface of Chemistry and Biology. Chemistry international 2014 , 36, 3-8.
+
+Liu, Chang C.; Schultz, Peter G. Adding new chemistries to the genetic code. Annual Review of Biochemistry 2010 , 79, 413-444.
+
+CLF065, a long-acting, once-weekly GLP-2 receptor agonist, advances in two inflammatory bowel disease indications. The studies aim to bring a regenerative treatment option to patients living with IBD, who currently have few therapies that repair the damaged intestinal lining at the root of their disease.
+
+A new platform developed at Scripps Research enables fast, scalable protein evolution—opening the door to new therapies and diagnostics, and to predicting resistance mutations across many disease areas.
+
+News Viome and Scripps Research partner to develop first at-home RNA screening test to prevent colon cancer before it strikes
+
+First-of-its-kind 1,000-patient clinical study will use RNA-based stool and saliva tests to detect colon polyps — early warning signs of colorectal cancer — before they become cancerous.Study aims to enhance colorectal cancer prevention by identifying polyp molecular signals, offering improved sensitivity over at-home DNA tests, which have limited ability to detect precancerous lesions.
+
+President and CEO Pete Schultz is honored for expanding the genetic code and the development and application of large scale “diversity-based” approaches to the discovery of novel proteins, drugs and modern materials.
+
+News Enzyme engineering opens door to novel therapies for Parkinson’s, cancers and other hard-to-target protein diseases
+
+Researchers reprogrammed a botulinum toxin protease to selectively break down disease-causing proteins in human cells, providing proof of concept for developing new therapies for a wide range of illnesses.
+
+Scientists at Scripps Research and its drug discovery arm, Calibr-Skaggs, develop first-in-class small molecules to repair damaged tissues of the heart, lungs, joints, and more.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Ian B. Seiple, PhD =====
+In a fruitful collaboration with the Huang lab, we have developed trifunctional anchors for a new technique known as Expansion Microscopy (ExM). These anchors enable ExM to be performed with no fluorescense loss, which previously limited its potential. In combination with super-resolution strategies, we have achieved 5-nm resolution, 2-color images of the spatial distribution of nuclear lamina and histone markers. This is the highest resolution ever achieved with fluorescence microscopy. Examining Imbalance in Chemistry Authorship There is an enormous imbalance in gender representation in chemistry authorship. We have written a web scraper to statistically predict gender of authors in major chemistry journals. This provides up-to-date data on the underrepresentation of female authors in chemistry journals. We provide thoughts on how this can be improved in our first publications in this area.
+
+Research in my group spans several disciplines including medicinal chemistry, microbiology, and structural biology. A central goal to our research is to identify major challenges in infectious diseases, especially in the treatment of resistant bacterial infections, and to develop new treatments by the strategic application of chemical synthesis. Our approaches are informed by structural binding data, known resistance pathways, and pharmacological considerations, requiring multidisciplinary research within the lab and strategic collaborations.
+
+Co-evolution of microorganisms has resulted in an abundance of natural product small molecules that serve as effective weapons against pathogenic bacteria. This evolutionary process, however, does not often optimize drug-like properties for human use, and is inherently coupled with the evolution of resistance mechanisms. Our laboratory develops modular, fully synthetic routes to natural product scaffolds that we believe have not reached their potential. We are currently focusing on two classes of bacterial protein synthesis inhibitors: streptogramins (JACS 2017, Tetrahedron 2019) and lankacidins (Angewandte 2018, JACS 2020). These projects have led to a fruitful collaboration with the Fraser laboratory to investigate the molecular mechanisms of action of our antibiotic analogs in the bacterial ribosome with Cryo-EM (Nature 2020).
+
+Of all of the effective antibiotics in our arsenal, less than half are effective against Gram-negative organisms. In a collaborative effort with the DeGrado and Craik laboratories, we are developing strategies to expand the spectra of activity of Gram-positive antibiotics to render them effective against Gram-negative pathogens, potentially doubling our pool of effective Gram-negative antibiotics. Our approach harnesses the reactivity of proteases in the bacterial periplasm to release Gram-positive payloads after they have penetrated the outer membrane.
+
+A joint student in the Seiple and Wells labs has initiated a project to harness the power of antibodies to achieve targeted protein degradation of oncogenic targets. We are pursuing two main strategies: 1) development of antibody-degrader conjugates, and 2) deveopment of bispecific antibody degraders of cell-surface proteins.
+
+In a new collaboration with the Rosenberg lab, our joint student is developing a mobile CRISPRi platform for the rapid, high-throughput screening of microbial extracts in search of new antibiotics. By employing double barcoding technology, we will be able to screen 96 compounds against 500 essential proteins in a single sequencing run .
+
+===== LAB: K. Barry Sharpless, PhD =====
+The Scripps Research chemistry community shares their thoughts on K. Barry Sharpless' historic second Nobel Prize in Chemistry. He was awarded the 2022 prize for his groundbreaking research in developing “click chemistry,” an ingenious method for building molecules. Sharpless, the W.M. Keck Professor of Chemistry, shares the prize with Carolyn R. Bertozzi of Stanford University and Morten Meldal of the University of Copenhagen for the development of click chemistry and bioorthogonal chemistry, according to the Nobel Prize committee. Sharpless previously shared the 2001 Nobel Prize in Chemistry for his work on chirally catalyzed oxidation reactions, making him the second scientist ever to win two Nobel Prizes in Chemistry. Frederick Sanger won the Nobel Prize in Chemistry in 1958 and 1980.
+
+Scripps Research scientists and collaborators use an innovative set of machine-learning models to discover a record-breaking material for film capacitors, key components in many energy technologies.
+
+Sharpless is recognized by the American Institute of Chemists for his service to the science and profession of chemistry in the United States.
+
+With applications in drug discovery and materials science, a new library of polymers can be generated in in an environmentally safe way.
+
+The Scripps Research scientists are part of a large collaborative team to win the 2021 Robert Robinson Award in Synthetic Organic Chemistry.
+
+A team including Nobel laureate chemist K. Barry Sharpless, PhD, has discovered an easy, efficient type of chemical reaction that could become widely useful in building potential new drug molecules and other valuable chemical products.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== END batch 5/8 =====

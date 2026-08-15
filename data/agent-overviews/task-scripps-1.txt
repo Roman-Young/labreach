@@ -1,0 +1,277 @@
+########## DISTILL OVERVIEWS — scripps batch 2/8 (15 labs) ##########
+
+For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad
+with no field background could read to decide if they want to email the lab. Say WHAT the lab studies,
+HOW (methods/approach), and WHY it matters. Ground it ONLY in that lab's provided text — do NOT invent
+specifics, numbers, or techniques not present. If a lab's text is too thin/administrative to describe
+its research, set that lab's value to "" (empty) rather than padding — an honest gap beats a fake overview.
+
+Write your answer as a JSON object {"<exact lab name>": "<overview or ''>", ...} to this ABSOLUTE path:
+  /home/roman/agent/codebases/labreach/data/agent-overviews/scripps-batch1.json
+
+===== LAB: Philip Dawson, PhD =====
+Phil Dawson, professor in the Department of Chemistry, has been awarded the 2025 Bruce Merrifield Award from the American Peptide Society (APS) for his contributions to the field of peptide science and research exemplifying a high level of scientific creativity.
+
+2017-2024, Dean of Graduate and Postdoctoral Studies, Skaggs Graduate School of Chemical and Biological Science, Scripps Research
+
+1996-1997, Postdoctoral Scholar with Drs. Harry B. Gray and Thomas J. Meade, Department of Chemistry, California Institute of Technology
+
+Flood, Dillon; Yan, Nicholas; Dawson, Philip E. Post-translational backbone engineering through selenomethionine-mediated incorporation of Freidinger lactams. Angewandte Chemie-International Edition 2018 , 57, 8697-8701.
+
+Silvestri, Anthony P.; Cistrone, Philip A.; Dawson, Philip E. Adapting the glaser reaction for bioconjugation: robust access to structurally simple, rigid linkers. Angewandte Chemie-International Edition 2017 , 56, 10438-10442.
+
+For his work supporting the development of peptide science, Phil Dawson, PhD, professor in the Department of Chemistry at Scripps Research, has been awarded the 2024 Cathay Award from the Chinese Peptide Society (CPS)—the highest honor bestowed by the society.
+
+Dawson is honored with the Arthur C. Cope Late Careers Scholar Award for his foundational contributions in organic chemistry.
+
+A total of 42 graduates are earning PhDs after completing their academic journey at the Skaggs Graduate School of Chemical and Biological Sciences.
+
+Skaggs Graduate School of Chemical and Biological Sciences recognizes 50+ graduate students, the largest class in the school’s history, on May 17.
+
+Dawson brings to his new role more than 25 years’ experience at Scripps Research as a student, alumnus, faculty member and associate dean.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Juan C. De La Torre, PhD =====
+Work in our laboratory focuses on the investigation of the molecular and cell biology of mammarenaviruses (Order Bunyavirales) and their biological implications. Mammarenaviruses are enveloped viruses with a bi-segmented negative-strand RNA genome. The prototypic mammarenavirus lymphocytic choriomeningitis virus (LCMV)provides investigators with a highly tractable experimental model system for the investigation of virus-host interactions and associated diseases. Moreover, several mammarenaviruses cause severe disease in humans and pose important public health threats. We pioneered the development of a reverse genetics system for the prototypic mammarenavirus LCMV and subsequently developed similar systems for the hemorrhagic fever-causing mammarenaviruses Lassa (LASV) and Junin (JUNV) viruses. The development of mammarenavirus reverse genetics has provided us with a powerful approach for the investigation of the viral cis-acting sequences and trans-acting factors that control mammarenavirus replication and gene expression, as well as assembly and budding. Moreover, our ability to rescue infectious mammarenaviruses from cloned cDNAs allows us to examine the phenotypes of recombinant mammarenaviruses with predetermined mutations of interest in the context of the virus's natural infection. These advances in mammarenavirus molecular genetics have allowed us to develop a variety of cell-based assays and tools to identify and functionally characterize virus-host cell protein interactions, as well as the identification and characterization of inhibitors of these interactions, whihc have provided the bases for the development of both direct-acting (DAA) and host-directed (HDA) antivirals to combat human pathogenic mammarenaviruses. In addition, we have leveraged our findings on the molecular and cell biology of mammarenaviruses to generate recombinant (r) forms of LCMV and LASV that are fully attenuated in animal models of LCMV and LASV infections, and able to provide complete protection, upon a single administration, against a lethal challenge with the corresponding wild-type forms of LCMV or LASV. These findings have established the foundations for the development of novel live-attenuated vaccine platforms to combat human pathogenic mammarenaviruses.
+
+1989-1991 Research Associate 1991-1991 Research Associate Sr 1991-1996 Assistant Professor 1996-2009 Associate Professor 2009-Present Professor
+
+Juan March Postdoctoral Fellowship 1981 – 1985 CSIE Postdoctoral Fellowship 1985-1987 NATO Postdoctoral Fellowship 1987-1988 Fulbright Postdoctoral Fellowship 1988 - 1990 1995 Spanish Society of Virology Award Japanese Science Foundation Award 1997 Editorial Board: J. Virology; Virology and J. General Virology. Charted Member (October 2003-June 2006) Virology B (VIRB) Study Section, NIH. Charted Member (October 2009-2013) Virology B (VIRB) Study Section, NIH. Charted Member (August 2019-Present) MID Study Section, NIH. Ad Hoc Reviewer for several NIH Study Sections, and international funding agencies. Member of the TSRI IACUC (2003-present), Chairperson Since 2005. Member TSRI Institutional Bio-safety Committee (IBC) (1999-Present), Chairperson Since December 2019
+
+Sanchez, A. B.; de la Torre, Juan C. Rescue of the prototypic arenavirus LCMV entirely from plasmid. Virology 2006 , 350, 370-380.
+
+Event Molecular &#038; Cellular Biology Community Event Explore News Scripps Research awarded NIH grant to enhance biosafety level 3 facility to address viruses of pandemic concern
+
+===== LAB: Ashok Deniz, PhD =====
+Our research is broadly focused around deriving fundamental physical rules governing the properties of complex protein , RNA and other biopolymers at a range of spatial and time scales, with deep implications for biology and disease . We study these fascinating molecular species and tunable materials they can assemble into, and also develop state-of-the-art single-molecule and other biophysical tools for this purpose. One research focus is on Intrinsically Disordered Proteins (IDPs) . While many proteins have well-defined 3-dimensional structures, IDPs have stretches of flexible sequence. IDPs are prevalent in proteomes, and their physics can play key roles in many cellular functions. Our single-molecule studies have shed light on the tunable nature of IDP structural landscapes, with implications for function and diseases such as Parkinson's and Alzheimer's diseases. We also have a strong interest in understanding the basic biophysics of larger structures that proteins, RNA and the inorganic polymer polyphosphate can assemble into in cells, specifically dynamic structures known as condensates or membraneless organelles . Such structures (well known examples are the nucleolus, stress granules and polyphosphate granules) can have a range of material properties (liquid-like, viscoelastic, solid) as well as complex structural features that are believed to be mechanistically key in the dynamics and functions in cells. In parallel, we develop and use single-molecule fluorescence methods to address key issues in molecular and cell biology. Single-molecule methods provide unprecedented views of structural and dynamic complexity in proteins and other biological macromolecules, allowing us to directly test biological models and theories.
+
+A jolt to the system: Scripps Research biophysicists uncover new electrical transmission mechanism for cellular regulation
+
+Read News-Medical interview on some of our lab’s emerging research directions, including how the physics of 2-dimensional-crowding uncovers a hidden conformation of a Parkinson’s disease-linked IDP
+
+Ph.D. ((Physical Organic) Chemistry), The University of Chicago, 1996 M.S. (Chemistry), University of Chicago, 1994 M.S. (Chemistry), Indian Institute of Technology, 1990 B.S. (Chemistry), St.Xavier's College (University of Bombay), 1988
+
+2000-2007 Assistant Professor, Scripps Research 2007-2021 Associate Professor, Scripps Research 2021-Present Professor, Scripps Research
+
+Gurunian, Anthony; Lasker, Keren; Deniz, Ashok A. Biomolecular Condensates Can Induce Local Membrane Potentials. Small 2026 , 22, e09591.
+
+Deniz, Ashok A. Percolation physics and density transition frameworks converge in biomolecular condensation. Proceedings of the National Academy of Sciences of the United States of America 2022 , 119, e2210177119.
+
+“Tiny biological batteries” can change the cell membrane’s electrical properties—a discovery that has big implications for health, as many essential cellular processes hinge upon precise electrical activity.
+
+News Scripps Research scientists discover a “Goldilocks” zone for DNA organization, opening new doors for drug development
+
+A new study uncovers how DNA, magnesium and polyphosphate form a balance that’s just right—which could lead to innovations in medicine and biotechnology.
+
+New phospholipid discovery brings researchers closer to understanding how primordial cells emerged during origin of life.
+
+A total of 42 graduates are earning PhDs after completing their academic journey at the Skaggs Graduate School of Chemical and Biological Sciences.
+
+===== LAB: Christian Diercks, PhD =====
+The Diercks lab leverages our T7-ORACLE system for continuous hypermutation and accelerated evolution in E. coli to outstanding challenges in human health and synthetic biology. Areas of interest comprise directed evolution to repurpose BoNT/A (Botox) protease as a therapeutic for cancer and pain, directed evolution of enzyme replacement therapies in lysosomal storage diseases, affinity maturation of highly specific antibodies, as well as new technologies for genetic code expansion. These areas have remained underexplored in the context of directed evolution, largely due to the fact that conventional evolution systems render pursuing extensive high-throughput evolution campaigns too laborious and time consuming in an academic setting. The lab further aims to expand the concept of directed evolution from biomacromolecules to new-to-nature abiological materials. Efforts toward this goal focus on endowing nanostructured materials with a selectable genotype/phenotype for the development of non-viral gene delivery vehicles with improved tissue/cell type tropism, endosomal escape, and intracellular trafficking
+
+1. C. S. Diercks *, P. Sondermann, C. Rong, T. G. Gillis, Y. Ban, C. Wang, D. A. Dik, P. G. Schultz*, An Orthogonal T7 Replisome for Continuous Hypermutation and Accelerated Evolution in E. coli. Science , 2025 , 389 (6760), 618–622.?
+
+2. P. Sondermann, C. S. Diercks , C. Rong, P. G. Schultz*, Targeted Degradation of a-Synuclein Using an Evolved Botulinum Toxin Protease. Proc. Natl. Acad. Sci. U. S. A . 2025 , 122 (13), e2426745122.
+
+3. M. Pigula, Y.-C. Lai, M. Koh, C. S. Diercks , T. F. Rogers, D. A. Dik*, P. G. Schultz*, An Unnatural Amino Acid Dependent, Conditional Pseudomonas Vaccine Prevents Bacterial Infection, Nat. Commun. 2024 , 15 (1), 6766.
+
+4. C. S. Diercks , D. A. Dik, P. G. Schultz*, Adding new chemistries to the central dogma of molecular biology. Chem , 2021 , 7 , 2883–2895.?
+
+5. C. S. Diercks , O. M. Yaghi*, The atom, the molecule, and the covalent organic framework, Science , 2017 , 355 , 923.
+
+6. S.Lin, # C. S. Diercks , # Y.-B. Zhang,# N. Kornienko, E. M. Nichols, Y. Zhao, A. R. Paris, D. Kim, P. Yang, O. M. Yaghi*, C. J. Chang*, Covalent organic frameworks comprising cobalt porphyrins for the electrocatalytic reduction of carbon dioxide in water. Science , 2015 , 349 , 1208–1213.?
+
+2020 – 2022 Chem (Cell Press) Next Generation Advisory Board 2019 KAVLI ENSI Graduate Student Thesis Prize, Kavli Energy NanoScience Institute, Berkeley, CA 2017 – 2018 KAVLI ENSI Philomathia Graduate Student Fellowship, Kavli Energy NanoScience Institute, Berkeley, CA 2016 UC Berkeley Conference Travel Grants, University of California, Berkeley, CA 2012 – 2013 EuRopean (Community) Action Scheme for the Mobility of University Students (ERASMUS) Fellowship
+
+News Enzyme engineering opens door to novel therapies for Parkinson’s, cancers and other hard-to-target protein diseases
+
+Researchers reprogrammed a botulinum toxin protease to selectively break down disease-causing proteins in human cells, providing proof of concept for developing new therapies for a wide range of illnesses.
+
+The newly appointed faculty are making transformative discoveries in areas ranging across drug discovery, neuroscience, chemistry, immunity and more.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Ilia Droujinine, PhD =====
+Secreted proteins coordinate functions of organs and organisms, and compose a yet uncharacterized communication network. For example, in homeostasis, fat-derived adipokines leptin and adiponectin serve as inter-organ secreted metabolic regulators, and in behavior, major urinary proteins serve as inter-organism excreted pheromones regulating aggression. Secreted factors are also relevant for disease: resulting from poorly-characterized dysfunctional inter-organ signaling, obesity affects 40% of the US population (https://www.cdc.gov/obesity/data/adult.html). Despite their relevance for understanding novel biological processes and diseases, identifying the secreted proteins involved has been challenging. Existing analysis methods have serious limitations that preclude comprehensive identification of low-abundance factors and their origins and destinations. Thus, many additional physiologically- and disease-relevant factors remain to be identified. To address this, our lab broadly aims to apply novel high-throughput quantitative approaches we developed to inter-organ and inter-organism communication, in order to understand the nature of the signals involved, which tissue(s) they originate from and target, their functions, and how they are regulated in stress or disease.
+
+We established an in vivo global proteomic platform using BirA*G3 to investigate secreted protein trafficking between organs in Drosophila , and identified a fat body (similar to mammalian liver and adipose tissues) conserved secreted protein that regulates muscle activity. This protein acts on muscles through the interaction with a specific receptor. Due to the success of the BirA*G3 method, we have developed and characterized inducible BirA*G3 mice that we are now using to characterize interorgan communication proteins and peptides. We use these mice to determine secreted proteins regulated by physiological and pathophysiological perturbations, as well as the functions and mechanisms of the identified secreted proteins.
+
+Secreted proteins also coordinate functions of organisms. Animals use chemical cues from their environment and conspecifics to inform decisions necessary for survival. Much is known about how small volatile molecules and pheromones guide behavior; however, whether and how other molecules secreted by conspecifics can influence behavior is unclear. Our research aims to uncover the roles of secreted proteins and peptides in this process.
+
+Ph.D. (Biological and Biomedical Sciences), Harvard University, 2020 B.S. (Honours Biochemistry, Co-op), University of Waterloo, 2011
+
+2023 Full Member, Sigma Xi 2022-2024 Glenn Foundation for Medical Research and AFAR Grants for Junior Faculty 2021 Ellen Browning Scripps Foundation Award 2021 ASBMB Annual Meeting Presentation Award 2019 EMBO Poster/Presentation Prize, EMBO Workshop on Organ Crosstalk
+
+Droujinine, Ilia A.; Perrimon, Norbert The Multidimensional Organization of Interorgan Communication Networks.. Developmental Cell 2019 , 50, 395-396.
+
+Droujinine, Ilia A.; Perrimon, Norbert Interorgan Communication Pathways in Physiology: Focus on Drosophila.. Annual Review of Genetics 2016 , 50, 539-570.
+
+Event Molecular &#038; Cellular Biology Explore News Two Scripps Research assistant professors named 2026 Baxter Young Investigators
+
+The Baxter Foundation annually support early-career researchers whose work in science and technology holds promise for improving patient care.
+
+ADA’s $1.3 million grant will support the Droujinine lab’s research of interorgan dialogue to develop therapeutics for diabetes management.
+
+===== LAB: Cindy Ehlers, PhD =====
+Awards 1973 Citation for Outstanding Performance in Physiology, UC Davis 1979 Giannini Foundation Fellow, UCLA 1980 Klingenstein Foundation Fellow, The Salk Institute 1985 Research Scientist Award, MacArthur Foundation Network Scientist 1986 Research Scientist Development Awards, NIAAA 2007 Thurman Award, UNC Bowles Center for Alcohol Studies 2007 Merit Award, National Institute of Health 2011 Wendy and Stanley Marsh 3 Endowed Lectureship, TTUHSC 2014 RSA Distinguished Researcher Award, Research Society on Alcoholism 2020 Henri Begleiter Excellence Research Award, Research Society on Alcoholism Other Professional Activities Journal Associate Editorships: Reviewing Editor, Alcoholism, Clinical & Experimental Research, Associate Editor, Biological Psychiatry and Journal of Alcohol Studies NIAAA Council, 2007-2010 Steering Committee member National Advisory Board on Underage Drinking 2004 Board of Directors, Research Society on Alcoholism, 1999-2002 Scientific Advisory Board for the Alcohol Research Center University of North Carolina, Skipper Bowles Center 1997 Scientific Advisory Board Alcohol Research Center Howard University 2004 Scientific Advisory Board Alcohol Research Center UC Berkeley CA 2004-present. Member, program committee ACNP 2000-2003 Chairman, Awards Committee RSA, 2000 Member, Committee on Social Outcomes, San Diego Foundation 1998-2000. Chair: Education & Training Committee, ACNP, 1998-1999 Consultant, Native American Graves protection and repatriation committee, culture and language retention committee, Luiseno nation-inter tribal coalition, 1998-present. Journal Associate/Review Editorships: Alcoholism: Clinical Experimental Research Biological Psychiatry Critical Reviews in Neurobiology Depression and Anxiety Neuropsychopharmacology Societies: Fellow, American College of Neuropsychopharmacology Research Society on Alcoholism Society for Neuroscience Society for Biological Psychiatry International Behavioural and Neural Genetics Society International Society for Biomedical Research on Alcoholism International Society for Psychoneuroendocrinology (scientific secretariat, 1997) International Society for Twin Studies
+
+Understanding genetic risk and protective factors for alcoholism in Native, African and Hispanic Americans. Our laboratory has been studying natural variation in the genes that encode the structure of the enzymes that metabolize alcohol between ethnic groups and conducting genome-wide scans for other genes that influence the development of alcoholism. The goal of our studies is to identify candidate genes that encode for the neurophysiological processes that underlie drug dependence. Genetic information is combined with data on clinical course and environmental risk factors with the aim of: describing the etiology of substance dependence; and developing prevention and intervention programs appropriate to the different ethnic groups. A second thrust of our laboratory involves the investigation of the toxic effects of alcohol on the developing fetal and adolescent brain.
+
+Wehrenberg, W. B.; Ehlers, Cindy L. Effects of growth-hormone releasing-factor in the brain. Science 1986 , 232, 1271-1272.
+
+Ehlers, C L.; Frank, E; Kupfer, D J. Social zeitgebers and biological rhythms. A unified approach to understanding the etiology of depression. Archives of General Psychiatry 1988 , 45, 948-52.
+
+Kupfer, D. J.; Ehlers, Cindy L. Two roads to rapid eye movement latency. Archives of General Psychiatry 1989 , 46, 945-948.
+
+===== LAB: Sandra Encalada, PhD =====
+Learning, memory and behavior depend on the continuous movement of valuable cellular components along axons, narrow nerve fibers through which neurons send signals to other neurons. But when this transport system fails, molecular traffic jams can cause neuronal damage associated with diseases like Alzheimer's, Parkinson's and prion disorders. In this Front Row lecture, Scripps Research associate professor Sandra Encalada shared how her lab is unraveling the cellular pathways that lead to the formation of toxic protein clumps seen at traffic jams inside brain cells undergoing neurodegeneration. Her breakthroughs are transforming the way scientists view brain health and identifying new molecules that could treat, and even reverse, complex neurological conditions.
+
+2021-Present Arlene and Arnold Goldstein Associate Professor, Dept. of Molecular and Cellular Biology, and Dorris Neuroscience Center Investigator, Scripps Research. 2011-2021 Arlene and Arnold Goldstein Assistant Professor, Dept. of Molecular Medicine, and Dorris Neuroscience Center Investigator, Scripps Research.
+
+2004-2008 Damon Runyon Cancer Research Foundation Postdoctoral Research Fellow. Dept. Cellular and Molecular Medicine, University of California, San Diego.
+
+As humans live longer, they’re at increased risk of developing devastating neurodegenerative diseases. At Scripps Research, scientists are closer than ever to understanding how these diseases harm the brain and identifying possible drugs to stop them.
+
+Professor Sandra Encalada is based in the Department of Molecular Medicine at Scripps Research, where her lab investigates the transport of cargo within brain cells and its role in health and disease. Listen as we talk about new therapeutic agents to stop and reverse neurodegeneration, environmental neurotoxins and when to listen to your gut feeling.
+
+The research could also help better understand other neurodegenerative diseases, including Alzheimer’s, Parkinson’s and Huntington’s.
+
+Researchers show how toxic aggregates are formed inside brain cells, and how to block the cell-killing process—which may also be at work in Alzheimer’s and other neurodegenerative diseases.
+
+Scientists have discovered that a microscopic roundworm develops similar nerve damage to human patients when their muscle cells are genetically engineered to produce TTR proteins.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Keary Engle, PhD =====
+2020 Catalysts Young Investigator Award 2020 ONR Young Investigator Award 2020 Eli Lilly Organic Chemistry Award 2020 Cottrell Scholar Award 2020 Novartis Early Career Award in Organic Chemistry 2019 Alfred P. Sloan Fellowship 2019 Boehringer Ingelheim Scientific Advancement Grant 2019 Camille Dreyfus Teacher-Scholar Award 2018 ACS Petroleum Research Fund Doctoral New Investigator Grant 2018 Bristol-Myers Squibb Unrestricted Grant 2018 Bayer Early Excellence in Science Award 2017 TSRI Society of Fellows Outstanding Mentor 2017 Thieme Chemistry Journal Award 2016 Donald E. and Delia B. Baxter Foundation Young Faculty Award 2014 IUPAC-Solvay International Award for Young Chemists 2013 Ruth L. Kirschstein National Research Service Award (NIH F32) 2012 Kenneth G. Hancock Memorial Student Award, ACS Green Chemistry Institute 2011 K. Patricia Cross Future Leaders Award, American Association of Colleges and Universities 2008 Skaggs-Oxford Scholarship, Scripps Research Institute and Oxford University 2008 NSF Graduate Research Fellowship, National Science Foundation 2008 National Defense Science and Engineering Graduate Fellowship, ASEE 2007 J. William Fulbright Scholarship, International Institute of Education
+
+Organic small molecules make up the vast majority of medicines, biological probes, agrochemicals, and materials building blocks. Thus, though they are ubiquitous in modern society, many classes of small molecules remain problematic to prepare using conventional methods. Contemporary synthetic routes routinely require multiple steps, generate large quantities of waste, or require substantial human energy to troubleshoot. Research in the Engle group focuses on addressing these challenges by harnessing the power of catalysis. Our group's goal is to advance the efficiency, effectiveness, and sustainability of chemical synthesis. The projects that we tackle are highly interdisciplinary, and as a consequence, students complement their core training in synthetic organic, physical organic, and organometallic chemistry with expertise in related disciplines in and outside of chemistry.
+
+D.Phil. (Biochemistry), University of Oxford, 2013 Ph.D. (Chemistry), The Scripps Research Institute, 2013 B.S. (Chemistry, Economics, Mathematics, and Statistics), University of Michigan, 2007
+
+2013-2015 NIH Postdoctoral Research Fellow, California Institute of Technology 2007-2008 Fulbright Fellow, Max-Planck-Institut für Kohlenforschung 2008-2015 Graduate Student, Scripps Research Institute 2015-2020 Assistant Professor, Scripps Research Institute 2020-Present Professor, Scripps Research Institute 2024-Present Dean of Graduate and Postdoctoral Studies, Scripps Research Institute
+
+2025 ChemSocRev Pioneering Investigator Lectureship 2025 ACS Green Chemistry Challenge Award 2025 Arthur C. Cope Scholar Award 2024 Mitsui Chemicals Catalysis Science Award for Creative Work 2023 Leo Hendrik Baekeland Award 2022 International Precious Metals Institute (IPMI) Advisor Award 2022 Kavli Frontiers in Science Fellow, 2021 ChemComm Emerging Investigator Lectureship
+
+Ni, Hui-qi; Engle, Keary M.; Cooper, Phillippa Recent advances in palladium-catalyzed (hetero)annulation of C[double bond, length as m-dash]C bonds with ambiphilic organo(pseudo)halides.. Chemical communications (Cambridge, England) 2021 , 7610-7624.
+
+The doctoral program also placed #7 in Chemistry in the publication’s latest issue ranking top science graduate schools.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Michael Erb, PhD =====
+During the first weeks of pregnancy, the developing placenta in a mother’s womb undergoes a dramatic change. Individual cells merge, forming a continuous barrier that will spend the next nine months ferrying oxygen and nutrients to the growing fetus while keeping the mother's immune system at bay. When this structure fails to form properly, pregnancies are at higher risk of complications, including preeclampsia and restricted fetal growth. Now, scientists at Scripps Research have identified a key player in the placenta’s transformation—a molecule called galectin-3 that binds to sugar molecules on specific cell surface proteins, likely holding placental cells tightly together to fuse.
+
+Some of the most devastating diseases are driven by proteins that cannot be targeted with conventional drugs. Scientists are now discovering ways to control disease by recruiting the cell’s own machinery to tackle this challenge. In this Front Row lecture, Associate Professor Michael Erb took the audience inside the cell to explain how his team is developing “proximity” drugs. Erb’s innovation has implications to change how scientists and cells join forces to fight against breast, prostate and blood cancers. Learn how proximity drugs can eliminate proteins, rewire essential cellular pathways, and enable researchers to target previously “undruggable” proteins.
+
+Scripps Research scientists and colleagues show how drugs that eliminate certain disease-driving proteins can be discovered systematically rather than by chance.
+
+Scientists uncover how small molecules interact with a cancer-related protein called FOXA1 and identify a crucial binding site on its surface.
+
+The Scripps Research Fellows Program fosters the next generation of scientific thought-leaders. The application period is now open.
+
+Scripps Research enjoys a worldwide reputation for producing innovative, high-quality research. Now, the institute’s Scripps Fellows program is identifying the next generation of scientific leaders and setting them up to launch impactful careers.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Stefano Forli, PhD =====
+Computational methods for drug discovery. Our research group is focused on the design and application of computational methods to structural biology and drug design, performing rational design of molecules capable of modulating biological processes. We combine different techniques, like molecular dynamics, homology modeling and docking to analyze macromolecule structures to identify druggable sites. We then screen large libraries of compounds performing high throughput virtual screening (HTVS) or designing focused virtual libraries based on specific synthetic pathways in order to identify small organic molecules that can act as biological probes and novel therapeutic agents. AutoDock Suite. We develop and distribute the AutoDock suite, a series of programs for performing dockings of small organic molecules and peptides against biologically relevant molecules, such as proteins and nucleic acids.
+
+We develop computational methods and apply them to therapeutically relevant targets, combining tool building with active drug discovery to unravel new biology and accelerate the path to new medicines.
+
+2003 - 2006 Visiting Scientist, SienaBiotech SpA, Siena 2006 - 2008 Research Associate, Universita' degli Studi di Siena, Siena 2008 - 2012 Research Associate, The Scripps Research Institute, La Jolla, CA 2012 - 2015 Staff Scientist, The Scripps Research Institute, La Jolla, CA 2015 - 2021 Assistant Professor, The Scripps Research Institute, La Jolla, CA
+
+2020 Baxter Foundation Young Faculty Award 2020 IBM World Community Grid Open Pandemics Award 2016 NIH R01 Early Stage Investigator 2003 Advanced Neurodegenerative Drug Discovery Fellowship
+
+Santos-Martins, D.; Forli, Stefano Charting Hydrogen Bond Anisotropy. Journal of Chemical Theory and Computation 2020 , 16, 2846-2856.
+
+New findings from Scripps Research show that disabling a single bacterial protein can restore vancomycin’s power against resistant bacteria–and point to a new strategy for overcoming antibiotic resistance.
+
+The recognized researchers encompass various areas including chemistry, microbiology, immunology, biochemistry and more.
+
+The novel computer method to encode synthetic protein sequences within cell lipid environments offers insights into how membrane proteins fold and function, critical to understanding disease.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Martin Friedlander, MD, PhD =====
+Phase 3 trial results from Scripps Research and collaborators helped support FDA approval of ENCELTO, the first cell-based therapy for a neurodegenerative retinal condition called MacTel.
+
+Scripps Research discovery finds that restoring the naturally occurring compound erucamide in the eye stabilized tissue in preclinical models of retinal degeneration.
+
+Select Publications Marchetti, V.; Krohne, T. U.; Friedlander, D. F.; Friedlander, Martin Stemming vision loss with stem cells. Journal of Clinical Investigation 2010 , 120, 3012-3021.
+
+Scripps Research discovery finds that restoring the naturally occurring compound erucamide in the eye stabilized tissue in preclinical models of retinal degeneration.
+
+The gene mutations explain why patients with MacTel are unable to produce enough of an amino acid needed for eye health.
+
+Scientists have uncovered a potential new approach for treating eye diseases that affect millions of people around the world.
+
+A 15-year effort points to treatments to help MacTel patients and offers potential new insights into other eye diseases.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: M. Reza Ghadiri, PhD =====
+Ghadiri reflects on the formative moments that set him on his scientific path and influenced his unwavering commitment to making the impossible a reality.
+
+Promoting a healthy gut microbiome may be a powerful strategy for lowering cholesterol and other heart attack risk factors.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: John Griffin, PhD =====
+1969–1971 Fellow in Biological Chemistry (Elkan R. Blout lab), Harvard Medical School 1971–1973 Senior Research Fellow (Christian B. Anfinsen Lab), NIH 1973–1974 Staff Scientist, Service de Biochimie, Centre d'Etudes Nucleaires, Saclay, France 1974-1992 Assistant Professor, Scripps Research Institute 1992-1994 Associate Professor, Scripps Research Institute 1994-Present Professor, Scripps Research Institute
+
+Mosnier, Laurent O.; Griffin, John H. Inhibition of staurosporine-induced apoptosis of endothelial cells by activated protein C requires protease-activated receptor-1 and endothelial cell protein C receptor. Biochemical Journal 2003 , 373, 65-70.
+
+The surprise finding from a Scripps Research team reveals a potential new approach for treating cardiovascular diseases.
+
+For the last decade researchers have been developing a drug candidate that eases inflammation and protects brain cells from damage. Now, research shows another potential application: treating Alzheimer’s disease.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Danielle Grotjahn, PhD =====
+2023 Pew Scholar in the Biomedical Sciences Award, The Pew Charitable Trusts 2023 Damon Runyon-Rachleff Innovation Award: Phase 2, Damon Runyon Cancer Foundation 2022 Baxter Young Investigator Award, The Donald E. and Delia B. Baxter Foundation 2021 Damon Runyon-Rachleff Innovation Award: Phase 1, Damon Runyon Cancer Foundation 2018 Harold M. Weintraub Graduate Student Award, Fred Hutchinson Cancer Research Center 2016 ROCHE Scholarship Award, Achievement Rewards for College Scientists (ARCS) 2015 Graduate Research Fellowship, Achievement Rewards for College Scientists 2014 Graduate Research Fellowship, National Science Foundation (NSF GRFP) 2013 Graduate Research Fellowship, Dean’s award, Scripps Research Graduate program 2010 Graduated with Honors, University of Wisconsin-Madison 2010 Graduated with Distinction, University of Wisconsin-Madison 2009 The Cargill Benevenga Undergraduate Research Stipend 2006-2010 Dean's List, University of Wisconsin-Madison 2007-2010 Merit-based undergraduate scholarship, University of Wisconsin-Madison
+
+The Grotjahn Lab connects molecular structure with cellular context to study how mitochondria remodel their shape, composition, and function in response to changing cellular demands and stressors. Our lab combines recent advances in cellular cryo-electron tomography (cryo-ET) and super-resolution fluorescence microscopy to elucidate the structural and functional interactions that regulate mitochondrial behavior amid changing cellular conditions. Our goal is to uncover fundamental mechanisms of mitochondrial adaptation that could inform new therapeutic strategies for disease.
+
+2025- Present Associate Professor, Department of Integrative Structural and Computational Biology (ISCB), Scripps Research
+
+2021- 2025 Assistant Professor, Department of Integrative Structural and Computational Biology (ISCB), Scripps Research 2019- 2021 Scripps Fellow , Department of Integrative Structural and Computational Biology (ISCB), Scripps Research
+
+2018- 2019 Postdoctoral Researcher, Laboratory of Dr. Grant Jensen, Department of Biology, California Institute of Technology (Caltech)
+
+2012-2013 Research Intern, Laboratory of Dr. Yevgenya Grinblat, Department of neuroscience, University of Wisconsin-Madison
+
+2010- 2012 Associate Research Specialist, Laboratory of Dr. Francisco Pelegri, Department of Genetics and Medical Genetics, University of Wisconsin-Madison
+
+Measuring membrane thickness was previously only possible in artificial membranes—now scientists can do it inside intact cells, providing crucial context for understanding how cells work.
+
+Magazine Scripps Research scientist Danielle Grotjahn recognized in Journal of Cell Biology’s 2025 highlights collection
+
+Danielle Grotjahn, associate professor at Scripps Research, and her team have been recognized by the Journal of Cell Biology for their paper, “Cytoplasmic ribosomes on mitochondria alter the local membrane environment for protein import,” for garnering exceptional reader interest. This paper is one of 13 featured publications in the journal’s prestigious “The Year in Cell Biology: 2025” collection, which highlights a variety of studies on cellular functions.
+
+News Scripps Research scientists discover a “Goldilocks” zone for DNA organization, opening new doors for drug development
+
+A new study uncovers how DNA, magnesium and polyphosphate form a balance that’s just right—which could lead to innovations in medicine and biotechnology.
+
+The award will support Grotjahn’s study of how cells assemble the molecular machinery that governs programmed cell death.
+
+===== LAB: Howard Hang, PhD =====
+My laboratory is broadly interested in the molecular mechanisms by which chemical signals modulate host microbe interactions in infection and immunity. These chemical signals (metabolites) may be derived from host metabolism (endogenous metabolites) or the environment (diet, microbiota, therapeutics) and have been challenging to mechanistically elucidate. To dissect the mechanisms that govern host-microbe interactions, my laboratory has 1) developed chemical methods to characterize metabolite-protein interactions and 2) employed key animal models to discover new protective factors from specific microbiota species and elucidated their mechanisms of action. These studies have revealed unpredicted metabolite-protein functions in host immunity and microbial pathogenesis as well as novel microbiota protective factors, which have afforded new therapeutic leads and biomarkers for infection, inflammation and immunotherapy.
+
+Ph.D. (Chemistry), University of California, Berkeley, 2003 B.S. (Chemistry), University of California, Santa Cruz, 1998
+
+2004 - 2006 Postdoctoral fellow in Immunology and Microbial Pathogenesis with Prof. Hidde Ploegh, Harvard Medical School and Whitehead Institute of Biomedical Research
+
+1997-1998 Doug Drexler Chemistry Scholarship, University of California, Santa Cruz 1998 Dean's and Chancellor's Award, University of California, Santa Cruz 1998 Priscilla Parkin Memorial Scholarship, University of California, Santa Cruz 1998 Kenneth and Ann Thiemann Scholarship, University of California, Santa Cruz 1999 Outstanding Graduate Student Instructor (CHEM 3B), University of California, Berkeley 2002 Organic Division Graduate Fellowship, American Chemical Society 2004 Damon Runyon Fellowship Award, Damon Runyon Cancer Research Foundation 2007 Irma T. Hirschl/Monique Weill-Caulier Trust Research Award, Weill Cornell Medicine 2008 New Scholar in Aging, Ellison Foundation 2011 Distinguished Teaching Award, The Rockefeller University 2017 Eli Lilly Award in Biological Chemistry, American Chemical Society Division of Biological Chemistry 2019 Synergy Award, Kenneth Rainin Foundation
+
+Event Immunology &#038; Microbiology Explore News Back in action: Researchers make drug-resistant bacteria vulnerable again
+
+New findings from Scripps Research show that disabling a single bacterial protein can restore vancomycin’s power against resistant bacteria–and point to a new strategy for overcoming antibiotic resistance.
+
+In the world of immunology, “gut reactions” take on a whole new meaning—not emotions, but signals from tiny organisms found in the gastrointestinal tract. And at Scripps Research, Professor Howard Hang explores the surprising power of some of the smallest inhabitants: microbes. These trillions of bacteria living in the gut communicate with human cells to shape immunity, metabolism and even how the body responds to disease treatments.
+
+How do microbes influence our immune system, and can we leverage this relationship to combat disease? In this Front Row lecture, Scripps Research professor Howard Hang delved into his lab’s innovative work at the intersection of chemistry, microbiology and immunology. By dissecting the molecular dialogues between gut bacteria and human cells, Hang’s research uncovers how microbial enzymes generate small molecules—called microbial metabolites—that can influence immune responses. These insights are paving the way for new treatments against infections, cancer and inflammatory illnesses, highlighting the powerful role that microbes play in shaping human health.
+
+===== END batch 2/8 =====

@@ -1,0 +1,277 @@
+########## DISTILL OVERVIEWS — sbp batch 3/4 (15 labs) ##########
+
+For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad
+with no field background could read to decide if they want to email the lab. Say WHAT the lab studies,
+HOW (methods/approach), and WHY it matters. Ground it ONLY in that lab's provided text — do NOT invent
+specifics, numbers, or techniques not present. If a lab's text is too thin/administrative to describe
+its research, set that lab's value to "" (empty) rather than padding — an honest gap beats a fake overview.
+
+Write your answer as a JSON object {"<exact lab name>": "<overview or ''>", ...} to this ABSOLUTE path:
+  /home/roman/agent/codebases/labreach/data/agent-overviews/sbp-batch2.json
+
+===== LAB: Elena Pasquale PhD =====
+We have identified a number of peptides that bind to Eph receptors and inhibit ephrin binding by using phage display approaches. Collaborating groups have elucidated the structural features of several of these peptides in complex with the ligand-binding domain of Eph receptors, demonstrating that the peptides bind to the ephrin-binding pocket in the ligand-binding domain (Figure 3A). Most of the peptides are antagonists, but the peptides targeting EphA2 are agonists that activate receptor signaling and endocytosis similarly to the natural ephrin ligands. Interestingly, some of the identified peptides are highly specific and bind to only one Eph receptor family member. This is unlike the natural ephrin ligands, each of which promiscuously binds to multiple Eph receptors. Thus, Eph receptor-targeting peptides represent valuable pharmacological tools to study the functional importance of specific Eph receptors in tumors and the nervous system. Furthermore, they could be used as leads to develop therapies against cancer and neurological disorders, and to promote neural repair after nervous system injury (Figure 3B). Finally, our peptides have been used by other groups to deliver conjugated imaging agents, drugs and nanoparticles to Eph receptor-positive tumors. Current work focuses on identifying novel Eph receptor-targeting agents (such as peptides and small molecules) as well as improving the existing ones in collaboration with medicinal chemists and structural biologists, and evaluating them in cell culture and in vivo animal models.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Elena Pasquale earned her PhD in biology from the University of Parma, Italy. She did postdoctoral work at Cornell University, after which she was appointed Research Assistant Professor at University of Parma. Following a second postdoctoral training period at the University of California in San Diego, Dr. Pasquale was appointed Assistant Research Biologist at that institution. Dr. Pasquale was recruited to Sanford Burnham Prebys in 1990.
+
+Our research investigates Eph receptor signaling activities in order to understand their role in normal physiology and in pathological conditions such as cancer and neurodegenerative disorders. This knowledge is useful for the development of disease treatments based on modulating Eph receptor/ephrin activities. Ongoing efforts in our laboratory also focus on the development of agents targeting Eph receptors for research and translational applications.
+
+Over the past three decades, researchers have been investigating an important cell communication system called the “Eph system,” and the&#8230;
+
+Scientists have long sought to target a cellular receptor called EphA2 because of its known role in many disorders, including&#8230;
+
+===== LAB: Pier Lorenzo Puri MD =====
+Pier Lorenzo Puri earned his MD at the University of Rome “la Sapienza” in 1991. Dr. Puri completed his internship in Internal Medicine at the hospital &#8220;Policlinico Umberto I&#8221; (Rome) from 1992 to 1997, and defended an experimental thesis on the vascular effects of angiotensin II to graduate as Specialist in Internal medicine at the University of Rome “la Sapienza” in 1997. During this time he was frequently working at the Freien University of Berlin, as visiting scientist at the Deprtment of Biochemistry and Molecular Biology, to perform experiments of protein and DNA microinjection in cultured cells. Dr. Puri trained as a post-doctoral fellow at the University of California San Diego (UCSD), in the department of Cell Biology, under the supervision of Dr. Wang, from 1997 to 2001. He was appointed as Staff Scientist at the Salk Institute (La Jolla) in 2001, and became an Assistant Telethon Scientist at the Dulbecco Telethon Institute in Rome in 2002. He was upgraded to Associate Telethon Scientist at the Dulbecco Telethon Institute in Rome since 2007 and became Senior Telethon Scientist, Dulbecco Telethon Institute, in 2012, but declined this position. Dr. Puri joined Sanford Burnham Prebys as an Assistant Professor in 2004. He has been promoted to Associate Professor in 2010 and full Professor in 2015. From 2008 to 2016 Dr. Puri served as Adjunct Professor of Pediatrics at the University of California, San Diego. From 2008 to 2013 Dr Puri was an Associate Member of Sanford Children’s Health Research Center. Dr Puri has been Director of the laboratory of Epigenetics and Regeneration at Fondazione S. Lucia, Roma, Italy, but stepped down this position since 2019.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+University of California San Diego, Postdoctoral, Department of Biology University of Rome La Sapienza, PhD, Internal Medicine University of Rome La Sapienza, MD, Internal Medicine University of Rome La Sapienza, Undergraduate, Internal Medicine
+
+2020-2024: Member of the Science Advisory Board (SAB) European Commission-funded Consortium BIND (Brain Involvement In Dystrophinopathies) 2015-2019: Standing Member, NIH Study Section (SMEP) 2010-present: Member of Editorial Board of Skeletal Muscle
+
+Related Disease Aging-Related Diseases, Childhood Diseases, Molecular Biology, Muscular Dystrophy, Myopathy, Neurodegenerative and Neuromuscular Diseases, Rhabdomyosarcomas, Sarcopenia/Aging-Related Muscle Atrophy, Spinal Cord Injury, Transcription Factors
+
+Phenomena or Processes Adult/Multipotent Stem Cells, Aging, Cell Biology, Cell Cycle Progression, Cell Differentiation, Cell Signaling, Cellular Senescence, Development and Differentiation, Disease Therapies, DNA Damage Checkpoint Function, Epigenetics, Gene Regulation, Phosphorylation, Regenerative Biology, Signal Transduction, Transcriptional Regulation
+
+===== LAB: Sanjeev S. Ranade PhD =====
+“My research is focused on understanding why young children are born with heart defects. What are the principles and rules that allow our hearts to develop in the first place and why do these rules get broken in some cases? This is really important because nearly 1 in 100 children are born with some form of heart defect and many of these children will suffer from heart disease at much earlier stages in life compared to the general population.”
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Sanjeev S. Ranade studies how transcription factors specifically control the development and function of cardiac cells — and what happens when things go wrong.
+
+Transcription factors (TF) are proteins that initiate and regulate the transcription of genes, essentially turning genes on and off, boosting or repressing their activity. At last count, there were over 1,500 known TFs, but the contribution of most of the TFs to life and health is unknown.
+
+In particular, Ranade focuses on how disrupted cell-to-cell signaling caused by mutations in TFs can cause congenital heart defects or CHDs.
+
+For his doctorate in molecular biology at Scripps Research in San Diego, Ranade studied ion channels — proteins that span cell membranes, allowing passage of ions or charged molecules from one side of the membrane to the other. The channels serve many critical functions, including transmitting signals involved in cell-cell communications and muscle contraction.
+
+Working as a post-doctoral fellow and staff research scientist in the lab of Deepak Srivastava, M.D. at Gladstone Institutes, Ranade looked at how genetics and cell biology were connected and how disruptions to these connections led to children with heart defects.
+
+Recent Ranade Lab News Apr 21, 2026 Sanford Burnham Prebys goes Inside the Science of Heart Disease Event recording now available for panel discussion with scientists held on April 15, 2026.
+
+Using advanced CRISPR technology, researchers identify a protein that in overabundance is linked to Down syndrome and congenital heart disease.
+
+The 24th Annual Biomedical Research Symposium brought together postdocs, graduate students, staff scientists, administrators, and faculty for a day that&#8230;
+
+Eleven participants presented posters at event marking the end of six weeks of hands-on biomedical research experience at Sanford Burnham&#8230;
+
+The newcomers, brought in with help from a $70 million donation, are versed in different technologies that can be applied&#8230;
+
+===== LAB: Alessandra Sacco PhD =====
+Alessandra Sacco completed her studies at La Sapienza University in Rome, Italy. In 2002, Dr. Sacco joined the laboratory of Prof. Helen M. Blau at Stanford University as a postdoctoral fellow (2002-2009), where she studied cell fusion between hematopoietic cells and muscle cells, as a potential mechanism for tissue repair. Recently she defined strategies to isolate adult skeletal muscle stem cells and performed single cell transplantation experiments, providing the first definitive evidence that adult muscle stem cells are able to self-renew in vivo. She received research funding from Muscular Dystrophy Association (2006-2008). In 2010, Dr. Sacco was recruited as Assistant Professor at Sanford Burnham Prebys.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Skeletal muscle wasting is a devastating pathology that occurs in several human conditions, including muscular dystrophies, aging, and HIV. There is currently no cure for it. Muscle stem cells offer great promise for future therapies, but their use is currently limited by our poor understanding of the regulatory mechanisms directing their behavior. We are interested in understanding how extrinsic and intrinsic factors regulate muscle stem cells in vivo. Current projects include:
+
+Scientists gathered at the La Jolla Aging Meeting on March 19, 2026, in the Salk Institute’s Conrad T. Prebys Auditorium.
+
+Study from the Sacco lab links the tenascin-C protein to muscle stem cell levels and muscle regeneration, may lead to&#8230;
+
+Register by March 17 for two exciting opportunities to learn more about aging research conducted in San Diego and beyond.
+
+Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
+
+===== LAB: Douglas Sheffler PhD =====
+The metabotropic glutamate receptors (mGlus) are G protein-coupled receptors (GPCRs) that play numerous roles in modulating synaptic transmission and cell excitability. Recent preclinical and clinical studies provide strong evidence that agonists of the group II mGlus, comprised of the mGlu2 and mGlu3 subtypes, may provide a novel approach to treatment of schizophrenia and anxiety disorders. Based on this, there has been a major focus on understanding the roles of these receptors in regulating transmission in forebrain and limbic circuits. However, currently available orthosteric (glutamate site) agonists activate both mGlu2 and mGlu3 and do not provide insight into which subtype is most important for clinical efficacy. Alternatively, recent focus on compounds interacting with less highly conserved allosteric sites has led to advances in subtype selective compound development. Dr. Sheffler and others have discovered and characterized highly selective mGlu2 positive allosteric modulators (PAMs), that have no effect on mGlu3, and these compounds have allowed us to elucidate many of the physiological roles of mGlu2. These PAMs do not activate the receptor directly but act allosterically to potentiate glutamate responses. Dr. Sheffler and collaborators have also discovered group II mGlu negative allosteric modulators (NAMs) and have very recently discovered the first highly selective antagonist of mGlu3. The development of these pharmacological tools provides an opportunity to fully elucidate the roles of these mGlu subtypes. The group II mGlus play important roles in regulating transmission through the hippocampal formation. For example, activation of presynaptic group II mGlus reduces transmission at numerous hippocampal synapses including perforant path-dentate gyrus synapses and the mossy fiber synapse. In contrast, presynaptic group II mGlus are not involved in directly regulating transmission at the Schaffer collateral &#8211; CA1 (SC-CA1) synapse. However, we have previously reported extensive studies demonstrating group II mGlu involvement in a novel form of glial-neuronal communication in hippocampal area CA1. When coincidentally activated with β-adrenergic receptors (βARs) in astrocytes, group II mGlus induce a marked potentiation of cAMP responses elicited by activation of βARs. This synergistic increase in glial cAMP accumulation results in the release of adenosine, which activates presynaptic A1 adenosine receptors on neighboring SC terminals and induces a profound depression of transmission at the SC-CA1 synapse. This novel form of glial-neuronal signaling may provide a protective mechanism to reduce the risk of excitotoxicity when there is excessive excitatory drive to the hippocampus, such as during periods of intense or prolonged stress. This potential role has implications relevant for the therapeutic effects of group II mGlu agonists and is consistent with multiple studies suggesting group II mGlu agonists can reduce both acute and long term responses to stress. We have postulated that this effect is mediated by mGlu3 based on heavy expression of mGlu3 in hippocampal astrocytes. However, until now, selective reagents that diffe
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+===== LAB: Sanju Sinha PhD =====
+At the heart of our research is the mission to develop cancer-preventive therapies using the power of artificial intelligence. Our current focus lies in dissecting the role of aging in cancer susceptibility, a crucial factor often overlooked in conventional research. We employ computational tools to analyze multi-omics data to understand the aging-induced alterations in the tissue microenvironment that increase cancer risk. But we don't stop at understanding these changes. We apply this knowledge in designing preventive therapy candidates that specifically target these alterations. Drawing on my experience in machine learning, drug discovery, and precision oncology, our lab is on a quest to reimagine the drug discovery pipeline.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Dr. Sanju Sinha earned his Bachelor of Technology in Bioengineering at the Indian Institute of Technology in Guwahati, India. He recently completed his postdoctoral research and PhD in computational biology at the National Cancer Institute (NCI) with Dr. Eytan Ruppin with a co-mentorship of Dr. Brid Ryan during his PhD His PhD was earned in a joint University of Maryland and NCI program.
+
+&#8220;At the core of my work is the desire to make a lasting impact on patient's lives, offering patients not just better treatment, but an opportunity to avoid the disease altogether. Sanford Burnham Prebys is renowned for its work in understanding aging and developing new drugs—two areas that are key to my research. This makes it the perfect place for what I'm hoping to achieve.&#8221;
+
+2021: PhD, Computational Biology, University of Maryland and National Cancer Institute 2016: B.Tech., Bioengineering, Indian Institute of Technology, Guwahat
+
+2023: Top Five Outstanding NCI Postdoctoral Fellow 2023: Transition to Industry Fellowship 2021: Emerging Leaders of Computational Oncology by MSKCC. 2020: NCI Outstanding PhD award 2020: NCI CCR milestone 2019: NCI Fellows Award for Research Excellence
+
+&#8220;As we aim to push the boundaries of cancer prevention research, we are hiring individuals eager to contribute to this mission at multiple levels including postdoctoral researchers, experienced computational biologists, and, PhD students.&#8221;
+
+DeepTarget: A Computational Tool for Decoding the Mechanism of Action for Cancer Drugs DeepTarget, our innovative computational tool, integrates data from genetic and drug screens to intricately understand the mechanism of action of cancer drugs. It identifies both primary and secondary drug targets, paving the way for a comprehensive understanding of drug function, its optimal indications, and clinical potential.
+
+The Cilento Initiative on Aging Outcomes (CIAO) held its 11th annual research symposium at Sanford Burnham Prebys, with more than a&#8230;
+
+===== LAB: Evan Snyder MD, PhD =====
+Evan Y. Snyder earned his MD and PhD (in neuroscience) from the University of Pennsylvania in 1980 as a member of NIH's Medical Scientist Training Program (MSTP). He had also studied psychology and linguistics at the University of Oxford. After moving to Boston in 1980, he completed residencies in pediatrics and neurology as well as a clinical fellowship in Neonatal-Perinatal Medicine at Children's Hospital-Boston, Harvard Medical School. He also served as Chief Resident in Medicine (1984-1985) and Chief Resident in Neurology (1987) at Children's Hospital-Boston. In 1989, he became an attending physician in the Department of Pediatrics (Division of Newborn Medicine) and Department of Neurology at Children's Hospital-Boston, Harvard Medical School. From 1985-1991, concurrent with his clinical activities, he conducted postdoctoral research as a fellow in the Department of Genetics, Harvard Medical School. In 1992, Dr. Snyder was appointed an instructor in neurology (neonatology) at Harvard Medical School and was promoted to assistant professor in 1996. He maintained lab spaces in both Children's Hospital-Boston and at Harvard Institutes of Medicine/Beth-Israel Deaconess Medical Center. In 2003, Dr. Snyder was recruited to Sanford Burnham Prebys as Professor and Director of the Program in Stem Cell and Regenerative Biology. He then inaugurated the Stem Cell Research Center (serving as its founding director) and initiated the Southern California Stem Cell Consortium. Dr. Snyder is a Fellow of the American Academy of Pediatrics (FAAP). He also received training in Philosophy and Linguistics at Oxford University.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Related Disease Alzheimer's Disease, Amyotrophic Lateral Sclerosis (Lou Gehrig's Disease), Arthritis, Brain Cancer, Brain Injury, Breast Cancer, Cancer, Childhood Diseases, Congenital Disorders of Glycosylation, HIV-Associated Dementia, Huntington's Disease, Multiple Sclerosis, Muscular Dystrophy, Neurodegenerative and Neuromuscular Diseases, Neurological and Psychiatric Disorders, Parkinson's Disease, Peripheral Vascular Disease, Skin Cancer and Melanoma, Spinal Cord Injury, Stroke, Traumatic Injury
+
+The Snyder Lab studies stem cell biology, with the goal of understanding normal development, tissue homeostasis, and recovery from injury and disease. A major focus is neural stem cells (NSCs), which can self-renew and differentiate into neurons, astrocytes, and oligodendrocytes. These properties make NSCs ideal for repair of damage due to injury or disease, but they also make them susceptible to transformation into malignant cancers.
+
+Recent Snyder Lab News May 28, 2025 Evan Snyder named Fellow of the Child Neurology Society Evan Snyder, MD, PhD, has been named a Fellow of the Child Neurology Society, honoring a distinguished career and&#8230;
+
+===== LAB: Charles Spruck PhD =====
+Developing viral mimicry therapeutic approaches for cancer: Approximately 45% of the human genome is composed of repetitive elements (REs), including endogenous retroviruses and retrotransposons, that are normally transcriptionally silenced in somatic cells. Recent studies suggest that the transcriptional awakening of ERVs/retrotransposons beyond a threshold level of tolerance in cancer cells induces antiviral responses that can enhance the efficacy of certain therapies, including immunotherapy. We recently discovered a novel epigenetic regulatory pathway, FBXO44/SUV39H1, that is essential for ERV/retrotransposon silencing in cancer cells. Preclinical studies showed that FBXO44/SUV39H1 inactivation induces viral mimicry in cancer cells, leading to increased immunogenicity, decreased tumorigenicity, and enhanced the efficacy of immune checkpoint blockade therapy. We are currently exploring therapeutic approaches to target this pathway, and others like it, to prevent tumor growth and enhance immunotherapy response. We are also exploring the role of reactivated REs in human diseases.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Charles Spruck earned his BS in Biology at UCLA and PhD in Molecular Biology at the University of Southern California. He worked as a postdoctoral fellow at The Scripps Research Institute in La Jolla and was recruited to the Sidney Kimmel Cancer Center in San Diego as an Assistant Professor in 2003. He joined Sanford Burnham Prebys in 2010.
+
+2003: Post-doc, The Scripps Research Institute 1986: PhD, University of Southern California 1995; BS, University of California at Los Angeles
+
+Phenomena or Processes Cancer Biology, Cancer Epigenetics, Cell Biology, Cell Cycle Progression, Cell Signaling, Genomic Instability, Innate Immunity, Metastasis, Posttranslational Modification, Proteolytic Pathways
+
+&#8220;Despite recent advances in treatment, patients with advanced metastatic cancers have few treatment options. Our lab is focused on developing new effective and non-toxic treatments for these patients.&#8221;
+
+Dr. Spruck’s laboratory is focused on developing new, effective, and non-toxic treatments for patients with advanced cancers. The lab focuses on defining the molecular networks that regulate cancer cell division and drive metastasis progression. Recent studies have focused on viral mimicry as a therapeutic approach in cancer, which involves the activation of dormant endogenous retroviruses and retrotransposons in cancer cells to enhance immunogenicity and the effectiveness of immune checkpoint blockade immunotherapy and DNA damaging therapies. The laboratory utilizes various biochemical and molecular approaches, CRISPR gene editing, and animal models of cancer. An emphasis is on studies of breast, lung, prostate, and brain tumors.
+
+===== LAB: Xueqin (Sherine) Sun PhD =====
+Phenomena or Processes Adapter Proteins, Adult/Multipotent Stem Cells, Aging, Angiogenesis, Apoptosis and Cell Death, Bcl-2 Family, Cancer Biology, Cancer Epigenetics, Cell Adhesion and Migration, Cell Biology, Cell Cycle Progression, Cell Differentiation, Cell Motility, Cell Proliferation, Cell Signaling, Cell Surface Receptors, Cellular Senescence, Chromosome Dynamics, Combinatorial Therapies, Cytokines, Development and Differentiation, Disease Therapies, DNA Damage Checkpoint Function, Embryonic/Pluripotent Stem Cells, Epigenetics, Gene Regulation, Genomic Instability, Growth Factors, Hematopoiesis, Host Defense, Host-Pathogen Interactions, Inflammation, Innate Immunity, Kinase Inhibitors, Metastasis, Neurogenesis, Oncogenes, Phosphorylation, Posttranslational Modification, Receptor Tyrosine Kinases, Serine/Threonine Kinases, Signal Transduction, TNF-Family, Transcription Factors, Transcriptional Regulation, Tumor Microenvironment, Tumorigenesis, Tyrosine Kinases, Ubiquitin, Ubiquitin Protease System and Ubiquitin-like Proteins
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Xueqin (Sherine) Sun seeks to better understand the genetic and epigenetic underpinnings of cancers, using genome editing technologies, animal and patient-derived models, and other tools to develop more effective cancer therapies.
+
+“My lab is interested in studying how DNA or the machinery that interprets it leads to the transformation of normal cells into cancerous cells and concurrently, their specific vulnerabilities. Identifying these intrinsic vulnerabilities and targeting them properly is profoundly important to developing effective cancer therapies.”
+
+Another aspect of Sun’s work is understanding how cancer cells and tumors change their circumstances and environment to improve survival, including hiding from or repressing the immune system.
+
+“Changes to DNA itself and the way how DNA is interpreted by cells can transform normal cells into cancer cells. And transformed cells propagate by enhancing the misinterpreted DNA information, which in turn becomes the Achilles’ heel of cancer cells. Our goal is to find out how DNA information is misinterpreted in different ways and how to correct it to halt cancer.”
+
+At Sanford Burnham Prebys, Sun and colleagues will employ a host of leading-edge tools and approaches, including functional genomics, artificial intelligence, structural biology, large-scale drug screening, and advanced imaging/spatial technologies.
+
+Sun conducted her postdoctoral fellowship at Cold Spring Harbor Laboratory under the guidance of Alea Mills, PhD, a professor at the National Cancer Institute-designated cancer center at Cold Spring Harbor.
+
+Related Disease Aging-Related Diseases, Brain Cancer, Cancer, Childhood Diseases, Immune Disorders, Inflammatory/Autoimmune Disease, Leukemia/Lymphoma
+
+===== LAB: Kevin Tharp PhD =====
+Phenomena or Processes Actin Cytoskeleton, Adipocyte Differentiation, Aging, Apoptosis and Cell Death, Cancer Biology, Cancer Metabolism, Cancer-Associated Glycans, Cell Adhesion and Migration, Cell Differentiation, Cell Signaling, Combinatorial Therapies, Damage-Associated Molecular Patterns, Extracellular Matrix, Glycosylation, Inflammation, Innate Immunity, Integrins, Metabolic Networks, Mitochondrial Biology, Organic/Synthetic/Medicinal Chemistry, Tumor Microenvironment, Tumorigenesis
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Kevin Tharp studies the interplay between mitochondrial metabolism and the physical properties of the tumor microenvironment, using genetically engineered mouse models and bioengineered human tumor models to define the mitochondrial programming unique to cancer cells in the tumor microenvironment.
+
+His goal is to develop new therapies that block the metabolic adaptations that cancer cells use to metastasize, a major cause of cancer-associated mortality.
+
+“I study how cells make decisions about their metabolic programming, which I expect will enable us to develop new therapeutics against metastatic tumor cells.”
+
+Tharp previously worked as a postdoctoral scholar in the Center for Bioengineering & Tissue Regeneration at UCSF Health.
+
+He completed his PhD in metabolic biology at UC Berkeley and his Bachelor of Science degree in biochemistry and molecular biology at UC Santa Cruz, where he graduated with honors and the Dean’s Award in Chemistry.
+
+He has received meritorious funding awards from the Sandler Foundation and the National Institutes of Health/National Cancer Institute for his postdoctoral research.
+
+Anatomical Systems and Sites Adipose Tissue, General Cell Biology, Immune System and Inflammation, Mammary Gland, Vasculature
+
+Study from the Tharp lab finds nearby conditions and nutrients govern how cancer cells avoid immune cells, and how to&#8230;
+
+Neuroinflammation is the body's response to injury, infection, toxins, or autoimmune dysfunction in the brain and spinal cord. Institute researchers&#8230;
+
+Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
+
+===== LAB: Xiao Tian PhD =====
+The Tian lab studies the fundamental mechanisms of aging and their roles in the onset of age-related diseases. Our recent research in epigenetic reprogramming and aging clocks indicates that the progressive loss of epigenetic information over time is a key driver of aging. The current research of the lab focuses on understanding how the epigenetic landscape is set up and maintained and investigating why the maintenance system fails which leads to aging and related diseases including cancer and neurodegeneration. Building on this, our ultimate goal is to develop safe and effective rejuvenation strategies to counteract aging.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Dr. Xiao Tian participates in the Degenerative Diseases Program and the Cancer Genome and Epigenetics Program at Sanford Burnham Prebys. He started his lab in 2024 to understand the fundamental biology of aging and its contribution to age-related diseases. He joined the Institute after his postdoctoral research in Dr. David Sinclair’s lab at Harvard Medical School where he co-wrote the Information Theory of Aging. He obtained his BS from Shandong University and his PhD from the University of Rochester where he worked with Dr. Vera Gorbunova.
+
+2018-2023: Postdoc, Harvard Medical School 2016-2018: Postdoc, University of Rochester 2010-2016: PhD, Biology of Aging, University of Rochester 2005-2009: BS, Microbial Technology, Shandong University
+
+2020-2026: K99/R00 Pathway to Independence Awards, NIH/NIA 2019-2020: NASA Postdoctoral Fellowship, NASA Ames Research Center 2017: Outstanding Dissertation Award for the Natural Sciences, University of Rochester 2015: Messersmith Dissertation Fellowship, University of Rochester 2014: Award for Outstanding Self-Financed Students Abroad, China Scholarship Council 2010-2014: Holtfreter Fellowship, University of Rochester 2007: Weichai Power Scholarship, Shandong University 2006-2008: Excellent Student Scholarship, Shandong University
+
+Techniques and Technologies Bioinformatics, Epigenomics, Gene Expression, Gene Knockout (Complete and Conditional), High-Throughput/Robotic Screening, Mouse Behavioral Analysis
+
+Uncovering the first anti-cancer and longevity mechanism of the naked mole rat We identified high-molecular-mass hyaluronan (HMM HA) as a critical mechanism for the cancer resistance of the naked mole-rat cells . Furthermore, we found that this anti-cancer and longevity mechanism from naked mole rats can be integrated into other species , highlighting the significant implications of identifying new mechanisms from long-lived species. Our goal is to decipher how long-lived organisms control the pace of aging and deter age-related diseases.
+
+The Institute recently welcomed members of the community for an engaging afternoon focused on the intersection of aging and cancer&#8230;.
+
+===== LAB: Alessandro Vasciaveo PhD =====
+2024: People's Choice Poster Award at 2024 CSBC / MetNet Annual Investigators Meeting 2024: AACR-Barbara Campbell Creighton Scholar-in-Training Award 2023: Herbert Irving Comprehensive Cancer Center (HICCC) Trainee Associate Member (TAM) Best Paper Award 2023: American Association for Cancer Research (AACR) – Sanofi Scholar-in-Training Award 2023: Herbert Irving Comprehensive Cancer Center (HICCC) Trainee Associate Member Travel Award 2022: European Association for Cancer Research (EACR) Annual Congress 2022 Bursary Travel Award 2022: Herbert Irving Comprehensive Cancer Center (HICCC) Early Career Development Pilot Award 2022: American Association for Cancer Research (AACR) – Prostate Cancer Foundation (PCF) Scholar-in-Training Award 2022: Herbert Irving Comprehensive Cancer Center (HICCC) Trainee Associate Member Travel Award 2021: Merck Innovation Cup 2021 Runner-Up Prize in Team Oncology 2021: American Association for Cancer Research (AACR) – Prostate Cancer Foundation (PCF) Scholar-in-Training Award 2019: Early Investigator Research Award, U.S. Department of Defense, U.S. 2019: Best Presentation Award, 6th International Synthetic & Systems Biology Summer School (SSBSS 2019), Pisa, Italy 2016: Research Quality Award, Dept. of Computer and Control Engineering, Polytechnic University of Turin, Italy 2014: Travel Award to attend the 13th Summer School on Scientific Visualization, Milan, Italy
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Dr. Vasciaveo joined Sanford Burnham Prebys as an assistant professor in computational biology and artificial intelligence in fall 2024. Prior to joining the institute, he was an associate research scientist at Columbia University in New York City, in the laboratory of Andrea Califano — a pioneer in the field of systems biology and in the reverse engineering and interrogation of gene regulatory networks.
+
+Vasciaveo’s laboratory focuses on leveraging massive datasets, including from single-cell biology, and advanced machine learning to uncover critical insights into how cells communicate and function in healthy and diseased states, and to identify key players of disease programs that can serve as precise therapeutic targets. This approach will allow for more precise treatments tailored to each patient’s unique biology, pushing the boundaries of traditional medicine. These efforts have the potential to significantly accelerate the process of identifying new therapies for challenging diseases.
+
+Vasciaveo earned his undergraduate and master’s degrees in Computer Engineering at the Polytechnic University of Turin in Italy. He completed his doctoral degree in Systems and Control Engineering at the Polytechnic University of Turin while conducting research as a visiting scientist at the German Cancer Research Center and Columbia University.
+
+===== LAB: Kristiina Vuori MD, PhD =====
+Dr. Vuori's research is aimed at unraveling the cell mechanisms of the most life-threatening aspect of cancer, which is cancer metastasis. Metastasis is responsible for nearly all deaths in cancer patients, and understanding of the mechanisms that turn a cancer from a locally growing tumor into highly metastatic cancer cells will provide clues how to prevent this step in cancer progression. All cells in our body stick to one another and to the packaging material, or extracellular matrix, around them. This adhesion is essential for cell survival; if cells become detached from their microenvironment, they will die through a process known as apoptosis. This phenomenon, which is called adhesion dependency of survival, is one of the safeguards that maintain the integrity and normal function of tissues, and prevent cells from becoming cancerous. Normal cells cannot detach from their tissue and establish themselves somewhere else, because they will die on the way. Yet cancer cells somehow get around this requirement; they trespass aggressively into other tissues and metastasize to distant sites in the body without dying. Dr. Vuori’s work is aimed at identifying the molecular mechanisms that in normal cells makes them adhesion-dependent; false action of the very same mechanisms is likely to be the key step in allowing cancer cells to metastasize.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Kristiina Vuori earned her MD and PhD at University of Oulu, Finland. After completion of internship and residency, she received postdoctoral training at the Institute and was appointed to faculty in 1996. Dr. Vuori was selected as a PEW Scholar in the Biomedical Sciences in 1997. She has been co-Director of the Conrad Prebys Center for Chemical Genomics, housed at Sanford Burnham Prebys, since its inception in 2005. She was appointed Deputy Director of the Institute's NCI-Designated Cancer Center in 2003, and Director of the Cancer Center in 2006. In 2008, she was appointed Executive Vice President for Scientific Affairs at Sanford Burnham Prebys. She was President of the Institute from 2010 to 2022.
+
+Recent Vuori Lab News Feb 1, 2024 New genome mapping tool may uncover secrets for treating blood cancers The outlook for patients with acute myeloid leukemia (AML), a deadly set of blood cancers that is difficult to treat,&#8230;
+
+SBP’s Cancer Center Open House on November 9, 2017 enlightened visitors from the community on the topic of “The Science&#8230;
+
+Friends and supporters of Sanford Burnham Prebys Medical Discovery Institute (SBP) gathered under the stars on Harbor Island in downtown&#8230;
+
+During a special end-of-the-year gathering, Reena Horowitz was honored for her hard work and dedication to Sanford Burnham Prebys Medical&#8230;
+
+===== LAB: Eric Wang PhD =====
+Eric has a broad background in chemical biology, with specific training and expertise in kinase inhibitors and targeted protein degradation, an emerging modality in which small molecules recruit E3 ligase complexes to target proteins to induce their ubiquitination and subsequent proteasomal degradation. He also has experience in pharmacological modulation of immune cells to improve anti-tumor immunity. He received his PhD from the University of California San Francisco and postdoctoral training at the Dana-Farber Cancer Institute.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+2021: Postdoctoral Fellow, Dana-Farber Cancer Institute / Harvard Medical School 2015: PhD, University of California San Francisco 2009: BS, Duke University
+
+Dysregulation of transcriptional circuits is a common hallmark of disease, and in particular is found in both tumor and host immune cells in cancer. Eric’s lab is focusing on developing and using chemical tools to modulate the activity of key transcriptional regulators of both tumor cells and host immune cells, with a long-term goal of identifying new therapeutic approaches.
+
+Sanford Burnham Prebys is pleased to congratulate Assistant Professor Eric Wang, PhD, on being named Educator of the Year at&#8230;
+
+Ten scientists at Sanford Burnham Prebys Medical Discovery Institute were awarded eight grants yesterday from Curebound, a San Diego-based philanthropic organization
+
+Next Select Publications Showing 0 of 0 View All Publications Subscribe Get the latest news about our achievements in Discoveries — our monthly newsletter.
+
+===== LAB: Yu Xin (Will) Wang PhD =====
+The lab's research is translationally oriented and utilizes interdisciplinary molecular, genetic, computational (machine learning and neural networks), and bioengineering approaches to view biology and disease from new perspectives. We combine multi-omics sequencing and imaging methods to resolve how different cell types work together after injury to repair tissues and restore function. We use a data-driven approach to identify targetable disease mechanisms and, through collaborations with other researchers and clinicians, develop therapies that promote regeneration. Visit our lab website to learn more.
+
+Education Postdoctoral Training Graduate School Education Graduate School Overview PhD Program Our Community Faculty and Educational Affiliates Prospective Students Student Achievement Internships & Training Programs International Services CIRM Program LEAP Program Learning & Development Quarterly The path to better knowledge starts here Training scientific leaders who will change the future.
+
+About Overview Leadership About Leadership Executive Scientific Administrative Board of Directors Officers Scientific Advisory Board Careers About Careers Overview Current Openings Benefits Culture and Values Life in Our City Our History Our Community Media Resources Publications Donate Dedicated to human disease and advancing discoveries. Pioneering biomedical breakthroughs since 1976.
+
+Dr. Yu Xin (Will) Wang received his PhD at the University of Ottawa where he identified cellular asymmetry and polarity mechanisms regulating muscle stem cell self-renewal and skeletal muscle regeneration. He then carried out postdoctoral training at Stanford University School of Medicine developing single cell multi-omic approaches to characterize the regenerative process and what goes awry with disease and aging.
+
+&#8220; I've always had a passion for science and became fascinated with how the body repairs and heals itself when I was introduced to the potential of stem cells in regenerative medicine. I was struck by the ability of a small pool of muscle stem cells that can rebuild and restore the function of muscle. My lab at Sanford Burnham Prebys aims to better understanding the repair process and harness our body's ability to heal in order to combat chronic diseases and even counteract aging. &#8220;
+
+Postdoctoral Fellowship, Stanford University School of Medicine PhD in Cellular Molecular Medicine, University of Ottawa, Canada BS in Biomedical Sciences, University of Ottawa, Canada
+
+Related Disease Aging-Related Diseases, Amyotrophic Lateral Sclerosis (Lou Gehrig's Disease), Arthritis, Cachexia, Inflammatory/Autoimmune Disease, Multiple Sclerosis, Muscular Dystrophy, Myopathy, Neurodegenerative and Neuromuscular Diseases, Sarcopenia/Aging-Related Muscle Atrophy, Spinal Muscular Atrophy
+
+Phenomena or Processes Adult/Multipotent Stem Cells, Aging, Cell Signaling, Development and Differentiation, Epigenetics, Exercise, Extracellular Matrix, Neurogenesis, Organogenesis, Regenerative Biology, Transcriptional Regulation
+
+Techniques and Technologies 3D Image Analysis, Bioinformatics, Cellular and Molecular Imaging, Gene Knockout (Complete and Conditional), Genomics, High Content Imaging, High-Throughput/Robotic Screening, Live Cell Imaging, Machine Learning, Microscopy and Imaging, Proteomics, Transplantation
+
+Specifically, the Wang lab aims to identify cellular and molecular crosstalk between muscle, nerve, and immune systems to develop targeted therapies that overcome autoimmune neuromuscular disorders and autoimmune aspects of “inflammaging.”
+
+===== END batch 3/4 =====
