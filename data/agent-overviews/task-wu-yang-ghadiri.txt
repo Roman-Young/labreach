@@ -1,0 +1,266 @@
+########## OVERVIEW BATCH — 3 labs whose real research content was one level deeper than what we'd scraped before (headless-browser-fetched home + research/about subpages). ##########
+
+For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad with no field background could read to decide if they want to email the lab. Say WHAT the lab studies, HOW (methods/approach), and WHY it matters. Ground it ONLY in that lab's provided text — do NOT invent specifics. Note: the raw text includes site chrome (nav links, address footer) mixed with the real content — ignore the chrome, use only the substantive research prose.
+
+Write your answer as a JSON object {"<exact lab name>": "<overview>", ...} to this ABSOLUTE path:
+  /home/roman/agent/codebases/labreach/data/agent-overviews/wu-yang-ghadiri-batch.json
+
+===== LAB: Xiaohua Wu =====
+DIRECTORY | CONTACT | CAREERS | | HOME
+HOME
+RESEARCH
+PUBLICATIONS
+LAB MEMBERS
+LAB ACTIVITIES
+OPEN POSITIONS
+Home >> Wu Lab >> Home Page
+Welcome to the Wu Lab Home Page
+
+Our laboratory focuses on understanding the molecular mechanisms of DNA double-strand break repair in mammalian cells, which has a significant impact on cancer etiology and cancer treatment.
+
+Genome instability is a hallmark of cancer cells and DNA double-strand breaks are a major source to induce genome instability. We have established a series of unique EGFP-based reporters to monitor different DSB repair pathways. Using a combination of genetics and molecular and cellular biology approaches, we study not only the major DSB repair pathways commonly used in normal cells, but also error-prone alternative DSB pathways often elevated during oncogenesis. In this process, we have identified new targets in double-strand break repair network that can be used for synthetic-lethality strategies of targeted cancer treatment. We are also developing our reporter systems for screening and working with experts in chemistry and structural biology to identify leads of small molecule inhibitors for translational research.
+
+ 
+
+ 
+
+
+
+
+ 
+
+
+
+
+California: 10550 North Torrey Pines Road, La Jolla, CA 92037 - (858) 784-1000
+Florida: 130 Scripps Way, Jupiter, FL 33458 - (561) 228-2000
+
+Copyright © , The Scripps Research Institute (TSRI). All Rights Reserved.
+
+ 
+
+Terms of Use
+
+---
+
+DIRECTORY | CONTACT | CAREERS | | HOME
+HOME
+RESEARCH
+PUBLICATIONS
+LAB MEMBERS
+LAB ACTIVITIES
+OPEN POSITIONS
+Home >> Wu Lab >> Research Interest
+Research Interest
+Double-strand break (DSB) Repair Pathways and Cancer Connection
+Major DSB Repair Pathways
+
+DSBs can be repaired by different pathways. Non-homologous end joining (NHEJ) and homologous recombination (HR) are two major pathways to repair DSBs. NHEJ is Ku-dependent and ligates DSB ends without using a template. HR uses homologous sequences as repair templates and is considered as the most conserved repair mechanism.
+
+Alternative DSB Repair Pathways
+
+Besides HR and NHEJ, there are other alternative DSB repair pathways which are often error-prone. For instance, microhomology-mediated end joining (MMEJ) ligates DSB ends at microhomology sites and inevitably causes deletions at the repair junctions. Break-induced replication (BIR) is a variation of HR and is used when homology is present only at one side of the break. BIR exhibits conservative replication, long gene conversion track and template switch.
+
+Cancer connection
+
+Genome instability caused by DSB repair deficiency is a driving force for tumorigenesis. Cancer cells likely activate or boost alternative DSB repair pathways affording growth advantage to cope with oncogenic replication stress. Whole genome sequencing has revealed common features of gross chromosomal rearrangements associated with cancers. For instance, microhomology is often present at chromosomal breakpoints in cancer cells, and thus MMEJ is likely involved in cancer-associated chromosomal rearrangements. Complex chromosomal rearrangement and copy number variation also prevail in the cancer genome, involving replicative mechanisms to copy DNA sequences from other places of the genome. This is reminiscent of the features of BIR which could contribute to increased mutation rate, loss of heterozygosity (LOH) and copy number variation that are often found in genomic disorders and cancer cells. 
+
+EGFP-Based DSB Repair Reporters
+
+The challenge of studying DSB repair mechanisms in mammalian cells is the lack of sensitive and reliable DSB repair assays. We developed novel EGFP-based repair reporters allowing systematic characterization and mechanistic study of different DSB repair pathways. We use a mega-endonuclease I-SceI to create a single DSB or adapt CRISPR system to generate DSBs or nicks in the reporters, and determine the repair efficiency by FACS analysis of green cells. Such EGFP-based assay systems can be developed for CRISPR library screening and small molecule screening.
+
+Study Genetic and Epigenetic regulation of DSB repair. 
+
+Mutations in damage checkpoint genes and DSB repair genes are often associated with inheritable human diseases which are predisposed to cancer. BRCA1 is a breast cancer suppressor and a BRCA1 mutation carrier has 60-80% chance of a life time risk of developing breast cancer. Nbs1-, Mre11-, CtIP- and Fanconi anemia-related human diseases also exhibit genome instability and are prone to cancer. We study the role of these tumor suppressor genes in DSB repair,
+
+Epigenetic modification and chromatin remodeling play important roles in DSB repair. We study posttranslational modifications such as phosphorylation, ubiquitination and sumoylation in the regulation of DSB repair. We also study chromatin-remodeling such as SWI/SNF complexes in DNA repair in a chromatin environment.
+
+Study the mechanisms to maintain genome stability at chromosomal loci with secondary structures.
+
+DNA sequences prone to
+
+===== LAB: Xiang-Lei Yang =====
+DIRECTORY | CONTACT | CAREERS | | HOME
+Home >> Scripps Laboratories for tRNA Synthetase Research >> About SLTSR
+About SLTSR
+
+The laboratory is focused on aminoacyl tRNA synthetases. The enzymes are ancient and are believed to have appeared in the transition from the putative RNA world to the theatre of proteins. The algorithm of the genetic code is established in the first reaction of protein synthesis. In this reaction, aminoacyl tRNA synthetases catalyze the attachments of amino acids to their cognate transfer RNAs. Errors of translation occur when a mischarged tRNA is released from the synthetase, so that the mischarged amino acid is then inserted at the wrong codon in mRNA. The laboratory investigates synthetases in their role as catalysts of aminoacylation and how that is connected to disease. In addition, the synthetases have resected forms (alternative splice variants and natural proteolytic fragments) and have extracellular and nuclear functions outside of translation. These novel functions are subject to intensive investigations by the laboratory, and may be intimately connected to heritable genetic diseases associated with tRNA synthetases.
+
+Occasional errors of aminoacylation occur naturally and these can result in mistranslation, where the mischarged amino acid is inserted at the wrong codon in mRNA. Over the eons, aminoacyl tRNA synthetases developed powerful mechanisms for correcting errors of aminoacylation. But if these mechanisms are disturbed (for example by mutations that attenuate the error-correcting activities), then errors of translation will occur. Recent work by us and collaborators showed that these errors cause cell and animal pathologies. Much focus is on structure-function relationships for clearance of errors of aminoacylation. We also learned from recent work that mistranslation is mutagenic in aging bacteria. These recent observations raise the question of whether a similar mutagenic response might be seen in aging higher organisms and could be oncogenic and contribute to the higher incidence of oncogenesis seen in aging populations.
+
+Synthetases in mammalian cells are now known to have expanded functions, including activities in signal transduction pathways, such as those for angiogenesis and inflammation. These novel functions often result from the production of resected forms (alternative splice variants or natural fragments produced by proteolysis). Cell surface receptors for secreted forms and interacting partners in the nucleus are being identified and investigated from the standpoint of structure-function relationships, and understanding the evolutionary forces that introduced new motifs and activities in tRNA synthetases. These activities offer the opportunity to understand the mechanistic side of expanded functions to the point where therapeutic applications can be envisioned.
+
+For all of this work, a cross-disciplinary approach is used. Methods and logic of biochemistry and molecular and cell biology are merged with genetics, x-ray crystallography, and evolutionary analysis.
+
+___________
+
+Lab Home
+___________
+
+About SLTSR
+___________
+
+Principal Investigators
+___________
+
+Lab Members
+___________
+
+Alumni
+___________
+
+Collaborators
+___________
+
+Publications
+___________
+
+News
+___________
+
+Photos
+___________
+
+Protocols
+___________
+
+Members Only
+___________
+
+Joining SLTSR
+___________
+
+Contact Us
+___________
+
+
+
+
+California: 10550 North Torrey Pines Road, La Jolla, CA 92037 - (858) 784-1000
+Florida: 130 Scripps Way, Jupiter, FL 33458 - (561) 228-2000
+
+Copyright © , The Scripps Research Institute (TSRI). All Rights Reserved.
+
+ 
+
+Terms of Use
+
+---
+
+DIRECTORY | CONTACT | CAREERS | | HOME
+Home >> Scripps Laboratories for tRNA Synthetase Research >> Lab Home
+
+___________
+
+Lab Home
+___________
+
+About SLTSR
+___________
+
+Principal Investigators
+___________
+
+Lab Members
+___________
+
+Alumni
+___________
+
+Collaborators
+___________
+
+Publications
+___________
+
+News
+___________
+
+Photos
+___________
+
+Protocols
+___________
+
+Members Only
+___________
+
+Joining SLTSR
+___________
+
+Contact Us
+___________
+
+
+
+
+California: 10550 North Torrey Pines Road, La Jolla, CA 92037 - (858) 784-1000
+Florida: 130 Scripps Way, Jupiter, FL 33458 - (561) 228-2000
+
+Copyright © , The Scripps Research Institute (TSRI). All Rights Reserved.
+
+ 
+
+Terms of Use
+
+===== LAB: M. Reza Ghadiri =====
+Welcome to the Ghadiri Lab
+
+The Ghadiri Lab has taken an engineering approach to tackling a variety of interdisciplinary challenges through developing novel techniques with chemical, molecular, cellular, and computational methods. These have included contributions to systems chemistry, origins of life chemistry, de novo antibiotic design, next-generation nanopore sequencing, and logic-gated enzyme design. Current undertakings in the Ghadiri Laboratory are largely focused towards harnessing this interdisciplinary experience and approach towards directed remodeling of the gut microbiome to affect chronic disease progression. This includes library synthesis or curation, optimization of in vitro screening protocols, in vivo animal studies, physiological evaluation, and computational bioinformatics.
+
+We are currently welcoming applicants that are highly motivated and interested in such an interdisciplinary and potentially impactful endeavor. Strong background in chemical biology, biochemistry, molecular biology, and/or bioinformatics is required. Previous experience in microbiome research is preferable. Applicants should send the following to M. Reza Ghadiri: (1) A cover letter addressing your qualifications; (2) brief summary of your current and previous research; and (3) contact information of three professional references with firsthand knowledge of your professional abilities.
+
+Programmed enzymes
+
+ 
+
+Next generation DNA sequencing
+
+ 
+
+Systems chemistry
+
+
+
+
+Modulating lipoproteins
+
+ 
+
+Histone deacetylase inhibitors
+
+ 
+
+Peptide nanotubes
+
+
+Copyright 2019 © Ghadiri Laboratory, The Scripps Research Institute
+
+---
+
+Research interests
+
+The Ghadiri Laboratory is a highly interdisciplinary research group, integrating chemistry, molecular biology, materials science, and medicine. Our main interest is to synthesize and engineer functional molecules that are useful for basic science, materials, and medical applications.
+
+Follow the links below for more detailed descriptions of current research interests.
+
+ Improving the function of high-density lipoprotein (HDL). We are developing orally efficacious peptides that interact with and modulate the function of HDLs, as a potential approach for treating cardiovacular disease.
+ Development of histone deacetylase (HDAC) inhibitors. We design, synthesize, and characterize small molecule HDAC inhibitors as potential treatments for cancer, cystic fibrosis, and neurodegenerative diseases.
+ Next generation DNA sequencing. We explore novel approaches for sequencing DNA using protein nanopores, to allow faster and cheaper sequencing for basic research and personalized medicine.
+ Origins of life research. We investigate how complex chemical networks could have arisen from simple, basic organic molecules, as an approach to understanding the origins and early evolution of life.
+ Intrasterically regulated enzymes. We design and engineer enzymes that can be programmed to switchon and off in response to chemical signals, for use in diagnostics and medical applications.
+ Self-assembling cyclic peptide nanotubes.We engineer peptides that can reversibly assemble into organic nanotubes, with applications as novel materials and antibacterial or antiviral agents.
+   
+   
+   
+   
+
+ 
+
+ 
+
+ 
+ 
+
+
+Copyright 2013 © Ghadiri Laboratory, The Scripps Research Institute
