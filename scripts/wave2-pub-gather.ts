@@ -31,7 +31,9 @@ async function main() {
   const { buildBundle } = await import('../lib/rag/extract2')
   const { nameParts } = await import('../lib/name-match')
   const { withRetry } = await import('../lib/retry')
+  const { INSTITUTE_AFFIL } = await import('../lib/attribution')
   type AuthorWork = Awaited<ReturnType<typeof fetchWorksByDois>>[number]
+  const instOf = (u: string) => /sbpdiscovery/.test(u) ? 'sbp' : /salk\.edu/.test(u) ? 'salk' : /scripps/.test(u) ? 'scripps' : /lji\.org/.test(u) ? 'lji' : null
 
   const EPMC = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search'
   const normT = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
@@ -94,10 +96,26 @@ async function main() {
     const uniq = all.filter(w => { const k = (w.doi || w.pmid || w.title || '').toLowerCase(); if (!k || seen.has(k)) return false; seen.add(k); return true })
 
     // GATE B — PI surname must appear as an author token (surname-list handles compound names)
-    const verified = uniq.filter(w => {
+    let verified = uniq.filter(w => {
       const authors = (w.authors || []).map(a => (a.last || '').toLowerCase())
       return surnames.some(ln => authors.some(a => a === ln || a.split(/\s+/).includes(ln)))
     })
+    // GATE C (affil-search labs ONLY) — a PubMed author search can pull a same-surname stranger from
+    // another institution (a hand surgeon "Osterman AL" vs the SBP microbiologist). DOI-page ids come
+    // off the lab's OWN page so they're immune, but esearch results need it. Drop a paper whose
+    // PI-surname author carries an affiliation that AFFIRMATIVELY mismatches the institute; keep
+    // matches and papers with no per-author affiliation (honest unknown). Belt-and-suspenders to the
+    // affiliation-ANDed esearch query in the harvester.
+    const inst = instOf(h.url)
+    if (/affil-search/.test(h.method) && inst && INSTITUTE_AFFIL[inst]) {
+      const affRe = INSTITUTE_AFFIL[inst]
+      verified = verified.filter(w => {
+        const mine = (w.authors || []).filter(a => surnames.includes((a.last || '').toLowerCase()))
+        const affils = mine.map(a => a.affiliation || '').filter(Boolean)
+        if (!affils.length) return true // no affiliation data → honest unknown, keep
+        return affils.some(aff => affRe.test(aff)) // keep only if an institute-matching affiliation exists
+      })
+    }
     // must carry an abstract to summarize from (no abstract → can't ground did/found/used/why)
     const withAbs = verified.filter(w => w.abstract && w.abstract.length > 60)
 

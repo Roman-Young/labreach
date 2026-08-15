@@ -67,13 +67,22 @@ async function extractIds(page) {
   })
 }
 
-// Resolve a PubMed author+affiliation search URL to its most-RECENT PMIDs via NCBI esearch (sorted
-// by date). This is what turns a stale "selected publications" institution page into the PI's real
-// current output. Affiliation-filtered => contamination-resistant; Gate B downstream is the backstop.
-async function esearchRecent(pubmedUrl) {
+// Institute → a PubMed [Affiliation] filter term. Broad-but-specific: "burnham" matches "Sanford
+// Burnham", "Sanford-Burnham", "Burnham Institute". This is the contamination guard for esearch.
+const AFFIL_TERM = { sbp: 'burnham', salk: 'salk', scripps: 'scripps', lji: '"la jolla institute"' }
+function instOf(url) { return /sbpdiscovery/.test(url) ? 'sbp' : /salk/.test(url) ? 'salk' : /scripps/.test(url) ? 'scripps' : /lji/.test(url) ? 'lji' : null }
+// Resolve a PubMed author search URL to its most-RECENT PMIDs via NCBI esearch (sorted by date).
+// CRITICAL: the page's own link often carries only [Author] (e.g. "Osterman AL[Author]") with NO
+// affiliation — which pulls same-name strangers (a hand surgeon "Osterman AL" contaminated the
+// microbiologist). So we ALWAYS AND the institute's [Affiliation] into the query, filtering at the
+// SOURCE. A same-surname author at another institution can no longer come back. (Found 2026-08-15.)
+async function esearchRecent(pubmedUrl, labUrl) {
   try {
-    const term = new URL(pubmedUrl).searchParams.get('term')
+    let term = new URL(pubmedUrl).searchParams.get('term')
     if (!term) return []
+    const inst = instOf(labUrl)
+    const affil = inst && AFFIL_TERM[inst]
+    if (affil && !/\[Affiliation\]/i.test(term)) term = `(${term}) AND ${affil}[Affiliation]`
     const api = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(term)}&sort=date&retmax=40&retmode=json`
     const res = await fetch(api, { signal: AbortSignal.timeout(20000) })
     if (!res.ok) return []
@@ -122,7 +131,7 @@ for (let i = 0; i < slice.length; i++) {
     // Author+affiliation PubMed search → most-recent PMIDs (recovers stale institution "selected
     // publications" pages, e.g. SBP). Only invoked when the page itself exposes such a link.
     if ((ids.pubSearches || []).length && (ids.dois.length + ids.pmids.length) < 10) {
-      const recent = await esearchRecent(ids.pubSearches[0])
+      const recent = await esearchRecent(ids.pubSearches[0], url)
       if (recent.length) {
         ids.pmids = [...new Set([...ids.pmids, ...recent])]
         r.method = r.method === 'homepage' || r.method === 'doi-page' ? 'pubmed-affil-search' : r.method + '+affil'
