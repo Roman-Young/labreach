@@ -1,0 +1,128 @@
+########## OVERVIEW FIX BATCH — 6 'done' labs whose paper-pipeline bundle only had homepage nav junk (no About text), even though their institute directory page has real bio text below. Plus one retry (Mansun Law) whose first pass wrongly returned empty despite good content. ##########
+
+For EACH lab below, write a plain-language research overview (~110-140 words) a first-year undergrad with no field background could read to decide if they want to email the lab. Say WHAT the lab studies, HOW (methods/approach), and WHY it matters. Ground it ONLY in that lab's provided text — do NOT invent specifics. Do NOT be overly conservative: if there is even ONE substantive paragraph describing the lab's actual research (even a short mission statement), that is enough to write a real overview from — do not default to empty just because the surrounding text is thin. Only leave a lab's value "" if there is truly no research-descriptive content at all (pure citations/nav/cookies/admin bio).
+
+Write your answer as a JSON object {"<exact lab name>": "<overview or ''>", ...} to this ABSOLUTE path:
+  /home/roman/agent/codebases/labreach/data/agent-overviews/done-fix-batch.json
+
+===== LAB: Alan Saghatelian, PhD =====
+Peptides and metabolites are two important classes of biological molecules, referred to as small molecules. Changes in the levels of these small molecules are known to cause prevalent diseases. For example, lower levels of the peptide insulin lead to diabetes, while higher levels of the metabolite cholesterol cause heart disease. There are thousands of small molecules in our bodies, so how do we find these disease-causing peptides and metabolites? Thanks to advances in a technology called mass spectrometry, scientists can now measure peptides and metabolites in a biological sample (cell, tissue, or organism). By analyzing disease samples, researchers can identify those molecules that are changing during a disease. Just as the identification of insulin led to a new treatment for diabetes, these discoveries of disease-associated peptides and metabolites will likely pave the way for a new generation of therapeutics to improve human health.
+
+Alan Saghatelian’s work touches on virtually all areas of human biology. He has developed and applied new mass spectrometry strategies that measure changes in small molecules overlooked by traditional biological methods, which typically focus on DNA, RNA and proteins. In particular, Saghatelian focuses on metabolites, and peptides, which have been understudied because of technical challenges in their detection. Exploring this uncharted territory has enabled Saghatelian to make important discoveries, including finding a novel human lipid that reduces inflammation and reverses the symptoms of diabetes. Saghatelian hopes to use the knowledge gained from his lab’s work to accelerate the development of new medicines in the area of diabetes. He is also collaborating with many laboratories at Salk to understand the roles of peptides and metabolites in cancer and neurodegenerative and immunologic disorders.
+
+BS, Chemistry, University of California, Los Angeles PhD, Chemistry, The Scripps Research Institute, La Jolla, Ca Merck Postdoctoral Fellow of the Life Sciences Research Foundation, 2003
+
+With collaborators, Saghatelian analyzed changes in metabolite levels in mice that are resistant to diabetes, which led to the discovery of a lipid called a FAHFA. FAHFAs are also found in humans. Administration of these lipids to mice reduces inflammation and improves the symptoms associated with diabetes, making these interesting therapeutic candidates and revealing a new disease-associated metabolite.
+
+Saghatelian also identified a previously unknown cluster of human genes that produce peptides that control fundamental cellular processes, such as DNA repair, highlighting their potential importance in cancer.
+
+Saghatelian’s team discovered thousands of additional human genes that will increase our understanding of the molecular pathways that regulate many diseases such as cancer and autoimmunity.
+
+===== LAB: Ali Torkamani, PhD =====
+Dr. Torkamani is Professor at The Scripps Research Institute and Director of Genomics and Genome Informatics at the Scripps Research Translational Institute. Dr. Torkamani’s research centers on the use of genomic and informatic technologies to identify the genetic etiology and underlying mechanisms of human disease in order to define health risks and individualized interventions. Major focus areas include human genome interpretation, genomic discovery of novel rare diseases, comprehensive, genetically-informed machine- and deep-learning prediction of risk for common diseases, and digital communication genetically-informed disease risk. He has authored over 100 peer-reviewed publications as well as numerous book chapters and Medscape references, and his research has been highlighted in the popular press. Dr. Torkamani’s overall vision is to decipher that code in order to understand and predict interventions that restore diseased individuals to their personal health baseline.
+
+Heart disease is the leading cause of death in the United States, yet our ability to predict and lower our own risk has been limited. In this Front Row lecture, Scripps Research professor Ali Torkamani shared how his team is developing app-based digital tools that can analyze genetic markers and predict someone’s future cardiovascular disease risk. Torkamani’s research is being integrated into remote clinical trials that can provide personalized behavioral and therapeutic interventions to improve long-term health outcomes.
+
+Scripps Research scientists developed a model that more accurately identifies patients at risk of coronary artery disease and can inform tailored treatment.
+
+Scripps Research scientists reveal how wearable sensors and artificial intelligence could transform the way we detect and manage pre-diabetes.
+
+Your DNA contains an incredible amount of information about every aspect of your being, including your risk of developing certain diseases. But up until recently, it was nearly impossible for doctors to analyze that information for individual patients. Now, with the help of affordable genomic sequencing, artificial intelligence and machine learning, scientists are working towards personalizing medical care. At the Scripps Research Translational Institute, Professor Ali Torkamani is developing ways to predict a person’s risk for rare and common diseases.
+
+Major grants from the National Institutes of Health and California Institute for Regenerative Medicine will support the development of state-of-the-art genomic tools.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+Stanford University , B.S. Chemistry, 1999-2003 University of California, San Diego, Ph.D. Biomedical Sciences, 2005-2008 Scripps Translational Science Insistute , Research Scientist, 2008-2009 Scripps Translational Science Insistute, Assistant Faculty , 2009-2014 Scripps Research Institute , Assistant Professor of Molecular and Experimental Medicine, 2009-2014 Scripps Research Institute , Assistant Professor of Integrative Structural and Computational Biology, 2014-2017 Scripps Translational Science Insistute, Associate Faculty , 2014-2017 Scripps Translational Science Insistute, Director of Genome Informatics , 2012-Present Scripps Research Institute , Associate Professor of Integrative Structural and Computational Biology, 2017-2021 Scripps Research Institute , Professor of Integrative Structural and Computational Biology, 2021-Present
+
+===== LAB: Dennis Burton, PhD =====
+In 1961, pioneering immunologist Frank Dixon established the Department of Experimental Pathology at the Scripps Clinic and Research Foundation, which would later become the basis of Scripps Research. Dixon served as director for 25 years, where his immunological focus would forever shape the institute’s scientific focus—as well as the world’s. Since Dixon’s leadership, scientists at Scripps Research have made countless discoveries revealing how the immune system functions and responds to different diseases. From designing universal vaccines for harmful viruses to uncovering the structures of deadly microbes, we're dedicated to translating our understanding of the immune system to eradicate disease worldwide.
+
+Scripps Research scientists discover that a higher ratio of antibodies to viral protein helps engage two specific types of immune cells.
+
+A leader in broadly neutralizing antibodies, Burton has helped drive global efforts to develop vaccines for HIV, influenza and more.
+
+A leader in broadly neutralizing antibodies, Burton has helped drive global efforts to develop vaccines for HIV, influenza and more.
+
+Scripps Research scientists used computer modeling to illustrate how antibodies use fatty molecules known as lipids to recognize the HIV virus.
+
+Clarivate’s annual, global list represents researchers who have demonstrated significant and broad influence in their field of research.
+
+Neutralizing antibodies are the mainstay of viral vaccines and their induction through vaccination the best correlate of protection against many viruses. For highly variable viruses such as HIV and influenza virus, the antibodies of interest are those that can neutralize many different circulating viral strains, referred to as broadly neutralizing antibodies. We have pioneered the isolation and characterization of broadly neutralizing antibodies to HIV and more recently against coronaviruses. We have described the protective activities of these antibodies against HIV and used them to define the targets on HIV for vaccine design. Study of the molecular interaction of broadly neutralizing antibodies with the HIV surface envelope glycoprotein has inspired rational approaches to vaccine design, the evaluation of candidate molecules in robust animal models and now their exploration in the clinic. This work is now carried out in large consortia funded by the National Institutes of Health (Center for HIV/AIDS Vaccine Immunology-Immunogen Design (CHAVI-ID) and then the Consortium for HIV/AIDS Vaccine Development (CHAVD)) and the Bill and Melinda Gates Foundation (International AIDS Vaccine Initiative (IAVI) Neutralizing Antibody Consortium).
+
+Select Publications Walker, Laura M.; Phogat, S. K.; Chan-Hui, P. Y.; Wagner, D.; Phung, P.; Goss, J. L.; Wrin, T.; Simek, M. D.; Fling, S.; Mitcham, J. L.; Lehrman, J. K.; Priddy, F. H.; Olsen, O. A.; Frey, S. M.; Hammond, P. W.; Kaminsky, S.; Zamb, T.; Moyle, M.; Koff, W. C.; Poignard, Pascal; Burton, Dennis R.; Protocol, G. P. Broad and potent neutralizing antibodies from an African donor reveal a new HIV-1 vaccine target. Science 2009 , 326, 285-289.
+
+The recognized researchers encompass various areas including chemistry, microbiology, immunology, biochemistry and more.
+
+Featured scientists represent a wide range of fields including chemistry, microbiology, immunology, neuroscience and more
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+===== LAB: Bryan Briney, PhD =====
+Across four preclinical studies, Scripps Research, IAVI, and additional collaborators make headway in stimulating the rare antibodies needed to fight HIV.
+
+By comparing the structures of protein complexes from different lineages of the dangerous Lassa virus, a Scripps Research team identified new antibodies and vaccine targets.
+
+News Scripps Research scientists discover antibodies that induce broad immunity against SARS viruses, including emerging variants
+
+The funding will support a multidisciplinary collaboration of four Scripps Research scientists to identify more effective vaccines to treat HIV.
+
+Results from a Scripps Research and UNC team pave the way for a vaccine and therapeutic antibodies that could be stockpiled to fight future coronavirus pandemics.
+
+A new approach that targets young immune cells may also work for creating vaccines against the flu, dengue, malaria and hepatitis C.
+
+Joyce, C.; Burton, D. R.; Briney, B. Comparisons of the antibody repertoires of a humanized rodent and humans by high throughput sequencing. Sci Rep 2020 , 10, 1120.
+
+Grant renewal from the NIH-NIAID will help uncover critical information about the viruses that cause COVID-19, Lassa and Ebola, including how they evolve.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2018 Young Investigator Award, Baxter Family Foundation 2017 Early Career Investigator Award, Bill and Melinda Gates Foundation (CAVD) 2016 Early Career Investigator Award, Bill and Melinda Gates Foundation (CAVD) 2012 Dissertation Enhancement Award, Vanderbilt University 2012 Sidney P. Colowick Award for Outstanding Pre-doctoral Achievement, Vanderbilt University 2012 Keystone Symposia Travel Award 2011 IBC Antibody Engineering Conference Travel Award 2011 Keystone Symposia Travel Award
+
+===== LAB: Sergio Catz, PhD =====
+Intracellular vesicular transport is essential for nearly all aspects of cellular physiology and plays a central role in the regulation of cellular homeostasis, cell division and immunity. The processes regulated by vesicular transport studied in my laboratory include autophagy, exocytosis, cytokine secretion, phagocytosis, nucleic acid sensing, neutrophil extracellular trap formation and lysosomal function. Molecular mechanisms studied in my laboratory are associated with human diseases including inflammation in the setting of coronary artery disease, lysosomal storage disorders and autoimmunity.
+
+Most vesicular transport processes are regulated by Rab proteins, monomeric GTPases of the Ras superfamily, that act as membrane organizers. My laboratory utilizes super-resolution microscopy approaches and functional assays for the study of Rab GTPases and effector molecules and their role in trafficking mechanisms. In our studies, we utilize animal models and cellular systems with the common objective of elucidating cellular mechanisms important for physiology and disease. In addition, we have developed unique quantitative systems biology methods for the analysis of organelle dynamics and positioned ourselves as one of the few laboratories studying the processes that control vesicular trafficking mechanisms preceding exocytosis, phagocytosis, endosomal maturation and autophagolysosomal formation in innate immune cells.
+
+We have developed and implemented high-throughput screening assays and identified small-molecule inhibitors and activators of vesicular trafficking. We discovered specific compounds that are being utilized to interrogate mechanistic questions and explore their activity in pre-clinical models of coronary artery disease, lysosomal disorders, viral encephalitis and autoinflammatory syndrome. Our research elucidates molecular mechanisms regulating vesicular transport and has the potential to lead to effective, novel therapeutical strategies for the treatment of human disease.
+
+First-in-class molecules block a specific protein interaction in immune cells, offering a potential targeted approach to autoimmune diseases like lupus and rheumatoid arthritis.
+
+2000 Postdoctoral fellowship in Neutrophil Function held at The Scripps Research Institute, La Jolla, CA, USA, The American Heart Association
+
+1998 Postdoctoral Fellowship in Neutrophil Function held at The Scripps Research Institute, La Jolla, CA, USA, Ministerio de Education de la Nación, Argentina
+
+1992 Pre-doctoral Fellowship in Biochemistry held at The Laboratory of Oxygen Metabolism, School of Medicine, The University of Buenos Aires
+
+1994 Pre-doctoral Fellowship in Biological Chemistry held at the Department of Biological Chemistry, Faculty of Pharmacy and Biochemistry, The University of Buenos Aires
+
+1991 Student Fellowship in Biochemistry held at The Department of Clinical Biochemistry, Faculty of Pharmacy and Biochemistry, The University of Buenos Aires
+
+1995 Prize Boeringher Ingelheim for the best work presented in poster at the XIX. Jornadas Anuales de Progresos en Alergia, Asma e Inmunología, Buenos Aires, Argentina
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+Catz, Sergio D. Divergent mechanisms of inflammasome activation in neutrophil early response and inflammation. Nature Immunology 2023 , 24, 1970-1971.
+
+Catz, Sergio D.; McLeish, K. R. Therapeutic targeting of neutrophil exocytosis. Journal of Leukocyte Biology 2020 , 107, 393-408.
+
+===== LAB: Michael Boddy, PhD =====
+Every time a cell divides, it must copy billions of base pairs of DNA with near-perfect fidelity and do so under constant chemical and environmental assault. Our laboratory studies the biological molecular machines that detect DNA damage, coordinate its repair, and suppress the genome instability that drives cancer and premature aging. We also study the "moonlighting roles” of these DNA repair factors in the innate immune response to episomal circular DNAs, which include pathogenic viruses and key gene therapy vehicles. To address these critical areas of research, we integrate cell biology, proteomics, genetics and protein structural biology techniques.
+
+The STUbL Discovery: Our laboratory discovered a novel family of proteins we named STUbLs (SUMO-targeted ubiquitin ligases). This discovery revealed an unanticipated crosstalk between the SUMO and ubiquitin post-translational modifiers, providing critical insight into how cells handle DNA damage and how a leukemia therapy works.
+
+Molecular Mimicry of SUMO in Genome Integrity: Our discovery that a DNA repair protein exploits structural mimicry to parasitize the SUMO conjugation cascade — rather than being a passive SUMO substrate — fundamentally changed how the field thinks about SUMO pathway regulation. It opened the question of how many other proteins use SUMO-like domain mimicry to modulate SUMO signaling without being SUMOylated themselves, a question directly relevant to cancer and antiviral biology, given the central role of the SUMO pathway in SMC5/6-mediated genome stability and viral silencing.
+
+Oravcová, Martina; Nie, Minghua; Zilio, Nicola; Maeda, Shintaro; Jami-Alahmadi, Yasaman; Lazzerini-Denchi, Eros; Wohlschlegel, James A.; Ulrich, Helle D.; Otomo, Takanori; Boddy, Michael N. The Nse5/6-like SIMC1-SLF2 complex localizes SMC5/6 to viral replication centers. eLife 2022 , 11.
+
+Oravcová, Martina; Nie, Minghua; Otomo, Takanori; Boddy, Michael N. SMC5/6-mediated plasmid silencing is directed by SIMC1-SLF2 and antagonized by the SV40 large T antigen. eLife 2025 , 14.
+
+You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+
+2013-present Associate Professor (Tenure), MCB, Scripps Research 2007-2012 Associate Professor, Molecular Biology, Scripps Research 2002-2007 Assistant Professor, Molecular Biology, Scripps Research 1997-2002 Research Associate, Molecular Biology, Scripps Research
+
+2001 Individual National Research Service Award 2003 Research Special Fellowship, The Leukemia and Lymphoma Society of America 2008 NIH Study Section ZRG1 GGG-H, NIH 2009 NIH Study Section ZRG1 GGG-F, NIH 2010 EMBO Editorial Board, EMBO 2011 NIH Study Section MGB, NIH 2014 Scholar, The Leukemia and Lymphoma Society of America 2014 NIH Study Section ZRG1 GGG-R, NIH 2014 NIH Director's Early Independence Award Review, NIH 2015 NIH Study Section MGB, NIH; 2019 Editorial board of Cells, Cells 2022 Ongoing reviewer of manuscripts for a number of high quality journals 2022 Ongoing hosting high school STEM students for laboratory experience and exposure to real-world science
+===== LAB: Mansun Law, PhD =====
+The mission of the Law Laboratory is to generate foundational insights in virology and immunology that enable the eradication of HBV and HCV. Experimentally, we apply a wide range of cutting-edge technologies to the investigation of viral hepatitis, chronic Infection, antibody, B cell, and vaccine design.
+
+In experiments, mice inoculated with virus-mimicking particles showed a stronger antibody response than when inoculated with hepatitis C proteins on their own.
