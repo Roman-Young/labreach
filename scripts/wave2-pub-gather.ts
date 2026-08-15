@@ -29,7 +29,7 @@ async function main() {
   const { fetchWorksByDois, fetchWorksByPmids } = await import('../lib/rag/sources')
   const { fetchEuropePMCFullText } = await import('../lib/papers')
   const { buildBundle } = await import('../lib/rag/extract2')
-  const { nameParts } = await import('../lib/name-match')
+  const { nameParts, firstNamesEquivalent } = await import('../lib/name-match')
   const { withRetry } = await import('../lib/retry')
   const { INSTITUTE_AFFIL } = await import('../lib/attribution')
   type AuthorWork = Awaited<ReturnType<typeof fetchWorksByDois>>[number]
@@ -95,10 +95,38 @@ async function main() {
     const seen = new Set<string>()
     const uniq = all.filter(w => { const k = (w.doi || w.pmid || w.title || '').toLowerCase(); if (!k || seen.has(k)) return false; seen.add(k); return true })
 
-    // GATE B — PI surname must appear as an author token (surname-list handles compound names)
+    // GATE B — a PI-surname author must be present AND first-name-compatible. Surname-only was too
+    // weak: a 32-author collaboration listed "Dan S" Kaufman (a UCSD NK-cell researcher), not the PI
+    // "Randal J" Kaufman — surname matched, so it slipped in. Now: keep a paper if SOME PI-surname
+    // author's first name is compatible (or absent = honest unknown); drop only if EVERY PI-surname
+    // author's first name AFFIRMATIVELY mismatches (Dan≠Randal). DOI-page papers with no EPMC author
+    // first name are still kept (provenance already strong). Skipped for surname-only PIs (LJI) where
+    // we have no first name to check. (Roman 2026-08-15: "flag/don't add anything that's not theirs".)
+    // A single-word PI name (LJI "Weiskopf") has no real first name — nameParts mirrors the surname
+    // into `.first`, so we must NOT first-name-gate those (would drop every real paper).
+    const singleWord = !pi.lastsAll.length
+    const piFirst = (pi.first || '').toLowerCase().trim()
+    const havePiFirst = !singleWord && piFirst.length >= 2 && piFirst !== (surnames[0] || '')
+    const piInit = piFirst[0] || ''
+    const firstVerdict = (authorFirst: string): boolean | null => {
+      const af = (authorFirst || '').trim().toLowerCase()
+      if (!af) return null                       // no author first name → unknown
+      if (af[0] !== piInit) return false          // different first initial → mismatch
+      const tok = af.split(/[\s.]+/)[0]
+      if (tok.length >= 3 && /[a-z]{3,}/.test(tok)) return firstNamesEquivalent(piFirst, af)
+      return true                                 // initials sharing the PI's first letter
+    }
     let verified = uniq.filter(w => {
-      const authors = (w.authors || []).map(a => (a.last || '').toLowerCase())
-      return surnames.some(ln => authors.some(a => a === ln || a.split(/\s+/).includes(ln)))
+      const mine = (w.authors || []).filter(a => {
+        const last = (a.last || '').toLowerCase()
+        return surnames.some(ln => last === ln || last.split(/\s+/).includes(ln))
+      })
+      if (!mine.length) return false             // PI surname not on the paper → not theirs
+      if (!havePiFirst) return true              // surname-only PI (LJI) → can't first-name-check
+      const verdicts = mine.map(a => firstVerdict(a.first))
+      if (verdicts.some(v => v === true)) return true    // a confirmed first-name match
+      if (verdicts.every(v => v === false)) return false // ALL mismatch → drop (Dan-S-Kaufman)
+      return true                                 // some unknown → honest unknown, keep
     })
     // GATE C (affil-search labs ONLY) — a PubMed author search can pull a same-surname stranger from
     // another institution (a hand surgeon "Osterman AL" vs the SBP microbiologist). DOI-page ids come
