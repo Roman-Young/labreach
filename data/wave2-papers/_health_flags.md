@@ -115,6 +115,11 @@ Re-harvested the 11 manual-flag labs with Roman's direct pub-page links. Results
   title→DOI + author-gated → 10 verified, 9 stored (BioThings/Translator/outbreak.info knowledge-graph
   work, heavy Su-lab co-authorship — legit shared papers). 9/9 grounded, embedded, tests 44/44.
   Wu's wulab.io PROJECTS request is still separate (see handoff project-storage decision).
-- **STILL FAILED — need manual DOI lists from Roman (2):** Eric Wang (ewanglab.com — pubs are a JS/
-  widget render, textLen~389, 0 ids even after clicking "2022-present"); Shannon Miller
-  (millerlabresearch.com — pubs not in extractable text). "Fail loud, flag, never guess" — not faked.
+- **FINAL DROPS (Roman "drop everyone else"):** Eric Wang, Shannon Miller (JS-rendered pubs,
+  unharvestable), Jeffery Kelly, Kathryn Hastie (LJI), Tal Einav → all status='excluded' + quarantined.
+  Hastie & Einav weren't in the original failure lists (active labs never gathered) — reversible, can
+  re-harvest later if wanted.
+- **Wu PROJECTS stored (Roman's call):** scraped wulab.io/research/ + 12 project pages → project-
+  grounded plain_summary (188w) + trajectory on his profile (+ synced cache). Renders in the digest's
+  plain-terms/trajectory panels. Wu now = 9 papers + full BioThings/Translator/outbreak project
+  descriptions. Corpus FINAL: 443 done / 137 excluded / 0 profile. WAVE-2 PAPER INGEST COMPLETE.

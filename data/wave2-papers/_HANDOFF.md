@@ -26,16 +26,30 @@ layer (emails/lab_urls/overviews for 216 labs) is DONE and committed.
   18, Lamia 12, MacRae 8, Wu 9, Teyton 4, Schimmel 2, Diercks 2 = 73 papers), embedded, tests 44/44.
   Wu recovered via a Scholar-title scrape (title→DOI resolution). Ocorr excluded (stale, newest 2020).
   2 still fail (Eric Wang/Miller — JS-rendered pubs, need manual DOI lists). See `_health_flags.md`.
-- **Corpus now: 443 done / 132 excluded / 5 profile.** The 5 profile = Eric Wang + Shannon Miller
-  (papers unharvestable) + Kelly (projects-only) + 2 stragglers — the genuinely-unresolved tail.
-- **Still TODO (needs Roman):** (1) manual DOI lists for Eric Wang / Shannon Miller (JS-rendered pub
-  pages); (2) DESIGN DECISION for project-page storage (Wu/Kelly) — see below; (3) audit corpus for
-  differently-titled preprint/published near-dups (known dedup limitation).
+- **WU PROJECTS DONE** (2026-08-16, Roman's call): scraped wulab.io/research/ + 12 project pages
+  (BioThings suite, BioGPS, Data Discovery Engine, BioThings Explorer, Translator, outbreak.info) →
+  synthesized a project-grounded plain_summary (188w) + trajectory, written to Wu's lab_profiles AND
+  his cache summary.json. Renders in the digest's "What this lab does" + "Where they're heading"
+  panels (the anti-overload design's designated home for descriptive content — no UI change needed).
+  Wu now shows 9 papers + full project descriptions.
+- **FINAL 5 DROPS** (2026-08-16, Roman "drop everyone else"): Eric Wang, Shannon Miller, Jeffery
+  Kelly, Kathryn Hastie (LJI), Tal Einav → status='excluded' + quarantined. NOTE: Hastie & Einav
+  were NOT in the original failure lists — active labs never successfully gathered; dropped per
+  Roman's instruction but are re-harvest candidates if ever wanted back (reversible).
+- **Corpus FINAL: 443 done / 137 excluded / 0 profile / 14 merged.** Wave-2 paper ingest COMPLETE.
+- **Optional future (not blocking):** (1) audit corpus for differently-titled preprint/published
+  near-dups (known dedup limitation — only Lamia's was caught by hand); (2) re-harvest Eric Wang /
+  Shannon Miller / Hastie / Einav if Roman supplies machine-readable pub links or DOI lists.
+- Leftover reusable tools in `scripts/` (untracked, `rm` was sandbox-blocked): `_wu_scholar.mjs`
+  (Scholar-title scraper), `_wu_projects.mjs` (project-page scraper). Delete or keep.
 - Git HEAD before this phase: `42eae2b`. Institute-profile layer untouched throughout.
 
-## PROJECT-PAGE STORAGE — blocked on a product decision (Wu / Kelly)
-Roman wants Chunlei Wu's wulab.io project sections + Jeffery Kelly's "ongoing projects" stored as
-"writing material" for students. Investigated the full path; it is NOT a simple ingest add:
+## PROJECT-PAGE STORAGE — RESOLVED 2026-08-16 (Wu done via plain_summary; Kelly dropped)
+Roman's decision: store Wu's wulab.io/research/ projects by folding them into his plain_summary +
+trajectory (which render in the digest per the anti-overload "plain summary covers the overview job"
+design — option (b) below, NO new chunk type / UI change). Kelly was DROPPED (excluded), not stored.
+So the design tension below is now moot for this phase; kept for reference if projects ever become a
+first-class rendered section. Original analysis:
 - **Retrieval** (`lib/rag/retrieve.ts`): filters only `embedding IS NOT NULL AND quarantined=false`,
   NO type filter — so a new `type='project'` chunk WOULD be searchable once embedded. Good.
 - **BUT the lab digest** (`app/digest/lab/page.tsx:69`) renders `findings.filter(f => f.type==='paper')`
