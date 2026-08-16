@@ -144,3 +144,25 @@ simply fell outside the batch. Gave them a real shot via their official LJI `lji
   ever wants the LJI profile live too, that's a distinct decision (papers are ready either way).
 
 Corpus FINAL: 445 done / 135 excluded / 0 profile / 14 merged. WAVE-2 PAPER INGEST COMPLETE.
+
+## Final quality audit (2026-08-16) — near-duplicate sweep, corpus-wide
+Ran a Jaccard title-similarity audit across ALL 445 done labs (4858 papers), not just wave-2. Found
+43 near-dup pairs the exact-title dedup missed. Classified + fixed:
+- **29 quarantined** (reversible + 27 added to quarantine_ledger for re-store durability): 26 genuine
+  bioRxiv/medRxiv preprints whose published version is also stored (kept the version of record), 2
+  null-DOI conference abstracts (STEM-20, dup of a stored PNAS paper), 1 "Author Correction:" (Dowdy,
+  dup of the original). 0 labs zeroed out. Spans wave-1 UCSD labs too (Reynolds, Hueschen, Commisso,
+  Sacco, Sung Han, Shaw, Nimmerjahn, Guldner, Pedram, Lander, Engle, Madigan, Aoi, Boddy, Kravets…).
+- **14 pairs REVIEWED and KEPT** (both published, genuinely distinct): HUPO annual reports 2022-2025
+  (Bandeira), Kadonaga's 2 core-promoter papers, Ratrix visual-image-vs-motion, Schmidt carbonyl-vs-
+  imine, Nimmerjahn multiplex-vs-trans-segmental, Ferro-Novick, dvj, Seiple. ONE to eyeball if bored:
+  regenmed/jamieson "Long-term safety and clinical outcomes" (Cell Rep Med 2024) vs "Long-term
+  clinical and safety outcomes" (Stem Cell Rep 2026) — sim 0.89, both published; left in place.
+- **BUG caught in my own classifier:** 10.1101 is Cold Spring Harbor Lab Press — used by bioRxiv AND
+  by CSH *journals* (Genes&Dev = 10.1101/gad., Genome Res = 10.1101/gr.). First pass wrongly flagged
+  Kadonaga's G&D paper as a preprint. Preprint test must be 10.1101/<date> or 10.1101/<pure-number>
+  ONLY. Fixed in the audit AND in extract2.ts isPreprintDoi.
+- **Durable prevention:** extract2.ts assembleLabV2 now has a PREPRINT COLLAPSE pass (title-Jaccard
+  ≥0.6 + exactly-one-is-preprint → drop the preprint) so future gather waves can't reintroduce this.
+  Verified it fires (Sung Han/Reynolds/Commisso) and correctly KEEPS standalone preprints with no
+  published sibling. Tests 44/44.

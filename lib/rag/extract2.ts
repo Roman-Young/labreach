@@ -181,7 +181,12 @@ export function assembleLabV2(g: GatheredLab, bundle: string, p: Record<string, 
   // two DOIs. The QB3 dedup below collapses them (both chunks resolve to whatever sid this map holds),
   // so the surviving citation is whichever wins here. Prefer the version of RECORD — a student should
   // land on the journal article, not the bioRxiv/medRxiv/ChemRxiv/Research-Square preprint.
-  const isPreprintDoi = (s: string | null) => !!s && /^doi:10\.(1101|26434|21203)\//.test(s)
+  // A preprint DOI: bioRxiv/medRxiv (10.1101/<date> or 10.1101/<pure-number>), ChemRxiv (10.26434),
+  // Research Square (10.21203). NOTE 10.1101 is Cold Spring Harbor Lab Press — used by bioRxiv AND by
+  // CSH *journals* (Genes & Dev = 10.1101/gad., Genome Res = 10.1101/gr.). Only the date/numeric form
+  // is a preprint; a journal-abbrev form is a real published paper, so it must NOT match here.
+  const isPreprintDoi = (s: string | null) =>
+    !!s && (/^doi:10\.1101\/(\d{4}\.\d{2}\.\d{2}\.|\d+$)/.test(s) || /^doi:10\.(26434|21203)\//.test(s))
   const titleToSid = new Map<string, string | null>()
   for (const gp of g.papers) {
     const k = normT(gp.title)
@@ -290,7 +295,35 @@ export function assembleLabV2(g: GatheredLab, bundle: string, p: Record<string, 
     }
   }
 
-  const grounded = deduped.filter((c) => {
+  // PREPRINT COLLAPSE — the exact dedup above only catches identical source_ids / normalized titles.
+  // A paper listed as a bioRxiv preprint AND its journal version usually has DIFFERENT DOIs AND a
+  // reworded title ("...in Alzheimer's microglia" → "...in Alzheimer's disease microglia"), so it
+  // slips through and a student sees the same study twice. Collapse a pair of paper chunks whose
+  // titles are ≥0.6 token-Jaccard-similar when EXACTLY ONE is a preprint DOI — drop the preprint,
+  // keep the version of record. Guarded to one-is-preprint so two distinct PUBLISHED papers (annual
+  // reports, related studies) are never merged. (Audit 2026-08-16 found 26 such pairs corpus-wide.)
+  const titleTokens = (s: string | null) =>
+    new Set(normT(s).split(' ').filter((w) => w.length > 2))
+  const jaccard = (a: Set<string>, b: Set<string>) => {
+    if (!a.size || !b.size) return 0
+    let inter = 0
+    for (const x of a) if (b.has(x)) inter++
+    return inter / (a.size + b.size - inter)
+  }
+  const dropIdx = new Set<number>()
+  const paperIdx = deduped.map((c, i) => ({ c, i })).filter((x) => x.c.kind === 'paper')
+  for (let a = 0; a < paperIdx.length; a++) {
+    for (let b = a + 1; b < paperIdx.length; b++) {
+      const A = paperIdx[a], B = paperIdx[b]
+      const aPre = isPreprintDoi(A.c.sourceId), bPre = isPreprintDoi(B.c.sourceId)
+      if (aPre === bPre) continue // both preprint or both not → not this rule
+      if (jaccard(titleTokens(A.c.title), titleTokens(B.c.title)) < 0.6) continue
+      dropIdx.add(aPre ? A.i : B.i) // drop whichever IS the preprint
+    }
+  }
+  const collapsed = dropIdx.size ? deduped.filter((_, i) => !dropIdx.has(i)) : deduped
+
+  const grounded = collapsed.filter((c) => {
     if (!c.anchorQuote) return c.kind !== 'paper'
     const q = normQ(c.anchorQuote)
     if (!haystack.includes(q)) return false
