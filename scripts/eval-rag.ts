@@ -139,10 +139,36 @@ async function makeDraft(): Promise<void> {
   console.log(`\nwrote ${DRAFT} — curate it into ${GOLDEN}`)
 }
 
+// Unbiased corpus lookup for BUILDING the golden set: lexical full-text over the actual paper +
+// overview text (NOT the dense/RRF retrieval path being evaluated), so you can find good labs the
+// eval'd retriever ranked low or missed — the false negatives that make the answer key honest.
+//   npx tsx scripts/eval-rag.ts find "cancer immunotherapy T cell exhaustion"
+async function runFind(terms: string): Promise<void> {
+  const { requireSql } = await import('../lib/db')
+  const sql = requireSql()
+  const rows = asRows(await sql.query(
+    `WITH q AS (
+       SELECT to_tsquery('english', array_to_string(tsvector_to_array(to_tsvector('english', $1)), ' | ')) tsq
+     )
+     SELECT p.lab_url, p.pi_name, p.department,
+            sum(ts_rank_cd(lc.content_tsv, q.tsq)) rank,
+            count(*) hits
+     FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url=lc.lab_url, q
+     WHERE p.status='done' AND lc.quarantined=false AND lc.content_tsv @@ q.tsq
+     GROUP BY p.lab_url, p.pi_name, p.department
+     ORDER BY rank DESC LIMIT 40`,
+    [terms],
+  ))
+  console.log(`\n== labs whose papers/overview mention: "${terms}"  (lexical, retrieval-independent) ==`)
+  for (const r of rows) console.log(`  ${String(r.pi_name ?? '?').slice(0, 26).padEnd(26)} ${String(r.department ?? '').slice(0, 22).padEnd(22)} hits=${String(r.hits).padStart(2)}  ${r.lab_url}`)
+  console.log(`\n(${rows.length} labs — add any genuinely-good ones to that profile's goodLabs, even if they weren't in the draft candidates.)`)
+}
+
 async function main() {
   const mode = process.argv[2]
   const raw = process.argv.includes('--raw')
   if (mode === 'draft') { await makeDraft(); process.exit(0) }
+  if (mode === 'find') { await runFind(process.argv.slice(3).join(' ')); process.exit(0) }
   const results: Array<{ pass: boolean; line: string }> = []
   if (mode === 'attribution' || !mode) results.push(await runAttribution())
   if (mode === 'relevance' || !mode) { const r = await runRelevance(raw); if (r) results.push(r) }
