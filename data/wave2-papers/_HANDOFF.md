@@ -22,14 +22,14 @@ layer (emails/lab_urls/overviews for 216 labs) is DONE and committed.
   overview+email INTACT (surgical store held), every paper has a DOI + verbatim quote, 0 quarantined.
 - **Code change:** `lib/rag/extract2.ts` published-DOI-preference dedup — COMMITTED `5211ca3`.
 - **27 drops APPLIED** (2026-08-16): status='excluded' + chunks quarantined. Reversible.
-- **WAVE-14 DONE** (2026-08-16): re-harvested Roman's 11 links → 7 labs stored (Roberto 18, Yang 18,
-  Lamia 12, MacRae 8, Teyton 4, Schimmel 2, Diercks 2 = 64 papers), embedded, tests 44/44. Ocorr
-  excluded (stale, newest 2020). 3 still fail (Eric Wang/Miller/Wu — JS/Scholar renders, need manual
-  DOI lists). See "Wave-14 re-harvest" in `_health_flags.md`.
-- **Corpus now: 442 done / 132 excluded / 6 profile.** The 6 profile = the 3 failed-harvest labs +
-  Kelly (projects-only) + 2 stragglers — the genuinely-unresolved tail.
-- **Still TODO (needs Roman):** (1) manual DOI lists for Eric Wang / Shannon Miller / Chunlei Wu;
-  (2) DESIGN DECISION for project-page storage (Wu/Kelly) — see below; (3) audit corpus for
+- **WAVE-14 DONE** (2026-08-16): re-harvested Roman's 11 links → **8 labs stored** (Roberto 18, Yang
+  18, Lamia 12, MacRae 8, Wu 9, Teyton 4, Schimmel 2, Diercks 2 = 73 papers), embedded, tests 44/44.
+  Wu recovered via a Scholar-title scrape (title→DOI resolution). Ocorr excluded (stale, newest 2020).
+  2 still fail (Eric Wang/Miller — JS-rendered pubs, need manual DOI lists). See `_health_flags.md`.
+- **Corpus now: 443 done / 132 excluded / 5 profile.** The 5 profile = Eric Wang + Shannon Miller
+  (papers unharvestable) + Kelly (projects-only) + 2 stragglers — the genuinely-unresolved tail.
+- **Still TODO (needs Roman):** (1) manual DOI lists for Eric Wang / Shannon Miller (JS-rendered pub
+  pages); (2) DESIGN DECISION for project-page storage (Wu/Kelly) — see below; (3) audit corpus for
   differently-titled preprint/published near-dups (known dedup limitation).
 - Git HEAD before this phase: `42eae2b`. Institute-profile layer untouched throughout.
 

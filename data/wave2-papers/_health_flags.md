@@ -110,7 +110,11 @@ Re-harvested the 11 manual-flag labs with Roman's direct pub-page links. Results
   labs may harbor similar near-dups (not audited corpus-wide).
 - **EXCLUDED (1):** Karen Ocorr — re-harvest got 27 DOIs off her own page but newest is 2020 (0 within
   5-yr floor). Genuinely stale → status='excluded' + chunk quarantined.
-- **STILL FAILED — need manual DOI lists from Roman (3):** Eric Wang (ewanglab.com — pubs are a JS/
+- **Chunlei Wu — RECOVERED via Scholar-title scrape (stored).** Generic harvester got 0 (Scholar
+  titles aren't quoted); a Scholar-specific extractor pulled 23 recent titles → gather resolved
+  title→DOI + author-gated → 10 verified, 9 stored (BioThings/Translator/outbreak.info knowledge-graph
+  work, heavy Su-lab co-authorship — legit shared papers). 9/9 grounded, embedded, tests 44/44.
+  Wu's wulab.io PROJECTS request is still separate (see handoff project-storage decision).
+- **STILL FAILED — need manual DOI lists from Roman (2):** Eric Wang (ewanglab.com — pubs are a JS/
   widget render, textLen~389, 0 ids even after clicking "2022-present"); Shannon Miller
-  (millerlabresearch.com — pubs not in extractable text); Chunlei Wu (Google Scholar exposes titles
-  but no DOIs). "Fail loud, flag, never guess" — not faked. Wu also has the wulab.io PROJECTS request.
+  (millerlabresearch.com — pubs not in extractable text). "Fail loud, flag, never guess" — not faked.
