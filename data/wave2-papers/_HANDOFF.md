@@ -20,12 +20,35 @@ layer (emails/lab_urls/overviews for 216 labs) is DONE and committed.
   0 orphans (no done lab with 0 papers). Embedded (`ingest.ts embed`): 1007 chunks (~$0.03), HNSW
   index rebuilt, 0 unembedded. **Tests 44/44.** DB health-check on Tian/Wiseman/Sacco/Yip: audited
   overview+email INTACT (surgical store held), every paper has a DOI + verbatim quote, 0 quarantined.
-- **Code change (uncommitted):** `lib/rag/extract2.ts` — published-DOI-preference in the dedup (see
-  "Preprint/published dedup" section). Plus doc updates here + `_health_flags.md`. NOT yet committed.
-- **Still TODO (next session):** (1) apply the 27 drops → status='excluded'; (2) wave-14 re-harvest
-  of the 11 labs with Roman's links; (3) design + build project-page storage (Wu/Kelly); (4) commit
-  the code+docs. See the "Manual-flag list — ROMAN DECIDED" section below.
+- **Code change:** `lib/rag/extract2.ts` published-DOI-preference dedup — COMMITTED `5211ca3`.
+- **27 drops APPLIED** (2026-08-16): status='excluded' + chunks quarantined. Reversible.
+- **WAVE-14 DONE** (2026-08-16): re-harvested Roman's 11 links → 7 labs stored (Roberto 18, Yang 18,
+  Lamia 12, MacRae 8, Teyton 4, Schimmel 2, Diercks 2 = 64 papers), embedded, tests 44/44. Ocorr
+  excluded (stale, newest 2020). 3 still fail (Eric Wang/Miller/Wu — JS/Scholar renders, need manual
+  DOI lists). See "Wave-14 re-harvest" in `_health_flags.md`.
+- **Corpus now: 442 done / 132 excluded / 6 profile.** The 6 profile = the 3 failed-harvest labs +
+  Kelly (projects-only) + 2 stragglers — the genuinely-unresolved tail.
+- **Still TODO (needs Roman):** (1) manual DOI lists for Eric Wang / Shannon Miller / Chunlei Wu;
+  (2) DESIGN DECISION for project-page storage (Wu/Kelly) — see below; (3) audit corpus for
+  differently-titled preprint/published near-dups (known dedup limitation).
 - Git HEAD before this phase: `42eae2b`. Institute-profile layer untouched throughout.
+
+## PROJECT-PAGE STORAGE — blocked on a product decision (Wu / Kelly)
+Roman wants Chunlei Wu's wulab.io project sections + Jeffery Kelly's "ongoing projects" stored as
+"writing material" for students. Investigated the full path; it is NOT a simple ingest add:
+- **Retrieval** (`lib/rag/retrieve.ts`): filters only `embedding IS NOT NULL AND quarantined=false`,
+  NO type filter — so a new `type='project'` chunk WOULD be searchable once embedded. Good.
+- **BUT the lab digest** (`app/digest/lab/page.tsx:69`) renders `findings.filter(f => f.type==='paper')`
+  ONLY — overview/future-direction chunks are deliberately not shown ("the plain summary covers the
+  overview job"). A `type='project'` chunk would be invisible on the lab page without a UI change.
+- **AND paperless labs** (Kelly) can't be status='done' — the DB invariant + policy pushes a
+  zero-paper lab to 'excluded'. So featuring Kelly's projects needs the zero-paper-'done' rule relaxed.
+- **Decision needed from Roman (pick one):** (a) render projects on the digest = new `type='project'`
+  chunk (anchor-quote-grounded like papers) + digest UI change + relax zero-paper invariant for
+  project-bearing labs; or (b) fold project text into `plain_summary`/`trajectory` (renders today, no
+  schema/UI change, but loses per-project structure) — only works for labs that ALSO have papers, so
+  Kelly (0 papers) still can't surface. Recommend (a) if projects are a real product feature, else (b)
+  for Wu (once his papers harvest) and leave Kelly out. NOT built — do not guess the model.
 
 ## Pipeline scripts (all in `scripts/`)
 - `wave2-pub-harvest.mjs` — headless Chrome. Reads `data/wave2-papers/_queue.json`, finds each lab's

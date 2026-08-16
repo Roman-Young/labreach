@@ -89,3 +89,28 @@ Kaufman, pediatric Hogan, and Rao stranger (all fixed at gather time).
 REMAINING KNOWN ISSUE (unchanged, for the store pass): Wiseman lab has 3 preprint/published
 duplicate pairs (AA147, PDIA1 x2, XBP1s/CMT1B) — the largest batch found — reinforcing the
 title-similarity dedup fix already required for Millar/Parker/Sung Han before `wave2-pub-store.ts`.
+
+## Wave-14 re-harvest (2026-08-16) — 7 labs stored, all topic-flags CLEARED (0 contaminants)
+Re-harvested the 11 manual-flag labs with Roman's direct pub-page links. Results:
+- **STORED (7):** Roberto (18, addiction/CeA neuroscience), Xiang-Lei Yang (18, aaRS moonlighting —
+  stored under labUrl scripps.edu/schimmel/about.html), Lamia (12, circadian/cancer/metabolism),
+  MacRae (8, Argonaute/PIWI structural biology), Teyton (4, lipid-antigen autoimmunity), Schimmel
+  (2, aaRS), Diercks (2, directed-evolution protein engineering). Embedded (64 chunks). Tests 44/44.
+- **Topic flags — both VERIFIED CLEAN** (deterministic DOI→author sweep):
+  - Schimmel "sperm small non-coding RNA aging" (doi:10.1038/s44318-025-00687-8): author "paul
+    schimmel" @ Scripps Molecular Medicine — tRNA-fragment work adjacent to his synthetase program. KEEP.
+  - Yang "PANDORA-seq" (doi:10.1038/s41556-021-00652-7): author "xiang lei yang" @ same dept — tRNA-
+    fragment methodology collab. KEEP. (Schimmel & Yang share a lab page; both do tRNA biology.)
+- **Lamia preprint near-dup — MANUALLY DROPPED 1.** ccRCC/BMAL1-HIF2α study listed 3×: published
+  (Nat Commun 2025, doi:10.1038/s41467-025-60904-0) + bioRxiv + Research Square. RS collapsed via
+  exact-title dedup; the bioRxiv "BMAL1-HIF2α heterodimers contribute to ccRCC"
+  (doi:10.1101/2024.06.07.597806) has a DIFFERENT title from the published version, so exact-title
+  dedup (and even the handoff's ≥0.9 rule) missed it — dropped manually (published version present).
+  13→12. **KNOWN LIMITATION:** differently-titled preprint/published pairs are NOT auto-caught; other
+  labs may harbor similar near-dups (not audited corpus-wide).
+- **EXCLUDED (1):** Karen Ocorr — re-harvest got 27 DOIs off her own page but newest is 2020 (0 within
+  5-yr floor). Genuinely stale → status='excluded' + chunk quarantined.
+- **STILL FAILED — need manual DOI lists from Roman (3):** Eric Wang (ewanglab.com — pubs are a JS/
+  widget render, textLen~389, 0 ids even after clicking "2022-present"); Shannon Miller
+  (millerlabresearch.com — pubs not in extractable text); Chunlei Wu (Google Scholar exposes titles
+  but no DOIs). "Fail loud, flag, never guess" — not faked. Wu also has the wulab.io PROJECTS request.
