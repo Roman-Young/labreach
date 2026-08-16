@@ -1,0 +1,1980 @@
+{
+  "_instructions": "For each profile, move the lab_urls that are GENUINELY good matches from `candidates` into `goodLabs` (delete the rest, add any obvious lab I missed). Then save this file as golden-retrieval.json. `candidates` are what current retrieval returns — some are right, some aren't; your judgment is the ground truth.",
+  "profiles": [
+    {
+      "id": "p01",
+      "profile": "Sophomore bioengineering major. Took an immunology course and loved it. Interned in a lab doing flow cytometry on T cells. I want to work on cancer immunotherapy and understanding T cell exhaustion in tumors.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "http://biology.ucsd.edu/labs/goldrath/",
+          "pi": "Ananda Goldrath",
+          "dept": "Molecular Biology",
+          "score": 0.0382
+        },
+        {
+          "lab_url": "http://labs.biology.ucsd.edu/murre/",
+          "pi": "Cornelis Murre",
+          "dept": "Molecular Biology",
+          "score": 0.0332
+        },
+        {
+          "lab_url": "https://pathology.ucsd.edu/research/labs/morris/index.html",
+          "pi": "Gerald Morris",
+          "dept": "Pathology",
+          "score": 0.0317
+        },
+        {
+          "lab_url": "https://chapelinlab.ucsd.edu/",
+          "pi": "Fanny Chapelin",
+          "dept": "Bioengineering",
+          "score": 0.0309
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/schoenberger-lab/",
+          "pi": "Stephen Schoenberger",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0298
+        },
+        {
+          "lab_url": "https://regenmed.ucsd.edu/research/kaufman-lab/index.html",
+          "pi": "Dan S. Kaufman, M.D., Ph.D.",
+          "dept": "Regenerative Medicine",
+          "score": 0.0298
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/vijayanand-lab/",
+          "pi": "Pandurangan Vijayanand",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0288
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/peters-lab/",
+          "pi": "Bjoern Peters",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0285
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/weiskopf-lab/",
+          "pi": "Weiskopf",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0283
+        },
+        {
+          "lab_url": "https://lulab.biosci.ucsd.edu/",
+          "pi": "Li-Fan Lu",
+          "dept": "Molecular Biology",
+          "score": 0.0282
+        },
+        {
+          "lab_url": "https://kaech.salk.edu",
+          "pi": "Susan Kaech, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0277
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/sette-lab/",
+          "pi": "Alessandro Sette",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0252
+        }
+      ]
+    },
+    {
+      "id": "p02",
+      "profile": "Third-year molecular biology student interested in CRISPR gene editing and DNA repair. Did a project on double-strand break repair in yeast. Want a structural or mechanistic genome-stability lab.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "http://www.scripps.edu/wu/",
+          "pi": "Xiaohua Wu, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0496
+        },
+        {
+          "lab_url": "http://www.scripps.edu/boddy/",
+          "pi": "Michael Boddy, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0397
+        },
+        {
+          "lab_url": "https://law.salk.edu",
+          "pi": "Julie Law, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0372
+        },
+        {
+          "lab_url": "https://bierlab.weebly.com/",
+          "pi": "Ethan Bier",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.0362
+        },
+        {
+          "lab_url": "http://biology.ucsd.edu/labs/pillus/",
+          "pi": "Lorraine Pillus",
+          "dept": "Molecular Biology",
+          "score": 0.0356
+        },
+        {
+          "lab_url": "https://haolab.ucsd.edu/",
+          "pi": "Nan Hao",
+          "dept": "Bioinformatics",
+          "score": 0.0348
+        },
+        {
+          "lab_url": "https://kadonagalab.biosci.ucsd.edu/",
+          "pi": "James T. Kadonaga",
+          "dept": "Molecular Biology",
+          "score": 0.0334
+        },
+        {
+          "lab_url": "https://chaimlab.com/",
+          "pi": "Alex Chaim",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.0326
+        },
+        {
+          "lab_url": "https://hamptonlab.biosci.ucsd.edu/",
+          "pi": "Randy Hampton",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.031
+        },
+        {
+          "lab_url": "https://karlseder.salk.edu/",
+          "pi": "Jan Karlseder, PhD",
+          "dept": "Salk Institute",
+          "score": 0.031
+        },
+        {
+          "lab_url": "http://www.scripps.edu/millar/",
+          "pi": "David Millar, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0279
+        },
+        {
+          "lab_url": "https://dongwang.ucsd.edu/",
+          "pi": "Dong Wang",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0277
+        }
+      ]
+    },
+    {
+      "id": "p03",
+      "profile": "Neuroscience major fascinated by how the brain controls behavior. Experience with mouse behavior and optogenetics. Interested in neural circuits for fear, pain, or feeding.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://smithlab.ucsd.edu/",
+          "pi": "Monique Smith",
+          "dept": "Neurobiology",
+          "score": 0.0486
+        },
+        {
+          "lab_url": "https://www.banghartlab.org/",
+          "pi": "Matthew Banghart",
+          "dept": "Neurobiology",
+          "score": 0.0472
+        },
+        {
+          "lab_url": "https://www.salk.edu/scientist/sung-han/",
+          "pi": "Sung Han, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0447
+        },
+        {
+          "lab_url": "https://www.ye-lab.org/",
+          "pi": "Li Ye, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0441
+        },
+        {
+          "lab_url": "https://www.bklimlab.com/home",
+          "pi": "Byungkook Lim",
+          "dept": "Neurobiology",
+          "score": 0.0349
+        },
+        {
+          "lab_url": "https://talmolab.org/",
+          "pi": "Talmo Pereira, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0345
+        },
+        {
+          "lab_url": "https://tyelab.org/",
+          "pi": "Kay Tye, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0322
+        },
+        {
+          "lab_url": "https://www.mikioaoi.com/",
+          "pi": "Mikio Aoi",
+          "dept": "Neurobiology",
+          "score": 0.0321
+        },
+        {
+          "lab_url": "https://www.ran-lab.org/",
+          "pi": "Chen Ran, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0299
+        },
+        {
+          "lab_url": "https://callaway.salk.edu/",
+          "pi": "Edward Callaway, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0271
+        },
+        {
+          "lab_url": "https://lee.salk.edu/",
+          "pi": "Kuo-Fen Lee, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0261
+        },
+        {
+          "lab_url": "https://bayless.salk.edu",
+          "pi": "Daniel Bayless, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0258
+        }
+      ]
+    },
+    {
+      "id": "p04",
+      "profile": "Chemistry student who likes making molecules. Organic synthesis experience. Want to do chemical biology, small-molecule drug discovery, or total synthesis of natural products.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://www.parkerresearch.org/",
+          "pi": "Christopher Parker, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0505
+        },
+        {
+          "lab_url": "https://shenvilab.org/",
+          "pi": "Ryan Shenvi, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0439
+        },
+        {
+          "lab_url": "http://www.scripps.edu/yu/",
+          "pi": "Jin-Quan Yu, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0373
+        },
+        {
+          "lab_url": "https://dawsonlabscripps.wordpress.com/",
+          "pi": "Philip Dawson, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0356
+        },
+        {
+          "lab_url": "https://seiple.scripps.edu/",
+          "pi": "Ian B. Seiple, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0345
+        },
+        {
+          "lab_url": "http://www.scripps.edu/boger/",
+          "pi": "Dale L. Boger, PhD",
+          "dept": "Department of Chemistry and The Skaggs Institute for Chemical Biology",
+          "score": 0.0343
+        },
+        {
+          "lab_url": "https://pharmacy.ucsd.edu/faculty/ferguson",
+          "pi": "Ferguson, Fleur",
+          "dept": "Chemistry & Biochemistry",
+          "score": 0.0316
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/nicholas-cosford-phd/",
+          "pi": "Nicholas Cosford PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.031
+        },
+        {
+          "lab_url": "https://pharmacy.ucsd.edu/faculty/molinski",
+          "pi": "Molinski, Tadeusz",
+          "dept": "Chemistry & Biochemistry",
+          "score": 0.0279
+        },
+        {
+          "lab_url": "https://dorresteinlab.ucsd.edu/",
+          "pi": "Pieter Dorrestein",
+          "dept": "Bioinformatics",
+          "score": 0.0249
+        },
+        {
+          "lab_url": "https://sharpless.scripps.edu/",
+          "pi": "K. Barry Sharpless, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0244
+        },
+        {
+          "lab_url": "https://www.salk.edu/scientist/joseph-noel/",
+          "pi": "Joseph Noel, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0234
+        }
+      ]
+    },
+    {
+      "id": "p05",
+      "profile": "Computer science + biology double major. Strong in Python and machine learning. Want to apply ML/AI to biomedical data, knowledge graphs, or medical imaging.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://sulab.org",
+          "pi": "Andrew Su, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0539
+        },
+        {
+          "lab_url": "https://www.scripps.edu/faculty/topol/",
+          "pi": "Eric Topol, MD",
+          "dept": "Scripps Research",
+          "score": 0.0494
+        },
+        {
+          "lab_url": "https://wulab.io/",
+          "pi": "Chunlei Wu, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0389
+        },
+        {
+          "lab_url": "https://pathology.ucsd.edu/research/labs/stelzer/index.html",
+          "pi": "Ina Stelzer",
+          "dept": "Pathology",
+          "score": 0.0306
+        },
+        {
+          "lab_url": "http://genomes.ucsd.edu/",
+          "pi": "Terry Gaasterland",
+          "dept": "Bioinformatics",
+          "score": 0.028
+        },
+        {
+          "lab_url": "https://genome.ucsd.edu/",
+          "pi": "Shankar Subramaniam",
+          "dept": "Bioengineering",
+          "score": 0.0274
+        },
+        {
+          "lab_url": "https://systemsbiology.ucsd.edu/",
+          "pi": "Bernhard Palsson",
+          "dept": "Bioengineering",
+          "score": 0.0258
+        },
+        {
+          "lab_url": "https://www.chandalab.org",
+          "pi": "Sumit Chanda, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0255
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/alessandro-vasciaveo-phd/",
+          "pi": "Alessandro Vasciaveo PhD",
+          "dept": "computational biology and artificial intelligence",
+          "score": 0.0244
+        },
+        {
+          "lab_url": "https://www.nematilab.info/",
+          "pi": "Shamim Nemati, Ph.D.",
+          "dept": "Biomedical Informatics",
+          "score": 0.0233
+        },
+        {
+          "lab_url": "https://profiles.ucsd.edu/jejo.koola",
+          "pi": "Jejo David Koola, M.D., M.S.",
+          "dept": "Biomedical Informatics",
+          "score": 0.022
+        },
+        {
+          "lab_url": "https://neurotheory.ucsd.edu/home",
+          "pi": "Marcus Benna",
+          "dept": "Neurobiology",
+          "score": 0.0209
+        }
+      ]
+    },
+    {
+      "id": "p06",
+      "profile": "Interested in structural biology. Took biochemistry, did a cryo-EM rotation imaging a membrane protein. Want to study protein structure of channels, transporters, or molecular machines.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://herziklab.com/",
+          "pi": "Herzik, Mark",
+          "dept": "Chemistry & Biochemistry",
+          "score": 0.0422
+        },
+        {
+          "lab_url": "https://www.bethel-lab.org/",
+          "pi": "Neville Bethel",
+          "dept": "Bioinformatics",
+          "score": 0.0388
+        },
+        {
+          "lab_url": "https://mmravic314.github.io/",
+          "pi": "Marco Mravic, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0386
+        },
+        {
+          "lab_url": "https://sites.google.com/view/hibbslab/home?authuser=0",
+          "pi": "Ryan Hibbs, Ph.D.",
+          "dept": "Pharmacology",
+          "score": 0.0365
+        },
+        {
+          "lab_url": "https://lander-lab.com/",
+          "pi": "Gabriel Lander, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0361
+        },
+        {
+          "lab_url": "http://villalab.ucsd.edu/",
+          "pi": "Elizabeth Villa",
+          "dept": "Molecular Biology",
+          "score": 0.0358
+        },
+        {
+          "lab_url": "https://www.jzhaolab.com/",
+          "pi": "Jianhua Zhao PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0344
+        },
+        {
+          "lab_url": "https://pharmacy.ucsd.edu/faculty/chang",
+          "pi": "Geoffrey Chang, Ph.D.",
+          "dept": "Pharmacology",
+          "score": 0.0327
+        },
+        {
+          "lab_url": "https://lyumkis.salk.edu/",
+          "pi": "Dmitry Lyumkis, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0324
+        },
+        {
+          "lab_url": "https://labs.biology.ucsd.edu/schroeder/",
+          "pi": "Julian Schroeder",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.0306
+        },
+        {
+          "lab_url": "https://ward.scripps.edu/",
+          "pi": "Andrew Ward, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0273
+        },
+        {
+          "lab_url": "https://kendrick.salk.edu",
+          "pi": "Agnieszka Kendrick, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0263
+        }
+      ]
+    },
+    {
+      "id": "p07",
+      "profile": "Pre-med student interested in aging and why we get age-related diseases. Curious about the biology of longevity, senescence, and epigenetic reprogramming.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://haolab.ucsd.edu/",
+          "pi": "Nan Hao",
+          "dept": "Bioinformatics",
+          "score": 0.0493
+        },
+        {
+          "lab_url": "http://www.padamslab.org/",
+          "pi": "Peter D. Adams PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.048
+        },
+        {
+          "lab_url": "http://biology.ucsd.edu/labs/pillus/",
+          "pi": "Lorraine Pillus",
+          "dept": "Molecular Biology",
+          "score": 0.0468
+        },
+        {
+          "lab_url": "https://www.xiaotianlab.org/",
+          "pi": "Xiao Tian PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0467
+        },
+        {
+          "lab_url": "https://sites.google.com/view/kumstalab/home",
+          "pi": "Caroline Kumsta PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0437
+        },
+        {
+          "lab_url": "http://www.scripps.edu/petrascheck/",
+          "pi": "Michael Petrascheck, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0433
+        },
+        {
+          "lab_url": "https://www.salk.edu/scientist/pamela-maher/",
+          "pi": "Pamela Maher, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0365
+        },
+        {
+          "lab_url": "https://sharpee.salk.edu/",
+          "pi": "Tatyana Sharpee, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0332
+        },
+        {
+          "lab_url": "https://biodynamics.ucsd.edu/",
+          "pi": "Jeff Hasty",
+          "dept": "Bioinformatics",
+          "score": 0.0325
+        },
+        {
+          "lab_url": "https://shadel.salk.edu",
+          "pi": "Gerald Shadel, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0297
+        },
+        {
+          "lab_url": "https://www.salk.edu/scientist/ian-guldner/",
+          "pi": "Ian Guldner, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0291
+        },
+        {
+          "lab_url": "https://pasquinellilab.biosci.ucsd.edu/",
+          "pi": "Amy Pasquinelli",
+          "dept": "Molecular Biology",
+          "score": 0.0269
+        }
+      ]
+    },
+    {
+      "id": "p08",
+      "profile": "Microbiology major interested in the gut microbiome, host-microbe interactions, and antibiotic resistance. Did bench work culturing bacteria.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "http://www.thepridelaboratory.org/",
+          "pi": "David Pride",
+          "dept": "Pathology",
+          "score": 0.0526
+        },
+        {
+          "lab_url": "https://jackrellab.biosci.ucsd.edu/",
+          "pi": "Sara Jackrel",
+          "dept": "Ecology, Behavior & Evolution",
+          "score": 0.0492
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/andrei-osterman-phd/",
+          "pi": "Andrei Osterman PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0475
+        },
+        {
+          "lab_url": "https://kitpogliano.ucsd.edu/",
+          "pi": "Kit Pogliano",
+          "dept": "Molecular Biology",
+          "score": 0.0417
+        },
+        {
+          "lab_url": "https://saghatelian.salk.edu/",
+          "pi": "Alan Saghatelian, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0392
+        },
+        {
+          "lab_url": "https://biodynamics.ucsd.edu/",
+          "pi": "Jeff Hasty",
+          "dept": "Bioinformatics",
+          "score": 0.0378
+        },
+        {
+          "lab_url": "https://rennisonlab.com/",
+          "pi": "Diana Rennison",
+          "dept": "Ecology, Behavior & Evolution",
+          "score": 0.0354
+        },
+        {
+          "lab_url": "https://chulab.ucsd.edu/",
+          "pi": "Hiutung Chu",
+          "dept": "Bioinformatics",
+          "score": 0.0354
+        },
+        {
+          "lab_url": "https://www.gonzalezlab.org/",
+          "pi": "David J. Gonzalez, Ph.D.",
+          "dept": "Pharmacology",
+          "score": 0.0336
+        },
+        {
+          "lab_url": "http://labs.biology.ucsd.edu/meyer",
+          "pi": "Justin Meyer",
+          "dept": "Ecology, Behavior & Evolution",
+          "score": 0.0302
+        },
+        {
+          "lab_url": "https://www.scripps.edu/faculty/torkamani/",
+          "pi": "Ali Torkamani, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0292
+        },
+        {
+          "lab_url": "https://fraley.ucsd.edu/",
+          "pi": "Stephanie Fraley",
+          "dept": "Bioengineering",
+          "score": 0.0277
+        }
+      ]
+    },
+    {
+      "id": "p09",
+      "profile": "Immunology-focused student interested in vaccines and antibodies. Want to work on how the immune system makes broadly neutralizing antibodies against HIV, flu, or coronaviruses.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://burton.scripps.edu/",
+          "pi": "Dennis Burton, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0542
+        },
+        {
+          "lab_url": "https://brineylab.com/",
+          "pi": "Bryan Briney, PhD",
+          "dept": "Scripps Research",
+          "score": 0.049
+        },
+        {
+          "lab_url": "https://wilson.scripps.edu/",
+          "pi": "Ian Wilson, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0462
+        },
+        {
+          "lab_url": "https://ward.scripps.edu/",
+          "pi": "Andrew Ward, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0437
+        },
+        {
+          "lab_url": "https://irvine.scripps.edu/",
+          "pi": "Darrell Irvine, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0426
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/crotty-lab/",
+          "pi": "Shane Crotty",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0418
+        },
+        {
+          "lab_url": "https://law.scripps.edu/",
+          "pi": "Mansun Law, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0376
+        },
+        {
+          "lab_url": "https://www.scripps.edu/faculty/schief/",
+          "pi": "William Schief, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0376
+        },
+        {
+          "lab_url": "https://www.jiangzhulab.org/",
+          "pi": "Jiang Zhu, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0328
+        },
+        {
+          "lab_url": "https://taleinav.github.io/index.html",
+          "pi": "Tal Einav",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0321
+        },
+        {
+          "lab_url": "https://www.decarvalholab.com",
+          "pi": "Renan V.H. de Carvalho, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0319
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/rad-lab/",
+          "pi": "Rad",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0317
+        }
+      ]
+    },
+    {
+      "id": "p10",
+      "profile": "Interested in cancer metabolism — how tumors rewire their metabolism to grow. Took a cell biology course, some wet-lab experience with cell culture.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/kevin-tharp-phd/",
+          "pi": "Kevin Tharp PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0419
+        },
+        {
+          "lab_url": "https://pathology.ucsd.edu/research/labs/wettersten/index.html",
+          "pi": "Hiromi Wettersten",
+          "dept": "Pathology",
+          "score": 0.0376
+        },
+        {
+          "lab_url": "https://www.commissolab.com/",
+          "pi": "Cosimo Commisso PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0361
+        },
+        {
+          "lab_url": "https://pathology.ucsd.edu/research/labs/cheresh/index.html",
+          "pi": "David Cheresh",
+          "dept": "Pathology",
+          "score": 0.0318
+        },
+        {
+          "lab_url": "https://regenmed.ucsd.edu/research/kaufman-lab/index.html",
+          "pi": "Dan S. Kaufman, M.D., Ph.D.",
+          "dept": "Regenerative Medicine",
+          "score": 0.0283
+        },
+        {
+          "lab_url": "https://shaw.salk.edu/",
+          "pi": "Reuben Shaw, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0283
+        },
+        {
+          "lab_url": "https://towers.salk.edu",
+          "pi": "Christina Towers, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0275
+        },
+        {
+          "lab_url": "https://www.willertlab.org/",
+          "pi": "Karl Willert",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0258
+        },
+        {
+          "lab_url": "https://www.emerlinglab.com/",
+          "pi": "Brooke Emerling PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0253
+        },
+        {
+          "lab_url": "https://metallo.salk.edu",
+          "pi": "Christian Metallo, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0229
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/sanju-sinha-phd/",
+          "pi": "Sanju Sinha PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0221
+        },
+        {
+          "lab_url": "https://moorescancercenter.ucsd.edu/about/centers-and-labs/howell-lab/index.html",
+          "pi": "Stephen Howell, M.D.",
+          "dept": "Hematology-Oncology",
+          "score": 0.0219
+        }
+      ]
+    },
+    {
+      "id": "p11",
+      "profile": "Stem cell biology and regenerative medicine. Want to understand how tissues like muscle or heart repair themselves and how stem cells could treat disease.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/alessandra-sacco-phd/",
+          "pi": "Alessandra Sacco PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0446
+        },
+        {
+          "lab_url": "https://www.willwanglab.com/",
+          "pi": "Yu Xin (Will) Wang PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0408
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/pier-lorenzo-puri-md/",
+          "pi": "Pier Lorenzo Puri MD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.035
+        },
+        {
+          "lab_url": "https://regenmed.ucsd.edu/research/kaufman-lab/index.html",
+          "pi": "Dan S. Kaufman, M.D., Ph.D.",
+          "dept": "Regenerative Medicine",
+          "score": 0.0297
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/evan-snyder-md-phd/",
+          "pi": "Evan Snyder MD, PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0294
+        },
+        {
+          "lab_url": "https://blum.salk.edu/",
+          "pi": "Jamie Blum, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0275
+        },
+        {
+          "lab_url": "http://ecm.ucsd.edu/",
+          "pi": "Adam Engler",
+          "dept": "Bioengineering",
+          "score": 0.0272
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/ahmed-mahmoud-phd/",
+          "pi": "Ahmed Mahmoud PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0267
+        },
+        {
+          "lab_url": "https://dermatology.ucsd.edu/research/basic-science/sen-lab/index.html",
+          "pi": "George Sen",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0249
+        },
+        {
+          "lab_url": "https://yeolab.github.io/gene-yeo/",
+          "pi": "Eugene Yeo",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0239
+        },
+        {
+          "lab_url": "http://signerlab.com/",
+          "pi": "Robert A. J. Signer, Ph.D.",
+          "dept": "Regenerative Medicine",
+          "score": 0.0235
+        },
+        {
+          "lab_url": "https://lulab.biosci.ucsd.edu/",
+          "pi": "Li-Fan Lu",
+          "dept": "Molecular Biology",
+          "score": 0.0232
+        }
+      ]
+    },
+    {
+      "id": "p12",
+      "profile": "Biophysics-leaning physics major. Like modeling and quantitative approaches to biology — protein folding, molecular dynamics, or theory of cellular systems.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://mmravic314.github.io/",
+          "pi": "Marco Mravic, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0357
+        },
+        {
+          "lab_url": "http://galileo.ucsd.edu/index.html",
+          "pi": "Kim, Judy",
+          "dept": "Chemistry & Biochemistry",
+          "score": 0.0355
+        },
+        {
+          "lab_url": "http://www.scripps.edu/deniz/",
+          "pi": "Ashok Deniz, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0351
+        },
+        {
+          "lab_url": "https://gilson.cloud.ucsd.edu/",
+          "pi": "Michael K. Gilson",
+          "dept": "Bioinformatics",
+          "score": 0.0308
+        },
+        {
+          "lab_url": "https://www.scripps.edu/faculty/kern/",
+          "pi": "Dorothee Kern, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0282
+        },
+        {
+          "lab_url": "https://rangamani.ucsd.edu/",
+          "pi": "Padmini Rangamani, Ph.D.",
+          "dept": "Pharmacology",
+          "score": 0.0278
+        },
+        {
+          "lab_url": "https://ccom.ucsd.edu/~mholst/research/",
+          "pi": "Michael Holst",
+          "dept": "Bioinformatics",
+          "score": 0.0275
+        },
+        {
+          "lab_url": "https://www.bethel-lab.org/",
+          "pi": "Neville Bethel",
+          "dept": "Bioinformatics",
+          "score": 0.0264
+        },
+        {
+          "lab_url": "https://kosurilab.com/",
+          "pi": "Pallav Kosuri, PhD",
+          "dept": "Salk Institute",
+          "score": 0.026
+        },
+        {
+          "lab_url": "https://debelouchinalab.ucsd.edu/",
+          "pi": "Debelouchina, Galia",
+          "dept": "Chemistry & Biochemistry",
+          "score": 0.0253
+        },
+        {
+          "lab_url": "https://wodarzlab.biosci.ucsd.edu/",
+          "pi": "Dominik Wodarz",
+          "dept": "Ecology, Behavior & Evolution",
+          "score": 0.0228
+        },
+        {
+          "lab_url": "https://komiveslab.ucsd.edu/",
+          "pi": "Elizabeth Komives",
+          "dept": "Chemistry & Biochemistry",
+          "score": 0.0227
+        }
+      ]
+    },
+    {
+      "id": "p13",
+      "profile": "Interested in diabetes and metabolic disease. Curious about insulin, beta cells, ER stress, and how the body regulates blood sugar and fat.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/randal-j-kaufman-phd/",
+          "pi": "Randal J. Kaufman PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0522
+        },
+        {
+          "lab_url": "https://niwalab.biosci.ucsd.edu/",
+          "pi": "Maho Niwa Rosen",
+          "dept": "Molecular Biology",
+          "score": 0.0497
+        },
+        {
+          "lab_url": "https://www.gaultonlab.org/",
+          "pi": "Kyle Gaulton",
+          "dept": "Bioinformatics",
+          "score": 0.0388
+        },
+        {
+          "lab_url": "https://systemsbio.ucsd.edu/",
+          "pi": "Sheng Zhong",
+          "dept": "Bioengineering",
+          "score": 0.0325
+        },
+        {
+          "lab_url": "https://kravetslab.ucsd.edu/",
+          "pi": "Vira Kravets",
+          "dept": "Bioengineering",
+          "score": 0.0316
+        },
+        {
+          "lab_url": "https://www.webalchlab.com/",
+          "pi": "William Balch, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0313
+        },
+        {
+          "lab_url": "https://cmm.ucsd.edu/research/labs/ferro-novick/index.html",
+          "pi": "Susan Ferro-Novick",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.029
+        },
+        {
+          "lab_url": "https://regenmed.ucsd.edu/research/kaufman-lab/index.html",
+          "pi": "Dan S. Kaufman, M.D., Ph.D.",
+          "dept": "Regenerative Medicine",
+          "score": 0.0286
+        },
+        {
+          "lab_url": "https://lulab.biosci.ucsd.edu/",
+          "pi": "Li-Fan Lu",
+          "dept": "Molecular Biology",
+          "score": 0.0259
+        },
+        {
+          "lab_url": "https://peptide-communication.github.io/",
+          "pi": "Ilia Droujinine, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0255
+        },
+        {
+          "lab_url": "https://evans.salk.edu",
+          "pi": "Ronald M. Evans",
+          "dept": "Bioinformatics",
+          "score": 0.0254
+        },
+        {
+          "lab_url": "http://biology.ucsd.edu/labs/goldrath/",
+          "pi": "Ananda Goldrath",
+          "dept": "Molecular Biology",
+          "score": 0.0238
+        }
+      ]
+    },
+    {
+      "id": "p14",
+      "profile": "Developmental biology student. Interested in how a single cell becomes an organism — single-cell RNA sequencing, cell fate, and gene regulation during development.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://yeolab.github.io/gene-yeo/",
+          "pi": "Eugene Yeo",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0409
+        },
+        {
+          "lab_url": "http://labs.biology.ucsd.edu/murre/",
+          "pi": "Cornelis Murre",
+          "dept": "Molecular Biology",
+          "score": 0.0402
+        },
+        {
+          "lab_url": "https://cookandersenlaboratory.com/",
+          "pi": "Heidi Cook-Andersen",
+          "dept": "Bioinformatics",
+          "score": 0.0346
+        },
+        {
+          "lab_url": "https://www.gaultonlab.org/",
+          "pi": "Kyle Gaulton",
+          "dept": "Bioinformatics",
+          "score": 0.0326
+        },
+        {
+          "lab_url": "https://systemsbio.ucsd.edu/",
+          "pi": "Sheng Zhong",
+          "dept": "Bioengineering",
+          "score": 0.0319
+        },
+        {
+          "lab_url": "https://b.bintulab.com/",
+          "pi": "Bogdan Bintu",
+          "dept": "Bioinformatics",
+          "score": 0.0286
+        },
+        {
+          "lab_url": "https://obgyn.ucsd.edu/research/labs/fisch/index.html",
+          "pi": "Kathleen Fisch",
+          "dept": "Bioinformatics",
+          "score": 0.0283
+        },
+        {
+          "lab_url": "http://homer.ucsd.edu/BennerLab/",
+          "pi": "Christopher Benner",
+          "dept": "Bioinformatics",
+          "score": 0.0283
+        },
+        {
+          "lab_url": "https://ecker.salk.edu/",
+          "pi": "Joseph Ecker",
+          "dept": "Bioinformatics",
+          "score": 0.0263
+        },
+        {
+          "lab_url": "http://www.biology.ucsd.edu/labs/lykkeandersen/",
+          "pi": "Jens Lykke-Andersen",
+          "dept": "Molecular Biology",
+          "score": 0.0258
+        },
+        {
+          "lab_url": "http://www.biology.ucsd.edu/labs/rifkin/index.html",
+          "pi": "Scott Rifkin",
+          "dept": "Ecology, Behavior & Evolution",
+          "score": 0.0257
+        },
+        {
+          "lab_url": "https://mali.ucsd.edu/index.html",
+          "pi": "Prashant Mali",
+          "dept": "Bioengineering",
+          "score": 0.0256
+        }
+      ]
+    },
+    {
+      "id": "p15",
+      "profile": "Interested in RNA biology — how RNA is processed, small RNAs, and RNA-based therapeutics. Some experience with molecular cloning.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "http://www.biology.ucsd.edu/labs/lykkeandersen/",
+          "pi": "Jens Lykke-Andersen",
+          "dept": "Molecular Biology",
+          "score": 0.0535
+        },
+        {
+          "lab_url": "https://yeolab.github.io/gene-yeo/",
+          "pi": "Eugene Yeo",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0525
+        },
+        {
+          "lab_url": "https://mali.ucsd.edu/index.html",
+          "pi": "Prashant Mali",
+          "dept": "Bioengineering",
+          "score": 0.0462
+        },
+        {
+          "lab_url": "https://kenrna.com/index.html",
+          "pi": "Megan Ken, MD, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0432
+        },
+        {
+          "lab_url": "https://www.macraelab.org/",
+          "pi": "Ian MacRae, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0404
+        },
+        {
+          "lab_url": "https://www.mchughlab.com/",
+          "pi": "McHugh, Colleen",
+          "dept": "Chemistry & Biochemistry",
+          "score": 0.0378
+        },
+        {
+          "lab_url": "https://www.scripps.edu/schimmel/about.html",
+          "pi": "Xiang-Lei Yang, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0362
+        },
+        {
+          "lab_url": "https://systemsbio.ucsd.edu/",
+          "pi": "Sheng Zhong",
+          "dept": "Bioengineering",
+          "score": 0.0358
+        },
+        {
+          "lab_url": "https://komorlab.ucsd.edu/",
+          "pi": "Komor, Alexis",
+          "dept": "Chemistry & Biochemistry",
+          "score": 0.0294
+        },
+        {
+          "lab_url": "https://chaimlab.com/",
+          "pi": "Alex Chaim",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.0283
+        },
+        {
+          "lab_url": "https://dowdylab.ucsd.edu/",
+          "pi": "Steven Dowdy",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0279
+        },
+        {
+          "lab_url": "https://pfaff.salk.edu/",
+          "pi": "Samuel Pfaff, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0227
+        }
+      ]
+    },
+    {
+      "id": "p16",
+      "profile": "Neuroscience student interested in addiction and the brain — alcohol, opioids, stress circuits, and the amygdala. Did rodent behavior work.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "http://www.scripps.edu/roberto/",
+          "pi": "Marisa Roberto, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0513
+        },
+        {
+          "lab_url": "https://www.banghartlab.org/",
+          "pi": "Matthew Banghart",
+          "dept": "Neurobiology",
+          "score": 0.0404
+        },
+        {
+          "lab_url": "https://www.bklimlab.com/home",
+          "pi": "Byungkook Lim",
+          "dept": "Neurobiology",
+          "score": 0.0392
+        },
+        {
+          "lab_url": "https://smithlab.ucsd.edu/",
+          "pi": "Monique Smith",
+          "dept": "Neurobiology",
+          "score": 0.0388
+        },
+        {
+          "lab_url": "http://www.scripps.edu/zorrilla",
+          "pi": "Eric Zorrilla, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0385
+        },
+        {
+          "lab_url": "https://www.scripps.edu/faculty/contet/",
+          "pi": "Candice Contet, PhD",
+          "dept": "Department of Translational Medicine",
+          "score": 0.0285
+        },
+        {
+          "lab_url": "https://www.salk.edu/scientist/sung-han/",
+          "pi": "Sung Han, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0251
+        },
+        {
+          "lab_url": "https://tyelab.org/",
+          "pi": "Kay Tye, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0239
+        },
+        {
+          "lab_url": "https://neurotheory.ucsd.edu/home",
+          "pi": "Marcus Benna",
+          "dept": "Neurobiology",
+          "score": 0.0238
+        },
+        {
+          "lab_url": "https://mcvicker.salk.edu/",
+          "pi": "Graham McVicker",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0228
+        },
+        {
+          "lab_url": "https://www.mikioaoi.com/",
+          "pi": "Mikio Aoi",
+          "dept": "Neurobiology",
+          "score": 0.0222
+        },
+        {
+          "lab_url": "https://talmolab.org/",
+          "pi": "Talmo Pereira, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0221
+        }
+      ]
+    },
+    {
+      "id": "p17",
+      "profile": "Interested in circadian rhythms and sleep, and how the body clock connects to metabolism and cancer. Some data-analysis experience.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://klamia.wixsite.com/website",
+          "pi": "Katja Lamia, PhD",
+          "dept": "Scripps Research",
+          "score": 0.058
+        },
+        {
+          "lab_url": "https://smarr.ucsd.edu/",
+          "pi": "Benjamin Smarr",
+          "dept": "Bioengineering",
+          "score": 0.05
+        },
+        {
+          "lab_url": "https://prunedapazlab.biosci.ucsd.edu/",
+          "pi": "Jose Pruneda-Paz",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.0457
+        },
+        {
+          "lab_url": "https://www.joinerlab.com/index.html",
+          "pi": "William J. Joiner, Ph.D.",
+          "dept": "Pharmacology",
+          "score": 0.0413
+        },
+        {
+          "lab_url": "https://chavezlab.org/",
+          "pi": "Lukas Chavez",
+          "dept": "Bioinformatics",
+          "score": 0.0291
+        },
+        {
+          "lab_url": "http://www.biology.ucsd.edu/labs/rifkin/index.html",
+          "pi": "Scott Rifkin",
+          "dept": "Ecology, Behavior & Evolution",
+          "score": 0.0232
+        },
+        {
+          "lab_url": "https://cseweb.ucsd.edu/~nbandeir/",
+          "pi": "Nuno Bandeira",
+          "dept": "Bioinformatics",
+          "score": 0.0224
+        },
+        {
+          "lab_url": "https://www.hogarth.org/",
+          "pi": "Michael Hogarth",
+          "dept": "Bioinformatics",
+          "score": 0.0223
+        },
+        {
+          "lab_url": "https://peptide-communication.github.io/",
+          "pi": "Ilia Droujinine, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0222
+        },
+        {
+          "lab_url": "https://pathology.ucsd.edu/research/labs/wettersten/index.html",
+          "pi": "Hiromi Wettersten",
+          "dept": "Pathology",
+          "score": 0.0207
+        },
+        {
+          "lab_url": "https://pathology.ucsd.edu/research/labs/cheresh/index.html",
+          "pi": "David Cheresh",
+          "dept": "Pathology",
+          "score": 0.0201
+        },
+        {
+          "lab_url": "https://greenspanlab.ucsd.edu/",
+          "pi": "Ralph Greenspan",
+          "dept": "Neurobiology",
+          "score": 0.02
+        }
+      ]
+    },
+    {
+      "id": "p18",
+      "profile": "Cell biologist interested in how cells eat and recycle — autophagy, macropinocytosis, membrane trafficking, and the lysosome.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://labs.biology.ucsd.edu/kiger/",
+          "pi": "Amy Kiger",
+          "dept": "Bioinformatics",
+          "score": 0.0556
+        },
+        {
+          "lab_url": "https://cmm.ucsd.edu/research/labs/ferro-novick/index.html",
+          "pi": "Susan Ferro-Novick",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0489
+        },
+        {
+          "lab_url": "https://gustafssonlabucsd.org/",
+          "pi": "Åsa Gustafsson, Ph.D.",
+          "dept": "Pharmacology",
+          "score": 0.041
+        },
+        {
+          "lab_url": "https://towers.salk.edu",
+          "pi": "Christina Towers, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0394
+        },
+        {
+          "lab_url": "https://www.scripps.edu/faculty/catz/",
+          "pi": "Sergio Catz, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0377
+        },
+        {
+          "lab_url": "https://sites.google.com/view/kumstalab/home",
+          "pi": "Caroline Kumsta PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0346
+        },
+        {
+          "lab_url": "https://haolab.ucsd.edu/",
+          "pi": "Nan Hao",
+          "dept": "Bioinformatics",
+          "score": 0.0322
+        },
+        {
+          "lab_url": "https://bloodgoodlab.biosci.ucsd.edu/",
+          "pi": "Brenda Bloodgood",
+          "dept": "Neurobiology",
+          "score": 0.0315
+        },
+        {
+          "lab_url": "https://budinlab.com/people/",
+          "pi": "Budin, Itay",
+          "dept": "Chemistry & Biochemistry",
+          "score": 0.0284
+        },
+        {
+          "lab_url": "https://shi.eng.ucsd.edu/",
+          "pi": "Lingyan Shi",
+          "dept": "Bioengineering",
+          "score": 0.0274
+        },
+        {
+          "lab_url": "https://grotjahnlab.org/",
+          "pi": "Danielle Grotjahn, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0237
+        },
+        {
+          "lab_url": "https://www.commissolab.com/",
+          "pi": "Cosimo Commisso PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0234
+        }
+      ]
+    },
+    {
+      "id": "p19",
+      "profile": "Interested in structural virology — how viruses like Lassa, measles, or SARS-CoV-2 enter cells, and using that for vaccine design.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://cmm.ucsd.edu/research/labs/esko/index.html",
+          "pi": "Jeffrey Esko",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0468
+        },
+        {
+          "lab_url": "https://brineylab.com/",
+          "pi": "Bryan Briney, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0403
+        },
+        {
+          "lab_url": "https://www.chandalab.org",
+          "pi": "Sumit Chanda, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0382
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/saphire-lab/",
+          "pi": "Erica Ollmann Saphire",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0381
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/hastie-lab/",
+          "pi": "Kathryn Hastie",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0374
+        },
+        {
+          "lab_url": "https://ranalab.ucsd.edu/",
+          "pi": "Tariq Rana",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0372
+        },
+        {
+          "lab_url": "https://amarolab.ucsd.edu/",
+          "pi": "Rommie Amaro",
+          "dept": "Molecular Biology",
+          "score": 0.0368
+        },
+        {
+          "lab_url": "https://burton.scripps.edu/",
+          "pi": "Dennis Burton, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0358
+        },
+        {
+          "lab_url": "https://godulalab.ucsd.edu/",
+          "pi": "Godula, Kamil",
+          "dept": "Chemistry & Biochemistry",
+          "score": 0.0313
+        },
+        {
+          "lab_url": "http://homer.ucsd.edu/CarlinLab/index.html",
+          "pi": "Aaron Carlin",
+          "dept": "Pathology",
+          "score": 0.0297
+        },
+        {
+          "lab_url": "https://wilson.scripps.edu/",
+          "pi": "Ian Wilson, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0294
+        },
+        {
+          "lab_url": "https://cmm.ucsd.edu/research/labs/ghosh/index.html",
+          "pi": "Pradipta Ghosh",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0288
+        }
+      ]
+    },
+    {
+      "id": "p20",
+      "profile": "Cardiac / heart student. Interested in heart development, arrhythmia, cardiomyocyte regeneration, and models of heart disease.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://zfin.org/ZDB-LAB-000412-2",
+          "pi": "Deborah Yelon",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.0587
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/alexandre-colas-phd/",
+          "pi": "Alexandre Colas PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0585
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/ahmed-mahmoud-phd/",
+          "pi": "Ahmed Mahmoud PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0499
+        },
+        {
+          "lab_url": "http://www.bodmerlab.org/",
+          "pi": "Rolf Bodmer",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0488
+        },
+        {
+          "lab_url": "http://ecm.ucsd.edu/",
+          "pi": "Adam Engler",
+          "dept": "Bioengineering",
+          "score": 0.043
+        },
+        {
+          "lab_url": "https://www.ranadelab.org",
+          "pi": "Sanjeev S. Ranade PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0421
+        },
+        {
+          "lab_url": "https://cmrg.ucsd.edu/people/andrew-d-mcculloch-ph-d/",
+          "pi": "Andrew McCulloch",
+          "dept": "Bioengineering",
+          "score": 0.0298
+        },
+        {
+          "lab_url": "http://frazer.ucsd.edu/",
+          "pi": "Kelly Frazer",
+          "dept": "Bioinformatics",
+          "score": 0.0283
+        },
+        {
+          "lab_url": "https://ccom.ucsd.edu/~mholst/research/",
+          "pi": "Michael Holst",
+          "dept": "Bioinformatics",
+          "score": 0.0282
+        },
+        {
+          "lab_url": "https://rangamani.ucsd.edu/",
+          "pi": "Padmini Rangamani, Ph.D.",
+          "dept": "Pharmacology",
+          "score": 0.0281
+        },
+        {
+          "lab_url": "https://gustafssonlabucsd.org/",
+          "pi": "Åsa Gustafsson, Ph.D.",
+          "dept": "Pharmacology",
+          "score": 0.028
+        },
+        {
+          "lab_url": "https://farleylab.com/",
+          "pi": "Emma Farley",
+          "dept": "Bioinformatics",
+          "score": 0.0213
+        }
+      ]
+    },
+    {
+      "id": "p21",
+      "profile": "Interested in the integrated stress response and proteostasis — how cells cope with misfolded proteins and how that goes wrong in neurodegeneration.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://ebennettlab.com/",
+          "pi": "Eric Bennett",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.0483
+        },
+        {
+          "lab_url": "http://signerlab.com/",
+          "pi": "Robert A. J. Signer, Ph.D.",
+          "dept": "Regenerative Medicine",
+          "score": 0.0458
+        },
+        {
+          "lab_url": "https://wiseman.scripps.edu/",
+          "pi": "R. Luke Wiseman, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0422
+        },
+        {
+          "lab_url": "https://niwalab.biosci.ucsd.edu/",
+          "pi": "Maho Niwa Rosen",
+          "dept": "Molecular Biology",
+          "score": 0.037
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/randal-j-kaufman-phd/",
+          "pi": "Randal J. Kaufman PhD",
+          "dept": "Sanford Burnham Prebys",
+          "score": 0.0352
+        },
+        {
+          "lab_url": "https://cmm.ucsd.edu/research/labs/ferro-novick/index.html",
+          "pi": "Susan Ferro-Novick",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0322
+        },
+        {
+          "lab_url": "https://yeolab.github.io/gene-yeo/",
+          "pi": "Eugene Yeo",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0312
+        },
+        {
+          "lab_url": "https://www.sonyaneallab.com/",
+          "pi": "Sonya Neal",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.0303
+        },
+        {
+          "lab_url": "https://hamptonlab.biosci.ucsd.edu/",
+          "pi": "Randy Hampton",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.0295
+        },
+        {
+          "lab_url": "https://www.willertlab.org/",
+          "pi": "Karl Willert",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0268
+        },
+        {
+          "lab_url": "https://ackermanlab.com/",
+          "pi": "Susan Ackerman",
+          "dept": "Neurobiology",
+          "score": 0.0264
+        },
+        {
+          "lab_url": "https://regenmed.ucsd.edu/research/kaufman-lab/index.html",
+          "pi": "Dan S. Kaufman, M.D., Ph.D.",
+          "dept": "Regenerative Medicine",
+          "score": 0.0248
+        }
+      ]
+    },
+    {
+      "id": "p22",
+      "profile": "Bioinformatics student who wants to build tools and databases for biology — data integration, FAIR data, gene/variant annotation, open-source software.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://wulab.io/",
+          "pi": "Chunlei Wu, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0559
+        },
+        {
+          "lab_url": "https://sulab.org",
+          "pi": "Andrew Su, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0517
+        },
+        {
+          "lab_url": "https://genome.ucsd.edu/",
+          "pi": "Shankar Subramaniam",
+          "dept": "Bioengineering",
+          "score": 0.0369
+        },
+        {
+          "lab_url": "https://bansal-lab.github.io/",
+          "pi": "Vikas Bansal",
+          "dept": "Bioinformatics",
+          "score": 0.0308
+        },
+        {
+          "lab_url": "http://genomes.ucsd.edu/",
+          "pi": "Terry Gaasterland",
+          "dept": "Bioinformatics",
+          "score": 0.0297
+        },
+        {
+          "lab_url": "https://www.scripps.edu/faculty/torkamani/",
+          "pi": "Ali Torkamani, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0294
+        },
+        {
+          "lab_url": "https://mesirovlab.org",
+          "pi": "Jill Mesirov PhD",
+          "dept": "Computational Science",
+          "score": 0.0285
+        },
+        {
+          "lab_url": "https://cseweb.ucsd.edu/~nbandeir/",
+          "pi": "Nuno Bandeira",
+          "dept": "Bioinformatics",
+          "score": 0.0271
+        },
+        {
+          "lab_url": "https://www.chandalab.org",
+          "pi": "Sumit Chanda, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0239
+        },
+        {
+          "lab_url": "https://talmolab.org/",
+          "pi": "Talmo Pereira, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0223
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/peters-lab/",
+          "pi": "Bjoern Peters",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0212
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/schoenberger-lab/",
+          "pi": "Stephen Schoenberger",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0195
+        }
+      ]
+    },
+    {
+      "id": "p23",
+      "profile": "Interested in behavioral neuroscience and computational ethology — tracking animal behavior with pose estimation and machine learning.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://talmolab.org/",
+          "pi": "Talmo Pereira, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0576
+        },
+        {
+          "lab_url": "https://komiyamalab.biosci.ucsd.edu/home/",
+          "pi": "Takaki Komiyama",
+          "dept": "Neurobiology",
+          "score": 0.046
+        },
+        {
+          "lab_url": "https://www.mikioaoi.com/",
+          "pi": "Mikio Aoi",
+          "dept": "Neurobiology",
+          "score": 0.043
+        },
+        {
+          "lab_url": "https://tyelab.org/",
+          "pi": "Kay Tye, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0393
+        },
+        {
+          "lab_url": "http://www.biology.ucsd.edu/labs/rifkin/index.html",
+          "pi": "Scott Rifkin",
+          "dept": "Ecology, Behavior & Evolution",
+          "score": 0.0384
+        },
+        {
+          "lab_url": "https://greenspanlab.ucsd.edu/",
+          "pi": "Ralph Greenspan",
+          "dept": "Neurobiology",
+          "score": 0.0356
+        },
+        {
+          "lab_url": "https://www.silva.ucsd.edu/",
+          "pi": "Gabriel Silva",
+          "dept": "Bioengineering",
+          "score": 0.0323
+        },
+        {
+          "lab_url": "https://asahina.salk.edu/",
+          "pi": "Kenta Asahina, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0303
+        },
+        {
+          "lab_url": "https://neurotheory.ucsd.edu/home",
+          "pi": "Marcus Benna",
+          "dept": "Neurobiology",
+          "score": 0.028
+        },
+        {
+          "lab_url": "http://www.biology.ucsd.edu/labs/nieh/index.html",
+          "pi": "James Nieh",
+          "dept": "Ecology, Behavior & Evolution",
+          "score": 0.0271
+        },
+        {
+          "lab_url": "https://www.kennedylab.org",
+          "pi": "Ann Kennedy, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0257
+        },
+        {
+          "lab_url": "https://www.lovettbarronlab.com/",
+          "pi": "Matthew Lovett-Barron",
+          "dept": "Neurobiology",
+          "score": 0.0256
+        }
+      ]
+    },
+    {
+      "id": "p24",
+      "profile": "Interested in epigenetics and chromatin — how DNA methylation and histone marks control gene expression, in development or disease.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://law.salk.edu",
+          "pi": "Julie Law, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0495
+        },
+        {
+          "lab_url": "https://www.chenglaboratory.com/",
+          "pi": "Christine Cheng",
+          "dept": "Bioinformatics",
+          "score": 0.0405
+        },
+        {
+          "lab_url": "https://goren-lab.github.io/",
+          "pi": "Alon Goren",
+          "dept": "Bioinformatics",
+          "score": 0.0402
+        },
+        {
+          "lab_url": "https://troemellab.biosci.ucsd.edu/",
+          "pi": "Emily Troemel",
+          "dept": "Cell & Developmental Biology",
+          "score": 0.0393
+        },
+        {
+          "lab_url": "https://ecker.salk.edu/",
+          "pi": "Joseph Ecker",
+          "dept": "Bioinformatics",
+          "score": 0.033
+        },
+        {
+          "lab_url": "https://b.bintulab.com/",
+          "pi": "Bogdan Bintu",
+          "dept": "Bioinformatics",
+          "score": 0.0305
+        },
+        {
+          "lab_url": "https://dixon.salk.edu",
+          "pi": "Jesse Dixon, MD, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0285
+        },
+        {
+          "lab_url": "https://coleferguson.com/",
+          "pi": "Cole Ferguson",
+          "dept": "Pathology",
+          "score": 0.0274
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/ay/",
+          "pi": "Ferhat Ay",
+          "dept": "Bioinformatics",
+          "score": 0.0269
+        },
+        {
+          "lab_url": "https://mcvicker.salk.edu/",
+          "pi": "Graham McVicker",
+          "dept": "Cellular & Molecular Medicine",
+          "score": 0.0262
+        },
+        {
+          "lab_url": "https://pathology.ucsd.edu/research/labs/soncin/index.html",
+          "pi": "Francesca Soncin",
+          "dept": "Pathology",
+          "score": 0.0248
+        },
+        {
+          "lab_url": "https://obgyn.ucsd.edu/research/labs/fisch/index.html",
+          "pi": "Kathleen Fisch",
+          "dept": "Bioinformatics",
+          "score": 0.0236
+        }
+      ]
+    },
+    {
+      "id": "p25",
+      "profile": "Interested in T cells and autoimmunity — how the immune system distinguishes self from non-self, and what goes wrong in autoimmune disease.",
+      "goodLabs": [],
+      "candidates": [
+        {
+          "lab_url": "https://lulab.biosci.ucsd.edu/",
+          "pi": "Li-Fan Lu",
+          "dept": "Molecular Biology",
+          "score": 0.0467
+        },
+        {
+          "lab_url": "https://zheng.salk.edu/",
+          "pi": "Ye Zheng, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0304
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/kronenberg-lab/",
+          "pi": "Mitchell Kronenberg",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0301
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/schoenberger-lab/",
+          "pi": "Stephen Schoenberger",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0295
+        },
+        {
+          "lab_url": "https://chulab.ucsd.edu/",
+          "pi": "Hiutung Chu",
+          "dept": "Bioinformatics",
+          "score": 0.0287
+        },
+        {
+          "lab_url": "https://regenmed.ucsd.edu/research/kaufman-lab/index.html",
+          "pi": "Dan S. Kaufman, M.D., Ph.D.",
+          "dept": "Regenerative Medicine",
+          "score": 0.0287
+        },
+        {
+          "lab_url": "http://biology.ucsd.edu/labs/goldrath/",
+          "pi": "Ananda Goldrath",
+          "dept": "Molecular Biology",
+          "score": 0.0281
+        },
+        {
+          "lab_url": "https://www.liutlab.com/",
+          "pi": "Tiantian Liu",
+          "dept": "Scripps Research",
+          "score": 0.0278
+        },
+        {
+          "lab_url": "https://www.pengwulabscripps.com/",
+          "pi": "Peng Wu, PhD",
+          "dept": "Scripps Research",
+          "score": 0.0269
+        },
+        {
+          "lab_url": "https://kaech.salk.edu",
+          "pi": "Susan Kaech, PhD",
+          "dept": "Salk Institute",
+          "score": 0.0245
+        },
+        {
+          "lab_url": "https://pathology.ucsd.edu/research/labs/morris/index.html",
+          "pi": "Gerald Morris",
+          "dept": "Pathology",
+          "score": 0.0235
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/schmiedel-lab/",
+          "pi": "Schmiedel",
+          "dept": "La Jolla Institute for Immunology",
+          "score": 0.0231
+        }
+      ]
+    }
+  ]
+}
