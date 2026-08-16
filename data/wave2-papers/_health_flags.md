@@ -122,4 +122,25 @@ Re-harvested the 11 manual-flag labs with Roman's direct pub-page links. Results
 - **Wu PROJECTS stored (Roman's call):** scraped wulab.io/research/ + 12 project pages → project-
   grounded plain_summary (188w) + trajectory on his profile (+ synced cache). Renders in the digest's
   plain-terms/trajectory panels. Wu now = 9 papers + full BioThings/Translator/outbreak project
-  descriptions. Corpus FINAL: 443 done / 137 excluded / 0 profile. WAVE-2 PAPER INGEST COMPLETE.
+  descriptions.
+
+## Hastie + Einav fair re-ingest (2026-08-16) — both stored, 0 contamination
+Roman: they'd been dropped without ever being ATTEMPTED (unlike Wang/Miller, which genuinely failed
+extraction) — created in lab_profiles 2026-08-14, after the wave-2 harvest queue was built, so they
+simply fell outside the batch. Gave them a real shot via their official LJI `lji-filtered` pub pages
+(the same proven, Gate-C-affiliation-safe mechanism used for Hogan/Rao/Myers/Sette/Saphire):
+- **Kathryn Hastie**: 5/5 grounded (structural/antibody virology — measles, Lassa, Omicron, SARS-CoV-2
+  RBD). STORED.
+- **Tal Einav**: 8/8 grounded (computational/biophysical modeling of antibody responses to influenza
+  vaccination). 1 flagged paper ("Glycolysis model shows that allostery maintains high ATP...",
+  doi:10.1016/j.bpj.2025.03.037) — VERIFIED via author affiliation: lists "Center for Vaccine
+  Innovation, La Jolla Institute for Immunology" explicitly, confirming the same Einav (his Caltech/
+  Fred Hutch biophysics training, cross-field work). KEEP. STORED.
+- **Two Einav DB profiles exist** — `lji.org/labs/einav-lab` (excluded since 2026-07-30 for
+  `dropped:not_a_recruiting_lab`, a pre-wave-2 business-logic call, untouched tonight) and
+  `taleinav.github.io/index.html` (the wave-2-scope one, now holds his 8 papers). Harvested his real
+  papers off the authoritative LJI page but attached them to the github.io profile — same remap
+  pattern as wave-14 — to avoid silently reversing the separate recruiting-status exclusion. If Roman
+  ever wants the LJI profile live too, that's a distinct decision (papers are ready either way).
+
+Corpus FINAL: 445 done / 135 excluded / 0 profile / 14 merged. WAVE-2 PAPER INGEST COMPLETE.

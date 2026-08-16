@@ -32,11 +32,18 @@ layer (emails/lab_urls/overviews for 216 labs) is DONE and committed.
   his cache summary.json. Renders in the digest's "What this lab does" + "Where they're heading"
   panels (the anti-overload design's designated home for descriptive content — no UI change needed).
   Wu now shows 9 papers + full project descriptions.
-- **FINAL 5 DROPS** (2026-08-16, Roman "drop everyone else"): Eric Wang, Shannon Miller, Jeffery
-  Kelly, Kathryn Hastie (LJI), Tal Einav → status='excluded' + quarantined. NOTE: Hastie & Einav
-  were NOT in the original failure lists — active labs never successfully gathered; dropped per
-  Roman's instruction but are re-harvest candidates if ever wanted back (reversible).
-- **Corpus FINAL: 443 done / 137 excluded / 0 profile / 14 merged.** Wave-2 paper ingest COMPLETE.
+- **FINAL 3 DROPS**: Eric Wang, Shannon Miller, Jeffery Kelly → status='excluded' + quarantined
+  (JS-rendered pub pages / no papers, need manual DOI lists or the project-storage decision).
+- **Hastie + Einav — RECOVERED, not dropped** (2026-08-16, Roman: "give them a fair re-ingest").
+  They'd been created in lab_profiles 2026-08-14, after the wave-2 harvest queue was already built —
+  never actually attempted (different from Wang/Miller's genuine extraction failures). Re-harvested
+  via their official LJI `lji-filtered` pub pages (Gate B+C safe): Hastie 5 papers, Einav 8 papers
+  (1 topic flag verified clean via affiliation — same person, cross-field biophysics work). Both
+  STORED, embedded, tests 44/44. See "Hastie + Einav fair re-ingest" in `_health_flags.md`.
+  Einav has a SECOND, separate DB profile (`lji.org/labs/einav-lab`) still excluded since before
+  wave-2 for an unrelated reason (`dropped:not_a_recruiting_lab`) — untouched; his papers are stored
+  under his github.io profile instead. Separate decision if Roman wants that LJI profile live too.
+- **Corpus FINAL: 445 done / 135 excluded / 0 profile / 14 merged.** Wave-2 paper ingest COMPLETE.
 - **Optional future (not blocking):** (1) audit corpus for differently-titled preprint/published
   near-dups (known dedup limitation — only Lamia's was caught by hand); (2) re-harvest Eric Wang /
   Shannon Miller / Hastie / Einav if Roman supplies machine-readable pub links or DOI lists.
