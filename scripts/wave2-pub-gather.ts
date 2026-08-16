@@ -134,8 +134,13 @@ async function main() {
     // PI-surname author carries an affiliation that AFFIRMATIVELY mismatches the institute; keep
     // matches and papers with no per-author affiliation (honest unknown). Belt-and-suspenders to the
     // affiliation-ANDed esearch query in the harvester.
+    // Applies to search-based sources (affil-search AND lji-filtered) — both can surface a
+    // same-surname stranger from another institution. A different "Patrick Hogan" (same FIRST name,
+    // Ranken Jordan Pediatric Hospital) rode LJI's filtered list past Gate B; his affiliation isn't
+    // LJI, so the affiliation gate catches what first-name matching can't. DOI-page labs (ids off the
+    // lab's OWN page) are exempt — provenance already binds the paper to the PI.
     const inst = instOf(h.url)
-    if (/affil-search/.test(h.method) && inst && INSTITUTE_AFFIL[inst]) {
+    if (/affil-search|lji-filtered/.test(h.method) && inst && INSTITUTE_AFFIL[inst]) {
       const affRe = INSTITUTE_AFFIL[inst]
       verified = verified.filter(w => {
         const mine = (w.authors || []).filter(a => surnames.includes((a.last || '').toLowerCase()))
