@@ -11,7 +11,12 @@ import { withRetry } from '@/lib/retry'
 // to run after top-up is `ingest.ts embed --limit 20` and eyeball the [embed] cost line before
 // backfilling all ~6.5k chunks.
 
-const EMBED_MODEL = 'gemini-embedding-001'
+// Exported so the query side, the version guard, and the DB-invariant test all reference ONE
+// source of truth. Query and document vectors MUST come from this exact model/version or they land
+// in incompatible spaces and cosine silently returns garbage (no error thrown) — the classic RAG
+// silent-failure. Every embedded row is stamped with this value; assertEmbeddingConsistency() and a
+// db-invariant fail loud the moment a stored vector's model differs from this constant.
+export const EMBED_MODEL = 'gemini-embedding-001'
 export const EMBED_DIM = 768
 const BATCH = 100
 const MAX_CHARS = 8000 // ~2k tokens — gemini-embedding-001's input ceiling; chunks are far smaller
@@ -59,6 +64,33 @@ async function embedBatch(texts: string[]): Promise<number[][]> {
 export async function ensureEmbeddingSchema(): Promise<void> {
   const sql = requireSql()
   await sql.query(`ALTER TABLE lab_chunks ADD COLUMN IF NOT EXISTS embedding vector(${EMBED_DIM})`)
+  // Stamp WHICH model produced each vector. Without this, bumping EMBED_MODEL and re-running the
+  // (NULL-only) backfill leaves old-space vectors in place against new-space queries — recall craters
+  // silently. With it, the invariant below catches a partial/stale re-embed as a red test.
+  await sql.query(`ALTER TABLE lab_chunks ADD COLUMN IF NOT EXISTS embedding_model text`)
+}
+
+// Fail loud if ANY live embedded chunk was produced by a model other than the current EMBED_MODEL.
+// Cheap COUNT; call it after a backfill and from a healthcheck. The db-invariant test freezes the
+// same guarantee in CI. Returns the count of mismatched rows (0 = consistent).
+export async function assertEmbeddingConsistency(): Promise<number> {
+  const sql = requireSql()
+  const rows = asRows(
+    await sql.query(
+      `SELECT count(*) n FROM lab_chunks
+       WHERE embedding IS NOT NULL AND embedding_model IS DISTINCT FROM $1`,
+      [EMBED_MODEL],
+    ),
+  )
+  const n = Number(rows[0]?.n ?? 0)
+  if (n > 0) {
+    throw new Error(
+      `embedding-model mismatch: ${n} chunk(s) embedded by a model other than ${EMBED_MODEL}. ` +
+        `Query vectors won't share their space — recall is silently degraded. Re-embed: ` +
+        `NULL out lab_chunks.embedding + embedding_model for those rows, then run ingest.ts embed.`,
+    )
+  }
+  return n
 }
 
 // Backfill embeddings for every chunk that lacks one. Resumable: re-running only touches
@@ -76,16 +108,21 @@ export async function backfillEmbeddings(
     const take = limit ? Math.min(BATCH, limit - embedded) : BATCH
     const rows = asRows(
       await sql.query(
+        // Re-embed both the never-embedded (NULL) AND the stale-model rows: if EMBED_MODEL is bumped,
+        // running this backfill migrates the whole corpus into the new space instead of leaving a
+        // silent mix. embedding_model IS DISTINCT FROM handles the NULL-stamp legacy rows too.
         `SELECT id, content FROM lab_chunks
-         WHERE embedding IS NULL AND content IS NOT NULL AND length(content) > 0
+         WHERE (embedding IS NULL OR embedding_model IS DISTINCT FROM $1)
+           AND content IS NOT NULL AND length(content) > 0
          ORDER BY id LIMIT ${take}`,
+        [EMBED_MODEL],
       ),
     )
     if (rows.length === 0) break
     const texts = rows.map((r) => String(r.content))
     const vecs = await embedBatch(texts)
     for (let i = 0; i < rows.length; i++) {
-      await sql.query(`UPDATE lab_chunks SET embedding = $1::vector WHERE id = $2`, [`[${vecs[i].join(',')}]`, rows[i].id])
+      await sql.query(`UPDATE lab_chunks SET embedding = $1::vector, embedding_model = $3 WHERE id = $2`, [`[${vecs[i].join(',')}]`, rows[i].id, EMBED_MODEL])
       estTokens += Math.ceil(texts[i].length / 4)
     }
     embedded += rows.length

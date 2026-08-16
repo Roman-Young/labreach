@@ -153,7 +153,7 @@ async function main() {
 
   // ── embed (backfill dense embeddings; resumable) ──────────────────────────
   if (cmd === 'embed') {
-    const { backfillEmbeddings, createEmbeddingIndex } = await import('../lib/rag/embed')
+    const { backfillEmbeddings, createEmbeddingIndex, assertEmbeddingConsistency } = await import('../lib/rag/embed')
     const limit = num('limit')
     const t0 = Date.now()
     const { embedded, estTokens } = await backfillEmbeddings((m) => console.log(m), limit)
@@ -163,6 +163,9 @@ async function main() {
       await createEmbeddingIndex()
       console.log('index built.')
     }
+    // Fail loud if a partial run (or an interrupted model migration) left mixed-model vectors — a
+    // full run with no --limit should end 100% consistent. Skipped for a --limit sample run.
+    if (!limit) { await assertEmbeddingConsistency(); console.log('embedding-model consistency: OK') }
     return
   }
 

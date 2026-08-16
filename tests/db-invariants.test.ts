@@ -45,6 +45,16 @@ d('DB invariants (live corpus)', () => {
       WHERE p.status IN ('done','profile') AND lc.quarantined=false AND lc.embedding IS NULL`)).toBe(0)
   })
 
+  it('no embedded chunk was produced by a stale embedding model', async () => {
+    // Query and document vectors MUST come from the same model/version or cosine search silently
+    // returns garbage (no error). This freezes "every stored vector was made by the CURRENT
+    // EMBED_MODEL" — so bumping the constant without a full re-backfill turns this test RED instead
+    // of cratering recall in prod. (RAG eval checklist item 4, 2026-08-16.)
+    const { EMBED_MODEL } = await import('../lib/rag/embed')
+    expect(await one(`SELECT count(*) n FROM lab_chunks
+      WHERE embedding IS NOT NULL AND embedding_model IS DISTINCT FROM '${EMBED_MODEL}'`)).toBe(0)
+  })
+
   it('every quarantined chunk has a reason', async () => {
     expect(await one(`SELECT count(*) n FROM lab_chunks
       WHERE quarantined=true AND (quarantine_reason IS NULL OR quarantine_reason='')`)).toBe(0)
