@@ -1,4 +1,4 @@
-# WAVE-2 PAPER INGEST — HANDOFF (2026-08-16)
+# WAVE-2 PAPER INGEST — HANDOFF (2026-08-16, updated post wave-13)
 
 Repo: `/home/roman/agent/codebases/labreach`. Read this whole file, then `_health_flags.md`
 (the running data-quality log). Everything below is the paper-ingest phase; the institute-profile
@@ -8,25 +8,24 @@ layer (emails/lab_urls/overviews for 216 labs) is DONE and committed.
 - **Pipeline: pub-page-first paper ingest.** Papers come ONLY from each lab's own publications page
   (never name-search), verified by layered gates. This is contamination-proof by design.
 - **118 labs gathered** (verified recent paper sets on disk in `data/wave2-papers/<slug>.json`).
-- **109 of 118 summarized** (have `<slug>.papers.json` + `<slug>.summary.json`).
-- **9 labs remain to summarize** (list below).
-- **NOTHING is stored to the DB yet.** The store pass runs AFTER all 118 are summarized.
-- Git HEAD at handoff: `42eae2b`. Tests: 44/44. Institute-profile layer untouched by this phase.
-
-## The 9 remaining labs to summarize (wave 13)
-```
-https_www_scripps_edu_faculty_henderson_    (Scott Henderson — core-facility director, may be thin)
-https_www_scripps_edu_faculty_sanna_
-https_www_scripps_edu_faculty_topol_        (Eric Topol)
-https_www_stowers_lab_com_                  (Lisa Stowers)
-https_www_the_park_lab_org_
-https_www_willwanglab_com_
-https_www_xiaotianlab_org_
-https_www_ye_lab_org_
-https_yiplab_org
-```
-NOTE: 3 wave-12 labs (Nimmerjahn, Guldner, Maher) may still be finishing — re-derive the true
-remaining set with the command in "Finish the summaries" below, don't trust this static list.
+- **118 of 118 SUMMARIZED — the summary phase is DONE.** (all have `<slug>.papers.json` +
+  `<slug>.summary.json`; verify with the command in "Finish the summaries" below — should print 0).
+  Wave 13 (the final 9: Henderson, Sanna, Topol, Stowers, Park, Will Wang, Xiaotian, Ye, Yip) plus a
+  separately-discovered pre-existing gap of 9 labs missing only `.summary.json` (Kaufman, Kumsta, Su,
+  Talmo Pereira, Mendoza, Ward, Williamson, Wiseman, Kuo-Fen Lee) were both closed out 2026-08-16.
+- **All topic-breadth flags raised in wave 13 were verified clean** (0 new contaminants) — see the
+  "Wave-13 topic flags" section in `_health_flags.md` for the deterministic-sweep evidence.
+- **STORE PASS COMPLETE (2026-08-16).** All 118 stored via `wave2-pub-store.ts --execute`
+  (`stored: 118 | flagged: 0`): 112 labs flipped profile→done, +903 paper chunks, +107 summaries,
+  0 orphans (no done lab with 0 papers). Embedded (`ingest.ts embed`): 1007 chunks (~$0.03), HNSW
+  index rebuilt, 0 unembedded. **Tests 44/44.** DB health-check on Tian/Wiseman/Sacco/Yip: audited
+  overview+email INTACT (surgical store held), every paper has a DOI + verbatim quote, 0 quarantined.
+- **Code change (uncommitted):** `lib/rag/extract2.ts` — published-DOI-preference in the dedup (see
+  "Preprint/published dedup" section). Plus doc updates here + `_health_flags.md`. NOT yet committed.
+- **Still TODO (next session):** (1) apply the 27 drops → status='excluded'; (2) wave-14 re-harvest
+  of the 11 labs with Roman's links; (3) design + build project-page storage (Wu/Kelly); (4) commit
+  the code+docs. See the "Manual-flag list — ROMAN DECIDED" section below.
+- Git HEAD before this phase: `42eae2b`. Institute-profile layer untouched throughout.
 
 ## Pipeline scripts (all in `scripts/`)
 - `wave2-pub-harvest.mjs` — headless Chrome. Reads `data/wave2-papers/_queue.json`, finds each lab's
@@ -49,39 +48,26 @@ Every real contaminant this session was caught by these. Verdicts logged in `_he
 5. **Grounding guard (in assembleLabV2, runs at store):** drops any paper chunk whose anchor_quote
    isn't verbatim in the bundle — auto-drops stale/empty entries.
 
-## Finish the summaries (wave 13)
-1. Get the true remaining set:
+## Summaries — DONE. Verify with this before trusting the count:
 ```
 cd /home/roman/agent/codebases/labreach && npx tsx -e "
 const fs=require('fs');const dir='data/wave2-papers';
 const caches=fs.readdirSync(dir).filter(f=>f.endsWith('.json')&&!f.includes('.papers.')&&!f.includes('.summary.')&&!f.startsWith('_'));
-const todo=caches.map(f=>f.replace(/\.json\$/,'')).filter(s=>!fs.existsSync(dir+'/'+s+'.papers.json'));
+const todo=caches.map(f=>f.replace(/\.json\$/,'')).filter(s=>!fs.existsSync(dir+'/'+s+'.papers.json')||!fs.existsSync(dir+'/'+s+'.summary.json'));
 console.log(todo.length); for(const s of todo) console.log(s);"
 ```
-2. For EACH remaining slug, spawn ONE Sonnet subagent (model: sonnet). Prompt template:
-```
-Read /home/roman/agent/codebases/labreach/data/wave2-papers/task-<SLUG>.txt and follow it exactly.
-Write both JSON files to the absolute paths named inside. Every anchor_quote MUST be verbatim from
-the bundle. Summarize ONLY bundle papers. If a paper is thematically unrelated (possible same-name
-author), summarize it but note it. Return counts + any contamination note.
-```
-   Run ~8-10 at a time (8GB box, no swap). When an agent flags a topic outlier, verify it with the
-   sweep in "Verify flags" below before treating it as contamination — so far EVERY agent topic-flag
-   was a false positive (legit collaboration or the PI's cross-field work); the gates caught the
-   real ones. Session limit resets periodically — if agents fail with "session limit," wait and
-   re-run only the labs whose `.papers.json` is missing (idempotent).
+Should print `0`. If it ever prints a nonzero list again (e.g. a future gather adds new labs), the
+old workflow still applies: spawn one Sonnet subagent per slug with the prompt template that was
+here, run ~8-10 concurrent, verify any topic-outlier flags with `/tmp/verify_flags2.ts` (deterministic
+DOI/PMID → author first-name + affiliation/ORCID check — recreate from `_health_flags.md`'s wave-13
+entry if gone) before treating a flag as contamination. Every topic-flag across all 13 waves has been
+a false positive so far — the gates catch the real contaminants at gather time, not this check.
 
-## Verify a flagged paper (deterministic, no agents)
-`/tmp/verify_flags.ts` (recreate if gone) fetches the flagged paper and prints the PI-surname
-author's first name + affiliation. Rule: KEEP if the author's first name matches the PI (or is
-absent) AND affiliation matches/absent; DROP only if a different first name OR affirmative
-institution mismatch. High-common-surname labs to spot-check: Peng Wu, Sun, Timothy Huang (all
-verified legit so far).
-
-## THE STORE PASS (after all 118 summarized) — the careful part
-1. **FIRST fix preprint/published dedup.** Several labs (Millar, Parker, Wiseman, Sung Han) list a
-   paper twice — a bioRxiv preprint AND its published version, with DIFFERENT DOIs but near-identical
-   titles. assembleLabV2's existing dedup collapses by source_id/exact-normalized-title; ADD a
+## THE STORE PASS (all 118 summarized — this is next, NOT started) — the careful part
+1. **FIRST fix preprint/published dedup.** Several labs (Millar, Parker, Sung Han, and now confirmed
+   Wiseman with 3 pairs: AA147, PDIA1, XBP1s/CMT1B — the largest batch found) list a paper twice — a
+   bioRxiv preprint AND its published version, with DIFFERENT DOIs but near-identical titles.
+   assembleLabV2's existing dedup collapses by source_id/exact-normalized-title; ADD a
    title-similarity collapse (e.g. normalize title, drop punctuation/preprint-server noise, and if
    two paper chunks share a ≥0.9 normalized-title overlap keep the published/higher-cited one). Do
    this in `lib/rag/extract2.ts` assembleLabV2 (the QB3 DEDUP block) OR as a post-filter in
@@ -103,16 +89,62 @@ verified legit so far).
    the DB" commits).
 8. **Commit + push** each meaningful checkpoint. NO "Co-Authored-By" trailer (Roman's standing rule).
 
-## Manual-flag list for Roman (NOT auto-fixable — needs his links/decisions)
-Consolidate these into one file for him at the end:
-- **21 no-pub-page labs** (harvest found nothing) in `data/wave2-papers/_harvest_failures2.json` —
-  Scripps plain-text citation lists (Schimmel/Yates/Lipton/Ghadiri/Wright/etc.), a Cloudflare wall
-  (Ocorr), 6 external sites (MacRae/Diercks/Eric Wang/Lamia/Chunlei Wu/Shannon Miller). Needs a
-  direct pub-page or Google Scholar link each → then re-harvest those specific labs.
-- **~18 no-recent-papers labs** in `data/wave2-papers/_failures.json` — pages expose only pre-2021
-  work (Kelly, O'Shea, Mosnier, Weiss, Rosen, Roberts, Srinivasan, etc.). Some are genuinely
-  winding-down emeriti; some active-but-stale. Roman decides per lab.
+## Manual-flag list — ROMAN DECIDED 2026-08-16 (was NOT auto-fixable; now actioned/queued)
+Roman triaged all 40 manual-flag labs. Resolution:
+
+**DROP → status='excluded' (27 labs)** — reversible, keeps overview/email, just hidden from students.
+His rule: "you don't want to be in an inactive lab papers wise (even if they're actually still active)."
+- From harvest-failures (10, incl. Lipton): Juan De La Torre, Martin Friedlander, Chi-Huey Wong,
+  Richard Wyatt, John Yates, Amy Lightner, Raymond Stevens, M. Reza Ghadiri, John Griffin,
+  **Stuart Lipton** (his only link was a bare `pubmed?term=lipton+s` name-search — breaks Gate A
+  provenance, exact vector Gate A exists to stop; Roman chose DROP over the contamination risk since
+  his pubs are too old for a student to validly reference anyway).
+- From failures (17): Saez, Peter Wright, Qinghai Zhang, Lena Mueller, Anne Bang, Debanjan Dhar,
+  Hudson Freeze, Jamey Marth, Kristiina Vuori, Shengjie Feng, Yu Yamaguchi, Clodagh O'Shea,
+  Edward Roberts, Laurent Mosnier, Hugh Rosen, Supriya Srinivasan, Friedbert Weiss.
+- NOT YET APPLIED — still TODO: flip these 27 to status='excluded' (with a quarantine reason) after
+  the 118-store lands. Yip is NOT in this set (see below).
+
+**RE-HARVEST with Roman's links → "wave 14" (11 labs)** — each still needs harvest→gather→summary→store.
+Some need headless click-throughs / odd parsing (noted):
+- Karen Ocorr: https://www.ocorrlab.org/index.html#Publications — headless click "2020 - Present" tab
+- Marisa Roberto: https://www.scripps.edu/roberto/references.html
+- Paul Schimmel: https://www.scripps.edu/schimmel/publications_schimmel.html
+- Luc Teyton: https://www.scripps.edu/teyton/publications.html (+ Research page; has 2021 pubs)
+- Katja Lamia: https://www.ncbi.nlm.nih.gov/sites/myncbi/katja.lamia.1/bibliography/40440719/public/
+  (NIH MyNCBI self-curated bibliography — provenance OK but unusual format, parse carefully)
+- Christian Diercks: https://www.dierckslab.com/general-5
+- Eric Wang: https://www.ewanglab.com/publications — headless click "2022-Present" tab
+- Ian MacRae: 3 research-focus pages, each with SELECTED pubs for that focus (Roman: grab the pubs
+  he emphasizes): /protein-and-rna-structure-1, /rational-rna-therapeutics, /copy-of-rna-therapeutics
+  on macraelab.org — PAPER re-harvest (not a project-parse).
+- Shannon Miller: https://www.millerlabresearch.com/publications
+- Xiang-Lei Yang: https://www.scripps.edu/yang/publications_yang.html
+- Chunlei Wu: https://scholar.google.com/citations?user=EmD8988AAAAJ (his Scholar profile — recents).
+
+**PROJECT-PAGE parse → NEW content type, storage model UNDECIDED (2 labs)** — parked pending design:
+- Chunlei Wu: wulab.io has cool per-project sections (headless: click menu → traverse projects) —
+  Roman wants project descriptions stored as writing material (in ADDITION to his Scholar papers).
+- Jeffery Kelly: https://www.scripps.edu/kelly/ — no pub page, but an "Ongoing projects in the Kelly
+  Laboratory include:" section with traversable links; parse + store those (projects-only, no papers).
+  OPEN QUESTION for Roman: where does project content live? (proposed: new type='project' chunk,
+  anchor-quote-grounded like papers; build plain_summary from projects for paperless labs). Decide
+  before building — it touches scrape→assemble→store→retrieval.
+
+**Yip: NOT a drop.** He's in `_failures.json` (stale — early homepage harvest failed) but a later
+yiplab.org pub-page harvest succeeded; summarized 2026-08-16, part of the 118-store. Ignore that entry.
+
 - LJI slight staleness is ACCEPTED (Roman OK'd it) — don't re-engineer.
+
+## Preprint/published dedup — RESOLVED 2026-08-16 (no new code path needed)
+The existing QB3 dedup ALREADY collapses preprint+published pairs: both title-variants resolve to one
+`sourceId` via the titleToSid map, so the sourceId-keyed dedup catches them (verified: 0 surviving
+normalized-title dups on Wiseman/Sung Han/Millar/Parker). The ONLY gap was *which* DOI survived —
+order-dependent, so 1 of Wiseman's 3 pairs kept the bioRxiv preprint over the published Brain paper.
+FIX LANDED in `lib/rag/extract2.ts` assembleLabV2: the titleToSid build now prefers a published DOI
+over a preprint (10.1101 bioRxiv/medRxiv, 10.26434 ChemRxiv, 10.21203 Research Square) for the same
+normalized title. Verified `avoidable=0` (no lab keeps a preprint when a published version exists);
+remaining preprint cites are genuine preprint-only papers. Tests 44/44.
 
 ## Standing rules (Roman)
 - No false papers — fail loud, flag, never guess. "Don't add anything that's not that paper."

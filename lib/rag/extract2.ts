@@ -177,8 +177,18 @@ export function assembleLabV2(g: GatheredLab, bundle: string, p: Record<string, 
   // Authoritative source ids come from OpenAlex (g.papers), matched by title —
   // more reliable than trusting the model to copy SOURCE_ID out of the header.
   const normT = (s: string | null) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim()
+  // A paper listed as BOTH a preprint and its published version shares one normalized title but has
+  // two DOIs. The QB3 dedup below collapses them (both chunks resolve to whatever sid this map holds),
+  // so the surviving citation is whichever wins here. Prefer the version of RECORD — a student should
+  // land on the journal article, not the bioRxiv/medRxiv/ChemRxiv/Research-Square preprint.
+  const isPreprintDoi = (s: string | null) => !!s && /^doi:10\.(1101|26434|21203)\//.test(s)
   const titleToSid = new Map<string, string | null>()
-  for (const gp of g.papers) titleToSid.set(normT(gp.title), gp.sourceId)
+  for (const gp of g.papers) {
+    const k = normT(gp.title)
+    if (!titleToSid.has(k)) { titleToSid.set(k, gp.sourceId); continue }
+    // Same title already seen: overwrite only if the incoming id is published and the kept one is a preprint.
+    if (isPreprintDoi(titleToSid.get(k) ?? null) && !isPreprintDoi(gp.sourceId)) titleToSid.set(k, gp.sourceId)
+  }
 
   // Per-paper chunks — content is the woven did/found/used/why summary.
   for (const raw of (p.papers as Array<Record<string, unknown>>) ?? []) {

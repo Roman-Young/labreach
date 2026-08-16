@@ -49,3 +49,43 @@ collaborations or cross-field work), 0 actual contaminants:
 - Parker (atherosclerosis): genuinely Christopher Parker. KEEP.
 CONCLUSION: the layered gates caught every real contaminant (Osterman hand-surgeon, Dan-S
 Kaufman, pediatric Hogan, Rao stranger); remaining agent flags are topic-breadth false positives.
+
+## Wave-13 topic flags (2026-08-16) — VERIFIED via deterministic sweep, ALL CLEARED (0 contaminants)
+Final 9 labs summarized tonight (wave 13), bringing the corpus to 118/118 summarized. Separately, a
+pre-existing gap was found and fixed: 9 already-gathered labs (Kaufman, Kumsta, Su, Talmo Pereira,
+Mendoza, Ward, Williamson, Wiseman, Kuo-Fen Lee) had `.papers.json` but were missing `.summary.json`
+— written directly tonight from the already-vetted paper extractions (no re-summarization needed).
+
+Topic-breadth flags raised by summarizing agents, verified with `/tmp/verify_flags2.ts` (fetch by
+DOI, check PI-surname author's first name + affiliation/ORCID) — ALL confirmed legitimate, same
+false-positive pattern as every prior wave:
+- **Stowers (Lisa Stowers Anderson)**: "Less is more..." (doi:10.1016/j.neuron.2021.05.010) is a
+  Neuron *Previews* commentary WRITTEN BY the Stowers lab (Palle, Mukhopadhyay, Stowers — author
+  email stowers@scripps.edu) about the Leinwand/Scott primary paper, not authored by them. The
+  in-bundle title differs from the flag's search term ("juvenile hormone"), which is what triggered
+  the false flag. KEEP both papers.
+- **Yip (Kevin Yip)**: HIRA/PML/p62 paper and HDAC8-inhibitor paper share the IDENTICAL ORCID
+  (0000-0001-5516-9944) — confirmed the same person, with a dual Sanford Burnham Prebys / CUHK CSE
+  appointment. KEEP both.
+- **Lee (Kuo-Fen Lee, Salk)**: all 3 flagged papers (2 epigenomics/BICCN, 1 primate PFC) have a
+  first-name + "Peptide Biology Laboratories, Salk" affiliation match. KEEP all 3 (wide collaborative
+  footprint, consistent with his established pattern from the wave-1 Gate-B fix).
+- **Su (Andrew Su)**: T1D extraislet-vasculature paper — author "andrew i su", Scripps ISCB
+  affiliation, exact match. KEEP.
+- **Talmo Pereira**: all 3 flagged papers have "talmo" as first name (Salk affiliation on 1, absent
+  on 2 — kept per no-affil rule). Consistent with the wave-7 finding that all 12 Pereira papers are
+  legit. KEEP all 3.
+- **Wiseman (R. Luke Wiseman)**: DM cryo-EM methods paper author format ("luke wiseman", no
+  affiliation/ORCID in source) is IDENTICAL to a known-core-theme Wiseman paper (AA147) from the same
+  bioRxiv metadata source — not a mismatch, just a data-source gap. KEEP.
+- Henderson, Sanna, Topol, Park, Xiaotian, Kaufman, Kumsta, Mendoza, Williamson, Ward: reviewed,
+  thematically coherent, no flags raised.
+
+CONCLUSION: wave-13 adds 0 new contaminants. Corpus-wide, the layered gates + this sweep have now
+verified every topic-breadth flag raised across all 13 waves as a legitimate collaboration or
+cross-field work; the only real contaminants ever found remain Osterman (hand surgeon), Dan-S
+Kaufman, pediatric Hogan, and Rao stranger (all fixed at gather time).
+
+REMAINING KNOWN ISSUE (unchanged, for the store pass): Wiseman lab has 3 preprint/published
+duplicate pairs (AA147, PDIA1 x2, XBP1s/CMT1B) — the largest batch found — reinforcing the
+title-similarity dedup fix already required for Millar/Parker/Sung Han before `wave2-pub-store.ts`.
