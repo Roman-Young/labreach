@@ -1,0 +1,140 @@
+{
+  "profiles": [
+    {
+      "id": "p01",
+      "profile": "Sophomore bioengineering major. Took an immunology course and loved it. Interned in a lab doing flow cytometry on T cells. I want to work on cancer immunotherapy and understanding T cell exhaustion in tumors.",
+      "goodLabs": [
+        "http://biology.ucsd.edu/labs/goldrath/",
+        "https://pathology.ucsd.edu/research/labs/morris/index.html",
+        "https://www.lji.org/labs/schoenberger-lab/",
+        "https://regenmed.ucsd.edu/research/kaufman-lab/index.html",
+        "https://www.lji.org/labs/weiskopf-lab/",
+        "https://lulab.biosci.ucsd.edu/",
+        "https://kaech.salk.edu",
+        "http://klemkelab.ucsd.edu/",
+        "https://www.kerstenlab.com/",
+        "https://www.huilab-ucsd.org/"
+      ]
+    },
+    {
+      "id": "p02",
+      "profile": "Third-year molecular biology student interested in CRISPR gene editing and DNA repair. Did a project on double-strand break repair in yeast. Want a structural or mechanistic genome-stability lab.",
+      "goodLabs": []
+    },
+    {
+      "id": "p03",
+      "profile": "Neuroscience major fascinated by how the brain controls behavior. Experience with mouse behavior and optogenetics. Interested in neural circuits for fear, pain, or feeding.",
+      "goodLabs": []
+    },
+    {
+      "id": "p04",
+      "profile": "Chemistry student who likes making molecules. Organic synthesis experience. Want to do chemical biology, small-molecule drug discovery, or total synthesis of natural products.",
+      "goodLabs": []
+    },
+    {
+      "id": "p05",
+      "profile": "Computer science + biology double major. Strong in Python and machine learning. Want to apply ML/AI to biomedical data, knowledge graphs, or medical imaging.",
+      "goodLabs": []
+    },
+    {
+      "id": "p06",
+      "profile": "Interested in structural biology. Took biochemistry, did a cryo-EM rotation imaging a membrane protein. Want to study protein structure of channels, transporters, or molecular machines.",
+      "goodLabs": []
+    },
+    {
+      "id": "p07",
+      "profile": "Pre-med student interested in aging and why we get age-related diseases. Curious about the biology of longevity, senescence, and epigenetic reprogramming.",
+      "goodLabs": []
+    },
+    {
+      "id": "p08",
+      "profile": "Microbiology major interested in the gut microbiome, host-microbe interactions, and antibiotic resistance. Did bench work culturing bacteria.",
+      "goodLabs": []
+    },
+    {
+      "id": "p09",
+      "profile": "Immunology-focused student interested in vaccines and antibodies. Want to work on how the immune system makes broadly neutralizing antibodies against HIV, flu, or coronaviruses.",
+      "goodLabs": []
+    },
+    {
+      "id": "p10",
+      "profile": "Interested in cancer metabolism — how tumors rewire their metabolism to grow. Took a cell biology course, some wet-lab experience with cell culture.",
+      "goodLabs": []
+    },
+    {
+      "id": "p11",
+      "profile": "Stem cell biology and regenerative medicine. Want to understand how tissues like muscle or heart repair themselves and how stem cells could treat disease.",
+      "goodLabs": []
+    },
+    {
+      "id": "p12",
+      "profile": "Biophysics-leaning physics major. Like modeling and quantitative approaches to biology — protein folding, molecular dynamics, or theory of cellular systems.",
+      "goodLabs": []
+    },
+    {
+      "id": "p13",
+      "profile": "Interested in diabetes and metabolic disease. Curious about insulin, beta cells, ER stress, and how the body regulates blood sugar and fat.",
+      "goodLabs": []
+    },
+    {
+      "id": "p14",
+      "profile": "Developmental biology student. Interested in how a single cell becomes an organism — single-cell RNA sequencing, cell fate, and gene regulation during development.",
+      "goodLabs": []
+    },
+    {
+      "id": "p15",
+      "profile": "Interested in RNA biology — how RNA is processed, small RNAs, and RNA-based therapeutics. Some experience with molecular cloning.",
+      "goodLabs": []
+    },
+    {
+      "id": "p16",
+      "profile": "Neuroscience student interested in addiction and the brain — alcohol, opioids, stress circuits, and the amygdala. Did rodent behavior work.",
+      "goodLabs": []
+    },
+    {
+      "id": "p17",
+      "profile": "Interested in circadian rhythms and sleep, and how the body clock connects to metabolism and cancer. Some data-analysis experience.",
+      "goodLabs": []
+    },
+    {
+      "id": "p18",
+      "profile": "Cell biologist interested in how cells eat and recycle — autophagy, macropinocytosis, membrane trafficking, and the lysosome.",
+      "goodLabs": []
+    },
+    {
+      "id": "p19",
+      "profile": "Interested in structural virology — how viruses like Lassa, measles, or SARS-CoV-2 enter cells, and using that for vaccine design.",
+      "goodLabs": []
+    },
+    {
+      "id": "p20",
+      "profile": "Cardiac / heart student. Interested in heart development, arrhythmia, cardiomyocyte regeneration, and models of heart disease.",
+      "goodLabs": []
+    },
+    {
+      "id": "p21",
+      "profile": "Interested in the integrated stress response and proteostasis — how cells cope with misfolded proteins and how that goes wrong in neurodegeneration.",
+      "goodLabs": []
+    },
+    {
+      "id": "p22",
+      "profile": "Bioinformatics student who wants to build tools and databases for biology — data integration, FAIR data, gene/variant annotation, open-source software.",
+      "goodLabs": []
+    },
+    {
+      "id": "p23",
+      "profile": "Interested in behavioral neuroscience and computational ethology — tracking animal behavior with pose estimation and machine learning.",
+      "goodLabs": []
+    },
+    {
+      "id": "p24",
+      "profile": "Interested in epigenetics and chromatin — how DNA methylation and histone marks control gene expression, in development or disease.",
+      "goodLabs": []
+    },
+    {
+      "id": "p25",
+      "profile": "Interested in T cells and autoimmunity — how the immune system distinguishes self from non-self, and what goes wrong in autoimmune disease.",
+      "goodLabs": []
+    }
+  ]
+}
