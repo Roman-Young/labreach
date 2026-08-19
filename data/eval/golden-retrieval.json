@@ -4,22 +4,89 @@
       "id": "p01",
       "profile": "Sophomore bioengineering major. Took an immunology course and loved it. Interned in a lab doing flow cytometry on T cells. I want to work on cancer immunotherapy and understanding T cell exhaustion in tumors.",
       "goodLabs": [
-        "http://biology.ucsd.edu/labs/goldrath/",
-        "https://pathology.ucsd.edu/research/labs/morris/index.html",
-        "https://www.lji.org/labs/schoenberger-lab/",
-        "https://regenmed.ucsd.edu/research/kaufman-lab/index.html",
-        "https://www.lji.org/labs/weiskopf-lab/",
-        "https://lulab.biosci.ucsd.edu/",
-        "https://kaech.salk.edu",
-        "http://klemkelab.ucsd.edu/",
-        "https://www.kerstenlab.com/",
-        "https://www.huilab-ucsd.org/"
+        {
+          "lab_url": "http://biology.ucsd.edu/labs/goldrath/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://pathology.ucsd.edu/research/labs/morris/index.html",
+          "match": "overall"
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/schoenberger-lab/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://regenmed.ucsd.edu/research/kaufman-lab/index.html",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/weiskopf-lab/",
+          "match": "overall"
+        },
+        {
+          "lab_url": "https://lulab.biosci.ucsd.edu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://kaech.salk.edu",
+          "match": "both"
+        },
+        {
+          "lab_url": "http://klemkelab.ucsd.edu/",
+          "match": "paper"
+        },
+        {
+          "lab_url": "https://www.kerstenlab.com/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://www.huilab-ucsd.org/",
+          "match": "both"
+        }
       ]
     },
     {
       "id": "p02",
       "profile": "Third-year molecular biology student interested in CRISPR gene editing and DNA repair. Did a project on double-strand break repair in yeast. Want a structural or mechanistic genome-stability lab.",
-      "goodLabs": []
+      "goodLabs": [
+        {
+          "lab_url": "http://www.scripps.edu/wu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "http://www.scripps.edu/boddy/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://law.salk.edu",
+          "match": "paper"
+        },
+        {
+          "lab_url": "https://kadonagalab.biosci.ucsd.edu/",
+          "match": "paper"
+        },
+        {
+          "lab_url": "https://karlseder.salk.edu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "http://www.scripps.edu/millar/",
+          "match": "overall"
+        },
+        {
+          "lab_url": "https://dongwang.ucsd.edu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://mali.ucsd.edu/index.html",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://komorlab.ucsd.edu/",
+          "match": "both"
+        }
+      ]
     },
     {
       "id": "p03",

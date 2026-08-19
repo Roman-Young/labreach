@@ -89,29 +89,46 @@ async function runAttribution(): Promise<{ pass: boolean; line: string }> {
   return { pass, line: `attribution top-20=${(r20 * 100).toFixed(1)}% (floor 90%) ${pass ? 'PASS' : 'FAIL'}` }
 }
 
+// A good lab qualifies on EITHER dimension (Roman 2026-08-19): `overall` = the lab's whole theme
+// fits the profile; `paper` = the theme diverges but it has ≥1 strongly-relevant paper (the cold-
+// email hook); `both` = strong on both. Recall is reported overall AND per-tag, so we can see if
+// retrieval systematically misses the paper-hook type (harder — a single strong chunk buried under
+// a divergent lab) vs the easy overall-fit type. goodLabs entries may be {lab_url, match} objects
+// or bare strings (treated as 'both').
+function normGood(goodLabs: Array<{ lab_url: string; match?: string } | string>): Array<{ url: string; tag: string }> {
+  return (goodLabs ?? []).map((g) => typeof g === 'string'
+    ? { url: g, tag: 'both' }
+    : { url: g.lab_url, tag: g.match === 'overall' || g.match === 'paper' ? g.match : 'both' })
+}
+
 async function runRelevance(raw: boolean): Promise<{ pass: boolean; line: string } | null> {
   if (!existsSync(GOLDEN)) { console.log(`\n== RELEVANCE: no golden set at ${GOLDEN} yet — run 'draft', label it, save as golden-retrieval.json ==`); return null }
   const { retrieveLabs } = await import('../lib/rag/retrieve')
   const { distillProfile } = await import('../lib/rag/distill')
-  const golden = JSON.parse(readFileSync(GOLDEN, 'utf8')) as { profiles: Array<{ id: string; profile: string; goodLabs: string[] }> }
+  const golden = JSON.parse(readFileSync(GOLDEN, 'utf8')) as { profiles: Array<{ id: string; profile: string; goodLabs: Array<{ lab_url: string; match?: string } | string> }> }
   let sumR20 = 0, sumR10 = 0, sumMrr = 0, graded = 0
-  console.log(`\n== RELEVANCE (Recall/MRR over ${golden.profiles.length} labeled profiles${raw ? ', RAW (no distill)' : ', full distill->retrieve path'}) ==`)
+  const bucket: Record<string, { found: number; total: number }> = { overall: { found: 0, total: 0 }, paper: { found: 0, total: 0 }, both: { found: 0, total: 0 } }
+  console.log(`\n== RELEVANCE (Recall/MRR over labeled profiles${raw ? ', RAW (no distill)' : ', full distill->retrieve path'}) ==`)
   for (const p of golden.profiles) {
-    if (!p.goodLabs?.length) continue
+    const good = normGood(p.goodLabs)
+    if (!good.length) continue
     const query = raw ? p.profile : (await distillProfile({ resume: p.profile, interests: [] })) || p.profile
-    const labs = await retrieveLabs(query, { topLabs: 20 })
-    const ranks = labs.map((l) => l.labUrl)
-    const good = new Set(p.goodLabs)
-    const found20 = ranks.filter((u) => good.has(u)).length
-    const found10 = ranks.slice(0, 10).filter((u) => good.has(u)).length
-    const firstHit = ranks.findIndex((u) => good.has(u))
-    const r20 = found20 / good.size, r10 = found10 / good.size, mrr = firstHit >= 0 ? 1 / (firstHit + 1) : 0
+    const top = (await retrieveLabs(query, { topLabs: 20 })).map((l) => l.labUrl)
+    const top10 = new Set(top.slice(0, 10)); const top20 = new Set(top)
+    const found20 = good.filter((g) => top20.has(g.url)).length
+    const found10 = good.filter((g) => top10.has(g.url)).length
+    const firstHit = top.findIndex((u) => good.some((g) => g.url === u))
+    const r20 = found20 / good.length, r10 = found10 / good.length, mrr = firstHit >= 0 ? 1 / (firstHit + 1) : 0
     sumR20 += r20; sumR10 += r10; sumMrr += mrr; graded++
-    console.log(`   ${p.id} R@20=${(r20 * 100).toFixed(0)}% R@10=${(r10 * 100).toFixed(0)}% MRR=${mrr.toFixed(2)}  (${found20}/${good.size} good labs in top-20)`)
+    for (const g of good) { bucket[g.tag].total++; if (top20.has(g.url)) bucket[g.tag].found++ }
+    const missed = good.filter((g) => !top20.has(g.url)).map((g) => `${g.tag}:${g.url.replace(/https?:\/\/(www[.])?/, '').slice(0, 24)}`)
+    console.log(`   ${p.id} R@20=${(r20 * 100).toFixed(0)}% R@10=${(r10 * 100).toFixed(0)}% MRR=${mrr.toFixed(2)}  (${found20}/${good.length} in top-20)${missed.length ? '  MISSED ' + missed.join(', ') : ''}`)
   }
   if (!graded) { console.log('   (golden set has no labeled goodLabs yet)'); return null }
   const R20 = sumR20 / graded, R10 = sumR10 / graded, MRR = sumMrr / graded
-  console.log(`   ── mean Recall@20=${(R20 * 100).toFixed(1)}%  Recall@10=${(R10 * 100).toFixed(1)}%  MRR=${MRR.toFixed(3)} ──`)
+  const pct = (b: { found: number; total: number }) => b.total ? `${((b.found / b.total) * 100).toFixed(0)}% (${b.found}/${b.total})` : '—'
+  console.log(`   ── mean Recall@20=${(R20 * 100).toFixed(1)}%  Recall@10=${(R10 * 100).toFixed(1)}%  MRR=${MRR.toFixed(3)}  (${graded} profiles) ──`)
+  console.log(`   ── by match type @20:  both ${pct(bucket.both)}   overall-only ${pct(bucket.overall)}   paper-hook-only ${pct(bucket.paper)} ──`)
   const pass = R20 >= 0.7 // provisional floor; tune once the baseline is known
   return { pass, line: `relevance mean-Recall@20=${(R20 * 100).toFixed(1)}% (floor 70%) ${pass ? 'PASS' : 'FAIL'}` }
 }
