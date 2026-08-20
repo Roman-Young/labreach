@@ -117,6 +117,71 @@ student input ─→ interests[] (17 fixed UI chips, max 5, verbatim)
 
 ---
 
+## FINAL BUILD — distiller selection fix (2026-08-20, shipped)
+
+The last input-path bug, and the close of the project. `distillProfile` excluded
+"software/databases/infrastructure" as noise — correct for a wet-lab student listing `Python, Excel`,
+catastrophic for a student whose research IS the software. A bioinformatics resume came back **100%
+empty**, so the query was chips-only and the perfect-match lab (Wu/BioThings) ranked **>30**.
+
+**Fix (Roman's design): SELECT, don't REWRITE.** The distiller filters out noise and hands survivors
+through unchanged. The keep/drop test is now *"is this a PROJECT or a bare LIST?"* rather than *"is
+this software?"* — one principle instead of an exception list that would grow with every newly-found
+broken segment. Enforced in code by `selectVerbatimSpans()` (drops any span not present verbatim in
+the resume), mirroring the anchor-quote GROUNDING GUARD in `extract2.ts` — *enforce, don't trust the
+prompt*. Bundled: retry depth 2→4 (503s were failing whole digest requests) and a `NONE` sentinel that
+tolerates trailing punctuation.
+
+### Results
+
+**Core promise — `scripts/eval-similar-work.ts`** (student-voice descriptions of similar work; the
+guarantee the product actually sells):
+
+| | before | after |
+|---|---|---|
+| rank #1 | 6/8 | **7/8** |
+| top-5 | 7/8 | **8/8** |
+| visible at default slider | 7/8 | **8/8** |
+
+**Wu went >30 → #1. Nothing regressed.** Every lab is now findable by a student who did similar work.
+
+**Archetype sweep — `scripts/eval-distill.ts`** (12 student types; the systematic check that no
+segment is silently broken). 11/12 clean; filtering demonstrably works on realistic noisy resumes:
+industry-intern kept 57% (dropped "managed the team's inventory spreadsheet"), wet-lab 71% (dropped
+GPA + coursework), noise-only → nothing. Verbatim-subset confirmed throughout (100% retention for
+neuro/chem/ecology/theory/engineering — i.e. it copied rather than rewrote).
+
+One flag investigated and **closed as correct behavior**: `coursework-only` (a first-year with only
+classes + a pre-med club) contributes nothing from the resume — there genuinely is no research signal
+— and still gets a usable interests-only query, **not** a 422. A first-year *with* a real science
+project has it preserved verbatim (rule 4 fires). Both verified by hand.
+
+**Distiller A/B (`relevance` vs `--raw`): INCONCLUSIVE BY CONSTRUCTION — do not cite it either way.**
+71.0% vs 71.4% Recall@20 (distilled better on R@10: 49.7% vs 45.1%). The golden-set profiles are
+one-sentence resumes with no noise in them, so there is nothing for a filter to remove and raw ≈
+distilled trivially. The evidence that the distiller earns its keep is the archetype sweep above, not
+this number.
+
+**Test coverage:** `tests/distill.test.ts` — 12 known-answer tests for the pure guard (exact copies
+kept, typography normalized, **rewrites dropped**, fabrications dropped, short fragments dropped, the
+software-resume regression pinned). First-ever coverage for the distiller, and it needed **no mocking
+scaffolding** — which is precisely why the guard was extracted as a pure function.
+
+### Gate results — all green
+
+| gate | result |
+|---|---|
+| Unit tests | **57/57** (45 existing + 12 new) |
+| Typecheck | clean |
+| Similar-work | **7/8 at #1, 8/8 top-5** (floor 7/8) — Wu recovered |
+| Attribution | **98.4% top-5, 100% top-20** — unchanged |
+| Wet-lab control | Sacco / Sung Han / Roberto all still #1 — **no regression** |
+| Relevance | 71.0% (baseline 71.8%, flat within noise on the underpowered n=4 set) |
+
+The revert rule was not triggered.
+
+---
+
 ## The one real bug this whole effort found (and fixed)
 
 `distillProfile` takes `{interests[], resume}` — interests are prepended **verbatim**, the resume is
@@ -147,7 +212,18 @@ not a tuning problem. **Where to look next time: the input path, not the ranking
 
 ## If you touch RAG again, the rule
 
-Run `eval-rag.ts attribution` (regression gate) + `npm test` before and after. **Do not tune against
-the 4-profile relevance set** — it is not powered for it. If a change cannot be justified by a
-*mechanism* (like the input-shape bug), not just a metric delta on a handful of profiles, do not
-ship it.
+Run these before and after — the first two are fast and need no network:
+
+```bash
+npm test                                  # 57/57
+npm run typecheck
+npx tsx scripts/eval-similar-work.ts      # core promise: >=7/8 at #1
+npx tsx scripts/eval-rag.ts attribution   # regression gate: top-5 >=98%, top-20 100%
+npx tsx scripts/eval-distill.ts           # only if you touch distill.ts
+```
+
+**Do not tune against the 4-profile relevance set** — it is not powered for it, and chasing it is
+what produced the tuning treadmill. If a change cannot be justified by a *mechanism* — as both real
+bugs were (input shape, then selection-vs-rewrite) — and only by a metric delta on a handful of
+profiles, **do not ship it**. Every one of the six ranking-math changes that looked good by metric
+alone was later shown to be noise or a regression.
