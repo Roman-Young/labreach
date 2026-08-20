@@ -158,6 +158,25 @@ students: tighter profile, work correlates with interests, smaller viable lab se
 more, shallower pool. The non-over-engineered version of this is ONE KNOB (pool depth, maybe an
 interests-vs-experience weight), not two retrieval systems. Do not fork the pipeline.
 
+## THE `tool` MATCH TYPE (Roman, 2026-08-20) — reconciles Mali vs Talmo
+
+Roman: "if a lab like Talmo is creating tools that contribute to your scientific interest or
+experience, that is a pretty good (though slightly more unorthodox) connection worth flagging."
+
+This looks like it contradicts the earlier "intent must match / drop Mali" call. It doesn't — the
+line is DIRECTION of the tool relationship:
+- **Mali** — *uses* the student's technique (CRISPR) to study an UNRELATED question (functional-
+  genomics screens). Technique is incidental to the lab's science. → NOT a match.
+- **Talmo** — *builds* tools (SLEAP, Keypoint-MoSeq) that SERVE the student's own field. A behavior/
+  optogenetics student interested in fear/pain/feeding circuits would use — or help build — exactly
+  these. → a real, unorthodox connection, tag `tool`.
+
+The test is not "does a keyword overlap" but "is the lab's tool-building IN SERVICE OF the student's
+interest/experience." So the match taxonomy is now four types: `overall`, `paper`, `both`, `tool`
+(see normGood in eval-rag.ts). `tool` labs surface AND carry a flag so the student sees why ("this
+lab builds methods for your area") — which is a differentiated cold-email hook, not noise. Reported
+as its own recall bucket.
+
 ## Method note
 
 Bench scripts: `scripts/_bench_decomp.mjs` (latency + naive union), `_bench_decomp2.mjs` (scoring

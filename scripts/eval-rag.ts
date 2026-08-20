@@ -99,16 +99,23 @@ async function runAttribution(): Promise<{ pass: boolean; line: string }> {
   return { pass, line: `attribution top-20=${(r20 * 100).toFixed(1)}% (floor 90%) ${pass ? 'PASS' : 'FAIL'}` }
 }
 
-// A good lab qualifies on EITHER dimension (Roman 2026-08-19): `overall` = the lab's whole theme
-// fits the profile; `paper` = the theme diverges but it has ≥1 strongly-relevant paper (the cold-
-// email hook); `both` = strong on both. Recall is reported overall AND per-tag, so we can see if
-// retrieval systematically misses the paper-hook type (harder — a single strong chunk buried under
-// a divergent lab) vs the easy overall-fit type. goodLabs entries may be {lab_url, match} objects
-// or bare strings (treated as 'both').
+// A good lab qualifies on ANY of these (Roman 2026-08-19/20):
+//   `overall` — the lab's whole theme fits the profile.
+//   `paper`   — the theme diverges but it has ≥1 strongly-relevant paper (the cold-email hook).
+//   `both`    — strong on theme AND papers.
+//   `tool`    — the UNORTHODOX-but-valid connection: the lab BUILDS tools/methods that serve the
+//               student's interest or experience, even if its biological question differs (e.g. a
+//               behavior/optogenetics student ↔ Talmo Pereira's SLEAP pose-tracking tools). Distinct
+//               from "uses the student's technique for an unrelated question" (Mali/CRISPR-screens),
+//               which is NOT a match — the test is whether the tool-building is IN SERVICE OF the
+//               student's field. Flagged separately so the student sees WHY it surfaced.
+// Recall is reported overall AND per-tag, so we can see which connection types retrieval finds vs
+// misses. goodLabs entries may be {lab_url, match} objects or bare strings (treated as 'both').
+const MATCH_TAGS = ['overall', 'paper', 'both', 'tool']
 function normGood(goodLabs: Array<{ lab_url: string; match?: string } | string>): Array<{ url: string; tag: string }> {
   return (goodLabs ?? []).map((g) => typeof g === 'string'
     ? { url: g, tag: 'both' }
-    : { url: g.lab_url, tag: g.match === 'overall' || g.match === 'paper' ? g.match : 'both' })
+    : { url: g.lab_url, tag: g.match && MATCH_TAGS.includes(g.match) ? g.match : 'both' })
 }
 
 async function runRelevance(raw: boolean): Promise<{ pass: boolean; line: string } | null> {
@@ -117,7 +124,7 @@ async function runRelevance(raw: boolean): Promise<{ pass: boolean; line: string
   const { distillProfile } = await import('../lib/rag/distill')
   const golden = JSON.parse(readFileSync(GOLDEN, 'utf8')) as { profiles: Array<{ id: string; interests?: string[]; resume?: string; profile?: string; goodLabs: Array<{ lab_url: string; match?: string } | string> }> }
   let sumR20 = 0, sumR10 = 0, sumMrr = 0, graded = 0
-  const bucket: Record<string, { found: number; total: number }> = { overall: { found: 0, total: 0 }, paper: { found: 0, total: 0 }, both: { found: 0, total: 0 } }
+  const bucket: Record<string, { found: number; total: number }> = { both: { found: 0, total: 0 }, overall: { found: 0, total: 0 }, paper: { found: 0, total: 0 }, tool: { found: 0, total: 0 } }
   console.log(`\n== RELEVANCE (Recall/MRR over labeled profiles${raw ? ', RAW (no distill)' : ', full distill->retrieve path'}) ==`)
   for (const p of golden.profiles) {
     const good = normGood(p.goodLabs)
@@ -142,7 +149,7 @@ async function runRelevance(raw: boolean): Promise<{ pass: boolean; line: string
   const R20 = sumR20 / graded, R10 = sumR10 / graded, MRR = sumMrr / graded
   const pct = (b: { found: number; total: number }) => b.total ? `${((b.found / b.total) * 100).toFixed(0)}% (${b.found}/${b.total})` : '—'
   console.log(`   ── mean Recall@20=${(R20 * 100).toFixed(1)}%  Recall@10=${(R10 * 100).toFixed(1)}%  MRR=${MRR.toFixed(3)}  (${graded} profiles) ──`)
-  console.log(`   ── by match type @20:  both ${pct(bucket.both)}   overall-only ${pct(bucket.overall)}   paper-hook-only ${pct(bucket.paper)} ──`)
+  console.log(`   ── by match type @20:  both ${pct(bucket.both)}   overall ${pct(bucket.overall)}   paper-hook ${pct(bucket.paper)}   tool ${pct(bucket.tool)} ──`)
   const pass = R20 >= 0.7 // provisional floor; tune once the baseline is known
   return { pass, line: `relevance mean-Recall@20=${(R20 * 100).toFixed(1)}% (floor 70%) ${pass ? 'PASS' : 'FAIL'}` }
 }

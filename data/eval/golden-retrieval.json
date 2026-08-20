@@ -99,7 +99,56 @@
         "neural circuits for fear, pain, or feeding"
       ],
       "resume": "Neuroscience major. Experience with mouse behavior and optogenetics.",
-      "goodLabs": []
+      "goodLabs": [
+        {
+          "lab_url": "https://smithlab.ucsd.edu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://www.banghartlab.org/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://www.salk.edu/scientist/sung-han/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://www.ye-lab.org/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://www.bklimlab.com/home",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://talmolab.org/",
+          "match": "tool"
+        },
+        {
+          "lab_url": "https://tyelab.org/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://lee.salk.edu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://bayless.salk.edu",
+          "match": "overall"
+        },
+        {
+          "lab_url": "https://theaugustinelab.org/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://www.lovettbarronlab.com/",
+          "match": "overall"
+        },
+        {
+          "lab_url": "http://www.scripps.edu/roberto/",
+          "match": "paper"
+        }
+      ]
     },
     {
       "id": "p04",
