@@ -82,6 +82,27 @@ describe('selectVerbatimSpans — drops anything not copied', () => {
     expect(selectVerbatimSpans('NONE', RESUME)).toEqual([])
   })
 
+  it('REGRESSION: markdown/quote wrappers must not destroy the match', () => {
+    // Gemini routinely bolds list items. If wrappers defeated the verbatim check, EVERY span would
+    // be dropped, the resume would contribute nothing, and we'd silently reproduce the exact
+    // empty-resume bug this function exists to prevent.
+    const span = 'Built and documented a public REST API that serves gene annotation data.'
+    expect(selectVerbatimSpans(`**${span}**`, RESUME)).toHaveLength(1)
+    expect(selectVerbatimSpans(`_${span}_`, RESUME)).toHaveLength(1)
+    expect(selectVerbatimSpans(`"${span}"`, RESUME)).toHaveLength(1)
+    expect(selectVerbatimSpans(`- **${span}**`, RESUME)).toHaveLength(1)
+  })
+
+  it('REGRESSION: a span stitched across two resume lines is rejected', () => {
+    // normV collapses newlines, so matching against one flattened blob would let a span splice the
+    // tail of a bare skills list to the head of the next bullet and still "verify" — re-admitting
+    // the noise the prompt drops. A genuine copied span never spans two lines.
+    const resume = 'Skills: Python, R, SQL, Excel\nRESEARCH\nPerformed patch-clamp electrophysiology on neurons.'
+    expect(selectVerbatimSpans('Excel RESEARCH Performed patch-clamp', resume)).toEqual([])
+    // ...while a real single-line span from the same resume still passes
+    expect(selectVerbatimSpans('Performed patch-clamp electrophysiology on neurons.', resume)).toHaveLength(1)
+  })
+
   it('keeps only the real spans when the model mixes copies with rewrites', () => {
     const llm = [
       'Built and documented a public REST API that serves gene annotation data.', // copied

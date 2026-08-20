@@ -28,6 +28,16 @@ export async function POST(req: NextRequest) {
     return json({ error: 'The lab digest is paused for maintenance — please check back shortly.' }, 503)
   }
 
+  // CROSS-ORIGIN COST AMPLIFICATION guard. Without this, a hostile page can POST here with
+  // Content-Type: text/plain — a CORS "simple" request, so no preflight — and every visitor's
+  // browser fires a billed digest call FROM THEIR OWN RESIDENTIAL IP. The attacker can't read the
+  // response, but the spend is already incurred and per-IP limiting is structurally defeated
+  // (each victim is a different IP). Requiring application/json forces a preflight, which a
+  // cross-origin page cannot pass. (2026-08-20 pre-push audit.)
+  if (!(req.headers.get('content-type') ?? '').toLowerCase().includes('application/json')) {
+    return json({ error: 'Invalid request body' }, 415)
+  }
+
   let body: { profile?: string; interests?: string[]; topLabs?: number; labUrl?: string }
   try {
     body = await req.json()
@@ -48,16 +58,32 @@ export async function POST(req: NextRequest) {
   try {
     // Stage B — a specific lab's full research. `profile` here is the ALREADY-DISTILLED query the
     // browse returned, so we don't re-distill (keeps A/B ranking consistent + saves an LLM call).
-    // Part of one browsing session and a cheap single-lab read, so NOT rate-limited.
-    if (body.labUrl) {
+    //
+    // IT IS RATE-LIMITED. It used to return above the limiter, described as "a cheap single-lab
+    // read" — but retrieveLabChunks calls embedQuery(), a BILLED Gemini embedContent call on up to
+    // 8000 chars of attacker-supplied text, and the embed fires BEFORE the lab-existence check, so
+    // even a garbage labUrl burned the call and then 404'd. That made it an unauthenticated,
+    // unmetered paid endpoint outside LLM_DAILY_CAP entirely. (2026-08-20 pre-push audit.)
+    if (body.labUrl !== undefined) {
+      if (typeof body.labUrl !== 'string' || !body.labUrl.trim() || body.labUrl.length > 500) {
+        return json({ error: 'Invalid lab.' }, 400)
+      }
       if (!profile) return json({ error: 'Missing search context for this lab.' }, 400)
+      if (!checkAdminAuth(req)) {
+        const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '127.0.0.1'
+        // Higher than Stage A: opening several labs is normal within one browsing session.
+        const { allowed } = await checkRateLimit(ip, { max: 900, bucket: 'lab' })
+        if (!allowed) return json({ error: 'Too many lab views this hour. Please wait a bit.' }, 429)
+        const cap = await checkDailyCap('digest', LLM_DAILY_CAP)
+        if (!cap.allowed) return json({ error: "The digest has hit today's usage limit. Please try again tomorrow." }, 503)
+      }
       const lab = await buildLabResearch(body.labUrl, profile)
       if (!lab) return json({ error: 'Lab not found.' }, 404)
       return json({ lab })
     }
 
-    // Stage A browse — the only rate-limited path. Cheap (one distill + one embed + SQL), NOT the
-    // expensive research agent, so it gets its own generous bucket, not the agent's 3/hour.
+    // Stage A browse. Cheap (one distill + one embed + SQL), NOT the expensive research agent, so it
+    // gets its own generous bucket, not the agent's 3/hour.
     if (!profile && interests.length === 0) {
       return json({ error: 'Pick a few interests or paste your experience to get a digest.' }, 400)
     }

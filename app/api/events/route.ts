@@ -26,6 +26,11 @@ export async function POST(req: NextRequest) {
   try {
     // Generous per-IP guard purely to stop a runaway client from flooding the table. Sized for a
     // SHARED CLASSROOM IP (a workshop is one NAT), consistent with the digest route's cap.
+    // Same cross-origin guard as /api/digest: application/json is not CORS-safelisted, so requiring
+    // it forces a preflight a hostile page can't pass. The client sends a Blob typed
+    // application/json via sendBeacon, so the legitimate path is unaffected.
+    if (!(req.headers.get('content-type') ?? '').toLowerCase().includes('application/json')) return ok
+
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '127.0.0.1'
     const { allowed } = await checkRateLimit(ip, { max: 3000, bucket: 'events' })
     if (!allowed) return ok

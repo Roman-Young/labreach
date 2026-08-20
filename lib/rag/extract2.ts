@@ -298,12 +298,33 @@ export function assembleLabV2(g: GatheredLab, bundle: string, p: Record<string, 
   // PREPRINT COLLAPSE — the exact dedup above only catches identical source_ids / normalized titles.
   // A paper listed as a bioRxiv preprint AND its journal version usually has DIFFERENT DOIs AND a
   // reworded title ("...in Alzheimer's microglia" → "...in Alzheimer's disease microglia"), so it
-  // slips through and a student sees the same study twice. Collapse a pair of paper chunks whose
-  // titles are ≥0.6 token-Jaccard-similar when EXACTLY ONE is a preprint DOI — drop the preprint,
-  // keep the version of record. Guarded to one-is-preprint so two distinct PUBLISHED papers (annual
-  // reports, related studies) are never merged. (Audit 2026-08-16 found 26 such pairs corpus-wide.)
+  // slips through and a student sees the same study twice. Collapse such a pair — drop the preprint,
+  // keep the version of record. (Audit 2026-08-16 found 26 such pairs corpus-wide.)
+  //
+  // THREE GUARDS, because a false positive here DELETES A REAL PAPER — the one outcome this project
+  // refuses ("no false papers, never lose a real one"). All three were added after the 2026-08-20
+  // pre-push audit caught the original version silently erasing distinct studies:
+  //  1. Keep EVERY token, including 1-2 characters. The original `w.length > 2` filter deleted
+  //     exactly the tokens that discriminate biology titles: "IL-2" vs "IL-6" and "primary T cells"
+  //     vs "primary B cells" each scored a perfect 1.000 and the distinct preprint was dropped.
+  //  2. Threshold 0.82, chosen as a DELIBERATE TRADE-OFF, not a clean separator. Measured on real
+  //     corpus pairs: most genuine preprint/published pairs score 0.833-1.000, and distinct papers
+  //     top out around 0.750 (IL-2/IL-6 0.714, hypothalamus/hippocampus 0.750). BUT the ranges DO
+  //     overlap — Commisso's real dup ("Macropinocytosis maintains CAF subtype identity under
+  //     metabolic stress" / "...controls metabolic stress-driven CAF subtype identity") scores
+  //     0.667, exactly the same as the DISTINCT pair "spatial transcriptomics"/"spatial
+  //     proteomics". Title similarity alone cannot tell those apart. So 0.82 deliberately errs
+  //     toward KEEPING: a student seeing one study twice is cosmetic, deleting a real paper is a
+  //     data-integrity failure and violates this project's core rule. Consequence to accept:
+  //     heavily-reworded dup titles (like that Commisso pair) survive here. That is fine — the
+  //     already-verified corpus dups are quarantined at the DB level (quarantine_ledger), so this
+  //     runtime pass is a backstop for FUTURE gathers, not the primary defense.
+  //  3. Both source_ids must be KNOWN. isPreprintDoi(null) is false, so a chunk whose title missed
+  //     the OpenAlex map (sourceId null by design, see the titleToSid note above) used to count as
+  //     "published" and beat a real preprint — leaving the student the uncitable copy with no DOI.
   const titleTokens = (s: string | null) =>
-    new Set(normT(s).split(' ').filter((w) => w.length > 2))
+    new Set(normT(s).split(' ').filter(Boolean))
+  const PREPRINT_COLLAPSE_MIN_SIMILARITY = 0.82
   const jaccard = (a: Set<string>, b: Set<string>) => {
     if (!a.size || !b.size) return 0
     let inter = 0
@@ -315,9 +336,10 @@ export function assembleLabV2(g: GatheredLab, bundle: string, p: Record<string, 
   for (let a = 0; a < paperIdx.length; a++) {
     for (let b = a + 1; b < paperIdx.length; b++) {
       const A = paperIdx[a], B = paperIdx[b]
+      if (!A.c.sourceId || !B.c.sourceId) continue // guard 3: never collapse against an unknown id
       const aPre = isPreprintDoi(A.c.sourceId), bPre = isPreprintDoi(B.c.sourceId)
       if (aPre === bPre) continue // both preprint or both not → not this rule
-      if (jaccard(titleTokens(A.c.title), titleTokens(B.c.title)) < 0.6) continue
+      if (jaccard(titleTokens(A.c.title), titleTokens(B.c.title)) < PREPRINT_COLLAPSE_MIN_SIMILARITY) continue
       dropIdx.add(aPre ? A.i : B.i) // drop whichever IS the preprint
     }
   }

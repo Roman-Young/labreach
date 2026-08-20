@@ -243,6 +243,16 @@ export function DigestProvider({ children }: { children: React.ReactNode }) {
 
   const selectedLab = state.labs.find((l) => l.labUrl === state.selectedLabUrl) ?? null
 
+  // The 1-based rank AS THE STUDENT SAW IT. digest/labs/page.tsx renders the list with hidden labs
+  // filtered out, so ranking against the raw `labs` array over-reports position: hide the top two,
+  // open the one now displayed first, and it would log rank 3. Since `hiddenLabs` persists across
+  // searches, that skew compounds — and rank exists precisely to reason about position bias, so a
+  // wrong rank silently corrupts the analysis it was added for. (2026-08-20 pre-push audit.)
+  const visibleRank = (labUrl: string): number | null => {
+    const i = state.labs.filter((l) => !state.hiddenLabs.includes(l.labUrl)).findIndex((l) => l.labUrl === labUrl)
+    return i >= 0 ? i + 1 : null
+  }
+
   const value: DigestCtx = {
     ...state,
     hydrated,
@@ -254,23 +264,27 @@ export function DigestProvider({ children }: { children: React.ReactNode }) {
     // `rank` is the 1-based position the lab was shown at, which is what makes it possible to reason
     // about position bias later (students click the top result partly BECAUSE it's the top result).
     selectLab: (labUrl) => {
-      const rank = state.labs.findIndex((l) => l.labUrl === labUrl)
-      track('lab_opened', { labUrl, rank: rank >= 0 ? rank + 1 : null, chips: state.profile.interests })
+      track('lab_opened', { labUrl, rank: visibleRank(labUrl), chips: state.profile.interests })
       setState((s) => ({ ...s, selectedLabUrl: labUrl, labFindings: [], starred: [], draft: null }))
     },
     setLabFindings: (labFindings) => setState((s) => ({ ...s, labFindings })),
-    toggleStar: (f) =>
+    toggleStar: (f) => {
+      // track() MUST stay OUT of the setState updater. React (StrictMode in dev, and update rebasing
+      // in prod) may invoke an updater more than once, and a side effect inside it fires each time —
+      // double-counting every star. Updaters must be pure; read from the closure instead, exactly as
+      // selectLab/hideLab already do. (2026-08-20 pre-push audit.)
+      const k = findingKey(f)
+      const already = state.starred.some((x) => findingKey(x) === k)
+      // Only the positive act is a relevance judgment; un-starring is a correction, not a signal.
+      if (!already) track('finding_starred', { labUrl: state.selectedLabUrl, chips: state.profile.interests, meta: { sourceId: f.sourceId ?? null, year: f.year ?? null } })
       setState((s) => {
-        const k = findingKey(f)
-        const already = s.starred.some((x) => findingKey(x) === k)
-        // Only the positive act is a relevance judgment; un-starring is a correction, not a signal.
-        if (!already) track('finding_starred', { labUrl: s.selectedLabUrl, chips: s.profile.interests, meta: { sourceId: f.sourceId ?? null, year: f.year ?? null } })
-        return { ...s, starred: already ? s.starred.filter((x) => findingKey(x) !== k) : [...s.starred, f] }
-      }),
+        const dup = s.starred.some((x) => findingKey(x) === k)
+        return { ...s, starred: dup ? s.starred.filter((x) => findingKey(x) !== k) : [...s.starred, f] }
+      })
+    },
     isStarred: (f) => state.starred.some((x) => findingKey(x) === findingKey(f)),
     hideLab: (labUrl) => {
-      const rank = state.labs.findIndex((l) => l.labUrl === labUrl)
-      track('lab_hidden', { labUrl, rank: rank >= 0 ? rank + 1 : null, chips: state.profile.interests })
+      track('lab_hidden', { labUrl, rank: visibleRank(labUrl), chips: state.profile.interests })
       setState((s) => ({ ...s, hiddenLabs: s.hiddenLabs.includes(labUrl) ? s.hiddenLabs : [...s.hiddenLabs, labUrl] }))
     },
     unhideLab: (labUrl) => setState((s) => ({ ...s, hiddenLabs: s.hiddenLabs.filter((u) => u !== labUrl) })),

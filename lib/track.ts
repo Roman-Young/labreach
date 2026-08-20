@@ -32,7 +32,8 @@ export function track(
   try {
     const sessionId = getSessionId()
     if (!sessionId) return
-    const body = JSON.stringify({ sessionId, event, ...payload })
+    // Spread payload FIRST so it can never overwrite the envelope fields (sessionId/event).
+    const body = JSON.stringify({ ...payload, sessionId, event })
     // sendBeacon survives page navigation (e.g. the click that routes to the lab page); fall back to
     // a keepalive fetch. Both are fire-and-forget — no await, errors swallowed.
     if (navigator.sendBeacon?.('/api/events', new Blob([body], { type: 'application/json' }))) return

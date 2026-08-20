@@ -42,6 +42,8 @@ KEEP a span if it describes:
 
 OMIT: bare skill/tool LISTS with no project attached (e.g. a line that is just "Skills: Python, R, SQL, Excel"); coursework or class names; contact info; non-science jobs; business/leadership/volunteering unless scientific; GPA; awards without scientific content.
 
+Output PLAIN TEXT only — no markdown, no bold, no italics, no quotes around spans, no bullet characters. One span per line, nothing else.
+
 Select AT MOST 6 spans (~120 words total), strongest first. If nothing in the resume qualifies, output exactly: NONE
 
 RESUME:
@@ -70,18 +72,33 @@ const MIN_SPAN_WORDS = 4
 // and is dropped. Pure function: no network, no LLM — which is what makes it unit-testable without
 // introducing mocking scaffolding the repo doesn't have.
 export function selectVerbatimSpans(llmOutput: string, resume: string): string[] {
-  const haystack = normV(resume)
-  if (!haystack) return []
+  // Match PER LINE, not against one flattened blob. normV collapses newlines, so a single haystack
+  // lets a span stitch together the tail of one line and the head of the next and still "verify" —
+  // e.g. "Excel RESEARCH Performed patch-clamp" splices a bare skills list to a section header to a
+  // real bullet, re-admitting the very noise the prompt drops. A genuine copied span never spans
+  // two resume lines. (2026-08-20 pre-push audit.)
+  const lines = resume.split('\n').map(normV).filter(Boolean)
+  if (!lines.length) return []
+  const inResume = (needle: string) => lines.some((l) => l.includes(needle))
   const seen = new Set<string>()
   const kept: string[] = []
   for (const raw of (llmOutput ?? '').split('\n')) {
-    // tolerate list markers the model may prepend ("- ", "• ", "1. ") — they're formatting, not content
-    const span = raw.replace(/^\s*(?:[-*•]|\d+[.)])\s+/, '').trim()
+    // Strip FORMATTING the model wraps around a span — it is not content, and leaving it in makes the
+    // verbatim match fail. Gemini routinely bolds list items, and the failure is silent and total:
+    // if every span comes back as **bold**, none match, spans.length is 0, the resume contributes
+    // nothing, and we reproduce the exact empty-resume bug this function exists to prevent.
+    // Order matters: drop the list marker first, then unwrap surrounding emphasis/quotes.
+    const span = raw
+      .replace(/^\s*(?:[-*•]|\d+[.)])\s+/, '') // "- ", "• ", "1. ", "1) "
+      .trim()
+      .replace(/^(\*\*|__|\*|_|["'“”‘’])+/, '') // leading **bold**, _italic_, quotes
+      .replace(/(\*\*|__|\*|_|["'“”‘’])+$/, '') // trailing
+      .trim()
     if (!span) continue
     const norm = normV(span)
     if (!norm || seen.has(norm)) continue
     if (norm.split(' ').filter(Boolean).length < MIN_SPAN_WORDS) continue
-    if (!haystack.includes(norm)) continue // rewritten or invented → drop
+    if (!inResume(norm)) continue // rewritten, invented, or stitched across lines → drop
     seen.add(norm)
     kept.push(span)
   }

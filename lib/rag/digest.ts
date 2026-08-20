@@ -120,7 +120,13 @@ export async function buildDigest(profile: string, opts: DigestOpts = {}): Promi
       labUrl: lab.labUrl,
       labName: str(m.lab_name),
       piName: str(m.pi_name) ?? lab.piName,
-      piEmail: str(m.pi_email),
+      // WITHHELD in the browse list, on purpose. This endpoint is unauthenticated and returns up to
+      // 40 labs per call, so including pi_email turned it into a bulk faculty-email harvester —
+      // a handful of varied queries dumps the whole PI list, pre-segmented, attributed to LabReach,
+      // for a spammer. That's other people's PII and not ours to spend. The UI never renders it here
+      // (only app/digest/lab/page.tsx does), and buildLabResearch below still returns it for the
+      // single lab the student actually opened. (2026-08-20 pre-push audit.)
+      piEmail: null,
       department: str(m.department) ?? lab.department,
       dataModality: str(m.data_modality),
       recruiting: str(m.recruiting),
