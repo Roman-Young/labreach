@@ -234,6 +234,42 @@ model decision (Roman's call) before that realignment.
 **Enable gate:** stays OFF until chip-aligned golden validation shows Recall↑ with P@5 flat. Targeted
 tests give confidence it's safe, but production enable waits for the eval.
 
+### REVERSAL after chip-aligned validation (2026-08-20) — do NOT enable as-built
+
+Realigned the golden set's `interests` to the real 17 UI chips (was free text — see below). That
+alone dropped mean Recall@20 71.8% (was 86.4% under the old, artificially-narrow free text) — the
+earlier baseline was optimistic. Then re-ran expansion on the CORRECTED baseline:
+
+| | mean R@20 |
+|---|---|
+| chip-based, no expansion | 71.8% |
+| chip-based, WITH expansion | **65.8%** (worse, now fails the 70% floor) |
+
+**Expansion's earlier win (Cravatt #9→#7) does not generalize.** It was validated against my own
+hand-picked narrow phrase, not a real broad chip query. On the real shape, p03 lost ground (50%→42%,
+also lost Roberto). Mechanism: the expansion arm retrieves on jargon ALONE; for a broad chip like
+"Neuroscience & neurodegeneration" the jargon (neural circuit/synaptic/optogenetics/neurodegeneration)
+is itself generic across dozens of unrelated neuro labs, so it adds noise instead of precision — the
+same breadth-beats-bullseye failure already seen in decomposition, now inside expansion too. Narrow
+chips (chem-bio) still plausibly benefit; broad ones actively hurt. Net negative on n=4.
+
+**Verdict: stays OFF (unchanged — it always was). Do not flip it on as currently built.** Not tuning
+further without labeling more profiles first — adjusting weights/jargon on n=4 would repeat the exact
+mistake this eval exists to prevent. If revisited, the fix is likely PER-CHIP gating (enable only for
+chips whose jargon is measurably discriminative, e.g. via corpus term-frequency spread) rather than a
+single global weight — but that's a hypothesis, not a plan, until there's more data.
+
+### Eval-faithfulness fix that CAUSED this correction — interests are real chips, not free text
+
+Found via Roman asking "is this a UI change?" — clarified it wasn't (chips already existed, untouched)
+but the EVAL's `interests` fields were invented free text ("chemical biology") instead of the real
+chip strings ("Biochemistry & chemical biology") the app actually offers (`app/digest/page.tsx`,
+17 fixed checkboxes, max 5, no free-text option). Fixed by copying every chip verbatim into PROFILES.
+Two profiles don't fit any chip cleanly (p17 circadian rhythms, p18 autophagy/cell biology) — flagged
+inline rather than forcing a bad match; a genuine chip-taxonomy coverage gap, not an eval bug. This is
+the 4th time re-aligning the eval to the REAL product shape changed the answer — each time the eval
+had been quietly testing an easier, unrealistic version of the actual problem.
+
 ## Method note
 
 Bench scripts: `scripts/_bench_decomp.mjs` (latency + naive union), `_bench_decomp2.mjs` (scoring

@@ -23,37 +23,48 @@ const DRAFT = 'data/eval/golden-retrieval.draft.json'
 //
 // SHAPE MATTERS (fixed 2026-08-19 after a diagnostic): these must be split the way the PRODUCT
 // receives them — `interests` (the student's forward-looking topic picks, prepended VERBATIM by
-// distillProfile, no LLM) and `resume` (past experience/methods, LLM-condensed). The first version
-// of this file jammed everything into one prose blob passed as `resume`, where the distiller is
-// DESIGNED to drop stated aspirations ("I want to work on X" is not experience) — so the eval
-// measured a query the product never builds. Re-shaping moved Kersten #20→#1 and Hui #22→#6 for
-// p01 with no code change. Keep interests and resume separate.
+// distillProfile, no LLM) and `resume` (past experience/methods, LLM-condensed).
+//
+// INTERESTS ARE THE REAL 17 UI CHIPS (fixed 2026-08-20), not free text. The product only lets a
+// student pick from the fixed list in app/digest/page.tsx INTERESTS (checkboxes, max 5) — there is
+// no free-text interest field. The first version of this file used invented phrases like "chemical
+// biology" instead of the real chip "Biochemistry & chemical biology", so `expandInterests()` (keyed
+// on exact chip strings) silently matched nothing and `--expand` was a no-op through the whole golden
+// set. Every entry below is copied VERBATIM from INTERESTS. Two profiles (p17 circadian, p18
+// autophagy/membrane-trafficking) don't fit any chip cleanly — flagged inline; this is a genuine
+// finding about chip-taxonomy coverage, not an eval bug, so a slightly-off chip was chosen rather
+// than a chip invented to fit.
+//
+// Chips are BROADER than the old free text (e.g. "Biochemistry & chemical biology" covers more than
+// "total synthesis of natural products" alone) — so the query a student actually sends is broader
+// than what the old eval tested. This can only ever EXPAND the honestly-relevant lab set for a
+// profile; goodLabs for the already-labeled p01-p04 should be spot-checked, not silently trusted.
 const PROFILES: Array<{ id: string; interests: string[]; resume: string }> = [
-  { id: 'p01', interests: ['cancer immunotherapy', 'T cell exhaustion in tumors'], resume: 'Sophomore bioengineering major. Interned in a lab doing flow cytometry on T cells.' },
-  { id: 'p02', interests: ['CRISPR gene editing', 'DNA repair', 'structural genome stability'], resume: 'Third-year molecular biology student. Did a project on double-strand break repair in yeast.' },
-  { id: 'p03', interests: ['neural circuits for fear, pain, or feeding'], resume: 'Neuroscience major. Experience with mouse behavior and optogenetics.' },
-  { id: 'p04', interests: ['chemical biology', 'small-molecule drug discovery', 'total synthesis of natural products'], resume: 'Chemistry student with organic synthesis experience.' },
-  { id: 'p05', interests: ['machine learning for biomedical data', 'biomedical knowledge graphs', 'medical imaging'], resume: 'Computer science and biology double major. Strong in Python and machine learning.' },
-  { id: 'p06', interests: ['structural biology', 'membrane channels and transporters', 'molecular machines'], resume: 'Took biochemistry; did a cryo-EM rotation imaging a membrane protein.' },
-  { id: 'p07', interests: ['biology of aging', 'longevity', 'senescence', 'epigenetic reprogramming'], resume: 'Pre-med student curious about age-related disease.' },
-  { id: 'p08', interests: ['gut microbiome', 'host-microbe interactions', 'antibiotic resistance'], resume: 'Microbiology major. Bench work culturing bacteria.' },
-  { id: 'p09', interests: ['vaccine design', 'broadly neutralizing antibodies', 'HIV, influenza and coronaviruses'], resume: 'Immunology-focused undergraduate.' },
-  { id: 'p10', interests: ['cancer metabolism', 'how tumors rewire metabolism'], resume: 'Took cell biology; some wet-lab experience with cell culture.' },
-  { id: 'p11', interests: ['stem cell biology', 'regenerative medicine', 'muscle and heart repair'], resume: 'Interested in how tissues repair themselves.' },
-  { id: 'p12', interests: ['protein folding', 'molecular dynamics', 'theory of cellular systems'], resume: 'Biophysics-leaning physics major; quantitative modeling.' },
-  { id: 'p13', interests: ['diabetes', 'beta cell biology', 'ER stress', 'metabolic disease'], resume: 'Interested in insulin secretion and blood sugar regulation.' },
-  { id: 'p14', interests: ['developmental biology', 'single-cell RNA sequencing', 'gene regulation and cell fate'], resume: 'Developmental biology student.' },
-  { id: 'p15', interests: ['RNA biology', 'small RNAs', 'RNA-based therapeutics'], resume: 'Some experience with molecular cloning.' },
-  { id: 'p16', interests: ['addiction neuroscience', 'alcohol and opioids', 'stress circuits', 'amygdala'], resume: 'Neuroscience student. Did rodent behavior work.' },
-  { id: 'p17', interests: ['circadian rhythms', 'sleep', 'body clock and metabolism', 'circadian disruption in cancer'], resume: 'Some data-analysis experience.' },
-  { id: 'p18', interests: ['autophagy', 'macropinocytosis', 'membrane trafficking', 'the lysosome'], resume: 'Cell biology student interested in how cells recycle material.' },
-  { id: 'p19', interests: ['structural virology', 'viral entry', 'vaccine design'], resume: 'Interested in Lassa, measles and SARS-CoV-2.' },
-  { id: 'p20', interests: ['heart development', 'arrhythmia', 'cardiomyocyte regeneration'], resume: 'Interested in models of heart disease.' },
-  { id: 'p21', interests: ['integrated stress response', 'proteostasis', 'neurodegeneration'], resume: 'Interested in how cells cope with misfolded proteins.' },
-  { id: 'p22', interests: ['bioinformatics tools and databases', 'data integration', 'FAIR data', 'gene and variant annotation'], resume: 'Bioinformatics student who wants to build open-source software.' },
-  { id: 'p23', interests: ['behavioral neuroscience', 'computational ethology', 'pose estimation', 'machine learning for behavior'], resume: 'Interested in tracking animal behavior from video.' },
-  { id: 'p24', interests: ['epigenetics', 'chromatin', 'DNA methylation', 'histone marks'], resume: 'Interested in how gene expression is controlled in development and disease.' },
-  { id: 'p25', interests: ['T cells', 'autoimmunity', 'self versus non-self recognition'], resume: 'Interested in what goes wrong in autoimmune disease.' },
+  { id: 'p01', interests: ['Cancer & oncology', 'Immunology & immunotherapy'], resume: 'Sophomore bioengineering major. Interned in a lab doing flow cytometry on T cells.' },
+  { id: 'p02', interests: ['Genetics, genomics & epigenetics', 'Structural biology & biophysics'], resume: 'Third-year molecular biology student. Did a project on double-strand break repair in yeast.' },
+  { id: 'p03', interests: ['Neuroscience & neurodegeneration'], resume: 'Neuroscience major. Experience with mouse behavior and optogenetics.' },
+  { id: 'p04', interests: ['Biochemistry & chemical biology', 'Drug discovery & pharmacology'], resume: 'Chemistry student with organic synthesis experience.' },
+  { id: 'p05', interests: ['Computational biology / bioinformatics / ML'], resume: 'Computer science and biology double major. Strong in Python and machine learning.' },
+  { id: 'p06', interests: ['Structural biology & biophysics'], resume: 'Took biochemistry; did a cryo-EM rotation imaging a membrane protein.' },
+  { id: 'p07', interests: ['Aging', 'Genetics, genomics & epigenetics'], resume: 'Pre-med student curious about age-related disease.' },
+  { id: 'p08', interests: ['Microbiome & infectious disease'], resume: 'Microbiology major. Bench work culturing bacteria.' },
+  { id: 'p09', interests: ['Immunology & immunotherapy', 'Microbiome & infectious disease'], resume: 'Immunology-focused undergraduate.' },
+  { id: 'p10', interests: ['Cancer & oncology', 'Cardiovascular & metabolic disease'], resume: 'Took cell biology; some wet-lab experience with cell culture.' },
+  { id: 'p11', interests: ['Stem cells & regenerative medicine'], resume: 'Interested in how tissues repair themselves.' },
+  { id: 'p12', interests: ['Structural biology & biophysics', 'Systems biology'], resume: 'Biophysics-leaning physics major; quantitative modeling.' },
+  { id: 'p13', interests: ['Cardiovascular & metabolic disease'], resume: 'Interested in insulin secretion and blood sugar regulation.' },
+  { id: 'p14', interests: ['Developmental biology', 'Genetics, genomics & epigenetics'], resume: 'Developmental biology student.' },
+  { id: 'p15', interests: ['Genetics, genomics & epigenetics', 'Drug discovery & pharmacology'], resume: 'Some experience with molecular cloning. Interested in RNA-based therapeutics.' },
+  { id: 'p16', interests: ['Neuroscience & neurodegeneration'], resume: 'Neuroscience student. Did rodent behavior work.' },
+  { id: 'p17', interests: ['Systems biology', 'Cardiovascular & metabolic disease'], resume: 'Some data-analysis experience. Interested in circadian rhythms and sleep.' }, // IMPERFECT FIT — no "circadian" chip
+  { id: 'p18', interests: ['Biochemistry & chemical biology'], resume: 'Cell biology student interested in how cells recycle material — autophagy, membrane trafficking.' }, // IMPERFECT FIT — no "cell biology" chip
+  { id: 'p19', interests: ['Microbiome & infectious disease', 'Structural biology & biophysics'], resume: 'Interested in Lassa, measles and SARS-CoV-2.' },
+  { id: 'p20', interests: ['Cardiovascular & metabolic disease', 'Developmental biology'], resume: 'Interested in models of heart disease.' },
+  { id: 'p21', interests: ['Neuroscience & neurodegeneration', 'Biochemistry & chemical biology'], resume: 'Interested in how cells cope with misfolded proteins.' },
+  { id: 'p22', interests: ['Computational biology / bioinformatics / ML'], resume: 'Bioinformatics student who wants to build open-source software.' },
+  { id: 'p23', interests: ['Neuroscience & neurodegeneration', 'Computational biology / bioinformatics / ML'], resume: 'Interested in tracking animal behavior from video.' },
+  { id: 'p24', interests: ['Genetics, genomics & epigenetics'], resume: 'Interested in how gene expression is controlled in development and disease.' },
+  { id: 'p25', interests: ['Immunology & immunotherapy'], resume: 'Interested in what goes wrong in autoimmune disease.' },
 ]
 
 // One display string for logs/labeling (NOT what gets embedded — see PROFILES note above).

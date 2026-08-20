@@ -3,8 +3,8 @@
     {
       "id": "p01",
       "interests": [
-        "cancer immunotherapy",
-        "T cell exhaustion in tumors"
+        "Cancer & oncology",
+        "Immunology & immunotherapy"
       ],
       "resume": "Sophomore bioengineering major. Interned in a lab doing flow cytometry on T cells.",
       "goodLabs": [
@@ -53,9 +53,8 @@
     {
       "id": "p02",
       "interests": [
-        "CRISPR gene editing",
-        "DNA repair",
-        "structural genome stability"
+        "Genetics, genomics & epigenetics",
+        "Structural biology & biophysics"
       ],
       "resume": "Third-year molecular biology student. Did a project on double-strand break repair in yeast.",
       "goodLabs": [
@@ -96,7 +95,7 @@
     {
       "id": "p03",
       "interests": [
-        "neural circuits for fear, pain, or feeding"
+        "Neuroscience & neurodegeneration"
       ],
       "resume": "Neuroscience major. Experience with mouse behavior and optogenetics.",
       "goodLabs": [
@@ -153,9 +152,8 @@
     {
       "id": "p04",
       "interests": [
-        "chemical biology",
-        "small-molecule drug discovery",
-        "total synthesis of natural products"
+        "Biochemistry & chemical biology",
+        "Drug discovery & pharmacology"
       ],
       "resume": "Chemistry student with organic synthesis experience.",
       "goodLabs": [
@@ -232,9 +230,7 @@
     {
       "id": "p05",
       "interests": [
-        "machine learning for biomedical data",
-        "biomedical knowledge graphs",
-        "medical imaging"
+        "Computational biology / bioinformatics / ML"
       ],
       "resume": "Computer science and biology double major. Strong in Python and machine learning.",
       "goodLabs": []
@@ -242,9 +238,7 @@
     {
       "id": "p06",
       "interests": [
-        "structural biology",
-        "membrane channels and transporters",
-        "molecular machines"
+        "Structural biology & biophysics"
       ],
       "resume": "Took biochemistry; did a cryo-EM rotation imaging a membrane protein.",
       "goodLabs": []
@@ -252,10 +246,8 @@
     {
       "id": "p07",
       "interests": [
-        "biology of aging",
-        "longevity",
-        "senescence",
-        "epigenetic reprogramming"
+        "Aging",
+        "Genetics, genomics & epigenetics"
       ],
       "resume": "Pre-med student curious about age-related disease.",
       "goodLabs": []
@@ -263,9 +255,7 @@
     {
       "id": "p08",
       "interests": [
-        "gut microbiome",
-        "host-microbe interactions",
-        "antibiotic resistance"
+        "Microbiome & infectious disease"
       ],
       "resume": "Microbiology major. Bench work culturing bacteria.",
       "goodLabs": []
@@ -273,9 +263,8 @@
     {
       "id": "p09",
       "interests": [
-        "vaccine design",
-        "broadly neutralizing antibodies",
-        "HIV, influenza and coronaviruses"
+        "Immunology & immunotherapy",
+        "Microbiome & infectious disease"
       ],
       "resume": "Immunology-focused undergraduate.",
       "goodLabs": []
@@ -283,8 +272,8 @@
     {
       "id": "p10",
       "interests": [
-        "cancer metabolism",
-        "how tumors rewire metabolism"
+        "Cancer & oncology",
+        "Cardiovascular & metabolic disease"
       ],
       "resume": "Took cell biology; some wet-lab experience with cell culture.",
       "goodLabs": []
@@ -292,9 +281,7 @@
     {
       "id": "p11",
       "interests": [
-        "stem cell biology",
-        "regenerative medicine",
-        "muscle and heart repair"
+        "Stem cells & regenerative medicine"
       ],
       "resume": "Interested in how tissues repair themselves.",
       "goodLabs": []
@@ -302,9 +289,8 @@
     {
       "id": "p12",
       "interests": [
-        "protein folding",
-        "molecular dynamics",
-        "theory of cellular systems"
+        "Structural biology & biophysics",
+        "Systems biology"
       ],
       "resume": "Biophysics-leaning physics major; quantitative modeling.",
       "goodLabs": []
@@ -312,10 +298,7 @@
     {
       "id": "p13",
       "interests": [
-        "diabetes",
-        "beta cell biology",
-        "ER stress",
-        "metabolic disease"
+        "Cardiovascular & metabolic disease"
       ],
       "resume": "Interested in insulin secretion and blood sugar regulation.",
       "goodLabs": []
@@ -323,9 +306,8 @@
     {
       "id": "p14",
       "interests": [
-        "developmental biology",
-        "single-cell RNA sequencing",
-        "gene regulation and cell fate"
+        "Developmental biology",
+        "Genetics, genomics & epigenetics"
       ],
       "resume": "Developmental biology student.",
       "goodLabs": []
@@ -333,20 +315,16 @@
     {
       "id": "p15",
       "interests": [
-        "RNA biology",
-        "small RNAs",
-        "RNA-based therapeutics"
+        "Genetics, genomics & epigenetics",
+        "Drug discovery & pharmacology"
       ],
-      "resume": "Some experience with molecular cloning.",
+      "resume": "Some experience with molecular cloning. Interested in RNA-based therapeutics.",
       "goodLabs": []
     },
     {
       "id": "p16",
       "interests": [
-        "addiction neuroscience",
-        "alcohol and opioids",
-        "stress circuits",
-        "amygdala"
+        "Neuroscience & neurodegeneration"
       ],
       "resume": "Neuroscience student. Did rodent behavior work.",
       "goodLabs": []
@@ -354,31 +332,25 @@
     {
       "id": "p17",
       "interests": [
-        "circadian rhythms",
-        "sleep",
-        "body clock and metabolism",
-        "circadian disruption in cancer"
+        "Systems biology",
+        "Cardiovascular & metabolic disease"
       ],
-      "resume": "Some data-analysis experience.",
+      "resume": "Some data-analysis experience. Interested in circadian rhythms and sleep.",
       "goodLabs": []
     },
     {
       "id": "p18",
       "interests": [
-        "autophagy",
-        "macropinocytosis",
-        "membrane trafficking",
-        "the lysosome"
+        "Biochemistry & chemical biology"
       ],
-      "resume": "Cell biology student interested in how cells recycle material.",
+      "resume": "Cell biology student interested in how cells recycle material — autophagy, membrane trafficking.",
       "goodLabs": []
     },
     {
       "id": "p19",
       "interests": [
-        "structural virology",
-        "viral entry",
-        "vaccine design"
+        "Microbiome & infectious disease",
+        "Structural biology & biophysics"
       ],
       "resume": "Interested in Lassa, measles and SARS-CoV-2.",
       "goodLabs": []
@@ -386,9 +358,8 @@
     {
       "id": "p20",
       "interests": [
-        "heart development",
-        "arrhythmia",
-        "cardiomyocyte regeneration"
+        "Cardiovascular & metabolic disease",
+        "Developmental biology"
       ],
       "resume": "Interested in models of heart disease.",
       "goodLabs": []
@@ -396,9 +367,8 @@
     {
       "id": "p21",
       "interests": [
-        "integrated stress response",
-        "proteostasis",
-        "neurodegeneration"
+        "Neuroscience & neurodegeneration",
+        "Biochemistry & chemical biology"
       ],
       "resume": "Interested in how cells cope with misfolded proteins.",
       "goodLabs": []
@@ -406,10 +376,7 @@
     {
       "id": "p22",
       "interests": [
-        "bioinformatics tools and databases",
-        "data integration",
-        "FAIR data",
-        "gene and variant annotation"
+        "Computational biology / bioinformatics / ML"
       ],
       "resume": "Bioinformatics student who wants to build open-source software.",
       "goodLabs": []
@@ -417,10 +384,8 @@
     {
       "id": "p23",
       "interests": [
-        "behavioral neuroscience",
-        "computational ethology",
-        "pose estimation",
-        "machine learning for behavior"
+        "Neuroscience & neurodegeneration",
+        "Computational biology / bioinformatics / ML"
       ],
       "resume": "Interested in tracking animal behavior from video.",
       "goodLabs": []
@@ -428,10 +393,7 @@
     {
       "id": "p24",
       "interests": [
-        "epigenetics",
-        "chromatin",
-        "DNA methylation",
-        "histone marks"
+        "Genetics, genomics & epigenetics"
       ],
       "resume": "Interested in how gene expression is controlled in development and disease.",
       "goodLabs": []
@@ -439,9 +401,7 @@
     {
       "id": "p25",
       "interests": [
-        "T cells",
-        "autoimmunity",
-        "self versus non-self recognition"
+        "Immunology & immunotherapy"
       ],
       "resume": "Interested in what goes wrong in autoimmune disease.",
       "goodLabs": []
