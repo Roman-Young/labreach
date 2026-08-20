@@ -177,6 +177,31 @@ interest/experience." So the match taxonomy is now four types: `overall`, `paper
 lab builds methods for your area") — which is a differentiated cold-email hook, not noise. Reported
 as its own recall bucket.
 
+## LEADING RETRIEVAL FIX: query expansion (umbrella term → field jargon) — 2026-08-20
+
+The strongest retrieval-improvement lead, because it's MECHANISTIC and reproduces across independent
+cases, not a metric wobble on n=2.
+
+**Symptom:** the marquee lab of a subfield ranks just outside the shown pool.
+- p02 Komor (base editing) — writes "base editors," not "CRISPR gene editing."
+- p04 Cravatt (chemical biology) — the phrase "chemical biology" appears in **0 of his 19 chunks**
+  (papers AND overview). His vocabulary: covalent(6), inhibitor(5), proteomic(5). Lab rank **#20**.
+
+**Mechanism (traced):** students query in UMBRELLA terms; established labs write in FIELD JARGON.
+The sparse arm can't rescue them (their text lacks the query's literal words — Cravatt's best chunk
+is sparse #368), and the dense arm places them mid-pack (#29-41) because their specific-mechanism
+papers embed toward the mechanism, not the umbrella. Counterintuitive consequence: **the bigger and
+more specialized the lab, the more likely it's missed**, because it least often uses the beginner's
+umbrella phrase.
+
+**Fix:** expand each interest term to its field synonyms/jargon before retrieval (e.g. "chemical
+biology" → + "chemoproteomics, activity-based protein profiling, covalent probes, small-molecule
+target ID"). Helps BOTH arms (lexical terms for sparse, richer semantics for dense). Known technique
+(query expansion / pseudo-HyDE). Risks: expansion adds noise, can pull wrong labs — so it MUST be
+validated on the golden set, not shipped on n=4. This is the top item for the "once 8-10 profiles are
+labeled" re-test. Cheap interim reality: both labs sit at ~#20, so the existing 5-30 slider surfaces
+them when a student widens the net.
+
 ## Method note
 
 Bench scripts: `scripts/_bench_decomp.mjs` (latency + naive union), `_bench_decomp2.mjs` (scoring

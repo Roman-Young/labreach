@@ -158,7 +158,76 @@
         "total synthesis of natural products"
       ],
       "resume": "Chemistry student with organic synthesis experience.",
-      "goodLabs": []
+      "goodLabs": [
+        {
+          "lab_url": "https://www.parkerresearch.org/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://shenvilab.org/",
+          "match": "both"
+        },
+        {
+          "lab_url": "http://www.scripps.edu/yu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "http://www.scripps.edu/boger/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://seiple.scripps.edu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://pharmacy.ucsd.edu/faculty/ferguson",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://pharmacy.ucsd.edu/faculty/molinski",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://sbpdiscovery.org/scientists/nicholas-cosford-phd/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://www.bollong.scripps.edu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://dorresteinlab.ucsd.edu/",
+          "match": "overall"
+        },
+        {
+          "lab_url": "https://www.lji.org/labs/myers-lab/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://www.salk.edu/scientist/joseph-noel/",
+          "match": "overall"
+        },
+        {
+          "lab_url": "http://lairson.scripps.edu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "http://abagyan.ucsd.edu/",
+          "match": "tool"
+        },
+        {
+          "lab_url": "https://gilson.cloud.ucsd.edu/",
+          "match": "tool"
+        },
+        {
+          "lab_url": "https://sharpless.scripps.edu/",
+          "match": "both"
+        },
+        {
+          "lab_url": "https://www.cravattlab.com/",
+          "match": "both"
+        }
+      ]
     },
     {
       "id": "p05",
