@@ -18,35 +18,45 @@ const GOLDEN = 'data/eval/golden-retrieval.json'
 const DRAFT = 'data/eval/golden-retrieval.draft.json'
 
 // Realistic target-user profiles (undergrad / early-career seeking a research position at the SD
-// biomedical institutes), spanning the corpus's topic areas. Written as a student would describe
-// themselves — the distiller turns this into the retrieval query, exactly as in production.
-const PROFILES: Array<{ id: string; profile: string }> = [
-  { id: 'p01', profile: 'Sophomore bioengineering major. Took an immunology course and loved it. Interned in a lab doing flow cytometry on T cells. I want to work on cancer immunotherapy and understanding T cell exhaustion in tumors.' },
-  { id: 'p02', profile: 'Third-year molecular biology student interested in CRISPR gene editing and DNA repair. Did a project on double-strand break repair in yeast. Want a structural or mechanistic genome-stability lab.' },
-  { id: 'p03', profile: 'Neuroscience major fascinated by how the brain controls behavior. Experience with mouse behavior and optogenetics. Interested in neural circuits for fear, pain, or feeding.' },
-  { id: 'p04', profile: 'Chemistry student who likes making molecules. Organic synthesis experience. Want to do chemical biology, small-molecule drug discovery, or total synthesis of natural products.' },
-  { id: 'p05', profile: 'Computer science + biology double major. Strong in Python and machine learning. Want to apply ML/AI to biomedical data, knowledge graphs, or medical imaging.' },
-  { id: 'p06', profile: 'Interested in structural biology. Took biochemistry, did a cryo-EM rotation imaging a membrane protein. Want to study protein structure of channels, transporters, or molecular machines.' },
-  { id: 'p07', profile: 'Pre-med student interested in aging and why we get age-related diseases. Curious about the biology of longevity, senescence, and epigenetic reprogramming.' },
-  { id: 'p08', profile: 'Microbiology major interested in the gut microbiome, host-microbe interactions, and antibiotic resistance. Did bench work culturing bacteria.' },
-  { id: 'p09', profile: 'Immunology-focused student interested in vaccines and antibodies. Want to work on how the immune system makes broadly neutralizing antibodies against HIV, flu, or coronaviruses.' },
-  { id: 'p10', profile: 'Interested in cancer metabolism — how tumors rewire their metabolism to grow. Took a cell biology course, some wet-lab experience with cell culture.' },
-  { id: 'p11', profile: 'Stem cell biology and regenerative medicine. Want to understand how tissues like muscle or heart repair themselves and how stem cells could treat disease.' },
-  { id: 'p12', profile: 'Biophysics-leaning physics major. Like modeling and quantitative approaches to biology — protein folding, molecular dynamics, or theory of cellular systems.' },
-  { id: 'p13', profile: 'Interested in diabetes and metabolic disease. Curious about insulin, beta cells, ER stress, and how the body regulates blood sugar and fat.' },
-  { id: 'p14', profile: 'Developmental biology student. Interested in how a single cell becomes an organism — single-cell RNA sequencing, cell fate, and gene regulation during development.' },
-  { id: 'p15', profile: 'Interested in RNA biology — how RNA is processed, small RNAs, and RNA-based therapeutics. Some experience with molecular cloning.' },
-  { id: 'p16', profile: 'Neuroscience student interested in addiction and the brain — alcohol, opioids, stress circuits, and the amygdala. Did rodent behavior work.' },
-  { id: 'p17', profile: 'Interested in circadian rhythms and sleep, and how the body clock connects to metabolism and cancer. Some data-analysis experience.' },
-  { id: 'p18', profile: 'Cell biologist interested in how cells eat and recycle — autophagy, macropinocytosis, membrane trafficking, and the lysosome.' },
-  { id: 'p19', profile: 'Interested in structural virology — how viruses like Lassa, measles, or SARS-CoV-2 enter cells, and using that for vaccine design.' },
-  { id: 'p20', profile: 'Cardiac / heart student. Interested in heart development, arrhythmia, cardiomyocyte regeneration, and models of heart disease.' },
-  { id: 'p21', profile: 'Interested in the integrated stress response and proteostasis — how cells cope with misfolded proteins and how that goes wrong in neurodegeneration.' },
-  { id: 'p22', profile: 'Bioinformatics student who wants to build tools and databases for biology — data integration, FAIR data, gene/variant annotation, open-source software.' },
-  { id: 'p23', profile: 'Interested in behavioral neuroscience and computational ethology — tracking animal behavior with pose estimation and machine learning.' },
-  { id: 'p24', profile: 'Interested in epigenetics and chromatin — how DNA methylation and histone marks control gene expression, in development or disease.' },
-  { id: 'p25', profile: 'Interested in T cells and autoimmunity — how the immune system distinguishes self from non-self, and what goes wrong in autoimmune disease.' },
+// biomedical institutes), spanning the corpus's topic areas.
+//
+// SHAPE MATTERS (fixed 2026-08-19 after a diagnostic): these must be split the way the PRODUCT
+// receives them — `interests` (the student's forward-looking topic picks, prepended VERBATIM by
+// distillProfile, no LLM) and `resume` (past experience/methods, LLM-condensed). The first version
+// of this file jammed everything into one prose blob passed as `resume`, where the distiller is
+// DESIGNED to drop stated aspirations ("I want to work on X" is not experience) — so the eval
+// measured a query the product never builds. Re-shaping moved Kersten #20→#1 and Hui #22→#6 for
+// p01 with no code change. Keep interests and resume separate.
+const PROFILES: Array<{ id: string; interests: string[]; resume: string }> = [
+  { id: 'p01', interests: ['cancer immunotherapy', 'T cell exhaustion in tumors'], resume: 'Sophomore bioengineering major. Interned in a lab doing flow cytometry on T cells.' },
+  { id: 'p02', interests: ['CRISPR gene editing', 'DNA repair', 'structural genome stability'], resume: 'Third-year molecular biology student. Did a project on double-strand break repair in yeast.' },
+  { id: 'p03', interests: ['neural circuits for fear, pain, or feeding'], resume: 'Neuroscience major. Experience with mouse behavior and optogenetics.' },
+  { id: 'p04', interests: ['chemical biology', 'small-molecule drug discovery', 'total synthesis of natural products'], resume: 'Chemistry student with organic synthesis experience.' },
+  { id: 'p05', interests: ['machine learning for biomedical data', 'biomedical knowledge graphs', 'medical imaging'], resume: 'Computer science and biology double major. Strong in Python and machine learning.' },
+  { id: 'p06', interests: ['structural biology', 'membrane channels and transporters', 'molecular machines'], resume: 'Took biochemistry; did a cryo-EM rotation imaging a membrane protein.' },
+  { id: 'p07', interests: ['biology of aging', 'longevity', 'senescence', 'epigenetic reprogramming'], resume: 'Pre-med student curious about age-related disease.' },
+  { id: 'p08', interests: ['gut microbiome', 'host-microbe interactions', 'antibiotic resistance'], resume: 'Microbiology major. Bench work culturing bacteria.' },
+  { id: 'p09', interests: ['vaccine design', 'broadly neutralizing antibodies', 'HIV, influenza and coronaviruses'], resume: 'Immunology-focused undergraduate.' },
+  { id: 'p10', interests: ['cancer metabolism', 'how tumors rewire metabolism'], resume: 'Took cell biology; some wet-lab experience with cell culture.' },
+  { id: 'p11', interests: ['stem cell biology', 'regenerative medicine', 'muscle and heart repair'], resume: 'Interested in how tissues repair themselves.' },
+  { id: 'p12', interests: ['protein folding', 'molecular dynamics', 'theory of cellular systems'], resume: 'Biophysics-leaning physics major; quantitative modeling.' },
+  { id: 'p13', interests: ['diabetes', 'beta cell biology', 'ER stress', 'metabolic disease'], resume: 'Interested in insulin secretion and blood sugar regulation.' },
+  { id: 'p14', interests: ['developmental biology', 'single-cell RNA sequencing', 'gene regulation and cell fate'], resume: 'Developmental biology student.' },
+  { id: 'p15', interests: ['RNA biology', 'small RNAs', 'RNA-based therapeutics'], resume: 'Some experience with molecular cloning.' },
+  { id: 'p16', interests: ['addiction neuroscience', 'alcohol and opioids', 'stress circuits', 'amygdala'], resume: 'Neuroscience student. Did rodent behavior work.' },
+  { id: 'p17', interests: ['circadian rhythms', 'sleep', 'body clock and metabolism', 'circadian disruption in cancer'], resume: 'Some data-analysis experience.' },
+  { id: 'p18', interests: ['autophagy', 'macropinocytosis', 'membrane trafficking', 'the lysosome'], resume: 'Cell biology student interested in how cells recycle material.' },
+  { id: 'p19', interests: ['structural virology', 'viral entry', 'vaccine design'], resume: 'Interested in Lassa, measles and SARS-CoV-2.' },
+  { id: 'p20', interests: ['heart development', 'arrhythmia', 'cardiomyocyte regeneration'], resume: 'Interested in models of heart disease.' },
+  { id: 'p21', interests: ['integrated stress response', 'proteostasis', 'neurodegeneration'], resume: 'Interested in how cells cope with misfolded proteins.' },
+  { id: 'p22', interests: ['bioinformatics tools and databases', 'data integration', 'FAIR data', 'gene and variant annotation'], resume: 'Bioinformatics student who wants to build open-source software.' },
+  { id: 'p23', interests: ['behavioral neuroscience', 'computational ethology', 'pose estimation', 'machine learning for behavior'], resume: 'Interested in tracking animal behavior from video.' },
+  { id: 'p24', interests: ['epigenetics', 'chromatin', 'DNA methylation', 'histone marks'], resume: 'Interested in how gene expression is controlled in development and disease.' },
+  { id: 'p25', interests: ['T cells', 'autoimmunity', 'self versus non-self recognition'], resume: 'Interested in what goes wrong in autoimmune disease.' },
 ]
+
+// One display string for logs/labeling (NOT what gets embedded — see PROFILES note above).
+const shown = (p: { interests: string[]; resume: string }) => `[interests: ${p.interests.join(', ')}] ${p.resume}`
 
 const asRows = (r: unknown): Array<Record<string, unknown>> =>
   (Array.isArray(r) ? r : ((r as { rows?: unknown[] }).rows ?? [])) as Array<Record<string, unknown>>
@@ -105,14 +115,18 @@ async function runRelevance(raw: boolean): Promise<{ pass: boolean; line: string
   if (!existsSync(GOLDEN)) { console.log(`\n== RELEVANCE: no golden set at ${GOLDEN} yet — run 'draft', label it, save as golden-retrieval.json ==`); return null }
   const { retrieveLabs } = await import('../lib/rag/retrieve')
   const { distillProfile } = await import('../lib/rag/distill')
-  const golden = JSON.parse(readFileSync(GOLDEN, 'utf8')) as { profiles: Array<{ id: string; profile: string; goodLabs: Array<{ lab_url: string; match?: string } | string> }> }
+  const golden = JSON.parse(readFileSync(GOLDEN, 'utf8')) as { profiles: Array<{ id: string; interests?: string[]; resume?: string; profile?: string; goodLabs: Array<{ lab_url: string; match?: string } | string> }> }
   let sumR20 = 0, sumR10 = 0, sumMrr = 0, graded = 0
   const bucket: Record<string, { found: number; total: number }> = { overall: { found: 0, total: 0 }, paper: { found: 0, total: 0 }, both: { found: 0, total: 0 } }
   console.log(`\n== RELEVANCE (Recall/MRR over labeled profiles${raw ? ', RAW (no distill)' : ', full distill->retrieve path'}) ==`)
   for (const p of golden.profiles) {
     const good = normGood(p.goodLabs)
     if (!good.length) continue
-    const query = raw ? p.profile : (await distillProfile({ resume: p.profile, interests: [] })) || p.profile
+    // Exercise the REAL production path: interests[] verbatim + resume distilled. (`profile` is the
+    // legacy single-blob field — still honored so an old golden file doesn't silently break.)
+    const interests = p.interests ?? []
+    const resume = p.resume ?? p.profile ?? ''
+    const query = raw ? [interests.join(', '), resume].filter(Boolean).join('. ') : (await distillProfile({ resume, interests })) || resume
     const top = (await retrieveLabs(query, { topLabs: 20 })).map((l) => l.labUrl)
     const top10 = new Set(top.slice(0, 10)); const top20 = new Set(top)
     const found20 = good.filter((g) => top20.has(g.url)).length
@@ -141,11 +155,13 @@ async function makeDraft(): Promise<void> {
     profiles: [],
   }
   for (const p of PROFILES) {
-    const query = (await distillProfile({ resume: p.profile, interests: [] })) || p.profile
+    const query = (await distillProfile({ resume: p.resume, interests: p.interests })) || p.resume
     const labs = await retrieveLabs(query, { topLabs: 12 })
     out.profiles.push({
       id: p.id,
-      profile: p.profile,
+      interests: p.interests,
+      resume: p.resume,
+      profile: shown(p),
       goodLabs: [],
       candidates: labs.map((l) => ({ lab_url: l.labUrl, pi: l.piName, dept: l.department, score: Number(l.score.toFixed(4)) })),
     })
