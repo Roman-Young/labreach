@@ -1,3 +1,14 @@
+// ⚠️ REJECTED / UNUSED — kept only as a record of a measured-and-rejected experiment.
+// NOTHING IMPORTS THIS FILE. Safe to delete. Do not wire it back in without re-reading
+// data/eval/RAG-AUDIT.md § "Rejected changes".
+//
+// Verdict (2026-08-20): query expansion measured NET NEGATIVE on real UI-chip queries —
+// mean Recall@20 71.8% → 65.8%. Its apparent win (Cravatt #9→#7) only existed against
+// artificially narrow hand-written test phrases; on the broad chips the product actually
+// sends, the jargon arm is itself generic and adds noise. The retrieval arm that consumed
+// this was removed from lib/rag/retrieve.ts.
+//
+// ─── original header ───
 // INTEREST-CHIP → FIELD-JARGON expansion map (RAG checklist, 2026-08-20).
 //
 // Why: students pick from a fixed 17-chip interest list (app/digest/page.tsx) in UMBRELLA terms

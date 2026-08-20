@@ -13,7 +13,6 @@
 //       exists. Exits nonzero if a metric is below its floor (so it can gate CI / a pre-deploy hook).
 process.loadEnvFile('.env.local')
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
-import { expandInterests } from '../lib/rag/interest-expansion'
 
 const GOLDEN = 'data/eval/golden-retrieval.json'
 const DRAFT = 'data/eval/golden-retrieval.draft.json'
@@ -146,9 +145,7 @@ async function runRelevance(raw: boolean): Promise<{ pass: boolean; line: string
     const interests = p.interests ?? []
     const resume = p.resume ?? p.profile ?? ''
     const query = raw ? [interests.join(', '), resume].filter(Boolean).join('. ') : (await distillProfile({ resume, interests })) || resume
-    // --expand: A/B the interest-chip → jargon expansion arm (off unless the flag is passed).
-    const expansionQuery = process.argv.includes('--expand') ? expandInterests(interests) : undefined
-    const top = (await retrieveLabs(query, { topLabs: 20, expansionQuery })).map((l) => l.labUrl)
+    const top = (await retrieveLabs(query, { topLabs: 20 })).map((l) => l.labUrl)
     const top10 = new Set(top.slice(0, 10)); const top20 = new Set(top)
     const found20 = good.filter((g) => top20.has(g.url)).length
     const found10 = good.filter((g) => top10.has(g.url)).length
