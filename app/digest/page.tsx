@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { StudentProfile } from '@/types'
 import { useDigest, BTN, INPUT, chip, type LabDigest } from './shared'
+import { track } from '@/lib/track'
 
 // Page 1 — intake. Collect who they are + what they're into, RAG, then go to the lab list. The
 // interest chips are the FLOOR (a no-experience student still gets labs); the resume is optional
@@ -86,7 +87,11 @@ export default function IntakePage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong.')
-      setResults((data.query as string) ?? resume, data.labs as LabDigest[])
+      const labs = data.labs as LabDigest[]
+      // Telemetry: what students search for and how much the search returned. Chips only — the
+      // resume text is never sent (see lib/track.ts).
+      track('search', { chips: interests, meta: { topLabs, resultCount: labs?.length ?? 0, hasResume: resume.trim().length > 0 } })
+      setResults((data.query as string) ?? resume, labs)
       router.push('/digest/labs')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.')

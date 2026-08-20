@@ -62,8 +62,15 @@ export async function POST(req: NextRequest) {
       return json({ error: 'Pick a few interests or paste your experience to get a digest.' }, 400)
     }
     if (!checkAdminAuth(req)) {
+      // SHARED-IP SAFE. This limit is keyed on x-forwarded-for, and a CLASSROOM SHARES ONE PUBLIC IP
+      // (NAT) — so the whole room draws from a single bucket. At the old 30/hr, a 30-student cold-
+      // emailing workshop locked itself out after ~10 people (students search 2-3× while adjusting
+      // interests), everyone else getting a 429. The cap must therefore be sized for a ROOM, not a
+      // person. Cost is NOT what this protects: the digest is ~$0.0015/call and the real ceiling is
+      // the IP-independent global LLM_DAILY_CAP below (5000/day ≈ $7.50 worst case). This stays only
+      // as an anti-abuse guard against one host hammering the endpoint.
       const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '127.0.0.1'
-      const { allowed } = await checkRateLimit(ip, { max: 30, bucket: 'digest' })
+      const { allowed } = await checkRateLimit(ip, { max: 300, bucket: 'digest' })
       if (!allowed) {
         return json({ error: 'Too many digests this hour. Please wait a bit before trying again.' }, 429)
       }

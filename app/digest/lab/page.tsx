@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDigest, Badge, FindingCard, ApplyInfoCard, findingKey, LINK, BTN, type DigestFinding, type LabDigest } from '../shared'
+import { track } from '@/lib/track'
 
 // Page 3 — the selected lab's research, ANTI-OVERLOAD edition (Roman, 2026-08-10): orientation
 // first (plain-terms panel, apply info), then just the top 3 recent+relevant papers with a
@@ -24,7 +25,7 @@ function topThree(papers: DigestFinding[]): DigestFinding[] {
 
 export default function LabPage() {
   const router = useRouter()
-  const { selectedLab, query, toggleStar, isStarred, starred, setLabFindings, hydrated } = useDigest()
+  const { selectedLab, query, profile, toggleStar, isStarred, starred, setLabFindings, hydrated } = useDigest()
   const [findings, setFindings] = useState<DigestFinding[] | null>(null)
   const [showAll, setShowAll] = useState(false)
   const [tipDismissed, setTipDismissed] = useState(true) // assume dismissed until localStorage read
@@ -183,7 +184,11 @@ export default function LabPage() {
             {starCount === 0 ? 'Star at least one finding to build an email' : `${starCount} finding${starCount > 1 ? 's' : ''} starred`}
           </span>
           <button
-            onClick={() => router.push('/digest/compose')}
+            onClick={() => {
+              // Strongest intent signal in the funnel: the student is actually going to email them.
+              track('email_composed', { labUrl: lab.labUrl, chips: profile.interests, meta: { starredCount: starCount } })
+              router.push('/digest/compose')
+            }}
             disabled={starCount === 0}
             className={`px-4 py-2 text-sm whitespace-nowrap shrink-0 ${BTN}`}
           >

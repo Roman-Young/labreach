@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
+import { track } from '@/lib/track'
 
 // Shared types, presentational components, and the flow context for the multi-page digest flow
 // (intake → labs → lab → compose). State is held in one context and mirrored to localStorage so
@@ -248,15 +249,30 @@ export function DigestProvider({ children }: { children: React.ReactNode }) {
     selectedLab,
     setProfile: (profile) => setState((s) => ({ ...s, profile })),
     setResults: (query, labs) => setState((s) => ({ ...s, query, labs })),
-    selectLab: (labUrl) => setState((s) => ({ ...s, selectedLabUrl: labUrl, labFindings: [], starred: [], draft: null })),
+    // Telemetry is wired HERE, in the shared context, rather than in each page — so every star/hide/
+    // open is captured wherever it's triggered and a new call site can't silently forget to log.
+    // `rank` is the 1-based position the lab was shown at, which is what makes it possible to reason
+    // about position bias later (students click the top result partly BECAUSE it's the top result).
+    selectLab: (labUrl) => {
+      const rank = state.labs.findIndex((l) => l.labUrl === labUrl)
+      track('lab_opened', { labUrl, rank: rank >= 0 ? rank + 1 : null, chips: state.profile.interests })
+      setState((s) => ({ ...s, selectedLabUrl: labUrl, labFindings: [], starred: [], draft: null }))
+    },
     setLabFindings: (labFindings) => setState((s) => ({ ...s, labFindings })),
     toggleStar: (f) =>
       setState((s) => {
         const k = findingKey(f)
-        return { ...s, starred: s.starred.some((x) => findingKey(x) === k) ? s.starred.filter((x) => findingKey(x) !== k) : [...s.starred, f] }
+        const already = s.starred.some((x) => findingKey(x) === k)
+        // Only the positive act is a relevance judgment; un-starring is a correction, not a signal.
+        if (!already) track('finding_starred', { labUrl: s.selectedLabUrl, chips: s.profile.interests, meta: { sourceId: f.sourceId ?? null, year: f.year ?? null } })
+        return { ...s, starred: already ? s.starred.filter((x) => findingKey(x) !== k) : [...s.starred, f] }
       }),
     isStarred: (f) => state.starred.some((x) => findingKey(x) === findingKey(f)),
-    hideLab: (labUrl) => setState((s) => ({ ...s, hiddenLabs: s.hiddenLabs.includes(labUrl) ? s.hiddenLabs : [...s.hiddenLabs, labUrl] })),
+    hideLab: (labUrl) => {
+      const rank = state.labs.findIndex((l) => l.labUrl === labUrl)
+      track('lab_hidden', { labUrl, rank: rank >= 0 ? rank + 1 : null, chips: state.profile.interests })
+      setState((s) => ({ ...s, hiddenLabs: s.hiddenLabs.includes(labUrl) ? s.hiddenLabs : [...s.hiddenLabs, labUrl] }))
+    },
     unhideLab: (labUrl) => setState((s) => ({ ...s, hiddenLabs: s.hiddenLabs.filter((u) => u !== labUrl) })),
     setDraft: (draft) => setState((s) => ({ ...s, draft })),
   }
