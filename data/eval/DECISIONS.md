@@ -52,6 +52,47 @@ falls out of the fan-out for free (we already log which sub-query matched each l
 thematically divergent lab. If paper-hook recall stays low across a bigger sample, that's the case
 for chunk-level surfacing, not query decomposition.
 
+## THE REFRAME (Roman, 2026-08-20) — recall, not precision
+
+> "It doesn't have to return only the best things, it just has to return all valid good ones."
+
+The product is browse-and-star: the STUDENT is the final reranker. So the objective is getting every
+valid lab into the pool they scan — not ordering the pool perfectly. That single sentence decides
+most of the open questions, and the data backs it:
+
+**Pool depth is the cheapest recall lever, and it beats every ranking scheme tested.**
+| approach | Recall@20-equivalent | engineering cost |
+|---|---|---|
+| blended @20 (today) | 13/18 (72%) | — |
+| decomposition, sum arms | 11/18 | days + latency + new failure modes |
+| decomposition, max/decay arms | 13/18 | days + latency + new failure modes |
+| **blended @30 (just show more)** | **16/18 (89%)** | **one config value** |
+| blended @40 | 16/18 (no further gain) | — |
+
+Consequences:
+- **Decomposition: DON'T BUILD.** Loses to a config change. Revisit only if depth plateaus and
+  paper-hook recall is still bad on a bigger sample.
+- **Reranking: DON'T BUILD.** Reranking is a precision tool; we don't have a precision problem.
+  Confirms `retrieve.ts`'s original "no reranker" call.
+- **Recency boost: RECONSIDER — it contradicts this principle.** Roman picked it earlier, but a
+  recency weight REORDERS the pool without adding valid labs; a lab whose best-fit paper is 2021 is
+  still a valid match inside the 5-year floor. It's precision work. Recommend dropping it, or
+  demoting it to a display-order tiebreak that can't push a valid lab out of the pool.
+- **Metric: Recall@30 is the north star; MRR is diagnostic only.** MRR rewards "best first" =
+  precision. Optimizing it would pull us back toward the thing we just decided not to care about.
+- **Two-sided (interests ⊕ experience) with source flags: BUILD.** It's a union → strictly more
+  valid labs in the pool (a recall move), plus the student sees WHY a lab matched. Aligned.
+
+**Still missing beyond @40** (the genuinely hard residue, n=2 so treat as anecdote): Weiskopf
+(`overall`) and Klemke (`paper`-hook, missed by every scheme). If paper-hook recall stays low on a
+bigger sample, that argues for surfacing the matching CHUNK, not for query decomposition.
+
+**Undergrad vs grad (Roman's forward look).** Undergrads: experience often does NOT correlate with
+target field (they took whatever lab job they could get) → wide net, recall-first, deeper pool. Grad
+students: tighter profile, work correlates with interests, smaller viable lab set → precision matters
+more, shallower pool. The non-over-engineered version of this is ONE KNOB (pool depth, maybe an
+interests-vs-experience weight), not two retrieval systems. Do not fork the pipeline.
+
 ## Method note
 
 Bench scripts: `scripts/_bench_decomp.mjs` (latency + naive union), `_bench_decomp2.mjs` (scoring
