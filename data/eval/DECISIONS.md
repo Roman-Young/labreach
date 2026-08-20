@@ -202,6 +202,38 @@ validated on the golden set, not shipped on n=4. This is the top item for the "o
 labeled" re-test. Cheap interim reality: both labs sit at ~#20, so the existing 5-30 slider surfaces
 them when a student widens the net.
 
+## QUERY EXPANSION — BUILT (off by default), targeted-validated 2026-08-20
+
+Files: `lib/rag/interest-expansion.ts` (the 17-chip → jargon map, Roman-audited) + `retrieveLabs`
+`opts.expansionQuery` (additive low-weight arm; absent → behavior byte-identical to before) +
+`eval-rag.ts --expand`. Corpus untouched; query-side only.
+
+**Safe:** baseline (no expansionQuery) is unchanged; Parker (a strong chem-bio match) #1→#1 — expansion
+never demotes a strong match. Additive fusion only ever ADDS a discounted bonus, never lowers a base
+score.
+
+**Helps where the chip is well-scoped:** Cravatt (the chemical-biology lab) #9→#7 for the chem-bio
+chip, because that chip's jargon (chemoproteomics/covalent) IS his vocabulary, with no collateral.
+
+**Doesn't help — and can't cleanly — for coarse multi-subfield chips.** Komor (gene editing) stays
+>40 under "Genetics, genomics & epigenetics" because that chip's jargon is epigenetics-leaning.
+Adding gene-editing terms lifts her (>40→#8) BUT demotes an epigenomics lab (Ecker #13→#26). The chip
+lumps gene-editing + genomics + epigenetics; one expansion can't serve all three. This is chip-level
+multi-topic dilution — a TAXONOMY problem, not a retrieval one. Real fix = a finer chip (split
+"Genetics…" or add a "Gene editing / CRISPR" chip), which is a UI/product decision. Recommendation:
+keep the Genetics chip's expansion conservative (epi-leaning, demotes nobody); let a gene-editing
+student's RESUME carry "CRISPR"; revisit with a finer chip if the eval shows the niche matters.
+
+**Can't validate via the golden set yet** — 3rd eval-faithfulness gap found: the eval profiles'
+`interests` are free-text phrases ("chemical biology"), NOT the 17 fixed UI chips ("Biochemistry &
+chemical biology") the map keys on, so `--expand` was a no-op through the golden set (the MRR wiggle
+was distill LLM nondeterminism). To validate: re-express each profile's interests as real chips. BUT
+chips are much BROADER than my phrases, which changes the relevant-lab set and the labels — a labeling-
+model decision (Roman's call) before that realignment.
+
+**Enable gate:** stays OFF until chip-aligned golden validation shows Recall↑ with P@5 flat. Targeted
+tests give confidence it's safe, but production enable waits for the eval.
+
 ## Method note
 
 Bench scripts: `scripts/_bench_decomp.mjs` (latency + naive union), `_bench_decomp2.mjs` (scoring

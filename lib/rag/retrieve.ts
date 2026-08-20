@@ -58,6 +58,13 @@ export interface RetrieveLabsOpts extends RetrieveOpts {
   chunksPerLab?: number
   scoreTopN?: number
   scoreDecay?: number
+  // Interest-chip → field-jargon expansion (see lib/rag/interest-expansion.ts). When a non-empty
+  // string is passed, retrieveLabs runs it as a SECOND, low-weight arm fused ADDITIVELY into the base
+  // result — bridging umbrella queries to marquee specialized labs (Cravatt/Komor). When ABSENT
+  // (the default), retrieveLabs behaves EXACTLY as before — this is the off switch, and it's the
+  // default, so nothing changes until a caller opts in. Base scores are never lowered.
+  expansionQuery?: string
+  expansionWeight?: number // bonus weight on the expansion arm; default 0.4 (< 1 so base dominates)
 }
 
 const asRows = (r: unknown): Array<Record<string, unknown>> =>
@@ -225,6 +232,26 @@ export async function retrieveLabs(query: string, opts: RetrieveLabsOpts = {}): 
   const scoreTopN = opts.scoreTopN ?? 5
   const decay = opts.scoreDecay ?? 0.5
   const chunks = await retrieveChunks(query, opts)
+
+  // ADDITIVE expansion arm — only when a caller opts in with a non-empty expansionQuery. Runs the
+  // jargon terms as a second retrieval and folds them into the base list by ADDING a discounted
+  // bonus (weight < 1) to each chunk's rrf. A base chunk keeps its full base score and may gain a
+  // little; a chunk found ONLY by expansion enters at the discounted score. No base score is ever
+  // reduced, so the base ranking's strong matches can't be displaced by dilution — expansion can
+  // only promote near-misses. Absent expansionQuery → this block is skipped and behavior is identical
+  // to before. (Gated in production by LABREACH_QUERY_EXPANSION at the digest layer.)
+  const expansionQuery = opts.expansionQuery?.trim()
+  if (expansionQuery) {
+    const w = opts.expansionWeight ?? 0.4
+    const expChunks = await retrieveChunks(expansionQuery, opts)
+    const byId = new Map(chunks.map((c) => [c.chunkId, c]))
+    for (const ec of expChunks) {
+      const base = byId.get(ec.chunkId)
+      if (base) base.rrf += w * ec.rrf
+      else { ec.rrf = w * ec.rrf; byId.set(ec.chunkId, ec); chunks.push(ec) }
+    }
+    chunks.sort((a, b) => b.rrf - a.rrf)
+  }
 
   const byLab = new Map<string, RetrievedChunk[]>()
   for (const c of chunks) {
