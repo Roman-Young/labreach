@@ -78,14 +78,79 @@ Consequences:
   recency weight REORDERS the pool without adding valid labs; a lab whose best-fit paper is 2021 is
   still a valid match inside the 5-year floor. It's precision work. Recommend dropping it, or
   demoting it to a display-order tiebreak that can't push a valid lab out of the pool.
-- **Metric: Recall@30 is the north star; MRR is diagnostic only.** MRR rewards "best first" =
-  precision. Optimizing it would pull us back toward the thing we just decided not to care about.
+- **Metric: TWO metrics, not one** (corrected 2026-08-20 after Roman pushed back on my
+  over-correction — see "RANKING STILL MATTERS" below). Recall@N for coverage, Precision@5 for
+  top-of-list quality. Optimizing either alone is wrong.
 - **Two-sided (interests ⊕ experience) with source flags: BUILD.** It's a union → strictly more
   valid labs in the pool (a recall move), plus the student sees WHY a lab matched. Aligned.
 
 **Still missing beyond @40** (the genuinely hard residue, n=2 so treat as anecdote): Weiskopf
 (`overall`) and Klemke (`paper`-hook, missed by every scheme). If paper-hook recall stays low on a
 bigger sample, that argues for surfacing the matching CHUNK, not for query decomposition.
+
+### RANKING STILL MATTERS (Roman's correction, 2026-08-20) — I over-corrected
+
+I swung from "precision matters" to "only recall matters." Wrong. Roman:
+
+> "We should still rank the labs in the general order of most related... if a lab aligned with their
+> interest AND their experience, that should definitely be at the top... otherwise there's just a lot
+> of mess for them to look at."
+
+Two facts I should have checked before recommending a depth change:
+1. **Pool depth is ALREADY user-controlled** — `app/digest/page.tsx` has a 5–30 slider (default
+   **15**, not 20). The student decides breadth-vs-focus; shipping a new default was never the lever.
+   NOTE: default 15 means real-world recall sits BELOW the @20 numbers measured above.
+2. **The UI literally promises ordering** — slider caption: *"The most relevant always come first."*
+   Ranking quality is a stated commitment to the user, not an optional nicety.
+
+So the correct synthesis is BOTH, with a clean division of labor:
+- **Recall** decides what's IN the pool. The student sets depth; our job is that valid labs appear
+  within whatever depth they choose.
+- **Ranking** decides the ORDER inside it. Attention is finite and the top is what actually gets
+  read — an unranked pool is "a lot of mess."
+- **The ranking rule Roman wants:** a lab matching BOTH interests and experience outranks one
+  matching only a single dimension.
+
+**This resurrects the arm-based (two-sided) machinery — but justified on RANKING, not recall.** A
+single blended embedding produces one score and CANNOT tell you why a lab matched; separate
+interest/experience arms are the only way to know "this hit both." That same attribution powers the
+source flags.
+
+**...and then the measurement said don't ship it as a RANKING change:**
+| | P@5 | R@15 |
+|---|---|---|
+| blended (today) | **60.0%** | 72.5% |
+| two-sided (best-arm + ½ other) | 50.0% | **78.8%** |
+
+Two-sided trades top-of-list quality for coverage — backwards from what Roman asked for. Today's
+blended ordering is already the better one at the top.
+
+**Key negative result: "matched both arms" is a DEGENERATE signal as implemented.** In the top-30,
+labs hitting both arms were 25/30 (p01) and 27/30 (p02) — with 80 candidates per arm, essentially
+every lab appears in both, so the flag carries almost no information. Roman's rule is sound in
+principle; capturing it needs "*strongly ranked* in both arms" (e.g. both ranks inside top-N, or a
+product/min of arm scores), not mere presence. Untested — and testing formulations at n=2 is exactly
+the eyeballing this eval exists to replace.
+
+**SAFE SPLIT (recommended): keep blended RANKING, add arm attribution as DISPLAY-ONLY metadata.**
+Compute which arm(s) a lab matched and show "matches your interest / matches your experience" without
+touching order. Gives Roman the transparency he wants, zero ranking risk, no metric regression.
+Revisit arm-based ORDERING once the golden set is big enough to decide it.
+
+## STOP DESIGNING, START LABELING (2026-08-20)
+
+Four benchmarks now — decomposition, arm-scoring shootout, depth curve, ranking — each produced a
+*differently-signed* weak answer on the same 2 profiles. That pattern is the signature of an
+undersized sample, not of a hard problem. Continuing to propose retrieval changes on n=2 would be
+precisely the "eyeball whether it helped" the eval was built to eliminate.
+
+Confidently known today:
+- Input shape `{interests, resume}` was a real bug, fixed. (Mechanism-verified, not a metric wobble.)
+- Today's blended ranking is decent at the top (P@5 = 60%).
+- Depth raises recall (@20 72% → @30 89%), and the STUDENT already controls it (5–30 slider).
+- Everything else — decomposition, arm ranking, recency — is unresolved noise at this sample size.
+
+Next action is labeling ~6–8 more profiles (target 8–10 total), not more benchmarks.
 
 **Undergrad vs grad (Roman's forward look).** Undergrads: experience often does NOT correlate with
 target field (they took whatever lab job they could get) → wide net, recall-first, deeper pool. Grad
