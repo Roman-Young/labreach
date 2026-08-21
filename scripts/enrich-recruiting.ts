@@ -10,6 +10,14 @@
 //   npx tsx scripts/enrich-recruiting.ts [--only-unknown] [--limit N] [--concurrency C=3]
 //     --only-unknown : only labs currently recruiting='unknown' (or null) — the default, cheapest set.
 //                      Omit to also re-verify labs that already have open/explicit_no (audit sweep).
+//     --audit-claimed : ONLY labs currently recruiting IN ('open','explicit_no') — i.e. the labs
+//                      showing a hard badge/bar to students. 2026-08-21 finding: every 'open' and
+//                      'explicit_no' row in prod has recruiting_evidence = NULL — those verdicts
+//                      predate this quote-disciplined pass and were never re-checked, so the
+//                      product's one hard filter is unaudited. Unlike --all (which never demotes an
+//                      existing claim it can't reground, to avoid flakiness on the DEFAULT pass),
+//                      --audit-claimed DOES demote to 'unknown' when it can't produce a grounded
+//                      quote THIS run — the whole point is "a claim with no evidence isn't a claim."
 export {} // module scope
 process.loadEnvFile('.env.local')
 import { GoogleGenerativeAI, SchemaType, type Schema } from '@google/generative-ai'
@@ -64,6 +72,7 @@ async function main() {
   const has = (n: string) => args.includes(`--${n}`)
   const limit = flag('limit')
   const concurrency = flag('concurrency') ?? 3
+  const auditClaimed = has('audit-claimed')
   const onlyUnknown = !has('all') // default true; --all does a full re-verify sweep
 
   const apiKey = process.env.GOOGLE_AI_API_KEY
@@ -79,11 +88,13 @@ async function main() {
     } as unknown as Record<string, unknown>,
   })
 
-  const where = onlyUnknown ? `status='done' AND (recruiting IS NULL OR recruiting='unknown')` : `status='done'`
+  const where = auditClaimed
+    ? `status='done' AND recruiting IN ('open','explicit_no')`
+    : onlyUnknown ? `status='done' AND (recruiting IS NULL OR recruiting='unknown')` : `status='done'`
   const labs = asRows(await sql.query(
     `SELECT lab_url, pi_name FROM lab_profiles WHERE ${where} ORDER BY lab_url ${limit ? `LIMIT ${limit}` : ''}`,
   ))
-  console.log(`re-extracting recruiting for ${labs.length} labs (${onlyUnknown ? 'unknown-only' : 'ALL done'}, concurrency ${concurrency})...`)
+  console.log(`re-extracting recruiting for ${labs.length} labs (${auditClaimed ? 'AUDIT claimed open/explicit_no' : onlyUnknown ? 'unknown-only' : 'ALL done'}, concurrency ${concurrency})...`)
 
   let openN = 0, noN = 0, unkN = 0, unchanged = 0, failed = 0
   let idx = 0
@@ -101,11 +112,22 @@ async function main() {
         }
         siteBundle = siteBundle.slice(0, 40000)
         if (!siteBundle.trim()) {
-          // No cached site text to look at — still stamp checked_at (we did look, found nothing to
-          // read), but never overwrite an existing status with 'unknown' on missing content alone.
-          await sql.query(`UPDATE lab_profiles SET recruiting_checked_at=now() WHERE lab_url=$1`, [lab.lab_url])
-          unchanged++
-          console.log(`  · ${lab.pi_name} — no site pages, checked_at stamped`)
+          if (auditClaimed) {
+            // Nothing cached to verify the CLAIMED status against at all — an unverifiable claim is
+            // not a claim. Demote rather than leave an unsupported badge standing.
+            await sql.query(
+              `UPDATE lab_profiles SET recruiting='unknown', recruiting_evidence=NULL, recruiting_checked_at=now() WHERE lab_url=$1`,
+              [lab.lab_url],
+            )
+            unkN++
+            console.log(`  ↓ ${lab.pi_name} — no cached pages to verify claim, demoted to unknown`)
+          } else {
+            // No cached site text to look at — still stamp checked_at (we did look, found nothing to
+            // read), but never overwrite an existing status with 'unknown' on missing content alone.
+            await sql.query(`UPDATE lab_profiles SET recruiting_checked_at=now() WHERE lab_url=$1`, [lab.lab_url])
+            unchanged++
+            console.log(`  · ${lab.pi_name} — no site pages, checked_at stamped`)
+          }
           continue
         }
 
@@ -130,12 +152,20 @@ async function main() {
 
         // Always stamp checked_at (we did look this run) — this is what makes 'unknown' auditable
         // rather than a shrug. Only touch status/evidence when we found grounded signal, so a
-        // dropped candidate never regresses an existing open/explicit_no verdict.
+        // dropped candidate never regresses an existing open/explicit_no verdict — EXCEPT in
+        // --audit-claimed mode, where the row was selected BECAUSE it's an unverified claim, and
+        // failing to reground it this run is exactly the signal that should demote it.
         if (status !== 'unknown') {
           await sql.query(
             `UPDATE lab_profiles SET recruiting=$1, recruiting_evidence=$2, recruiting_checked_at=now() WHERE lab_url=$3`,
             [status, evidence, lab.lab_url],
           )
+        } else if (auditClaimed) {
+          await sql.query(
+            `UPDATE lab_profiles SET recruiting='unknown', recruiting_evidence=NULL, recruiting_checked_at=now() WHERE lab_url=$1`,
+            [lab.lab_url],
+          )
+          console.log(`  ↓ ${lab.pi_name} — no grounded evidence found, demoted to unknown`)
         } else {
           await sql.query(`UPDATE lab_profiles SET recruiting_checked_at=now() WHERE lab_url=$1`, [lab.lab_url])
         }

@@ -114,6 +114,25 @@ const statements = [
      created_at timestamptz NOT NULL DEFAULT now(),
      PRIMARY KEY (lab_url, source_id)
   )`,
+
+  // ── v6 (2026-08-21): consolidate columns that batch scripts were creating as a SIDE EFFECT ──
+  // These four columns are read by the PRODUCTION serving path (lib/rag/digest.ts renders
+  // plain_summary/apply_info/trajectory; retrieval reads embedding), but were only ever created by
+  // ad-hoc `ALTER ... ADD COLUMN IF NOT EXISTS` buried inside scripts/enrich.ts, enrich-trajectory.ts,
+  // and lib/rag/embed.ts. A fresh checkout that ran ONLY this migration got a DB the app couldn't
+  // serve from. Declaring them here makes migrate.mjs the single schema source of truth; the inline
+  // ALTERs in those scripts stay (idempotent, harmless) as belt-and-suspenders. (Pre-push audit.)
+  `ALTER TABLE lab_profiles
+     ADD COLUMN IF NOT EXISTS plain_summary text,   -- first-year "what/how/why" (enrich pass)
+     ADD COLUMN IF NOT EXISTS apply_info    jsonb,  -- lab's own quote-backed "how to join"
+     ADD COLUMN IF NOT EXISTS trajectory    text    -- synthesized "where it's heading" (enrich)
+  `,
+  // embedding is vector(768) to match EMBED_DIM in lib/rag/embed.ts. embedding_model tags each row
+  // with the model that produced it so a model migration can detect stale vectors (assertEmbeddingConsistency).
+  `ALTER TABLE lab_chunks
+     ADD COLUMN IF NOT EXISTS embedding       vector(768),
+     ADD COLUMN IF NOT EXISTS embedding_model text`,
+  `CREATE INDEX IF NOT EXISTS lab_chunks_embedding_idx ON lab_chunks USING hnsw (embedding vector_cosine_ops)`,
 ]
 
 for (const stmt of statements) {
@@ -130,6 +149,16 @@ const hasStatus = rows(await sql.query(
 const profileNullable = rows(await sql.query(
   "SELECT is_nullable FROM information_schema.columns WHERE table_name='lab_profiles' AND column_name='profile'",
 ))[0]?.is_nullable
+// Verify the v6 serving-path columns actually exist — the whole point of declaring them here is that
+// a fresh checkout is no longer missing what the app renders from. Print which are present.
+const servingCols = rows(await sql.query(
+  `SELECT column_name FROM information_schema.columns
+   WHERE (table_name='lab_profiles' AND column_name IN ('plain_summary','apply_info','trajectory'))
+      OR (table_name='lab_chunks'   AND column_name IN ('embedding','embedding_model'))`,
+)).map((r) => r.column_name)
+const wantCols = ['plain_summary', 'apply_info', 'trajectory', 'embedding', 'embedding_model']
+const missingCols = wantCols.filter((c) => !servingCols.includes(c))
 console.log(`\nlab_profiles: ${profileCount} rows (status col: ${hasStatus ? 'yes' : 'NO'}, profile nullable: ${profileNullable})`)
 console.log(`lab_chunks:   ${chunkCount} rows | pgvector: ${ext.length ? 'enabled' : 'MISSING'}`)
+console.log(`serving cols: ${missingCols.length ? `MISSING ${missingCols.join(', ')}` : 'all present ✓'}`)
 console.log('migration complete ✓')

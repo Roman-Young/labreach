@@ -171,6 +171,24 @@ async function main() {
 
   // ── reextract (re-derive from cached raw pages — NO Firecrawl) ──
   if (cmd === 'reextract') {
+    // FOOTGUN GUARD (2026-08-21 audit): this path calls the V1 extractor (extractFromPages) + storeLab,
+    // which produce the OLD single-quote chunk model — strictly worse than the v2 rich-per-paper
+    // chunks that `run` (ingestLabV2) and every re-ingest script now write. Running it silently
+    // REGRESSES a lab's chunks to the inferior shape. A proper v2 cache-reextract isn't a drop-in:
+    // extractLabV2 needs a full GatheredLab (incl. the papers[] metadata array), but raw_pages only
+    // caches the page-text map — so the papers[] would have to be reconstructed (from the lab's
+    // existing chunks or re-derived). Until that's built, refuse to run unless the caller EXPLICITLY
+    // opts into the legacy path, so nobody degrades the corpus by reaching for the obvious command.
+    if (!has('allow-v1-legacy')) {
+      console.error(
+        'reextract is DISABLED: it uses the v1 extractor and would regress chunks to the old\n' +
+        'single-quote model. A v2 cache-reextract is not yet built (needs GatheredLab.papers[]\n' +
+        'reconstruction from cache). To re-derive a lab now, use scripts/reingest-labs.ts (v2, does\n' +
+        're-scrape). To run the legacy path anyway (NOT recommended), pass --allow-v1-legacy.',
+      )
+      process.exit(1)
+    }
+    console.warn('⚠️  reextract --allow-v1-legacy: writing the OLD v1 chunk model. This regresses chunk quality.\n')
     const { requireSql } = await import('../lib/db')
     const { extractFromPages } = await import('../lib/rag/extract')
     const { storeLab } = await import('../lib/rag/store')
