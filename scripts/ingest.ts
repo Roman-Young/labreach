@@ -171,57 +171,20 @@ async function main() {
 
   // ── reextract (re-derive from cached raw pages — NO Firecrawl) ──
   if (cmd === 'reextract') {
-    // FOOTGUN GUARD (2026-08-21 audit): this path calls the V1 extractor (extractFromPages) + storeLab,
-    // which produce the OLD single-quote chunk model — strictly worse than the v2 rich-per-paper
-    // chunks that `run` (ingestLabV2) and every re-ingest script now write. Running it silently
-    // REGRESSES a lab's chunks to the inferior shape. A proper v2 cache-reextract isn't a drop-in:
-    // extractLabV2 needs a full GatheredLab (incl. the papers[] metadata array), but raw_pages only
-    // caches the page-text map — so the papers[] would have to be reconstructed (from the lab's
-    // existing chunks or re-derived). Until that's built, refuse to run unless the caller EXPLICITLY
-    // opts into the legacy path, so nobody degrades the corpus by reaching for the obvious command.
-    if (!has('allow-v1-legacy')) {
-      console.error(
-        'reextract is DISABLED: it uses the v1 extractor and would regress chunks to the old\n' +
-        'single-quote model. A v2 cache-reextract is not yet built (needs GatheredLab.papers[]\n' +
-        'reconstruction from cache). To re-derive a lab now, use scripts/reingest-labs.ts (v2, does\n' +
-        're-scrape). To run the legacy path anyway (NOT recommended), pass --allow-v1-legacy.',
-      )
-      process.exit(1)
-    }
-    console.warn('⚠️  reextract --allow-v1-legacy: writing the OLD v1 chunk model. This regresses chunk quality.\n')
-    const { requireSql } = await import('../lib/db')
-    const { extractFromPages } = await import('../lib/rag/extract')
-    const { storeLab } = await import('../lib/rag/store')
-    const sql = requireSql()
-    const asRows = (r: unknown): Array<Record<string, unknown>> =>
-      (Array.isArray(r) ? r : ((r as { rows?: unknown[] }).rows ?? [])) as Array<Record<string, unknown>>
-    const only = flag('only')
-    const limit = num('limit')
-    const params: unknown[] = []
-    let q = `SELECT lab_url, pi_name, department, school, raw_pages FROM lab_profiles
-             WHERE raw_pages IS NOT NULL AND status = 'done'`
-    if (only) { params.push(only); q += ` AND department = $${params.length}` }
-    q += ` ORDER BY lab_url`
-    if (limit) { params.push(limit); q += ` LIMIT $${params.length}` }
-
-    const labs = asRows(await sql.query(q, params))
-    console.log(`re-extracting ${labs.length} labs from cache (0 Firecrawl calls)...\n`)
-    let n = 0
-    for (const lab of labs) {
-      const raw = (typeof lab.raw_pages === 'string'
-        ? JSON.parse(lab.raw_pages)
-        : lab.raw_pages) as Record<string, string>
-      const { profile, chunks } = await extractFromPages(String(lab.lab_url), raw, {
-        piName: (lab.pi_name as string) ?? null,
-        department: (lab.department as string) ?? null,
-        school: (lab.school as string) ?? null,
-      })
-      await storeLab(profile, chunks)
-      n++
-      console.log(`  ✓ ${lab.pi_name ?? lab.lab_url} — ${chunks.length} chunks`)
-    }
-    console.log(`\nre-extracted ${n} labs from cache`)
-    return
+    // RETIRED (2026-08-21). This command used the v1 extractor (extractFromPages) + storeLab, which
+    // wrote the OLD single-quote chunk model — strictly worse than the v2 rich-per-paper chunks the
+    // live pipeline writes. That whole v1 cluster (lib/agent, lib/rag/extract, lib/rag/chunk) was
+    // archived to _legacy/, so there is no cache-only re-derive path anymore. A v2 cache-reextract is
+    // NOT a drop-in: extractLabV2 needs a full GatheredLab (incl. the papers[] metadata array), but
+    // raw_pages only caches the page-text map, so papers[] would have to be reconstructed from the
+    // lab's existing chunks or re-derived. Until that's built, re-derive a lab with
+    // scripts/reingest-labs.ts (v2 — re-scrapes, costs Firecrawl+Gemini).
+    console.error(
+      'reextract is RETIRED: the v1 cache-extract path was archived to _legacy/ (it wrote the old,\n' +
+      'inferior chunk model). A v2 cache-reextract is not yet built. To re-derive a lab now, use\n' +
+      'scripts/reingest-labs.ts (v2 — re-scrapes via the live pipeline).',
+    )
+    process.exit(1)
   }
 
   console.log('usage: npx tsx scripts/ingest.ts <seed|run|embed|reextract|status> [flags]')
