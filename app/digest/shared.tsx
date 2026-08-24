@@ -109,7 +109,14 @@ export function FindingCard({
     })
   }
   return (
-    <div className={`border-l-2 pl-3.5 py-1 ${starred ? 'border-[#A8842C]' : 'border-[#E7E0D2]'}`}>
+    // Boxy card (grid-friendly) rather than the old border-left strip — findings render 2-up on the
+    // lab page, so each needs its own contained shape. Starred state tints the whole card gold.
+    // No overflow-hidden (it would clip focus outlines on the buttons inside).
+    <div
+      className={`rounded-lg border p-4 sm:p-5 transition-colors ${
+        starred ? 'border-[#A8842C] bg-[#A8842C]/[0.04]' : 'border-[#E7E0D2] bg-white/40'
+      }`}
+    >
       <div className="flex items-center gap-2 text-[11px] text-[#8A8478] mb-1">
         <span className="uppercase tracking-[0.12em] shrink-0">{f.type.replace('_', ' ')}</span>
         {f.title && <span className="truncate italic text-[#6E7076]">{cleanTitle(f.title)}</span>}
@@ -119,16 +126,16 @@ export function FindingCard({
           </a>
         )}
       </div>
-      <p className={`text-[15px] text-[#20242B] leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
+      <p className={`text-[16px] text-[#20242B] leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
       {/* Verbatim anchor quotes stay in the DATA (grounding + the copy blob) but are no longer
           rendered — they doubled the page for first-years without adding decision value. The
           source ↗ link above remains the trust anchor. (Roman, 2026-08-10.) */}
       {(copyable || onToggleStar) && !preview && (
-        <div className="mt-2 flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-2">
           {copyable && (
             <button
               onClick={copy}
-              className="px-3.5 py-2 sm:px-3 sm:py-1.5 text-[13px] border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] hover:bg-white/60 transition-colors"
+              className="px-3.5 py-2 sm:px-3 sm:py-1.5 text-[15px] border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] hover:bg-white/60 transition-colors"
               title="Copy this finding — paste it into your own LLM to have it explained"
             >
               {copied ? '✓ copied' : '⧉ copy'}
@@ -137,7 +144,7 @@ export function FindingCard({
           {onToggleStar && (
             <button
               onClick={onToggleStar}
-              className={`px-3.5 py-2 sm:px-3 sm:py-1.5 text-[13px] border rounded-md transition-colors ${
+              className={`px-3.5 py-2 sm:px-3 sm:py-1.5 text-[15px] border rounded-md transition-colors ${
                 starred
                   ? 'border-[#A8842C] bg-[#A8842C]/10 text-[#7A5C12] font-medium'
                   : 'border-[#D9D2C4] text-[#6E7076] hover:border-[#A8842C] hover:text-[#7A5C12]'
@@ -161,7 +168,7 @@ export function ApplyInfoCard({ apply }: { apply: ApplyInfo }) {
   return (
     <div className="rounded-md border border-[#A8842C]/35 bg-[#A8842C]/[0.06] px-4 py-3">
       <p className="text-[11px] uppercase tracking-[0.12em] text-[#A8842C] font-medium">How to join — from the lab&rsquo;s own site</p>
-      <p className="mt-1.5 text-[15px] text-[#20242B] leading-relaxed">{apply.instructions}</p>
+      <p className="mt-1.5 text-[16px] text-[#20242B] leading-relaxed">{apply.instructions}</p>
       {apply.url && (
         <a
           href={apply.url}

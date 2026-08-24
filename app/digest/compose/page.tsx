@@ -157,7 +157,7 @@ export default function ComposePage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between gap-3">
-        <button onClick={() => router.push('/digest/lab')} className={`text-sm ${LINK}`}>
+        <button onClick={() => router.push('/digest/lab')} className={`text-[15px] ${LINK}`}>
           ← back to {selectedLab.piName ?? 'the lab'}&rsquo;s research
         </button>
         <h1 className="text-lg font-semibold tracking-tight text-[#20242B]">Your email skeleton</h1>
@@ -214,7 +214,7 @@ export default function ComposePage() {
           />
           <button
             onClick={() => copyText('subject', subject)}
-            className="shrink-0 px-3 py-2 text-[13px] border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] transition-colors"
+            className="shrink-0 px-3 py-2 text-[15px] border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] transition-colors"
           >
             {copied === 'subject' ? '✓' : 'Copy'}
           </button>
@@ -231,22 +231,22 @@ export default function ComposePage() {
         />
       </div>
       <div className="mt-2.5 flex flex-wrap items-center gap-3">
-        <button onClick={() => copyText('body', body)} className={`px-3.5 py-2 sm:py-1.5 text-sm ${BTN}`}>
+        <button onClick={() => copyText('body', body)} className={`px-3.5 py-2 sm:py-1.5 text-[15px] ${BTN}`}>
           {copied === 'body' ? '✓ copied' : 'Copy email'}
         </button>
         <button
           onClick={regenerate}
-          className="px-3.5 py-2 sm:py-1.5 text-sm border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] transition-colors"
+          className="px-3.5 py-2 sm:py-1.5 text-[15px] border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] transition-colors"
           title="Rebuild subject + email from your current ask and starred research (replaces your edits)"
         >
           ↻ Regenerate
         </button>
-        <span className="text-xs text-[#8A8478]">Edits save automatically.</span>
+        <span className="text-[13px] text-[#8A8478]">Edits save automatically.</span>
       </div>
 
       {/* annotated real examples — read before drafting; kept out of the work area */}
       <div className="mt-8 border-t border-[#E7E0D2] pt-5">
-        <button onClick={() => setShowExamples((v) => !v)} className={`text-sm ${LINK}`}>
+        <button onClick={() => setShowExamples((v) => !v)} className={`text-[15px] ${LINK}`}>
           {showExamples ? '↑ Hide examples' : '↓ See real emails that got responses'}
         </button>
         {showExamples && (
@@ -267,7 +267,7 @@ export default function ComposePage() {
 
       {/* add more research from this lab */}
       <div className="mt-6">
-        <button onClick={() => setShowMore((v) => !v)} className={`text-sm ${LINK}`}>
+        <button onClick={() => setShowMore((v) => !v)} className={`text-[15px] ${LINK}`}>
           {showMore ? '↑ Hide' : `↓ Star more research from this lab (${unstarred.length})`}
         </button>
         {showMore && (

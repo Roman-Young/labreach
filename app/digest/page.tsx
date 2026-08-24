@@ -34,6 +34,9 @@ const INTERESTS = [
 
 const inputClass = INPUT
 
+// Loading-stage messages, in the order the server actually works: distill → search → rank.
+const SEARCH_STAGES = ['Reading your profile…', 'Distilling your research signal…', 'Searching every lab…', 'Ranking by fit…']
+
 export default function IntakePage() {
   const router = useRouter()
   const { profile, setProfile, setResults } = useDigest()
@@ -46,6 +49,20 @@ export default function IntakePage() {
   const [topLabs, setTopLabs] = useState(profile.topLabs || 15)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [stage, setStage] = useState(0)
+
+  // Staged "thinking" messages so the multi-second digest call doesn't look frozen. Client-side
+  // pacing only (the API is one JSON POST, no streaming) — the stages mirror what the server really
+  // does in order: distill the profile → embed+search → rank. Clamps at the last message; the
+  // interval is cleared the moment loading flips off, so it never outlives the real request.
+  useEffect(() => {
+    if (!loading) {
+      setStage(0)
+      return
+    }
+    const id = setInterval(() => setStage((s) => Math.min(s + 1, SEARCH_STAGES.length - 1)), 1800)
+    return () => clearInterval(id)
+  }, [loading])
 
   // One-time prefill from the older home profile form, if this flow has no state yet.
   useEffect(() => {
@@ -176,14 +193,20 @@ export default function IntakePage() {
           <p className="text-xs text-[#8A8478] mt-1">Fewer keeps it focused; more casts a wider net. The most relevant always come first.</p>
         </div>
 
-        <div className="flex items-center justify-end">
-          <button onClick={submit} disabled={loading} className={`w-full sm:w-auto px-4 py-2.5 sm:py-2 text-sm ${BTN}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-3">
+          {loading && (
+            <span className="text-[14px] text-[#8A8478] text-center sm:text-right">
+              <span className="inline-block animate-pulse mr-1.5">●</span>
+              {SEARCH_STAGES[stage]}
+            </span>
+          )}
+          <button onClick={submit} disabled={loading} className={`w-full sm:w-auto px-4 py-2.5 sm:py-2 text-[15px] ${BTN}`}>
             {loading ? 'Finding labs…' : 'Find my labs →'}
           </button>
         </div>
       </div>
 
-      {error && <p className="mt-4 text-sm text-[#9B2C2C]">{error}</p>}
+      {error && <p className="mt-4 text-[15px] text-[#9B2C2C]">{error}</p>}
     </main>
   )
 }
