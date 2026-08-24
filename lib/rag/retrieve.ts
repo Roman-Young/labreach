@@ -100,10 +100,14 @@ export async function retrieveChunks(query: string, opts: RetrieveOpts = {}): Pr
   const denseTxn = await sql.transaction((txn) => [
     txn.query(`SET LOCAL hnsw.ef_search = ${EF_SEARCH}`),
     txn.query(
+      // `, lc.id` is a UNIQUE tiebreaker so the LIMIT boundary is DETERMINISTIC. Without it, rows
+      // that tie on the sort key are returned in arbitrary physical order, so the specific subset
+      // kept at the cutoff varies run-to-run — which reshuffles the boundary labs for an identical
+      // query (empirically: top-8 stable, positions ~9-15 swapped between runs). (2026-08-24.)
       `SELECT ${SELECT_COLS}
        FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url = lc.lab_url
        WHERE lc.embedding IS NOT NULL AND lc.quarantined = false
-       ORDER BY lc.embedding <=> $1::vector
+       ORDER BY lc.embedding <=> $1::vector, lc.id
        LIMIT ${cand}`,
       [vec],
     ),
@@ -128,7 +132,10 @@ export async function retrieveChunks(query: string, opts: RetrieveOpts = {}): Pr
        SELECT ${SELECT_COLS}
        FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url = lc.lab_url, q
        WHERE lc.content_tsv @@ q.tsq AND lc.quarantined = false
-       ORDER BY ts_rank_cd(lc.content_tsv, q.tsq) DESC
+       -- id tiebreaker: ts_rank_cd produces MANY equal values (lots of chunks share a rank), so
+       -- without a unique key the LIMIT cutoff returns an arbitrary tied subset that changes between
+       -- runs. This arm is the main source of the boundary shuffle. (2026-08-24.)
+       ORDER BY ts_rank_cd(lc.content_tsv, q.tsq) DESC, lc.id
        LIMIT ${cand}`,
       [query],
     ),
@@ -189,7 +196,7 @@ export async function retrieveLabChunks(
       `SELECT ${SELECT_COLS}
        FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url = lc.lab_url
        WHERE lc.lab_url = $1 AND lc.embedding IS NOT NULL AND lc.quarantined = false
-       ORDER BY lc.embedding <=> $2::vector`,
+       ORDER BY lc.embedding <=> $2::vector, lc.id`,
       [labUrl, vec],
     ),
   )
@@ -201,7 +208,7 @@ export async function retrieveLabChunks(
        SELECT ${SELECT_COLS}
        FROM lab_chunks lc JOIN lab_profiles p ON p.lab_url = lc.lab_url, q
        WHERE lc.lab_url = $1 AND lc.content_tsv @@ q.tsq AND lc.quarantined = false
-       ORDER BY ts_rank_cd(lc.content_tsv, q.tsq) DESC`,
+       ORDER BY ts_rank_cd(lc.content_tsv, q.tsq) DESC, lc.id`,
       [labUrl, query],
     ),
   )
@@ -245,6 +252,8 @@ export async function retrieveLabs(query: string, opts: RetrieveLabsOpts = {}): 
       topChunks: cs.slice(0, chunksPerLab),
     }
   })
-  labs.sort((a, b) => b.score - a.score)
+  // Tiebreak equal lab scores on labUrl so the final order is stable when two labs score identically
+  // (belt-and-suspenders now that the candidate sets above are deterministic).
+  labs.sort((a, b) => b.score - a.score || a.labUrl.localeCompare(b.labUrl))
   return labs.slice(0, topLabs)
 }
