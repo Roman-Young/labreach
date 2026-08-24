@@ -62,24 +62,25 @@ export function sourceHref(id: string | null): string | null {
 export const findingKey = (f: DigestFinding): string => `${f.type}|${(f.title ?? '').slice(0, 40)}|${f.content.slice(0, 60)}`
 
 // ── presentational ──────────────────────────────────────────────────────────
-// Editorial identity: paper #FBF8F1 · ink #20242B · muted #6E7076 · hairline #E7E0D2 · navy accent
-// #1B3A5C · gold (stars/quotes) #A8842C. Typography is the site-wide system sans (globals.css) — no
-// custom font, so the digest matches the rest of the app.
+// Editorial identity, via the SEMANTIC TOKENS in globals.css (which flip in dark mode): bg-paper ·
+// text-ink · text-muted · border-hairline · text-accent (navy links) / bg-accent-solid (nav buttons,
+// text-on-accent) · gold for stars/quotes. Never hardcode a hex here — use a token so dark mode
+// works. Typography is the site-wide system sans (globals.css) — no custom font.
 
 // Shared editorial tokens, so every page speaks one visual language (hairlines, navy accent, no
 // glowing cards). Kept as full literal class strings so Tailwind picks them up at build.
-export const LINK = 'text-[#1B3A5C] hover:underline'
-export const BTN = 'bg-[#1B3A5C] hover:bg-[#12293f] text-[#FBF8F1] disabled:opacity-40 disabled:cursor-not-allowed rounded-md font-medium transition-colors'
+export const LINK = 'text-accent hover:underline'
+export const BTN = 'bg-accent-solid hover:bg-accent-solid-hover text-on-accent disabled:opacity-40 disabled:cursor-not-allowed rounded-md font-medium transition-colors'
 // text-base below sm: iOS Safari auto-zooms the page when focusing an input under 16px.
-export const INPUT = 'w-full px-3 py-2.5 bg-white/70 border border-[#D9D2C4] rounded-md text-[#20242B] placeholder-[#A29B8C] text-base sm:text-sm focus:outline-none focus:border-[#1B3A5C] focus:ring-1 focus:ring-[#1B3A5C]'
+export const INPUT = 'w-full px-3 py-2.5 bg-surface/70 border border-border-2 rounded-md text-ink placeholder-placeholder text-base sm:text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent'
 // Chips get more vertical padding below sm (thumb-sized tap targets); whitespace-nowrap stops a
 // label from wrapping inside its own pill on narrow screens (they wrap as whole chips instead).
 export const chip = (on: boolean): string =>
-  `px-3 py-1.5 sm:px-2.5 sm:py-1 text-xs whitespace-nowrap rounded-full border transition-colors ${on ? 'bg-[#1B3A5C] text-[#FBF8F1] border-[#1B3A5C]' : 'bg-transparent text-[#6E7076] border-[#D9D2C4] hover:border-[#1B3A5C]/50'}`
+  `px-3 py-1.5 sm:px-2.5 sm:py-1 text-xs whitespace-nowrap rounded-full border transition-colors ${on ? 'bg-accent-solid text-on-accent border-accent' : 'bg-transparent text-muted border-border-2 hover:border-accent/50'}`
 
 // Metadata rendered as quiet small-caps text, not colored pills. Navy for the recruiting signal.
 export function Badge({ children, tone }: { children: React.ReactNode; tone: 'teal' | 'green' | 'slate' | 'amber' }) {
-  const color = tone === 'green' ? 'text-[#1B3A5C] font-medium' : 'text-[#8A8478]'
+  const color = tone === 'green' ? 'text-accent font-medium' : 'text-muted-2'
   return <span className={`text-[11px] uppercase tracking-[0.1em] ${color}`}>{children}</span>
 }
 
@@ -114,19 +115,19 @@ export function FindingCard({
     // No overflow-hidden (it would clip focus outlines on the buttons inside).
     <div
       className={`rounded-lg border p-4 sm:p-5 transition-colors ${
-        starred ? 'border-[#A8842C] bg-[#A8842C]/[0.04]' : 'border-[#E7E0D2] bg-white/40'
+        starred ? 'border-gold bg-gold/[0.04]' : 'border-hairline bg-surface/40'
       }`}
     >
-      <div className="flex items-center gap-2 text-[11px] text-[#8A8478] mb-1">
+      <div className="flex items-center gap-2 text-[11px] text-muted-2 mb-1">
         <span className="uppercase tracking-[0.12em] shrink-0">{f.type.replace('_', ' ')}</span>
-        {f.title && <span className="truncate italic text-[#6E7076]">{cleanTitle(f.title)}</span>}
+        {f.title && <span className="truncate italic text-muted">{cleanTitle(f.title)}</span>}
         {href && (
-          <a href={href} target="_blank" rel="noopener noreferrer" className="text-[#1B3A5C] hover:underline shrink-0">
+          <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline shrink-0">
             source ↗
           </a>
         )}
       </div>
-      <p className={`text-[16px] text-[#20242B] leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
+      <p className={`text-[16px] text-ink leading-relaxed ${preview ? 'line-clamp-2' : ''}`}>{f.content}</p>
       {/* Verbatim anchor quotes stay in the DATA (grounding + the copy blob) but are no longer
           rendered — they doubled the page for first-years without adding decision value. The
           source ↗ link above remains the trust anchor. (Roman, 2026-08-10.) */}
@@ -135,7 +136,7 @@ export function FindingCard({
           {copyable && (
             <button
               onClick={copy}
-              className="px-3.5 py-2 sm:px-3 sm:py-1.5 text-[15px] border border-[#D9D2C4] rounded-md text-[#1B3A5C] hover:border-[#1B3A5C] hover:bg-white/60 transition-colors"
+              className="px-3.5 py-2 sm:px-3 sm:py-1.5 text-[15px] border border-border-2 rounded-md text-accent hover:border-accent hover:bg-surface/60 transition-colors"
               title="Copy this finding — paste it into your own LLM to have it explained"
             >
               {copied ? '✓ copied' : '⧉ copy'}
@@ -146,8 +147,8 @@ export function FindingCard({
               onClick={onToggleStar}
               className={`px-3.5 py-2 sm:px-3 sm:py-1.5 text-[15px] border rounded-md transition-colors ${
                 starred
-                  ? 'border-[#A8842C] bg-[#A8842C]/10 text-[#7A5C12] font-medium'
-                  : 'border-[#D9D2C4] text-[#6E7076] hover:border-[#A8842C] hover:text-[#7A5C12]'
+                  ? 'border-gold bg-gold/10 text-gold-dark font-medium'
+                  : 'border-border-2 text-muted hover:border-gold hover:text-gold-dark'
               }`}
               title={starred ? 'Starred — added to your email' : 'Star this to use it in your email'}
             >
@@ -166,20 +167,20 @@ export function FindingCard({
 // extraction), so its presence is itself a signal.
 export function ApplyInfoCard({ apply }: { apply: ApplyInfo }) {
   return (
-    <div className="rounded-md border border-[#A8842C]/35 bg-[#A8842C]/[0.06] px-4 py-3">
-      <p className="text-[11px] uppercase tracking-[0.12em] text-[#A8842C] font-medium">How to join — from the lab&rsquo;s own site</p>
-      <p className="mt-1.5 text-[16px] text-[#20242B] leading-relaxed">{apply.instructions}</p>
+    <div className="rounded-md border border-gold/35 bg-gold/[0.06] px-4 py-3">
+      <p className="text-[11px] uppercase tracking-[0.12em] text-gold font-medium">How to join — from the lab&rsquo;s own site</p>
+      <p className="mt-1.5 text-[16px] text-ink leading-relaxed">{apply.instructions}</p>
       {apply.url && (
         <a
           href={apply.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-1.5 inline-block text-sm text-[#1B3A5C] hover:underline break-all"
+          className="mt-1.5 inline-block text-sm text-accent hover:underline break-all"
         >
           {apply.url.replace(/^mailto:/, '✉ ')} ↗
         </a>
       )}
-      <p className="mt-2 text-[12px] text-[#6E7076] italic">&ldquo;{apply.quote}&rdquo;</p>
+      <p className="mt-2 text-[12px] text-muted italic">&ldquo;{apply.quote}&rdquo;</p>
     </div>
   )
 }

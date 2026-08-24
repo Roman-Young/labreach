@@ -119,14 +119,14 @@ export default function IntakePage() {
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
       <header className="mb-8">
-        <h1 className="text-[28px] font-semibold tracking-tight leading-tight text-[#20242B]">Research Digest</h1>
-        <p className="text-sm text-[#6E7076] mt-2 max-w-xl leading-relaxed">
+        <h1 className="text-[28px] font-semibold tracking-tight leading-tight text-ink">Research Digest</h1>
+        <p className="text-sm text-muted mt-2 max-w-xl leading-relaxed">
           Every UCSD lab, pre-researched. Tell us about you, get each lab&rsquo;s real, quote-backed work ordered by
           fit, and pick who to email — LabReach never writes it for you.
         </p>
       </header>
 
-      <div className="border border-[#E7E0D2] bg-white/40 rounded-lg p-5 space-y-5">
+      <div className="border border-hairline bg-surface/40 rounded-lg p-5 space-y-5">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <input className={inputClass} placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} />
           <select className={inputClass} value={year} onChange={(e) => setYear(e.target.value)}>
@@ -141,10 +141,10 @@ export default function IntakePage() {
         </div>
 
         <div>
-          <p className="text-sm font-medium text-[#20242B] mb-2">
-            What are you interested in? <span className="text-[#8A8478] font-normal">— pick up to {MAX_INTERESTS}</span>
+          <p className="text-sm font-medium text-ink mb-2">
+            What are you interested in? <span className="text-muted-2 font-normal">— pick up to {MAX_INTERESTS}</span>
             {interests.length > 0 && (
-              <span className={`ml-2 text-xs ${interests.length >= MAX_INTERESTS ? 'text-[#A8842C] font-medium' : 'text-[#8A8478]'}`}>
+              <span className={`ml-2 text-xs ${interests.length >= MAX_INTERESTS ? 'text-gold font-medium' : 'text-muted-2'}`}>
                 {interests.length} of {MAX_INTERESTS}
               </span>
             )}
@@ -163,8 +163,8 @@ export default function IntakePage() {
         </div>
 
         <div>
-          <p className="text-sm font-medium text-[#20242B] mb-1">
-            Paste your resume or experience <span className="text-[#8A8478] font-normal">— optional, sharpens the match</span>
+          <p className="text-sm font-medium text-ink mb-1">
+            Paste your resume or experience <span className="text-muted-2 font-normal">— optional, sharpens the match</span>
           </p>
           <textarea
             value={resume}
@@ -176,9 +176,9 @@ export default function IntakePage() {
         </div>
 
         <div>
-          <label htmlFor="topLabs" className="flex items-center justify-between text-sm font-medium text-[#20242B]">
+          <label htmlFor="topLabs" className="flex items-center justify-between text-sm font-medium text-ink">
             <span>How many labs to show?</span>
-            <span className="text-[#1B3A5C] font-semibold tabular-nums">{topLabs}</span>
+            <span className="text-accent font-semibold tabular-nums">{topLabs}</span>
           </label>
           <input
             id="topLabs"
@@ -188,14 +188,14 @@ export default function IntakePage() {
             step={1}
             value={topLabs}
             onChange={(e) => setTopLabs(Number(e.target.value))}
-            className="mt-2 w-full accent-[#1B3A5C]"
+            className="mt-2 w-full accent-accent"
           />
-          <p className="text-xs text-[#8A8478] mt-1">Fewer keeps it focused; more casts a wider net. The most relevant always come first.</p>
+          <p className="text-xs text-muted-2 mt-1">Fewer keeps it focused; more casts a wider net. The most relevant always come first.</p>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-3">
           {loading && (
-            <span className="text-[14px] text-[#8A8478] text-center sm:text-right">
+            <span className="text-[14px] text-muted-2 text-center sm:text-right">
               <span className="inline-block animate-pulse mr-1.5">●</span>
               {SEARCH_STAGES[stage]}
             </span>
@@ -206,7 +206,7 @@ export default function IntakePage() {
         </div>
       </div>
 
-      {error && <p className="mt-4 text-[15px] text-[#9B2C2C]">{error}</p>}
+      {error && <p className="mt-4 text-[15px] text-danger">{error}</p>}
     </main>
   )
 }

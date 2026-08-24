@@ -20,7 +20,7 @@ export default function LabsPage() {
   const visible = labs.filter((l) => !hiddenLabs.includes(l.labUrl))
   const hidden = labs.filter((l) => hiddenLabs.includes(l.labUrl))
 
-  if (!hydrated) return <main className="max-w-5xl mx-auto px-4 py-10 text-sm text-[#8A8478]">Loading…</main>
+  if (!hydrated) return <main className="max-w-5xl mx-auto px-4 py-10 text-sm text-muted-2">Loading…</main>
 
   return (
     // max-w-5xl + the 2-col grid below must stay IDENTICAL to the lab detail page's container/grid —
@@ -31,7 +31,7 @@ export default function LabsPage() {
       </button>
 
       {labs.length === 0 ? (
-        <div className="text-[#6E7076] text-sm">
+        <div className="text-muted text-sm">
           No labs yet.{' '}
           <button onClick={() => router.push('/digest')} className={LINK}>
             Start with your interests →
@@ -39,10 +39,10 @@ export default function LabsPage() {
         </div>
       ) : (
         <>
-          <p className="text-sm text-[#6E7076] mb-1">{visible.length} labs, most relevant first — open one to see its research.</p>
+          <p className="text-sm text-muted mb-1">{visible.length} labs, most relevant first — open one to see its research.</p>
           {query && (
-            <details className="mb-5 text-xs text-[#8A8478]">
-              <summary className="cursor-pointer hover:text-[#6E7076]">what we matched on</summary>
+            <details className="mb-5 text-xs text-muted-2">
+              <summary className="cursor-pointer hover:text-muted">what we matched on</summary>
               <p className="mt-1 italic">{query}</p>
             </details>
           )}
@@ -58,13 +58,13 @@ export default function LabsPage() {
                 tabIndex={0}
                 onClick={() => open(lab.labUrl)}
                 onKeyDown={(e) => e.key === 'Enter' && open(lab.labUrl)}
-                className="flex flex-col w-full text-left border border-[#E7E0D2] bg-white/40 rounded-lg p-5 hover:border-[#1B3A5C]/50 hover:bg-white/70 transition-colors cursor-pointer"
+                className="flex flex-col w-full text-left border border-hairline bg-surface/40 rounded-lg p-5 hover:border-accent/50 hover:bg-surface/70 transition-colors cursor-pointer"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-xl font-bold tracking-tight text-[#1B3A5C]">{lab.piName ?? lab.labName ?? 'Lab'}</h3>
-                    {lab.labName && lab.labName !== lab.piName && <p className="text-sm text-[#6E7076]">{lab.labName}</p>}
-                    <p className="text-[13px] text-[#8A8478] mt-0.5">{lab.department}</p>
+                    <h3 className="text-xl font-bold tracking-tight text-accent">{lab.piName ?? lab.labName ?? 'Lab'}</h3>
+                    {lab.labName && lab.labName !== lab.piName && <p className="text-sm text-muted">{lab.labName}</p>}
+                    <p className="text-[13px] text-muted-2 mt-0.5">{lab.department}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     {lab.recruiting === 'open' && <Badge tone="green">recruiting: open</Badge>}
@@ -77,23 +77,23 @@ export default function LabsPage() {
                 </div>
 
                 {lab.plainSummary && (
-                  <p className="mt-2.5 text-[14px] text-[#3A3F47] leading-relaxed line-clamp-3">{lab.plainSummary}</p>
+                  <p className="mt-2.5 text-[14px] text-ink-2 leading-relaxed line-clamp-3">{lab.plainSummary}</p>
                 )}
 
                 <div className="mt-auto pt-3 flex items-center gap-4 text-[13px]">
-                  {lab.applyInfo && <span className="text-[#A8842C] font-medium uppercase tracking-[0.1em]">▸ lists how to join</span>}
+                  {lab.applyInfo && <span className="text-gold font-medium uppercase tracking-[0.1em]">▸ lists how to join</span>}
                   <span className="ml-auto flex items-center gap-4">
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
                         hideLab(lab.labUrl)
                       }}
-                      className="p-2.5 -m-2.5 text-[#8A8478] hover:text-[#9B2C2C]"
+                      className="p-2.5 -m-2.5 text-muted-2 hover:text-danger"
                       title="Hide this lab — already in it, already emailed, or not interested"
                     >
                       ✕ hide
                     </button>
-                    <span className="text-[#1B3A5C]">Open lab →</span>
+                    <span className="text-accent">Open lab →</span>
                   </span>
                 </div>
               </div>
@@ -101,14 +101,14 @@ export default function LabsPage() {
           </div>
 
           {hidden.length > 0 && (
-            <div className="mt-8 border-t border-[#E7E0D2] pt-4">
+            <div className="mt-8 border-t border-hairline pt-4">
               <button onClick={() => setShowHidden((v) => !v)} className={`text-[15px] ${LINK}`}>
                 {showHidden ? '↑ Collapse hidden labs' : `Hidden labs (${hidden.length}) — show`}
               </button>
               {showHidden && (
                 <div className="mt-3 space-y-2">
                   {hidden.map((lab) => (
-                    <div key={lab.labUrl} className="flex items-center justify-between text-sm text-[#6E7076] border border-[#E7E0D2] rounded-md px-4 py-2.5">
+                    <div key={lab.labUrl} className="flex items-center justify-between text-sm text-muted border border-hairline rounded-md px-4 py-2.5">
                       <span>{lab.piName ?? lab.labName ?? 'Lab'}</span>
                       <button onClick={() => unhideLab(lab.labUrl)} className={LINK}>
                         Unhide

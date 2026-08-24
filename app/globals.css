@@ -1,14 +1,90 @@
 @import "tailwindcss";
 
+/* Dark mode is a CLASS on <html> (set by the theme toggle + the anti-flash script in layout.tsx),
+   not the OS media query alone — so a user can override their system setting. This variant lets
+   `dark:` utilities work if ever needed, but the palette below flips automatically via CSS vars. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* SEMANTIC TOKENS. Every color in the app resolves to one of these (bg-paper, text-ink, border-hairline,
+   text-accent, bg-accent-solid, …). Light values keep the established editorial "paper" look pixel-
+   identical; the .dark block re-points the same variables to a warm dark palette. Dual-role colors are
+   split on purpose: `accent` (links/borders, lightens in dark) vs `accent-solid` (button bg, stays a
+   rich blue); `paper` (page bg, darkens) vs `on-accent` (text ON a solid accent, stays light);
+   `surface` (raised cards/inputs, used WITH opacity so bg-surface/70 keeps the exact light-mode look). */
 :root {
+  --paper: #FBF8F1;
+  --paper-2: #EDE7D9;
+  --surface: #FFFFFF;
+  --ink: #20242B;
+  --ink-2: #3A3F47;
+  --muted: #6E7076;
+  --muted-2: #8A8478;
+  --placeholder: #A29B8C;
+  --hairline: #E7E0D2;
+  --border-2: #D9D2C4;
+  --border-3: #C4BBA8;
+  --accent: #1B3A5C;
+  --accent-solid: #1B3A5C;
+  --accent-solid-hover: #12293F;
+  --on-accent: #FBF8F1;
+  --gold: #A8842C;
+  --gold-dark: #7A5C12;
+  --gold-darker: #5E4711;
+  --danger: #9B2C2C;
   color-scheme: light;
 }
 
-/* Site-wide light "paper" theme — paper #FBF8F1 · ink #20242B. The product is the research digest,
-   which established this editorial look; the whole app follows it now. */
+.dark {
+  --paper: #17181B;
+  --paper-2: #202227;
+  --surface: #2A2D34;
+  --ink: #ECE7DC;
+  --ink-2: #C7C1B4;
+  --muted: #9A968C;
+  --muted-2: #857F73;
+  --placeholder: #6A6558;
+  --hairline: #2C3037;
+  --border-2: #3A3F45;
+  --border-3: #4A505A;
+  --accent: #82ABD6;
+  --accent-solid: #2F5C8A;
+  --accent-solid-hover: #24496E;
+  --on-accent: #F3EFE6;
+  --gold: #D8B45C;
+  --gold-dark: #E6C67A;
+  --gold-darker: #F0D89A;
+  --danger: #E07A7A;
+  color-scheme: dark;
+}
+
+/* Map the runtime variables to Tailwind color utilities. `inline` makes utilities emit
+   `var(--paper)` directly, so overriding the variable in .dark flips every utility at runtime.
+   Opacity modifiers (bg-accent/25, bg-surface/70) still work — Tailwind color-mixes the variable. */
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+  --color-placeholder: var(--placeholder);
+  --color-hairline: var(--hairline);
+  --color-border-2: var(--border-2);
+  --color-border-3: var(--border-3);
+  --color-accent: var(--accent);
+  --color-accent-solid: var(--accent-solid);
+  --color-accent-solid-hover: var(--accent-solid-hover);
+  --color-on-accent: var(--on-accent);
+  --color-gold: var(--gold);
+  --color-gold-dark: var(--gold-dark);
+  --color-gold-darker: var(--gold-darker);
+  --color-danger: var(--danger);
+}
+
 body {
-  background-color: #FBF8F1;
-  color: #20242B;
+  background-color: var(--paper);
+  color: var(--ink);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -16,12 +92,12 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #EDE7D9;
+  background: var(--paper-2);
 }
 ::-webkit-scrollbar-thumb {
-  background: #D9D2C4;
+  background: var(--border-2);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C4BBA8;
+  background: var(--border-3);
 }
