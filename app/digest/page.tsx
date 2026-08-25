@@ -41,7 +41,7 @@ const SEARCH_STAGES = ['Reading your profile…', 'Distilling your research sign
 export default function IntakePage() {
   const router = useRouter()
   const { profile, setProfile, setResults } = useDigest()
-  const { status: sessionStatus } = useSession()
+  const { data: session, status: sessionStatus } = useSession()
 
   const [name, setName] = useState(profile.name)
   const [year, setYear] = useState(profile.year)
@@ -65,6 +65,14 @@ export default function IntakePage() {
     const id = setInterval(() => setStage((s) => Math.min(s + 1, SEARCH_STAGES.length - 1)), 1800)
     return () => clearInterval(id)
   }, [loading])
+
+  // Signed-in convenience: seed the name field from the Google profile ONLY when it's still empty,
+  // so a returning user doesn't retype it — and so an old locally-saved typo never silently
+  // overrides their real name (we only fill a blank, never overwrite what they've typed).
+  useEffect(() => {
+    const googleName = session?.user?.name?.trim()
+    if (sessionStatus === 'authenticated' && googleName && !name.trim()) setName(googleName)
+  }, [sessionStatus, session, name])
 
   // One-time prefill from the older home profile form, if this flow has no state yet.
   useEffect(() => {

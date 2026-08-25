@@ -49,7 +49,13 @@ async function upsertUser(p: { sub: string; email?: string | null; name?: string
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true, // required on Vercel (host comes from the proxy)
-  providers: authConfigured ? [Google] : [],
+  // Pass the credentials EXPLICITLY. Auth.js v5 otherwise auto-reads AUTH_GOOGLE_ID/AUTH_GOOGLE_SECRET
+  // (see @auth/core/lib/utils/env.js — `AUTH_${ID}_ID`), NOT the GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET
+  // names we document and check in authConfigured. Calling Google() bare sent an empty client_id →
+  // Google's "invalid_client / OAuth client was not found." (2026-08-25)
+  providers: authConfigured
+    ? [Google({ clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET })]
+    : [],
   session: { strategy: 'jwt' },
   callbacks: {
     async jwt({ token, profile, trigger }) {
