@@ -1,7 +1,9 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
-import { track } from '@/lib/track'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { track, getSessionId } from '@/lib/track'
+import { mergeFlowState } from '@/lib/flow-merge'
 
 // Shared types, presentational components, and the flow context for the multi-page digest flow
 // (intake → labs → lab → compose). State is held in one context and mirrored to localStorage so
@@ -209,6 +211,10 @@ const EMPTY: FlowState = {
   draft: null,
 }
 const STORAGE = 'labreach_flow'
+// The local blob's last-modified time, kept in a SEPARATE key so FlowState's shape stays untouched.
+// It feeds the last-write-wins comparison when a signed-in user's server copy and local copy have
+// both moved (see lib/flow-merge.ts).
+const STORAGE_UPDATED = 'labreach_flow_updated'
 
 interface DigestCtx extends FlowState {
   hydrated: boolean // true once localStorage has loaded — pages must wait before redirecting
@@ -229,10 +235,19 @@ export function DigestProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<FlowState>(EMPTY)
   const [hydrated, setHydrated] = useState(false)
 
+  // ── signed-in sync (guests never touch any of this) ──
+  // When auth is unconfigured, the session endpoint answers null, status settles on
+  // 'unauthenticated', and every effect below no-ops — byte-for-byte guest behavior.
+  const { status: sessionStatus } = useSession()
+  const syncedRef = useRef(false) // initial merge done for the current sign-in?
+  const adoptEchoRef = useRef(false) // suppress the debounced PUT caused by adopting server state
+  const localUpdatedRef = useRef(0) // ms epoch of the local blob's last change (persisted separately)
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE)
       if (raw) setState({ ...EMPTY, ...(JSON.parse(raw) as FlowState) })
+      localUpdatedRef.current = Number(localStorage.getItem(STORAGE_UPDATED)) || 0
     } catch {
       /* ignore */
     }
@@ -243,11 +258,76 @@ export function DigestProvider({ children }: { children: React.ReactNode }) {
     if (hydrated) {
       try {
         localStorage.setItem(STORAGE, JSON.stringify(state))
+        localUpdatedRef.current = Date.now()
+        localStorage.setItem(STORAGE_UPDATED, String(localUpdatedRef.current))
       } catch {
         /* quota — non-fatal */
       }
     }
   }, [state, hydrated])
+
+  // Initial merge, once per sign-in: decide whether the local (guest) work or the server copy is
+  // the truth — the decision logic is pure and tested (lib/flow-merge.ts). Also links this
+  // browser's anonymous telemetry session id to the account (identity lives ONLY in that side
+  // table; see app/api/link-session/route.ts). Fire-and-forget throughout: sync must never break
+  // the product.
+  useEffect(() => {
+    if (!hydrated || sessionStatus !== 'authenticated' || syncedRef.current) {
+      if (sessionStatus === 'unauthenticated') syncedRef.current = false // re-merge on next sign-in
+      return
+    }
+    syncedRef.current = true
+    ;(async () => {
+      try {
+        const res = await fetch('/api/flow')
+        if (!res.ok) return
+        const server = (await res.json()) as { state: unknown; updatedAt: number }
+        const decision = mergeFlowState(
+          { state, updatedAt: localUpdatedRef.current },
+          server?.state ? { state: server.state, updatedAt: server.updatedAt } : null,
+        )
+        if (decision === 'adopt-server') {
+          adoptEchoRef.current = true
+          setState({ ...EMPTY, ...(server.state as FlowState) })
+        } else {
+          void fetch('/api/flow', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ state }),
+          }).catch(() => {})
+        }
+      } catch {
+        /* offline / transient — the debounced push will catch up later */
+      }
+      const sid = getSessionId()
+      if (sid) {
+        void fetch('/api/link-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId: sid }),
+        }).catch(() => {})
+      }
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `state` is read once at merge time on purpose
+  }, [hydrated, sessionStatus])
+
+  // Steady-state: debounced push of local changes to the server while signed in. The echo flag
+  // skips exactly one cycle — the state change that WAS the server adoption.
+  useEffect(() => {
+    if (!hydrated || sessionStatus !== 'authenticated' || !syncedRef.current) return
+    if (adoptEchoRef.current) {
+      adoptEchoRef.current = false
+      return
+    }
+    const t = setTimeout(() => {
+      void fetch('/api/flow', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ state }),
+      }).catch(() => {})
+    }, 2000)
+    return () => clearTimeout(t) // cleared on unmount, sign-out, or the next keystroke
+  }, [state, hydrated, sessionStatus])
 
   const selectedLab = state.labs.find((l) => l.labUrl === state.selectedLabUrl) ?? null
 

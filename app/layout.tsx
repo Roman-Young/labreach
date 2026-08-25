@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { ThemeToggle } from './theme-toggle'
+import { AuthSessionProvider } from './session-provider'
+import { AccountButton } from './account-button'
+import { authConfigured } from '@/lib/auth'
 
 export const metadata: Metadata = {
   title: 'LabReach — Cold Email Agent for Research Lab Outreach',
@@ -21,8 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="min-h-full flex flex-col antialiased">
-        {children}
-        <ThemeToggle />
+        <AuthSessionProvider>
+          {children}
+          <ThemeToggle />
+          <AccountButton authConfigured={authConfigured} />
+        </AuthSessionProvider>
       </body>
     </html>
   )

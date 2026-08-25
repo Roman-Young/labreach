@@ -133,6 +133,46 @@ const statements = [
      ADD COLUMN IF NOT EXISTS embedding       vector(768),
      ADD COLUMN IF NOT EXISTS embedding_model text`,
   `CREATE INDEX IF NOT EXISTS lab_chunks_embedding_idx ON lab_chunks USING hnsw (embedding vector_cosine_ops)`,
+
+  // ── v7 (2026-08-25): optional Google sign-in + saved history (guest-by-default) ──
+  // Sessions are JWTs (no adapter tables — next-auth manages nothing here); `users` exists purely
+  // to key app data. ON DELETE CASCADE everywhere is the delete-my-data path: one DELETE FROM users
+  // wipes flow state, history, and the telemetry mapping.
+  `CREATE TABLE IF NOT EXISTS users (
+     id            serial PRIMARY KEY,
+     google_sub    text UNIQUE NOT NULL,      -- Google's stable account id (OIDC sub claim)
+     email         text,
+     name          text,
+     avatar_url    text,
+     created_at    timestamptz NOT NULL DEFAULT now(),
+     last_login_at timestamptz
+  )`,
+  // Cross-device continuation: the signed-in mirror of the client's localStorage FlowState blob.
+  `CREATE TABLE IF NOT EXISTS user_flow_state (
+     user_id    int PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+     state      jsonb NOT NULL,
+     updated_at timestamptz NOT NULL DEFAULT now()
+  )`,
+  // Search history: one row per completed search (pruned to the newest 50 per user on insert).
+  `CREATE TABLE IF NOT EXISTS saved_searches (
+     id         serial PRIMARY KEY,
+     user_id    int NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+     created_at timestamptz NOT NULL DEFAULT now(),
+     profile    jsonb,
+     query      text,
+     labs       jsonb
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_saved_searches_user_created ON saved_searches(user_id, created_at DESC)`,
+  // Telemetry linkage — maps a user to their ANONYMOUS usage_events session ids. usage_events
+  // itself stays PII-free and untouched; analysis JOINs through this table. Deleting the account
+  // cascades ONLY the mapping, so events revert to anonymous aggregate data (identity severing).
+  `CREATE TABLE IF NOT EXISTS user_sessions (
+     user_id    int NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+     session_id text NOT NULL,
+     linked_at  timestamptz NOT NULL DEFAULT now(),
+     PRIMARY KEY (user_id, session_id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_user_sessions_session ON user_sessions(session_id)`,
 ]
 
 for (const stmt of statements) {
@@ -158,7 +198,13 @@ const servingCols = rows(await sql.query(
 )).map((r) => r.column_name)
 const wantCols = ['plain_summary', 'apply_info', 'trajectory', 'embedding', 'embedding_model']
 const missingCols = wantCols.filter((c) => !servingCols.includes(c))
+// v7 account tables — prove they exist (counts are expected to be 0 until sign-in is enabled).
+const authTables = {}
+for (const t of ['users', 'user_flow_state', 'saved_searches', 'user_sessions']) {
+  authTables[t] = rows(await sql.query(`SELECT count(*)::int AS c FROM ${t}`))[0]?.c
+}
 console.log(`\nlab_profiles: ${profileCount} rows (status col: ${hasStatus ? 'yes' : 'NO'}, profile nullable: ${profileNullable})`)
 console.log(`lab_chunks:   ${chunkCount} rows | pgvector: ${ext.length ? 'enabled' : 'MISSING'}`)
 console.log(`serving cols: ${missingCols.length ? `MISSING ${missingCols.join(', ')}` : 'all present ✓'}`)
+console.log(`account tables: ${Object.entries(authTables).map(([t, c]) => `${t}=${c}`).join(' · ')}`)
 console.log('migration complete ✓')

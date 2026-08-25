@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import type { StudentProfile } from '@/types'
 import { useDigest, BTN, INPUT, chip, type LabDigest } from './shared'
 import { track } from '@/lib/track'
@@ -40,6 +41,7 @@ const SEARCH_STAGES = ['Reading your profile…', 'Distilling your research sign
 export default function IntakePage() {
   const router = useRouter()
   const { profile, setProfile, setResults } = useDigest()
+  const { status: sessionStatus } = useSession()
 
   const [name, setName] = useState(profile.name)
   const [year, setYear] = useState(profile.year)
@@ -109,6 +111,17 @@ export default function IntakePage() {
       // resume text is never sent (see lib/track.ts).
       track('search', { chips: interests, meta: { topLabs, resultCount: labs?.length ?? 0, hasResume: resume.trim().length > 0 } })
       setResults((data.query as string) ?? resume, labs)
+      // Signed-in: record this search to history — fire-and-forget, mirroring track()'s
+      // never-block-the-student style. Profile deliberately EXCLUDES the résumé text: it would be
+      // duplicated across up to 50 history rows, and restoring a search only needs query + labs.
+      // The résumé lives in the single user_flow_state row instead (data minimization).
+      if (sessionStatus === 'authenticated' && labs?.length) {
+        void fetch('/api/history', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ profile: { interests, topLabs }, query: (data.query as string) ?? resume, labs }),
+        }).catch(() => {})
+      }
       router.push('/digest/labs')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.')
