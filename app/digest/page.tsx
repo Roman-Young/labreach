@@ -228,6 +228,12 @@ export default function IntakePage() {
       </div>
 
       {error && <p className="mt-4 text-[15px] text-danger">{error}</p>}
+
+      <footer className="mt-10 pt-5 border-t border-hairline text-[13px] text-muted-2">
+        <a href="/privacy" className="hover:text-ink transition-colors">
+          Privacy
+        </a>
+      </footer>
     </main>
   )
 }
